@@ -1,0 +1,10 @@
+<project name="modestmaps" url="http://github.com/skaronn/modestmaps-haxe" license="MIT">
+	<user name="skaronn"/>
+	<description><![CDATA[Modest Maps haxe port http://modestmaps.com. A tiled map library for Haxe, for displaying maps from OpenStreetMap, CloudMade, Bing, etc..]]></description>
+	<version name="3.3.6"><![CDATA[Add haxelib.json ready to release to new haxelib.]]></version>
+	<tag v="data"/>
+	<tag v="geo"/>
+	<tag v="tools"/>
+	<tag v="map"/>
+	<tag v="zoom"/>
+</project>
