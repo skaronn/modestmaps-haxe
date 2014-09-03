@@ -206,8 +206,8 @@ class TweenLite {
 		if (this.vars.mcColor != null) {
 			this.vars.tint = this.vars.mcColor;
 		}
-		if (!isNaN(Number(this.vars.autoAlpha))) {
-			this.vars.alpha = Number(this.vars.autoAlpha);
+		if (!Math.isNaN(Float(this.vars.autoAlpha))) {
+			this.vars.alpha = Float(this.vars.autoAlpha);
 		}
 		
 		this.tweens = {};
@@ -278,7 +278,7 @@ class TweenLite {
 							valChange = this.vars[p] - this.target[p];
 						}
 						else {
-							valChange = Number(this.vars[p]);
+							valChange = Float(this.vars[p]);
 						}
 						this.tweens[p] = {o:this.target, s:this.target[p], c:valChange}; //o: object, p:property, s:starting value, c:change in value, e: easing function
 					} else {

@@ -29,7 +29,7 @@ class MapEvent extends Event
 	public var panDelta:Point;
 
 	public static inline var RESIZED:String = 'resized';
-	public var newSize:Array;
+	public var newSize:Array<Dynamic>;
 		
 	public static inline var COPYRIGHT_CHANGED:String = 'copyrightChanged';
 	public var newCopyright:String;
@@ -54,55 +54,56 @@ class MapEvent extends Event
 	{
 		super(type, true, true);
 		
-		switch(type) {
-		case PANNED:
-			if (rest.length > 0 && Std.is(rest[0], Point))
-			{
-				panDelta = rest[0];
-			}
-			break;
-		case ZOOMED_BY:
-			if (rest.length > 0 && Std.is(rest[0], Number))
-			{
-				zoomDelta = rest[0];
-			}
-			break;
-		case EXTENT_CHANGED:
-			if (rest.length > 0 && Std.is(rest[0], MapExtent))
-			{
-				newExtent = rest[0];
-			}
-			break;		
-		case START_ZOOMING:
-		case STOP_ZOOMING:
-			if (rest.length > 0 && Std.is(rest[0], Number))
-			{
-				zoomLevel = rest[0];
-			}
-			break;			
-		case RESIZED:
-			if (rest.length > 0 && Std.is(rest[0], Array))
-			{
-				newSize = rest[0];
-			}
-			break;
-		case COPYRIGHT_CHANGED:
-			if (rest.length > 0 && Std.is(rest[0], String))
-			{
-				newCopyright = rest[0];
-			}
-			break;		
-		case BEGIN_EXTENT_CHANGE:
-			if (rest.length > 0 && Std.is(rest[0], MapExtent))
-			{
-				oldExtent = rest[0];
-			}
-			break;		
-		case MAP_PROVIDER_CHANGED:
-			if (rest.length > 0 && Std.is(rest[0], IMapProvider))
-			{
-				newMapProvider = rest[0];
-			}
+		switch(type)
+		{
+			case PANNED:
+				if (rest.length > 0 && Std.is(rest[0], Point))
+				{
+					panDelta = rest[0];
+				}
+				//break;
+			case ZOOMED_BY:
+				if (rest.length > 0 && Std.is(rest[0], Float))
+				{
+					zoomDelta = rest[0];
+				}
+				//break;
+			case EXTENT_CHANGED:
+				if (rest.length > 0 && Std.is(rest[0], MapExtent))
+				{
+					newExtent = rest[0];
+				}
+				//break;		
+			case START_ZOOMING:
+			case STOP_ZOOMING:
+				if (rest.length > 0 && Std.is(rest[0], Float))
+				{
+					zoomLevel = rest[0];
+				}
+				//break;			
+			case RESIZED:
+				if (rest.length > 0 && Std.is(rest[0], Array))
+				{
+					newSize = rest[0];
+				}
+				//break;
+			case COPYRIGHT_CHANGED:
+				if (rest.length > 0 && Std.is(rest[0], String))
+				{
+					newCopyright = rest[0];
+				}
+				//break;		
+			case BEGIN_EXTENT_CHANGE:
+				if (rest.length > 0 && Std.is(rest[0], MapExtent))
+				{
+					oldExtent = rest[0];
+				}
+				//break;		
+			case MAP_PROVIDER_CHANGED:
+				if (rest.length > 0 && Std.is(rest[0], IMapProvider))
+				{
+					newMapProvider = rest[0];
+				}
 		}
 	}
 

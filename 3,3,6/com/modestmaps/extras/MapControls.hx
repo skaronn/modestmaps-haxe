@@ -104,37 +104,37 @@ private var vAlignFunctions:Object = {
 private var positionFunctions:Object = {
 	left: function(child:DisplayObject, s:String, a:String):Void {
 	if (s.lastIndexOf("%") >= 0) {
-		child.x = map.getWidth() * parseFloat(s.substring(-1)) / 100.0;
+		child.x = map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0;
 	}
 	else { 
-		child.x = parseFloat(s.substring(-2));
+		child.x = Std.parseFloat(s.substring(-2));
 	} 
 	child.x -= a ? hAlignFunctions[a.split('-')[1]](child) : 0;
 	},
 	right: function(child:DisplayObject, s:String, a:String):Void { 
 	if (s.lastIndexOf("%") >= 0) { 
-		child.x = map.getWidth() - (map.getWidth() * parseFloat(s.substring(-1)) / 100.0) - child.width;
+		child.x = map.getWidth() - (map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0) - child.width;
 	}
 	else { 
-		child.x = map.getWidth() - parseFloat(s.substring(-2)) - child.width;
+		child.x = map.getWidth() - Std.parseFloat(s.substring(-2)) - child.width;
 	} 
 	child.x += a ? hAlignFunctions[a.split('-')[1]](child) : 0;
 	},
 	top: function(child:DisplayObject, s:String, a:String):Void { 
 	if (s.lastIndexOf("%") >= 0) { 
-		child.y = map.getHeight() * parseFloat(s.substring(-1)) / 100.0;
+		child.y = map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0;
 	}
 	else { 
-		child.y = parseFloat(s.substring(-2));
+		child.y = Std.parseFloat(s.substring(-2));
 	} 
 	child.y -= a ? vAlignFunctions[a.split('-')[0]](child) : 0;
 	},
 	bottom: function(child:DisplayObject, s:String, a:String):Void { 
 	if (s.lastIndexOf("%") >= 0) { 
-		child.y = map.getHeight() - (map.getHeight() * parseFloat(s.substring(-1)) / 100.0) - child.height;
+		child.y = map.getHeight() - (map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0) - child.height;
 	}
 	else { 
-		child.y = map.getHeight() - parseFloat(s.substring(-2)) - child.height;
+		child.y = map.getHeight() - Std.parseFloat(s.substring(-2)) - child.height;
 	} 
 	child.y += a ? vAlignFunctions[a.split('-')[0]](child) : 0;
 	}

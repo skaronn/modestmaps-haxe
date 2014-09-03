@@ -1,7 +1,6 @@
 /*
  * $Id$
  */
-
 package com.modestmaps.core;
 
 import com.modestmaps.geo.Location;
@@ -18,10 +17,12 @@ class MapExtent
 	public var east:Float;
 	public var west:Float;
 
-	/** @param n the most northerly latitude
-	 *  @param s the southern latitude
-	 *  @param e the eastern-most longitude
-	 *  @param w the westest longitude */
+	/** 
+	 * @param n the most northerly latitude
+	 * @param s the southern latitude
+	 * @param e the eastern-most longitude
+	 * @param w the westest longitude
+	 */
 	public function new(n:Float=0, s:Float=0, e:Float=0, w:Float=0)
 	{
 		north = Math.max(n, s);
@@ -35,7 +36,9 @@ class MapExtent
 		return new MapExtent(north, south, east, west);
 	}
 
-	/** enlarges this extent so that the given extent is inside it */
+	/** 
+	* enlarges this extent so that the given extent is inside it
+	*/
 	public function encloseExtent(extent:MapExtent):Void
 	{
 		north = Math.max(extent.north, north);
@@ -149,44 +152,52 @@ class MapExtent
 	}
 
 	/** 
-	 * @return "north, south, east, west"
-	 */
+	* @return "north, south, east, west"
+	*/
 	public function toString():String
 	{
 		return [north, south, east, west].join(', ');
 	}
 
-	/** Creates a new MapExtent from the given String.
-	 * @param str "north, south, east, west"
-	 * @return a new MapExtent from the given string
-	 */
+	/**
+	* Creates a new MapExtent from the given String.
+	* 
+	* @param str "north, south, east, west"
+	* @return a new MapExtent from the given string
+	*/
 	public static function fromString(str:String):MapExtent
 	{
-		var parts:Array = new Array(); //str.split(/\s*,\s*/, 4);
-		return new MapExtent(parseFloat(parts[0]),
-				 parseFloat(parts[1]),
-				 parseFloat(parts[2]),
-				 parseFloat(parts[3]));
+		var parts:Array = new Array<Dynamic>(); //str.split(/\s*,\s*/, 4);
+		return new MapExtent(Std.parseFloat(parts[0]),
+				 Std.parseFloat(parts[1]),
+				 Std.parseFloat(parts[2]),
+				 Std.parseFloat(parts[3]));
 	}
 
-	/** calculate the north/south/east/west extremes of the given array of locations */
-	public static function fromLocations(locations:Array):MapExtent
+	/**
+	* Calculate the north/south/east/west extremes of the given array of locations
+	* 
+	* @param	locations
+	* @return
+	*/
+	public static function fromLocations(locations:Array<Dynamic>):MapExtent
 	{
-		if (!locations || locations.length == 0) return new MapExtent();
-
+		if (locations==null || locations.length == 0) return new MapExtent();
+		
 		var extent:MapExtent;
 		var location:Location;
 		
 		for (location in locations)
 		{
-			if (!extent) {
-				if (location && !isNaN(location.lat) && !isNaN(location.lon)) {
-				extent = new MapExtent(location.lat, location.lat, location.lon, location.lon);
+			if (!extent)
+			{
+				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {
+					extent = new MapExtent(location.lat, location.lat, location.lon, location.lon);
 				}			
 			}
 			else {
-				if (location && !isNaN(location.lat) && !isNaN(location.lon)) {
-				extent.enclose(location);
+				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {
+					extent.enclose(location);
 				}
 			}
 		}
@@ -198,12 +209,23 @@ class MapExtent
 		return extent;
 	}
 
+	/**
+	* 
+	* @param	location
+	* @return
+	*/
 	public static function fromLocation(location:Location):MapExtent
 	{
 		return new MapExtent(location.lat, location.lat, location.lon, location.lon);
 	}
 
-	public static function fromLocationProperties(objects:Array, locationProp:String='location'):MapExtent
+	/**
+	* 
+	* @param	objects
+	* @param	locationProp
+	* @return
+	*/
+	public static function fromLocationProperties(objects:Array<Dynamic>, locationProp:String='location'):MapExtent
 	{
 		//return fromLocations(objects.map(function(obj:Object, ...rest):Location { return obj[locationProp] as Location }));
 		return fromLocations(objects.map(function(obj:Object, rest:Dynamic = null):Location { return cast (obj[locationProp], Location);  } ));

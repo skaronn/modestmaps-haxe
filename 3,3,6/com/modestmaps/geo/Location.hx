@@ -19,7 +19,7 @@ class Location
 	{
 		var parts:Array = new Array(); //str.split(/\s*,\s*/, 2);
 		if (lonlat) parts = parts.reverse();
-		return new Location(Std.parseFloat(parts[0]), Std.parseFloat(parts[1]));
+		return new Location(Std.Std.parseFloat(parts[0]), Std.Std.parseFloat(parts[1]));
 	}
 
 	public function new(lat:Float, lon:Float)

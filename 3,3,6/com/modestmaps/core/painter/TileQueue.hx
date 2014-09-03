@@ -38,7 +38,7 @@ public function push(tile:Tile):Void
 
 public function shift():Tile
 {
-	return queue.shift() as Tile;
+	return cast(queue.shift(), Tile);
 }
 
 public function sortTiles(callback:Function):Void
@@ -49,12 +49,14 @@ public function sortTiles(callback:Function):Void
 public function retainAll(tiles:Array):Array
 {
 	var removed:Array = [];
-	for (var i:Int = queue.length-1; i >= 0; i--) {
-	var tile:Tile = queue[i] as Tile;
-	if (tiles.indexOf(tile) < 0) {
-		removed.push(tile);
-		queue.splice(i,1);
-	} 
+	for (i in queue.length - 1...0)
+	{
+		var tile:Tile = cast(queue[i], Tile);
+		if (tiles.indexOf(tile) < 0)
+		{
+			removed.push(tile);
+			queue.splice(i, 1);
+		} 
 	}
 	return removed;
 }

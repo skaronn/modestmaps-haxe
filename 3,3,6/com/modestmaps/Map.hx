@@ -124,8 +124,8 @@ class Map extends Sprite
 		if (rest && rest.length > 0 && Std.is (rest[0], MapExtent)){
 			//setExtent(rest[0] as MapExtent);
 		}
-		else if (rest && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Number)) {
-			//setCenterZoom(rest[0] as Location, rest[1] as Number);
+		else if (rest && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
+			//setCenterZoom(rest[0] as Location, rest[1] as Float);
 		}
 		else {
 			// use the whole world as a default
@@ -135,16 +135,16 @@ class Map extends Sprite
 			var l1:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[0]);
 			var l2:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[1]);
 
-			if (!isNaN(l1.lat) && Math.abs(l1.lat) != Infinity) {
+			if (!Math.isNaN(l1.lat) && Math.abs(l1.lat) != Infinity) {
 				extent.north = l1.lat;
 			}		
-			if (!isNaN(l2.lat) && Math.abs(l2.lat) != Infinity) {
+			if (!Math.isNaN(l2.lat) && Math.abs(l2.lat) != Infinity) {
 				extent.south = l2.lat;
 			}		
-			if (!isNaN(l1.lon) && Math.abs(l1.lon) != Infinity) {
+			if (!Math.isNaN(l1.lon) && Math.abs(l1.lon) != Infinity) {
 				extent.west = l1.lon;
 			}		
-			if (!isNaN(l2.lon) && Math.abs(l2.lon) != Infinity) {
+			if (!Math.isNaN(l2.lon) && Math.abs(l2.lon) != Infinity) {
 				extent.east = l2.lon;
 			}
 
@@ -232,7 +232,7 @@ class Map extends Sprite
 		var BR:Coordinate = TL.copy();
 		
 		// get outermost top left and bottom right coordinates to cover all locations
-		for (i in 1...locations.length) {
+		for (i in 1...locations.length)
 		{
 			var coordinate:Coordinate = mapProvider.locationCoordinate(locations[i].normalize());
 			TL.row = Math.min(TL.row, coordinate.row);
@@ -300,7 +300,7 @@ class Map extends Sprite
 	*
 	* @return   Array of center and zoom: [center location, zoom number].
 	*/
-	function getCenterZoom():Array
+	public function getCenterZoom():Array
 	{
 		return [ mapProvider.coordinateLocation(grid.centerCoordinate), grid.zoomLevel ];
 	}
@@ -310,7 +310,7 @@ class Map extends Sprite
 	*
 	* @return center Location
 	*/
-	function getCenter():Location
+	public function getCenter():Location
 	{
 		return mapProvider.coordinateLocation(grid.centerCoordinate);
 	}
@@ -361,19 +361,19 @@ class Map extends Sprite
 		return size;
 	}
 
-	function set_size(getSize, setSize):Point {
-		
-	}
-
 	function getSize():Point
 	{
 		return new Point(mapWidth, mapHeight);
 	}
+	
+	//function set_size(getSize, setSize):Point {
+		//
+	//}
 
-	function setSize(value:Point):Void
-	{
-		set_Size(value.x, value.y);
-	}
+	//function setSize(value:Point):Void
+	//{
+		//set_Size(value.x, value.y);
+	//}
 
 	/** Get map width. */
 	function getWidth():Float
@@ -399,383 +399,383 @@ class Map extends Sprite
 		return mapProvider;
 	}
 
-		/**
-		* Set a new map provider, repainting tiles and changing bounding box if necessary.
-		*
-		* @param   Map provider.
-		*
-		* @see com.modestmaps.mapproviders.IMapProvider
-		*/
-		function setMapProvider(newProvider:IMapProvider):Void
+	/**
+	* Set a new map provider, repainting tiles and changing bounding box if necessary.
+	*
+	* @param   Map provider.
+	*
+	* @see com.modestmaps.mapproviders.IMapProvider
+	*/
+	function setMapProvider(newProvider:IMapProvider):Void
+	{
+		var previousGeometry:String;
+		if (mapProvider)
 		{
-			var previousGeometry:String;
-			if (mapProvider)
-			{
-				previousGeometry = mapProvider.geometry();
-			}
-			var extent:MapExtent = getExtent();
-
-			mapProvider = newProvider;
-			if (grid)
-			{
-				grid.setMapProvider(mapProvider);
-			}
-			
-			if (mapProvider.geometry() != previousGeometry)
-			{
-				setExtent(extent);
-			}
-			
-			// among other things this will notify the marker clip that its cached coordinates are invalid
-			dispatchEvent(new MapEvent(MapEvent.MAP_PROVIDER_CHANGED, newProvider));
+			previousGeometry = mapProvider.geometry();
 		}
+		var extent:MapExtent = getExtent();
 
-		/**
-		* Get a point (x, y) for a location (lat, lon) in the context of a given clip.
-		*
-		* @param	Location to match.
-		* @param	Movie clip context in which returned point should make sense.
-		*
-		* @return   Matching point.
-		*/
-		function locationPoint(location:Location, context:DisplayObject=null):Point
+		mapProvider = newProvider;
+		if (grid)
 		{
-			var coord:Coordinate = mapProvider.locationCoordinate(location);
-			return grid.coordinatePoint(coord, context);
-		}
-
-		   /**
-		* Get a location (lat, lon) for a point (x, y) in the context of a given clip.
-		*
-		* @param	Point to match.
-		* @param	Movie clip context in which passed point should make sense.
-		*
-		* @return   Matching location.
-		*/
-		function pointLocation(point:Point, context:DisplayObject=null):Location
-		{
-			var coord:Coordinate = grid.pointCoordinate(point, context);
-			return mapProvider.coordinateLocation(coord);
+			grid.setMapProvider(mapProvider);
 		}
 		
-		/** Pan up by 1/3 (or panFraction) of the map height. */
-		function panUp(event:Event=null):Void
+		if (mapProvider.geometry() != previousGeometry)
 		{
-			panBy(0, mapHeight*panFraction);
-		}	  
-
-		   /** Pan down by 1/3 (or panFraction) of the map height. */
-		function panDown(event:Event=null):Void
-		{
-			panBy(0, -mapHeight*panFraction);
+			setExtent(extent);
 		}
-
-		/** Pan left by 1/3 (or panFraction) of the map width. */	
-		function panLeft(event:Event=null):Void
-		{
-			panBy((mapWidth*panFraction), 0);
-		}	  
-
-		/** Pan left by 1/3 (or panFraction) of the map width. */	
-		function panRight(event:Event=null):Void
-		{
-			panBy(-(mapWidth*panFraction), 0);
-		}
-
-		function panBy(px:Float, py:Float):Void
-		{
-			if (!grid.panning && !grid.zooming) {
-				grid.prepareForPanning();
-				grid.tx += px;
-				grid.ty += py;
-				grid.donePanning();
-			}
-		}
-
-		/** zoom in, keeping the requested point in the same place */
-		function zoomInAbout(targetPoint:Point=null, duration:Float=-1):Void
-		{
-			zoomByAbout(1, targetPoint, duration);
-		}
-
-		/** zoom out, keeping the requested point in the same place */
-		function zoomOutAbout(targetPoint:Point=null, duration:Float=-1):Void
-		{
-			zoomByAbout(-1, targetPoint, duration);
-		}
-
-		/** zoom in or out by zoomDelta, keeping the requested point in the same place */
-		function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
-		{
-			if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
-			
-			if (grid.zoomLevel + zoomDelta < grid.minZoom) {
-				zoomDelta = grid.minZoom - grid.zoomLevel;		
-			}
-			else if (grid.zoomLevel + zoomDelta > grid.maxZoom) {
-				zoomDelta = grid.maxZoom - grid.zoomLevel; 
-			} 
-			
-			var sc:Float = Math.pow(2, zoomDelta);
-			
-			grid.prepareForZooming();
-			grid.prepareForPanning();
-			
-			var m:Matrix = grid.getMatrix();
-			
-			m.translate(-targetPoint.x, -targetPoint.y);
-			m.scale(sc, sc);
-			m.translate(targetPoint.x, targetPoint.y);	   	
-			
-			grid.setMatrix(m);
-
-			grid.doneZooming();
-			grid.donePanning();
-		}
-
-		function getRotation():Float
-		{
-			var m:Matrix = grid.getMatrix();
-			var px:Point = m.deltaTransformPoint(new Point(0, 1));
-			return Math.atan2(px.y, px.x);
-		}
-
-		/** rotate to angle (radians), keeping the requested point in the same place */
-		function setRotation(angle:Float, targetPoint:Point=null):Void
-		{
-			var rotation:Float = getRotation();
-			rotateByAbout(angle - rotation, targetPoint);		
-		}
-
-		/** rotate by angle (radians), keeping the requested point in the same place */
-		function rotateByAbout(angle:Float, targetPoint:Point=null):Void
-		{
-			if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
-			
-			grid.prepareForZooming();
-			grid.prepareForPanning();
-			
-			var m:Matrix = grid.getMatrix();
-			
-			m.translate(-targetPoint.x, -targetPoint.y);
-			m.rotate(angle);
-			m.translate(targetPoint.x, targetPoint.y);	   	
-			
-			grid.setMatrix(m);
-
-			grid.doneZooming();
-			grid.donePanning();
-		}	
-
-		/** zoom in and put the given location in the center of the screen, or optionally at the given targetPoint */
-		function panAndZoomIn(location:Location, targetPoint:Point=null):Void
-		{
-			panAndZoomBy(2, location, targetPoint);
-		}
-
-		/** zoom out and put the given location in the center of the screen, or optionally at the given targetPoint */	
-		function panAndZoomOut(location:Location, targetPoint:Point=null):Void
-		{
-			panAndZoomBy(0.5, location, targetPoint);
-		}
-
-		/** zoom in or out by sc, moving the given location to the requested target */	
-		function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
-		{
-			if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);
-			
-			var p:Point = locationPoint(location);
-			
-			grid.prepareForZooming();
-			grid.prepareForPanning();
-			
-			var m:Matrix = grid.getMatrix();
-			
-			m.translate(-p.x, -p.y);
-			m.scale(sc, sc);
-			m.translate(targetPoint.x, targetPoint.y);
-			
-			grid.setMatrix(m);
-			
-			grid.donePanning();
-			grid.doneZooming();
-		}
-			
-		/** put the given location in the middle of the map */
-		function setCenter(location:Location):Void
-		{
-			onExtentChanging();
-			// tell grid what the rock is cooking
-			grid.resetTiles(mapProvider.locationCoordinate(location).zoomTo(grid.zoomLevel));
-			onExtentChanged();
-		}
-
-		   /**
-		* Zoom in by one zoom level (to 200%) immediately,
-		* rounding up to the nearest zoom level if we're currently between zooms.
-		*  
-		* <p>Triggers MapEvent.START_ZOOMING and MapEvent.STOP_ZOOMING events.</p>
-		* 
-		* @param event an optional event so that zoomIn can directly function as an event listener.
-		*/
-		function zoomIn(event:Event=null):Void
-		{
-			zoomBy(1);
-		}
-
-		   /**
-		* Zoom out by one zoom level (to 50%) immediately, 
-		* rounding down to the nearest zoom level if we're currently between zooms.
-		*  
-		* <p>Triggers MapEvent.START_ZOOMING and MapEvent.STOP_ZOOMING events.</p>
-		* 
-		* @param event an optional event so that zoomOut can directly function as an event listener.
-		*/
-		function zoomOut(event:Event=null):Void
-		{
-			zoomBy(-1);
-		}
-
-		/**
-		 * Adds dir to grid.zoomLevel, and rounds up or down to the nearest whole number.
-		 * Used internally by zoomIn and zoomOut (keeping it DRY, as they say)
-		 * and overridden by TweenMap for animation.
-		 * 
-		 * <p>grid.zoomLevel calls the grid.scale setter for us 
-		 * which will call grid.prepareForZooming if we didn't already 
-		 * and grid.doneZooming after modifying the zoom level.</p>
-		 * 
-		 * <p>Animating/tweening grid.scale fires START_ZOOMING, and STOP_ZOOMING 
-		 * MapEvents unless you call grid.prepareForZooming first. Be sure
-		 * to also call grid.stopZooming at the end of your animation.
-		 *
-		 * @param dir the direction of zoom, generally 1 for zooming in, or -1 for zooming out
-		 * 
-		 */ 
-		function zoomBy(dir:Int):Void
-		{
-			if (!grid.panning) {
-				var target:Float = dir < 0 ? Math.floor(grid.zoomLevel+dir) : Math.ceil(grid.zoomLevel+dir);
-				grid.zoomLevel = Math.min(Math.max(grid.minZoom, target), grid.maxZoom);
-			}
-		} 
-
-		/**
-		* Add a marker at the given location (lat, lon)
-		*
-		* @param	Location of marker.
-		* @param	optionally, a sprite (where sprite.name=id) that will always be in the right place
-		*/
-		function putMarker(location:Location, marker:DisplayObject=null):Void
-		{
-			markerClip.attachMarker(marker, location);
-		}
-
-		/**
-		 * Get a marker with the given id if one was created.
-		 *
-		 * @param	ID of marker, opaque string.
-		 */
-		function getMarker(id:String):DisplayObject
-		{
-			return markerClip.getMarker(id);
-		}
-
-		/**
-		* Remove a marker with the given id.
-		*
-		* @param	ID of marker, opaque string.
-		*/
-		function removeMarker(id:String):Void
-		{
-			markerClip.removeMarker(id); // also calls grid.removeMarker
-		}
-
-		function removeAllMarkers():Void {
-			markerClip.removeAllMarkers();
-		}
-
-		/**
-		* Dispatches MapEvent.EXTENT_CHANGED when the map is recentered.
-		* The MapEvent includes the new extent.
-		* 
-		* TODO: dispatch this on resize?
-		* TODO: should we move Map to com.modestmaps.core so that this could be made internal instead of public?
-		*
-		* @see com.modestmaps.events.MapEvent.EXTENT_CHANGED
-		*/
-		function onExtentChanged(event:Event=null):Void
-		{
-			if (hasEventListener(MapEvent.EXTENT_CHANGED)) {
-				dispatchEvent(new MapEvent(MapEvent.EXTENT_CHANGED, getExtent()));
-			}
-		}
-
-		/**
-		* Dispatches MapEvent.BEGIN_EXTENT_CHANGE when the map is about to be resized.
-		* The MapEvent includes the current.
-		*
-		* @see com.modestmaps.events.MapEvent.BEGIN_EXTENT_CHANGE
-		*/
-		function onExtentChanging():Void
-		{
-			if (hasEventListener(MapEvent.BEGIN_EXTENT_CHANGE)) {
-			dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, getExtent()));
-			}
-		}
-
-		//override public var doubleClickEnabled(null, setDoubleClickEnabled):Bool;
 		
-		function setDoubleClickEnabled(enabled:Bool):Void
-		{
-			super.doubleClickEnabled = enabled;
-			trace("doubleClickEnabled on Map is no longer necessary!"); 
-			trace("\tto enable useful defaults, use:");
-			trace("\tmap.addEventListener(MouseEvent.DOUBLE_CLICK, map.onDoubleClick);");
-		}
+		// among other things this will notify the marker clip that its cached coordinates are invalid
+		dispatchEvent(new MapEvent(MapEvent.MAP_PROVIDER_CHANGED, newProvider));
+	}
 
-		/** pans and zooms in on double clicked location */
-		function onDoubleClick(event:MouseEvent):Void
-		{
-			if (!__draggable) return;
-			
-			var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));
-			
-			if (event.shiftKey) {
-				if (grid.zoomLevel > grid.minZoom) {
-					zoomOutAbout(p);
-				}
-				else {
-					panBy(mapWidth/2 - p.x, mapHeight/2 - p.y);
-				}
-			}
-			else if (event.ctrlKey) {
-				panAndZoomIn(pointLocation(p));
-			}
-			else {
-				if (grid.zoomLevel < grid.maxZoom) {
-					zoomInAbout(p);
-				}
-				else {
-					panBy(mapWidth/2 - p.x, mapHeight/2 - p.y);
-				}
-			}
-		}	
+	/**
+	* Get a point (x, y) for a location (lat, lon) in the context of a given clip.
+	*
+	* @param	Location to match.
+	* @param	Movie clip context in which returned point should make sense.
+	*
+	* @return   Matching point.
+	*/
+	function locationPoint(location:Location, context:DisplayObject=null):Point
+	{
+		var coord:Coordinate = mapProvider.locationCoordinate(location);
+		return grid.coordinatePoint(coord, context);
+	}
 
-		var previousWheelEvent:Float = 0;
-		var minMouseWheelInterval:Float = 100;
+	/**
+	* Get a location (lat, lon) for a point (x, y) in the context of a given clip.
+	*
+	* @param	Point to match.
+	* @param	Movie clip context in which passed point should make sense.
+	*
+	* @return   Matching location.
+	*/
+	function pointLocation(point:Point, context:DisplayObject=null):Location
+	{
+		var coord:Coordinate = grid.pointCoordinate(point, context);
+		return mapProvider.coordinateLocation(coord);
+	}
+		
+	/** Pan up by 1/3 (or panFraction) of the map height. */
+	function panUp(event:Event=null):Void
+	{
+		panBy(0, mapHeight*panFraction);
+	}	  
 
-		function onMouseWheel(event:MouseEvent):Void
-		{
-			if (getTimer() - previousWheelEvent > minMouseWheelInterval) {
-				if (event.delta > 0) {
-					zoomInAbout(new Point(mouseX, mouseY), 0);
-				}
-				else if (event.delta < 0) {
-					zoomOutAbout(new Point(mouseX, mouseY), 0);
-				}
-				previousWheelEvent = getTimer(); 
-			}
+	   /** Pan down by 1/3 (or panFraction) of the map height. */
+	function panDown(event:Event=null):Void
+	{
+		panBy(0, -mapHeight*panFraction);
+	}
+
+	/** Pan left by 1/3 (or panFraction) of the map width. */	
+	function panLeft(event:Event=null):Void
+	{
+		panBy((mapWidth*panFraction), 0);
+	}	  
+
+	/** Pan left by 1/3 (or panFraction) of the map width. */	
+	function panRight(event:Event=null):Void
+	{
+		panBy(-(mapWidth*panFraction), 0);
+	}
+
+	function panBy(px:Float, py:Float):Void
+	{
+		if (!grid.panning && !grid.zooming) {
+			grid.prepareForPanning();
+			grid.tx += px;
+			grid.ty += py;
+			grid.donePanning();
 		}
 	}
+
+	/** zoom in, keeping the requested point in the same place */
+	function zoomInAbout(targetPoint:Point=null, duration:Float=-1):Void
+	{
+		zoomByAbout(1, targetPoint, duration);
+	}
+
+	/** zoom out, keeping the requested point in the same place */
+	function zoomOutAbout(targetPoint:Point=null, duration:Float=-1):Void
+	{
+		zoomByAbout(-1, targetPoint, duration);
+	}
+
+	/** zoom in or out by zoomDelta, keeping the requested point in the same place */
+	function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
+	{
+		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		
+		if (grid.zoomLevel + zoomDelta < grid.minZoom) {
+			zoomDelta = grid.minZoom - grid.zoomLevel;		
+		}
+		else if (grid.zoomLevel + zoomDelta > grid.maxZoom) {
+			zoomDelta = grid.maxZoom - grid.zoomLevel; 
+		} 
+		
+		var sc:Float = Math.pow(2, zoomDelta);
+		
+		grid.prepareForZooming();
+		grid.prepareForPanning();
+		
+		var m:Matrix = grid.getMatrix();
+		
+		m.translate(-targetPoint.x, -targetPoint.y);
+		m.scale(sc, sc);
+		m.translate(targetPoint.x, targetPoint.y);	   	
+		
+		grid.setMatrix(m);
+
+		grid.doneZooming();
+		grid.donePanning();
+	}
+
+	function getRotation():Float
+	{
+		var m:Matrix = grid.getMatrix();
+		var px:Point = m.deltaTransformPoint(new Point(0, 1));
+		return Math.atan2(px.y, px.x);
+	}
+
+	/** rotate to angle (radians), keeping the requested point in the same place */
+	function setRotation(angle:Float, targetPoint:Point=null):Void
+	{
+		var rotation:Float = getRotation();
+		rotateByAbout(angle - rotation, targetPoint);		
+	}
+
+	/** rotate by angle (radians), keeping the requested point in the same place */
+	function rotateByAbout(angle:Float, targetPoint:Point=null):Void
+	{
+		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		
+		grid.prepareForZooming();
+		grid.prepareForPanning();
+		
+		var m:Matrix = grid.getMatrix();
+		
+		m.translate(-targetPoint.x, -targetPoint.y);
+		m.rotate(angle);
+		m.translate(targetPoint.x, targetPoint.y);	   	
+		
+		grid.setMatrix(m);
+
+		grid.doneZooming();
+		grid.donePanning();
+	}	
+
+	/** zoom in and put the given location in the center of the screen, or optionally at the given targetPoint */
+	function panAndZoomIn(location:Location, targetPoint:Point=null):Void
+	{
+		panAndZoomBy(2, location, targetPoint);
+	}
+
+	/** zoom out and put the given location in the center of the screen, or optionally at the given targetPoint */	
+	function panAndZoomOut(location:Location, targetPoint:Point=null):Void
+	{
+		panAndZoomBy(0.5, location, targetPoint);
+	}
+
+	/** zoom in or out by sc, moving the given location to the requested target */	
+	function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
+	{
+		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);
+		
+		var p:Point = locationPoint(location);
+		
+		grid.prepareForZooming();
+		grid.prepareForPanning();
+		
+		var m:Matrix = grid.getMatrix();
+		
+		m.translate(-p.x, -p.y);
+		m.scale(sc, sc);
+		m.translate(targetPoint.x, targetPoint.y);
+		
+		grid.setMatrix(m);
+		
+		grid.donePanning();
+		grid.doneZooming();
+	}
+			
+	/** put the given location in the middle of the map */
+	function setCenter(location:Location):Void
+	{
+		onExtentChanging();
+		// tell grid what the rock is cooking
+		grid.resetTiles(mapProvider.locationCoordinate(location).zoomTo(grid.zoomLevel));
+		onExtentChanged();
+	}
+
+	/**
+	* Zoom in by one zoom level (to 200%) immediately,
+	* rounding up to the nearest zoom level if we're currently between zooms.
+	*  
+	* <p>Triggers MapEvent.START_ZOOMING and MapEvent.STOP_ZOOMING events.</p>
+	* 
+	* @param event an optional event so that zoomIn can directly function as an event listener.
+	*/
+	function zoomIn(event:Event=null):Void
+	{
+		zoomBy(1);
+	}
+
+	   /**
+	* Zoom out by one zoom level (to 50%) immediately, 
+	* rounding down to the nearest zoom level if we're currently between zooms.
+	*  
+	* <p>Triggers MapEvent.START_ZOOMING and MapEvent.STOP_ZOOMING events.</p>
+	* 
+	* @param event an optional event so that zoomOut can directly function as an event listener.
+	*/
+	function zoomOut(event:Event=null):Void
+	{
+		zoomBy(-1);
+	}
+
+	/**
+	 * Adds dir to grid.zoomLevel, and rounds up or down to the nearest whole number.
+	 * Used internally by zoomIn and zoomOut (keeping it DRY, as they say)
+	 * and overridden by TweenMap for animation.
+	 * 
+	 * <p>grid.zoomLevel calls the grid.scale setter for us 
+	 * which will call grid.prepareForZooming if we didn't already 
+	 * and grid.doneZooming after modifying the zoom level.</p>
+	 * 
+	 * <p>Animating/tweening grid.scale fires START_ZOOMING, and STOP_ZOOMING 
+	 * MapEvents unless you call grid.prepareForZooming first. Be sure
+	 * to also call grid.stopZooming at the end of your animation.
+	 *
+	 * @param dir the direction of zoom, generally 1 for zooming in, or -1 for zooming out
+	 * 
+	 */ 
+	function zoomBy(dir:Int):Void
+	{
+		if (!grid.panning) {
+			var target:Float = dir < 0 ? Math.floor(grid.zoomLevel+dir) : Math.ceil(grid.zoomLevel+dir);
+			grid.zoomLevel = Math.min(Math.max(grid.minZoom, target), grid.maxZoom);
+		}
+	} 
+
+	/**
+	* Add a marker at the given location (lat, lon)
+	*
+	* @param	Location of marker.
+	* @param	optionally, a sprite (where sprite.name=id) that will always be in the right place
+	*/
+	function putMarker(location:Location, marker:DisplayObject=null):Void
+	{
+		markerClip.attachMarker(marker, location);
+	}
+
+	/**
+	 * Get a marker with the given id if one was created.
+	 *
+	 * @param	ID of marker, opaque string.
+	 */
+	function getMarker(id:String):DisplayObject
+	{
+		return markerClip.getMarker(id);
+	}
+
+	/**
+	* Remove a marker with the given id.
+	*
+	* @param	ID of marker, opaque string.
+	*/
+	function removeMarker(id:String):Void
+	{
+		markerClip.removeMarker(id); // also calls grid.removeMarker
+	}
+
+	function removeAllMarkers():Void {
+		markerClip.removeAllMarkers();
+	}
+
+	/**
+	* Dispatches MapEvent.EXTENT_CHANGED when the map is recentered.
+	* The MapEvent includes the new extent.
+	* 
+	* TODO: dispatch this on resize?
+	* TODO: should we move Map to com.modestmaps.core so that this could be made internal instead of public?
+	*
+	* @see com.modestmaps.events.MapEvent.EXTENT_CHANGED
+	*/
+	function onExtentChanged(event:Event=null):Void
+	{
+		if (hasEventListener(MapEvent.EXTENT_CHANGED)) {
+			dispatchEvent(new MapEvent(MapEvent.EXTENT_CHANGED, getExtent()));
+		}
+	}
+
+	/**
+	* Dispatches MapEvent.BEGIN_EXTENT_CHANGE when the map is about to be resized.
+	* The MapEvent includes the current.
+	*
+	* @see com.modestmaps.events.MapEvent.BEGIN_EXTENT_CHANGE
+	*/
+	function onExtentChanging():Void
+	{
+		if (hasEventListener(MapEvent.BEGIN_EXTENT_CHANGE)) {
+		dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, getExtent()));
+		}
+	}
+
+	//override public var doubleClickEnabled(null, setDoubleClickEnabled):Bool;
+	
+	function setDoubleClickEnabled(enabled:Bool):Void
+	{
+		super.doubleClickEnabled = enabled;
+		trace("doubleClickEnabled on Map is no longer necessary!"); 
+		trace("\tto enable useful defaults, use:");
+		trace("\tmap.addEventListener(MouseEvent.DOUBLE_CLICK, map.onDoubleClick);");
+	}
+
+	/** pans and zooms in on double clicked location */
+	function onDoubleClick(event:MouseEvent):Void
+	{
+		if (!__draggable) return;
+		
+		var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));
+		
+		if (event.shiftKey) {
+			if (grid.zoomLevel > grid.minZoom) {
+				zoomOutAbout(p);
+			}
+			else {
+				panBy(mapWidth/2 - p.x, mapHeight/2 - p.y);
+			}
+		}
+		else if (event.ctrlKey) {
+			panAndZoomIn(pointLocation(p));
+		}
+		else {
+			if (grid.zoomLevel < grid.maxZoom) {
+				zoomInAbout(p);
+			}
+			else {
+				panBy(mapWidth/2 - p.x, mapHeight/2 - p.y);
+			}
+		}
+	}	
+
+	var previousWheelEvent:Float = 0;
+	var minMouseWheelInterval:Float = 100;
+
+	function onMouseWheel(event:MouseEvent):Void
+	{
+		if (getTimer() - previousWheelEvent > minMouseWheelInterval) {
+			if (event.delta > 0) {
+				zoomInAbout(new Point(mouseX, mouseY), 0);
+			}
+			else if (event.delta < 0) {
+				zoomOutAbout(new Point(mouseX, mouseY), 0);
+			}
+			previousWheelEvent = getTimer(); 
+		}
+	}
+
 }

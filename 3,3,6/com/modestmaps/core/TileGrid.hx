@@ -15,7 +15,7 @@ import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.geom.Rectangle;
 import flash.text.TextField;
-//import flash.utils.GetTimer;
+import flash.utils.Timer;
 
 class TileGrid extends Sprite
 {
@@ -743,8 +743,8 @@ class TileGrid extends Sprite
 	private function parentKey(col:Int, row:Int, zoom:Int, parentZoom:Int):String
 	{
 		var scaleFactor:Float = Math.pow(2.0, zoom-parentZoom);
-		var pcol:Int = Math.floor(Number(col) / scaleFactor); 
-		var prow:Int = Math.floor(Number(row) / scaleFactor);
+		var pcol:Int = Math.floor(Float(col) / scaleFactor); 
+		var prow:Int = Math.floor(Float(row) / scaleFactor);
 		return tileKey(pcol,prow,parentZoom);		
 	}
 
@@ -753,8 +753,8 @@ class TileGrid extends Sprite
 	private function parentCoord(col:Int, row:Int, zoom:Int, parentZoom:Int):Array
 	{
 		var scaleFactor:Float = Math.pow(2.0, zoom-parentZoom);
-		var pcol:Int = Math.floor(Number(col) / scaleFactor); 
-		var prow:Int = Math.floor(Number(row) / scaleFactor);
+		var pcol:Int = Math.floor(Float(col) / scaleFactor); 
+		var prow:Int = Math.floor(Float(row) / scaleFactor);
 		return [ pcol, prow ];		
 	}	
 
@@ -1366,7 +1366,7 @@ class TileGrid extends Sprite
 		dirty = true;
 	}
 	
-	public var d(null, setD):Float;
+	//public var d(null, setD):Float;
 	
 	private function setD(n:Float):Void
 	{

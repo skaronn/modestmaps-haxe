@@ -4,7 +4,7 @@ import openfl.text.TextField;
 import com.modestmaps.core.TileGrid;
 import com.modestmaps.core.Tile;
 import openfl.text.TextFormat;
-import openfl.utils.GetTimer;
+import openfl.utils.Timer;
 import openfl.display.Sprite;
 import openfl.system.System;
 import com.modestmaps.core.painter.TilePainter;

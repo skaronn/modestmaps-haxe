@@ -13,39 +13,41 @@ import com.modestmaps.core.Tile;
  */ 
 class TilePool 
 {
-private static inline MIN_POOL_SIZE:Int = 256;
-private static inline MAX_NEW_TILES:Int = 256;
+	private static inline var MIN_POOL_SIZE:Int = 256;
+	private static inline var MAX_NEW_TILES:Int = 256;
 
-private var pool:Array = [];
-private var tileClass:Class;
+	private var pool:Array = [];
+	private var tileClass:Class;
 
-public function new(tileClass:Class)
-{
-	this.tileClass = tileClass;
-}
-
-public function setTileClass(tileClass:Class):Void
-{
-	this.tileClass = tileClass;
-	pool = [];
-}
-
-public function getTile(column:Int, row:Int, zoom:Int):Tile
-{
-	if (pool.length < MIN_POOL_SIZE) {
-	while (pool.length < MAX_NEW_TILES) {
-		pool.push(new tileClass(0,0,0));
+	public function new(tileClass:Class)
+	{
+		this.tileClass = tileClass;
 	}
-	}			
-	var tile:Tile = pool.pop() as Tile;
-	tile.init(column, row, zoom);
-	return tile;
-}
 
-public function returnTile(tile:Tile):Void
-{
-	tile.destroy();
-	pool.push(tile);
-}
+	public function setTileClass(tileClass:Class):Void
+	{
+		this.tileClass = tileClass;
+		pool = [];
+	}
+
+	public function getTile(column:Int, row:Int, zoom:Int):Tile
+	{
+		if (pool.length < MIN_POOL_SIZE)
+		{
+			while (pool.length < MAX_NEW_TILES)
+			{
+				pool.push(new tileClass(0, 0, 0));
+			}
+		}			
+		var tile:Tile = pool.pop() as Tile;
+		tile.init(column, row, zoom);
+		return tile;
+	}
+
+	public function returnTile(tile:Tile):Void
+	{
+		tile.destroy();
+		pool.push(tile);
+	}
 
 }

@@ -12,7 +12,7 @@ interface IMapProvider
 	/**
 	 * @return an array of Strings urls (or URLRequests) for the images needed for this tile coordinate.
 	 */ 
-	function getTileUrls(coord:Coordinate):Array;
+	function getTileUrls(coord:Coordinate):Array<Dynamic>;
 		
 	/**
 	 * 
@@ -30,7 +30,7 @@ interface IMapProvider
 	* Get top left outer-zoom limit and bottom right inner-zoom limits,
 	* as Coordinates in a two element array.
 	*/
-	function outerLimits():Array;
+	function outerLimits():Array<Dynamic>;
 
 	/**
 	* A string which describes the projection and transformation of a map provider.

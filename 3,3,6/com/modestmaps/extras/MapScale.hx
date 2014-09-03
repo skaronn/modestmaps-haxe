@@ -67,7 +67,7 @@ private function redraw(event:MapEvent):Void
 	
 	// powers of ten, two?
 	//var nearestPower:Float = Math.pow(2, Math.round(Math.log(d) / Math.LN2)); 
-	var nearestPower:Float = parseFloat(d.toPrecision(1));
+	var nearestPower:Float = Std.parseFloat(d.toPrecision(1));
 	
 	var pixels:Float = nearestPower / metersPerPixel;
 	

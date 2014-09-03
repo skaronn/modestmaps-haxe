@@ -25,12 +25,12 @@ class TweenMap extends Map
 {
 
 	/** easing function used for panLeft, panRight, panUp, panDown */
-	public var panEase:Function = quadraticEaseOut;
+	public var panEase:Dynamic = quadraticEaseOut;
 	/** time to pan using panLeft, panRight, panUp, panDown */
 	public var panDuration:Float = 0.5;
 
 	/** easing function used for zoomIn, zoomOut */
-	public var zoomEase:Function = quadraticEaseOut;
+	public var zoomEase:Dynamic = quadraticEaseOut;
 	/** time to zoom using zoomIn, zoomOut */
 	public var zoomDuration:Float = 0.2;
 
@@ -210,13 +210,13 @@ class TweenMap extends Map
 		}
 	}
 
-	   /**
-	 * Animate to put the given location in the middle of the map.
-	 * Use setCenter or setCenterZoom for big jumps, or panTo for pre-defined animation.
-	 * 
-	 * @see com.modestmaps.Map#panTo
-	 */
-	public function tweenTo(location:Location, duration:Float, easing:Function=null):Void
+	/**
+	* Animate to put the given location in the middle of the map.
+	* Use setCenter or setCenterZoom for big jumps, or panTo for pre-defined animation.
+	* 
+	* @see com.modestmaps.Map#panTo
+	*/
+	public function tweenTo(location:Location, duration:Float, easing:Dynamic=null):Void
 	{
 		var pan:Point = new Point(mapWidth/2, mapHeight/2).subtract(locationPoint(location,grid));
 		// grid.prepareForPanning();

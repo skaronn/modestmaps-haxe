@@ -21,8 +21,8 @@ public function new(minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
 	
 	__projection = new LinearProjection(1, t);
 
-	__topLeftOutLimit = new Coordinate(0, Number.NEGATIVE_INFINITY, 0).zoomTo(minZoom);
-	__bottomRightInLimit = (new Coordinate(1, Number.POSITIVE_INFINITY, 0)).zoomTo(maxZoom);
+	__topLeftOutLimit = new Coordinate(0, Float.NEGATIVE_INFINITY, 0).zoomTo(minZoom);
+	__bottomRightInLimit = (new Coordinate(1, Float.POSITIVE_INFINITY, 0)).zoomTo(maxZoom);
 	
 }
 

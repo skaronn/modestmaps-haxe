@@ -167,7 +167,7 @@ public function new($mc:DisplayObject, $duration:Float, $vars:Object) {
 	if (this.vars.runBackwards == true) { //Keep in mind that when the duration is 0, the TweenLite constructor will force the runBackward property to be true so that the values will be immediately rendered. It will also call the removeTween() method.
 	initTweenVals();
 	}
-	if (TweenLite.version < 5.87 || isNaN(TweenLite.version)) {
+	if (TweenLite.version < 5.87 || Math.isNaN(TweenLite.version)) {
 	trace("ERROR! Please update your TweenLite class. TweenFilterLite requires a more recent version. Download updates at http://www.TweenLite.com.");
 	}
 }
@@ -189,7 +189,7 @@ override public function initTweenVals():Void {
 		var i:Int;
 		_clrsa = [];
 		_matrix = _idMatrix.slice();
-		if (this.vars.quality == undefined || isNaN(this.vars.quality)) {
+		if (this.vars.quality == undefined || Math.isNaN(this.vars.quality)) {
 		this.vars.quality = 2;
 		}
 		if (this.vars.runBackwards == true) {
@@ -220,9 +220,9 @@ override public function initTweenVals():Void {
 			_endMatrix = setHue(_endMatrix, this.vars.hue);
 			_endMatrix = setSaturation(_endMatrix, this.vars.saturation);
 			_endMatrix = setThreshold(_endMatrix, this.vars.threshold);
-			if (!isNaN(this.vars.colorize)) {
+			if (!Math.isNaN(this.vars.colorize)) {
 			_endMatrix = colorize(_endMatrix, this.vars.colorize, this.vars.amount);
-			} else if (!isNaN(this.vars.color)) { //Just in case they define "color" instead of "colorize"
+			} else if (!Math.isNaN(this.vars.color)) { //Just in case they define "color" instead of "colorize"
 			_endMatrix = colorize(_endMatrix, this.vars.color, this.vars.amount);
 			}
 			var ndl:Float = this.delay - ((getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
@@ -283,7 +283,7 @@ private function setFilter($filterType:Class, $props:Array, $defaultFilter:Bitma
 		if (typeof(this.vars[prop]) == "number") {
 			valChange = this.vars[prop] - _f[prop];
 		} else {
-			valChange = Number(this.vars[prop]);
+			valChange = Float(this.vars[prop]);
 		}
 		this.tweens[prop] = {o:_f, p:prop, s:_f[prop], c:valChange, e:this.vars.ease};
 		}
@@ -384,9 +384,9 @@ public function HEXtoRGB($n:Float):Object {
 //---- COLOR MATRIX FILTER FUNCTIONS -----------------------------------------------------------------------------------------------------------------------
 
 public static function colorize($m:Array, $color:Float, $amount:Float = 100):Array { //You can use 
-	if (isNaN($color)) {
+	if (Math.isNaN($color)) {
 	return $m;
-	} else if (isNaN($amount)) {
+	} else if (Math.isNaN($amount)) {
 	$amount = 1;
 	}
 	var r:Float = (($color >> 16) & 0xff) / 255;
@@ -401,7 +401,7 @@ public static function colorize($m:Array, $color:Float, $amount:Float = 100):Arr
 }
 
 public static function setThreshold($m:Array, $n:Float):Array {
-	if (isNaN($n)) {
+	if (Math.isNaN($n)) {
 	return $m;
 	}
 	var temp:Array = [_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * $n, 
@@ -412,7 +412,7 @@ public static function setThreshold($m:Array, $n:Float):Array {
 }
 
 public static function setHue($m:Array, $n:Float):Array {
-	if (isNaN($n)) {
+	if (Math.isNaN($n)) {
 	return $m;
 	}
 	$n *= Math.PI / 180;
@@ -423,7 +423,7 @@ public static function setHue($m:Array, $n:Float):Array {
 }
 
 public static function setBrightness($m:Array, $n:Float):Array {
-	if (isNaN($n)) {
+	if (Math.isNaN($n)) {
 	return $m;
 	}
 	$n = ($n * 100) - 100;
@@ -435,7 +435,7 @@ public static function setBrightness($m:Array, $n:Float):Array {
 }
 
 public static function setSaturation($m:Array, $n:Float):Array {
-	if (isNaN($n)) {
+	if (Math.isNaN($n)) {
 	return $m;
 	}
 	var inv:Float = 1 - $n;
@@ -450,7 +450,7 @@ public static function setSaturation($m:Array, $n:Float):Array {
 }
 
 public static function setContrast($m:Array, $n:Float):Array {
-	if (isNaN($n)) {
+	if (Math.isNaN($n)) {
 	return $m;
 	}
 	$n += 0.01;
