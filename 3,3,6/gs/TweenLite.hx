@@ -314,7 +314,7 @@ class TweenLite {
 		return new TweenLite($target, $duration, $vars);
 	}
 
-	public static function delayedCall($delay:Float, $onComplete:Function, $onCompleteParams:Array = null):TweenLite {
+	public static function delayedCall($delay:Float, $onComplete:Function, $onCompleteParams:Array<Dynamic> = null):TweenLite {
 		return new TweenLite($onComplete, 0, {delay:$delay, onComplete:$onComplete, onCompleteParams:$onCompleteParams, overwrite:false}); //NOTE / TO-DO: There may be a bug in the Dictionary class that causes it not to handle references to objects correctly! (I haven't verified this yet)
 	}
 

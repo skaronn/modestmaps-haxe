@@ -9,6 +9,7 @@ import openfl.display.Bitmap;
 import openfl.display.DisplayObject;
 import openfl.display.Loader;
 import openfl.display.Sprite;
+import openfl.errors.Error;
 
 class Tile extends Sprite
 {	
@@ -43,12 +44,13 @@ class Tile extends Sprite
 	{
 		while (numChildren > 0) {
 			var child:DisplayObject = removeChildAt(0);
-			if (Std.is(child, Loader)) {
+			if (Std.is(child, Loader))
+			{
 				try {
-				Loader(child).unload();
+					Loader(child).unload();
 				}
 				catch (error:Error) {
-				// meh
+					error.getStackTrace();
 				}
 			}
 		}

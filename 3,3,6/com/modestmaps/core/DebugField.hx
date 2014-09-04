@@ -22,12 +22,11 @@ class DebugField extends TextField
 		backgroundColor = 0xffffff;
 		background = true;
 		text = "messages";
-			name = 'debugField';
-			mouseEnabled = false;
-			selectable = false;
-			multiline = true;
-			wordWrap = false;
-
+		name = 'debugField';
+		mouseEnabled = false;
+		selectable = false;
+		multiline = true;
+		wordWrap = false;
 		lastFrameTime = getTimer();	
 	}
 
@@ -46,7 +45,7 @@ class DebugField extends TextField
 		var tileChildren:Int = 0;
 		
 		for (i in 0...well.numChildren) {
-			tileChildren += Tile(well.getChildAt(i)).numChildren;
+			tileChildren += cast(well.getChildAt(i), Tile).numChildren;
 		}
 	  
 		this.text = "tx: " + grid.tx.toFixed(3)

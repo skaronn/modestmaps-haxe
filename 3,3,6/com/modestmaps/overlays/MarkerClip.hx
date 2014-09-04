@@ -13,8 +13,7 @@ import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
 import flash.utils.Dictionary;
-//import flash.utils.ClearTimeout;
-//import flash.utils.SetTimeout;
+import flash.utils.Timer;
 
 //[Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent")]
 //[Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent")]
@@ -26,11 +25,10 @@ class MarkerClip extends Sprite
 	private var map:Map;
 
 	private var drawCoord:Coordinate;
-
 	private var locations:Dictionary = new Dictionary();
 	private var coordinates:Dictionary = new Dictionary();
-	private var markers:Array = []; // all markers
-	private var markersByName:Object = {};
+	private var markers:Array<Dynamic> = []; // all markers
+	private var markersByName:Dynamic = {};
 
 	/** enable this if you want intermediate zooming steps to
 	 * stretch your graphics instead of reprojecting the points
@@ -50,7 +48,7 @@ class MarkerClip extends Sprite
 
 	// the function used to sort the markers array before re-ordering them
 	// on the z plane (by child index)
-	public var markerSortFunction:Function = sortMarkersByYPosition;
+	public var markerSortFunction:Dynamic = sortMarkersByYPosition;
 
 	// the projection of the current map's provider
 	// if this changes we need to recache coordinates
@@ -111,7 +109,8 @@ class MarkerClip extends Sprite
 	}
 
 	override public var x(null, setX):Float;
-		private function setX(value:Float):Void
+	
+	private function setX(value:Float):Void
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 	}
@@ -189,9 +188,9 @@ class MarkerClip extends Sprite
 	public function removeMarker(id:String):Void
 	{
 		var marker:DisplayObject = getMarker(id);
-		if (marker)
+		if (marker!=null)
 		{
-		removeMarkerObject(marker);
+			removeMarkerObject(marker);
 		}
 	}
 
@@ -275,10 +274,10 @@ class MarkerClip extends Sprite
 		// sorting markers and applying depths pretty much doubles the 
 		// time to run updateClips 
 		if (sortTimer) {
-		clearTimeout(sortTimer);
+			clearTimeout(sortTimer);
 		}
 		sortTimer = setTimeout(sortMarkers, 50, updateOrder);
-		}	
+	}	
 
 	public function sortMarkers(updateOrder:Bool=false):Void
 	{
@@ -343,29 +342,29 @@ class MarkerClip extends Sprite
 
 	private function onMapPanned(event:MapEvent):Void
 	{
-		if (drawCoord) {
-		var p:Point = map.grid.coordinatePoint(drawCoord);
-		this.x = p.x;
-		this.y = p.y;
+		if (drawCoord!=null) {
+			var p:Point = map.grid.coordinatePoint(drawCoord);
+			this.x = p.x;
+			this.y = p.y;
 		}
 		else {
-		dirty = true;
+			dirty = true;
 		}
 	}
 
 	private function onMapZoomedBy(event:MapEvent):Void
 	{
 		if (autoCache) cacheAsBitmap = false;
-		if (scaleZoom && drawCoord) {
-		if (Math.abs(map.grid.zoomLevel - drawCoord.zoom) < zoomTolerance) {
-			scaleX = scaleY = Math.pow(2, map.grid.zoomLevel - drawCoord.zoom);
+		if (scaleZoom!=null && drawCoord!=null) {
+			if (Math.abs(map.grid.zoomLevel - drawCoord.zoom) < zoomTolerance) {
+				scaleX = scaleY = Math.pow(2, map.grid.zoomLevel - drawCoord.zoom);
 			}
 			else {
-			dirty = true;	
+				dirty = true;	
 			}
 		}
 		else { 
-		dirty = true;
+			dirty = true;
 		}
 	}
 
@@ -423,8 +422,9 @@ class MarkerClip extends Sprite
 		}
 	}
 
-	private var dirty(getDirty, setDirty):Bool;
-		private function getDirty():Bool
+	//private var dirty(getDirty, setDirty):Bool;
+	
+	private function get_Dirty():Bool
 	{
 		return _dirty;
 	}

@@ -16,15 +16,15 @@ class TilePool
 	private static inline var MIN_POOL_SIZE:Int = 256;
 	private static inline var MAX_NEW_TILES:Int = 256;
 
-	private var pool:Array = [];
-	private var tileClass:Class;
+	private var pool:Array<Dynamic> = [];
+	private var tileClass:Type;
 
-	public function new(tileClass:Class)
+	public function new(tileClass:Type)
 	{
 		this.tileClass = tileClass;
 	}
 
-	public function setTileClass(tileClass:Class):Void
+	public function setTileClass(tileClass:Type):Void
 	{
 		this.tileClass = tileClass;
 		pool = [];
@@ -36,10 +36,11 @@ class TilePool
 		{
 			while (pool.length < MAX_NEW_TILES)
 			{
-				pool.push(new tileClass(0, 0, 0));
+				//pool.push(new tileClass(0, 0, 0));
+				pool.push(new Tile(0, 0, 0));
 			}
 		}			
-		var tile:Tile = pool.pop() as Tile;
+		var tile:Tile = cast(pool.pop(), Tile);
 		tile.init(column, row, zoom);
 		return tile;
 	}

@@ -19,21 +19,21 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 	public static inline var ROAD:String = "ROAD";
 	public static inline var HYBRID:String = "HYBRID";
 
-	public static var serverSalt:Int = int(Math.random() * 4);
+	public static var serverSalt:Int = cast((Math.random() * 4), Int);
 
-	private static inline var urlStart:Object = {
+	private static inline var urlStart:Dynamic = {
 		AERIAL: "http://a",
 		ROAD:   "http://r",
 		HYBRID: "http://h"
 	};
 	
-	private static inline var urlMiddle:Object = {
+	private static inline var urlMiddle:Dynamic = {
 		AERIAL: ".ortho.tiles.virtualearth.net/tiles/a",
 		ROAD:   ".ortho.tiles.virtualearth.net/tiles/r",
 		HYBRID: ".ortho.tiles.virtualearth.net/tiles/h"
 	}
 	
-	private static inline var urlEnd:Object = {
+	private static inline var urlEnd:Dynamic = {
 		AERIAL: ".jpeg?g=90",
 		ROAD:   ".png?g=90",
 		HYBRID: ".jpeg?g=90"
@@ -51,7 +51,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		this.hillShading = hillShading;
 
 		if (hillShading) {
-		urlEnd[ROAD] += "&shading=hill"; 
+			urlEnd[ROAD] += "&shading=hill"; 
 		}
 
 		// Microsoft don't have a zoom level 0 right now:
@@ -86,7 +86,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		return "MICROSOFT_"+type;
 	}
 
-	public function getTileUrls(coord:Coordinate):Array
+	public function getTileUrls(coord:Coordinate):Array<Dynamic>
 	{
 		if (coord.row < 0 || coord.row >= Math.pow(2, coord.zoom)) {
 			return null;

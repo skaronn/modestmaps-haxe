@@ -46,27 +46,27 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private var tileQueue:TileQueue;
 	private var tileCache:TileCache;
 	private var tilePool:TilePool;	
-	private var queueFunction:Function;
+	private var queueFunction:Dynamic;
 	private var queueTimer:Timer;
 
 	// per-tile, the array of images we're going to load, which can be empty
 	// TODO: document this in IMapProvider, so that provider implementers know
 	// they are free to check the bounds of their overlays and don't have to serve
 	// millions of 404s
-	private var layersNeeded:Object = {};
+	private var layersNeeded:Dynamic = {};
 	private var loaderTiles:Dictionary = new Dictionary(true);
 
 	// open requests
-	private var openRequests:Array = [];
+	private var openRequests:Array<Dynamic> = [];
 
 	// keeping track for dispatching MapEvent.ALL_TILES_LOADED and MapEvent.BEGIN_TILE_LOADING
 	private var previousOpenRequests:Int = 0;
 
 	// loader cache is shared across map instances, hence this is static for the time being	
-	private static var loaderCache:Object = {};
-	private static var cachedUrls:Array = [];
+	private static var loaderCache:Dynamic = {};
+	private static var cachedUrls:Array<String> = [];
 
-	public function new(tileGrid:TileGrid, provider:IMapProvider, queueFunction:Function)
+	public function new(tileGrid:TileGrid, provider:IMapProvider, queueFunction:Dynamic)
 	{
 		super(null);
 		
@@ -92,7 +92,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:Class):Void
+	public function setTileClass(tileClass:Type):Void
 	{
 		// assign the new class, which creates a new pool array
 		tilePool.setTileClass(tileClass);
@@ -109,7 +109,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		return tileCache.getTile(key);
 	}
 
-	public function retainKeysInCache(recentlySeen:Array):Void
+	public function retainKeysInCache(recentlySeen:Array<Dynamic>):Void
 	{
 		tileCache.retainKeys(recentlySeen); 		
 	}

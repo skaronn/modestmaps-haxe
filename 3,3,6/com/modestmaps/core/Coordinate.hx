@@ -90,6 +90,6 @@ class Coordinate
 	 */
 	public function equalTo( coord : Coordinate ) : Bool
 	{
-		return coord && coord.row == this.row && coord.column == this.column && coord.zoom == this.zoom;
+		return coord!=null && coord.row == this.row && coord.column == this.column && coord.zoom == this.zoom;
 	}
 }

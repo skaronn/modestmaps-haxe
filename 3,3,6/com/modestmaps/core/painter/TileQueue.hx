@@ -5,7 +5,7 @@ import com.modestmaps.core.Tile;
 class TileQueue
 {
 // Tiles we want to load:
-private var queue:Array;
+private var queue:Array<Dynamic>;
 
 public function new()
 {
@@ -41,12 +41,12 @@ public function shift():Tile
 	return cast(queue.shift(), Tile);
 }
 
-public function sortTiles(callback:Function):Void
+public function sortTiles(callback:Dynamic):Void
 {
 	queue = queue.sort(callback);
 }
 
-public function retainAll(tiles:Array):Array
+public function retainAll(tiles:Array<Dynamic>):Array<Dynamic>
 {
 	var removed:Array = [];
 	for (i in queue.length - 1...0)

@@ -82,7 +82,7 @@ class AbstractMapProvider
 	* Get top left outer-zoom limit and bottom right inner-zoom limits,
 	* as Coordinates in a two element array.
 	*/
-	public function outerLimits():Array
+	public function outerLimits():Array<Dynamic>
 	{
 		return [ __topLeftOutLimit.copy(), __bottomRightInLimit.copy() ];
 	}

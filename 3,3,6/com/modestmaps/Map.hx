@@ -223,7 +223,7 @@ class Map extends Sprite
 		return locationsCoordinate([ extent.northWest, extent.southEast ]);
 	}
 		
-	public function locationsCoordinate(locations:Array, fitWidth:Float=0, fitHeight:Float=0):Coordinate
+	public function locationsCoordinate(locations:Array<Dynamic>, fitWidth:Float=0, fitHeight:Float=0):Coordinate
 	{
 		if (!fitWidth) fitWidth = mapWidth;
 		if (!fitHeight) fitHeight = mapHeight;
@@ -300,7 +300,7 @@ class Map extends Sprite
 	*
 	* @return   Array of center and zoom: [center location, zoom number].
 	*/
-	public function getCenterZoom():Array
+	public function getCenterZoom():Array<Dynamic>
 	{
 		return [ mapProvider.coordinateLocation(grid.centerCoordinate), grid.zoomLevel ];
 	}
@@ -355,13 +355,13 @@ class Map extends Sprite
 	*
 	* @return   Array of [width, height].
 	*/
-	function getSize():Array
+	function getSize():Array<Dynamic>
 	{
 		var size:Array = [mapWidth, mapHeight];
 		return size;
 	}
 
-	function getSize():Point
+	function getSizePoint():Point
 	{
 		return new Point(mapWidth, mapHeight);
 	}

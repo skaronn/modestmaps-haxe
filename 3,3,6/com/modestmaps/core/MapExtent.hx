@@ -189,7 +189,7 @@ class MapExtent
 		
 		for (location in locations)
 		{
-			if (!extent)
+			if (extent == null)
 			{
 				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {
 					extent = new MapExtent(location.lat, location.lat, location.lon, location.lon);
@@ -202,7 +202,7 @@ class MapExtent
 			}
 		}
 		
-		if (!extent) {
+		if (extent!=null) {
 			extent = new MapExtent();
 		}
 		
@@ -228,7 +228,7 @@ class MapExtent
 	public static function fromLocationProperties(objects:Array<Dynamic>, locationProp:String='location'):MapExtent
 	{
 		//return fromLocations(objects.map(function(obj:Object, ...rest):Location { return obj[locationProp] as Location }));
-		return fromLocations(objects.map(function(obj:Object, rest:Dynamic = null):Location { return cast (obj[locationProp], Location);  } ));
+		return fromLocations(objects.map(function(obj:Dynamic, rest:Dynamic = null):Location { return cast (obj[locationProp], Location);  } ));
 	}
 
 }

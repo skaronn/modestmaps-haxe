@@ -46,7 +46,7 @@ class TileCache
 		return Std.is(alreadySeen[key], Tile);
 	}
 
-	public function retainKeys(keys:Array):Void
+	public function retainKeys(keys:Array<Dynamic>):Void
 	{
 		for (key in alreadySeen)
 		{

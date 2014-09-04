@@ -4,6 +4,8 @@
 
 package com.modestmaps.geo;
 
+import de.polygonal.core.fmt.NumberFormat;
+
 class Location
 {
 	public static inline var MAX_LAT:Float = 84;
@@ -30,7 +32,7 @@ class Location
 
 	public function equals(loc:Location):Bool
 	{
-		return loc && loc.lat == lat && loc.lon == lon;
+		return loc!=null && loc.lat == lat && loc.lon == lon;
 	}
 
 	public function clone():Location
@@ -53,6 +55,9 @@ class Location
 
 	public function toString(precision:Int=5):String
 	{
-		return [lat.toFixed(precision), lon.toFixed(precision)].join(',');
+		//return [lat.toFixed(precision), lon.toFixed(precision)].join(',');
+		var latitude : NumberFormat = cast(lat, NumberFormat);
+		var longitude : NumberFormat = cast(lon, NumberFormat);
+		return [latitude.toFixed(precision), longitude.toFixed(precision)].join(',');
 	}
 }

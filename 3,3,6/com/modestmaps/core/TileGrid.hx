@@ -108,13 +108,13 @@ class TileGrid extends Sprite
 	private var tilePainter:ITilePainter;
 
 	// coordinate bounds derived from IMapProviders
-	private var limits:Array;
+	private var limits:Array<Dynamic>;
 
 	// keys we've recently seen
-	private var recentlySeen:Array = [];
+	private var recentlySeen:Array<Dynamic>;
 
 	// currently visible tiles
-	private var visibleTiles:Array = [];
+	private var visibleTiles:Array<Dynamic>;
 		
 	// number of tiles we're failing to show
 	private var blankCount:Int = 0;
@@ -245,7 +245,7 @@ class TileGrid extends Sprite
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:Class):Void
+	public function setTileClass(tileClass:Type):Void
 	{
 		// first get rid of everything, which passes tiles back to the pool
 		clearEverything();
@@ -612,7 +612,7 @@ class TileGrid extends Sprite
 	 * (including parent and child tiles currently visible until
 	 * the current zoom level finishes loading)
 	 * */
-	public function getVisibleTiles():Array
+	public function getVisibleTiles():Array<Dynamic>
 	{
 		return visibleTiles;
 	}
@@ -731,7 +731,7 @@ class TileGrid extends Sprite
 		return tile;
 	}
 
-	private static inline var zoomLetter:Array = "abcdefghijklmnopqrstuvwxyz".split('');
+	private static inline var zoomLetter:Array<Dynamic> = "abcdefghijklmnopqrstuvwxyz".split('');
 			
 	/** zoom is translated into a letter so that keys can easily be sorted (alphanumerically) by zoom level */
 	private function tileKey(col:Int, row:Int, zoom:Int):String
@@ -750,7 +750,7 @@ class TileGrid extends Sprite
 
 	// used when maxParentLoad is > 0
 	// TODO: check that this does the right thing with negative row/col?
-	private function parentCoord(col:Int, row:Int, zoom:Int, parentZoom:Int):Array
+	private function parentCoord(col:Int, row:Int, zoom:Int, parentZoom:Int):Array<Dynamic>
 	{
 		var scaleFactor:Float = Math.pow(2.0, zoom-parentZoom);
 		var pcol:Int = Math.floor(Float(col) / scaleFactor); 
@@ -759,11 +759,11 @@ class TileGrid extends Sprite
 	}	
 
 	// TODO: check that this does the right thing with negative row/col?
-	private function childKeys(col:Int, row:Int, zoom:Int, childZoom:Int):Array
+	private function childKeys(col:Int, row:Int, zoom:Int, childZoom:Int):Array<Dynamic>
 	{
 			var scaleFactor:Float = Math.pow(2, zoom-childZoom); // one zoom in = 0.5
 			var rowColSpan:Int = Math.pow(2, childZoom-zoom); // one zoom in = 2, two = 4
-			var keys:Array = [];
+			var keys:Array<Dynamic>;
 			//for (var ccol:Int = col/scaleFactor; ccol < (col/scaleFactor)+rowColSpan; ccol++) {
 			for (ccol in col / scaleFactor...ccol < (col / scaleFactor) + rowColSpan)
 			{
@@ -927,7 +927,7 @@ class TileGrid extends Sprite
 			
 		var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));
 
-		if (context && context != this)
+		if (context!=null && context != this)
 		{
 			screenPoint = this.parent.localToGlobal(screenPoint);
 			screenPoint = context.globalToLocal(screenPoint);
@@ -938,7 +938,7 @@ class TileGrid extends Sprite
 
 	public function pointCoordinate(point:Point, context:DisplayObject=null):Coordinate
 	{		
-		if (context && context != this)
+		if (context!=null && context != this)
 		{
 			point = context.localToGlobal(point);
 			point = this.globalToLocal(point);
