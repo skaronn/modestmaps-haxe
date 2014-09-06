@@ -1281,7 +1281,7 @@ class TileGrid extends Sprite
 	{
 		_dirty = d;
 		if (d) {
-			if (stage) stage.invalidate();
+			if (stage!=null) stage.invalidate();
 			
 			_invertedMatrix = null;
 			_topLeftCoordinate = null;

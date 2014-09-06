@@ -6,13 +6,14 @@ import com.modestmaps.events.MapEvent;
 import com.modestmaps.events.MarkerEvent;
 import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
+//import openfl.utils.Dictionary;
 
 import flash.display.DisplayObject;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.events.MouseEvent;
 import flash.geom.Point;
-import flash.utils.Dictionary;
+import haxe.ds.ObjectMap;
 import flash.utils.Timer;
 
 //[Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent")]
@@ -25,8 +26,10 @@ class MarkerClip extends Sprite
 	private var map:Map;
 
 	private var drawCoord:Coordinate;
-	private var locations:Dictionary = new Dictionary();
-	private var coordinates:Dictionary = new Dictionary();
+	//private var locations:Dictionary = new Dictionary();
+	private var locations:ObjectMap = new ObjectMap();
+	//private var coordinates:Dictionary = new Dictionary();
+	private var coordinates:ObjectMap = new ObjectMap();
 	private var markers:Array<Dynamic> = []; // all markers
 	private var markersByName:Dynamic = {};
 
@@ -108,15 +111,16 @@ class MarkerClip extends Sprite
 		return markers.length;
 	}
 
-	override public var x(null, setX):Float;
+	override public var x(null, set_x):Float;
 	
-	private function setX(value:Float):Void
+	private function set_x(value:Float):Void
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 	}
 
-	override public var y(null, setY):Float;
-		private function setY(value:Float):Void
+	override public var y(null, set_y):Float;
+	
+	private function set_y(value:Float):Void
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
 	}
@@ -266,7 +270,7 @@ class MarkerClip extends Sprite
 		dirty = true;
 	}
 
-	private var sortTimer:UInt;		
+	private var sortTimer:Int;		
 
 	private function requestSort(updateOrder:Bool=false):Void
 	{
@@ -287,12 +291,12 @@ class MarkerClip extends Sprite
 			markers = markers.sort(markerSortFunction, Array.NUMERIC);
 		}
 		// apply depths to maintain the order things were added in
-		var index:UInt = 0;
+		var index:Float = 0;
 		for (marker in markers)
 		{
 			if (contains(marker))
 			{
-				setChildIndex(marker, Math.min(index, numChildren - 1));
+				setChildIndex(marker, Math.min(index, cast(numChildren - 1, Float)));
 				index++;
 			}
 		}
@@ -317,9 +321,9 @@ class MarkerClip extends Sprite
 		{
 			if (!contains(marker))
 			{
-			addChild(marker);
-			// notify the caller that we've added something and need to sort markers
-			return true;
+				addChild(marker);
+				// notify the caller that we've added something and need to sort markers
+				return true;
 			}
 		}
 		else if (contains(marker))
@@ -414,11 +418,12 @@ class MarkerClip extends Sprite
 	///// Invalidations...
 
 	private var dirty(null, setDirty):Bool;
-		private function setDirty(d:Bool):Void
+	
+	private function setDirty(d:Bool):Void
 	{
 		_dirty = d;
 		if (d) {
-		if (stage) stage.invalidate();
+			if (stage!=null) stage.invalidate();
 		}
 	}
 

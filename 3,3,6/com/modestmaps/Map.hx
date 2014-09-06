@@ -94,7 +94,7 @@ class Map extends Sprite
 	//public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, ...rest)
 	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
-		if (!mapProvider) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
+		if (mapProvider==null) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
 
 		// TODO getter/setter for this that disables interaction in TileGrid
 		__draggable = draggable;
@@ -115,17 +115,17 @@ class Map extends Sprite
 
 		// if rest was passed in from super constructor in a subclass,
 		// it will be an array...
-		if (rest && rest.length > 0 && Std.is (rest[0], Array)){
+		if (rest!=null && rest.length > 0 && Std.is (rest[0], Array)){
 			rest = rest[0];
 		}
 		// (doing that is OK because none of the arguments we're expecting are Arrays)
 		
 		// look at ... rest arguments for MapExtent or Location/zoom
-		if (rest && rest.length > 0 && Std.is (rest[0], MapExtent)){
-			//setExtent(rest[0] as MapExtent);
+		if (rest!=null && rest.length > 0 && Std.is(rest[0], MapExtent)){
+			setExtent(cast(rest[0], MapExtent));
 		}
-		else if (rest && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
-			//setCenterZoom(rest[0] as Location, rest[1] as Float);
+		else if (rest!=null && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
+			setCenterZoom(cast(rest[0], Location), cast(rest[1], Float));
 		}
 		else {
 			// use the whole world as a default
@@ -135,16 +135,16 @@ class Map extends Sprite
 			var l1:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[0]);
 			var l2:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[1]);
 
-			if (!Math.isNaN(l1.lat) && Math.abs(l1.lat) != Infinity) {
+			if (!Math.isNaN(l1.lat) && Math.abs(l1.lat) != Math.NEGATIVE_INFINITY) {
 				extent.north = l1.lat;
 			}		
-			if (!Math.isNaN(l2.lat) && Math.abs(l2.lat) != Infinity) {
+			if (!Math.isNaN(l2.lat) && Math.abs(l2.lat) != Math.NEGATIVE_INFINITY) {
 				extent.south = l2.lat;
 			}		
-			if (!Math.isNaN(l1.lon) && Math.abs(l1.lon) != Infinity) {
+			if (!Math.isNaN(l1.lon) && Math.abs(l1.lon) != Math.NEGATIVE_INFINITY) {
 				extent.west = l1.lon;
 			}		
-			if (!Math.isNaN(l2.lon) && Math.abs(l2.lon) != Infinity) {
+			if (!Math.isNaN(l2.lon) && Math.abs(l2.lon) != Math.NEGATIVE_INFINITY) {
 				extent.east = l2.lon;
 			}
 
@@ -286,7 +286,7 @@ class Map extends Sprite
 	{
 		var extent:MapExtent = new MapExtent();
 		
-		if(!mapProvider) {
+		if(mapProvider==null) {
 			throw new Error("WHOAH, no mapProvider in getExtent!");
 		}
 
@@ -357,7 +357,7 @@ class Map extends Sprite
 	*/
 	function getSize():Array<Dynamic>
 	{
-		var size:Array = [mapWidth, mapHeight];
+		var size:Array<Dynamic> = [mapWidth, mapHeight];
 		return size;
 	}
 
@@ -376,13 +376,13 @@ class Map extends Sprite
 	//}
 
 	/** Get map width. */
-	function getWidth():Float
+	public function getWidth():Float
 	{
 		return mapWidth;
 	}
 
 	/** Get map height. */
-	function getHeight():Float
+	public function getHeight():Float
 	{
 		return mapHeight;
 	}
@@ -394,7 +394,7 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.mapproviders.IMapProvider
 	*/
-	function getMapProvider():IMapProvider
+	public function getMapProvider():IMapProvider
 	{
 		return mapProvider;
 	}
@@ -406,17 +406,17 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.mapproviders.IMapProvider
 	*/
-	function setMapProvider(newProvider:IMapProvider):Void
+	public function setMapProvider(newProvider:IMapProvider):Void
 	{
 		var previousGeometry:String;
-		if (mapProvider)
+		if (mapProvider!=null)
 		{
 			previousGeometry = mapProvider.geometry();
 		}
 		var extent:MapExtent = getExtent();
 
 		mapProvider = newProvider;
-		if (grid)
+		if (grid!=null)
 		{
 			grid.setMapProvider(mapProvider);
 		}
@@ -438,7 +438,7 @@ class Map extends Sprite
 	*
 	* @return   Matching point.
 	*/
-	function locationPoint(location:Location, context:DisplayObject=null):Point
+	public function locationPoint(location:Location, context:DisplayObject=null):Point
 	{
 		var coord:Coordinate = mapProvider.locationCoordinate(location);
 		return grid.coordinatePoint(coord, context);
@@ -452,26 +452,26 @@ class Map extends Sprite
 	*
 	* @return   Matching location.
 	*/
-	function pointLocation(point:Point, context:DisplayObject=null):Location
+	public function pointLocation(point:Point, context:DisplayObject=null):Location
 	{
 		var coord:Coordinate = grid.pointCoordinate(point, context);
 		return mapProvider.coordinateLocation(coord);
 	}
 		
 	/** Pan up by 1/3 (or panFraction) of the map height. */
-	function panUp(event:Event=null):Void
+	public function panUp(event:Event=null):Void
 	{
 		panBy(0, mapHeight*panFraction);
 	}	  
 
 	   /** Pan down by 1/3 (or panFraction) of the map height. */
-	function panDown(event:Event=null):Void
+	public function panDown(event:Event=null):Void
 	{
 		panBy(0, -mapHeight*panFraction);
 	}
 
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
-	function panLeft(event:Event=null):Void
+	public function panLeft(event:Event=null):Void
 	{
 		panBy((mapWidth*panFraction), 0);
 	}	  
@@ -482,7 +482,7 @@ class Map extends Sprite
 		panBy(-(mapWidth*panFraction), 0);
 	}
 
-	function panBy(px:Float, py:Float):Void
+	public function panBy(px:Float, py:Float):Void
 	{
 		if (!grid.panning && !grid.zooming) {
 			grid.prepareForPanning();
@@ -493,21 +493,21 @@ class Map extends Sprite
 	}
 
 	/** zoom in, keeping the requested point in the same place */
-	function zoomInAbout(targetPoint:Point=null, duration:Float=-1):Void
+	public function zoomInAbout(targetPoint:Point=null, duration:Float=-1):Void
 	{
 		zoomByAbout(1, targetPoint, duration);
 	}
 
 	/** zoom out, keeping the requested point in the same place */
-	function zoomOutAbout(targetPoint:Point=null, duration:Float=-1):Void
+	public function zoomOutAbout(targetPoint:Point=null, duration:Float=-1):Void
 	{
 		zoomByAbout(-1, targetPoint, duration);
 	}
 
 	/** zoom in or out by zoomDelta, keeping the requested point in the same place */
-	function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
+	public function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
 	{
-		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint==null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
 		
 		if (grid.zoomLevel + zoomDelta < grid.minZoom) {
 			zoomDelta = grid.minZoom - grid.zoomLevel;		
@@ -533,7 +533,7 @@ class Map extends Sprite
 		grid.donePanning();
 	}
 
-	function getRotation():Float
+	public function getRotation():Float
 	{
 		var m:Matrix = grid.getMatrix();
 		var px:Point = m.deltaTransformPoint(new Point(0, 1));
@@ -541,16 +541,16 @@ class Map extends Sprite
 	}
 
 	/** rotate to angle (radians), keeping the requested point in the same place */
-	function setRotation(angle:Float, targetPoint:Point=null):Void
+	public function setRotation(angle:Float, targetPoint:Point=null):Void
 	{
 		var rotation:Float = getRotation();
 		rotateByAbout(angle - rotation, targetPoint);		
 	}
 
 	/** rotate by angle (radians), keeping the requested point in the same place */
-	function rotateByAbout(angle:Float, targetPoint:Point=null):Void
+	public function rotateByAbout(angle:Float, targetPoint:Point=null):Void
 	{
-		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint==null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
 		
 		grid.prepareForZooming();
 		grid.prepareForPanning();
@@ -568,21 +568,21 @@ class Map extends Sprite
 	}	
 
 	/** zoom in and put the given location in the center of the screen, or optionally at the given targetPoint */
-	function panAndZoomIn(location:Location, targetPoint:Point=null):Void
+	public function panAndZoomIn(location:Location, targetPoint:Point=null):Void
 	{
 		panAndZoomBy(2, location, targetPoint);
 	}
 
 	/** zoom out and put the given location in the center of the screen, or optionally at the given targetPoint */	
-	function panAndZoomOut(location:Location, targetPoint:Point=null):Void
+	public function panAndZoomOut(location:Location, targetPoint:Point=null):Void
 	{
 		panAndZoomBy(0.5, location, targetPoint);
 	}
 
 	/** zoom in or out by sc, moving the given location to the requested target */	
-	function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
+	public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
 	{
-		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);
+		if (targetPoint==null) targetPoint = new Point(mapWidth/2, mapHeight/2);
 		
 		var p:Point = locationPoint(location);
 		
@@ -602,7 +602,7 @@ class Map extends Sprite
 	}
 			
 	/** put the given location in the middle of the map */
-	function setCenter(location:Location):Void
+	public function setCenter(location:Location):Void
 	{
 		onExtentChanging();
 		// tell grid what the rock is cooking
@@ -618,7 +618,7 @@ class Map extends Sprite
 	* 
 	* @param event an optional event so that zoomIn can directly function as an event listener.
 	*/
-	function zoomIn(event:Event=null):Void
+	public function zoomIn(event:Event=null):Void
 	{
 		zoomBy(1);
 	}
@@ -631,7 +631,7 @@ class Map extends Sprite
 	* 
 	* @param event an optional event so that zoomOut can directly function as an event listener.
 	*/
-	function zoomOut(event:Event=null):Void
+	public function zoomOut(event:Event=null):Void
 	{
 		zoomBy(-1);
 	}
@@ -652,7 +652,7 @@ class Map extends Sprite
 	 * @param dir the direction of zoom, generally 1 for zooming in, or -1 for zooming out
 	 * 
 	 */ 
-	function zoomBy(dir:Int):Void
+	public function zoomBy(dir:Int):Void
 	{
 		if (!grid.panning) {
 			var target:Float = dir < 0 ? Math.floor(grid.zoomLevel+dir) : Math.ceil(grid.zoomLevel+dir);
@@ -666,7 +666,7 @@ class Map extends Sprite
 	* @param	Location of marker.
 	* @param	optionally, a sprite (where sprite.name=id) that will always be in the right place
 	*/
-	function putMarker(location:Location, marker:DisplayObject=null):Void
+	public function putMarker(location:Location, marker:DisplayObject=null):Void
 	{
 		markerClip.attachMarker(marker, location);
 	}
@@ -676,7 +676,7 @@ class Map extends Sprite
 	 *
 	 * @param	ID of marker, opaque string.
 	 */
-	function getMarker(id:String):DisplayObject
+	public function getMarker(id:String):DisplayObject
 	{
 		return markerClip.getMarker(id);
 	}
@@ -686,12 +686,12 @@ class Map extends Sprite
 	*
 	* @param	ID of marker, opaque string.
 	*/
-	function removeMarker(id:String):Void
+	public function removeMarker(id:String):Void
 	{
 		markerClip.removeMarker(id); // also calls grid.removeMarker
 	}
 
-	function removeAllMarkers():Void {
+	public function removeAllMarkers():Void {
 		markerClip.removeAllMarkers();
 	}
 
@@ -704,7 +704,7 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.events.MapEvent.EXTENT_CHANGED
 	*/
-	function onExtentChanged(event:Event=null):Void
+	public function onExtentChanged(event:Event=null):Void
 	{
 		if (hasEventListener(MapEvent.EXTENT_CHANGED)) {
 			dispatchEvent(new MapEvent(MapEvent.EXTENT_CHANGED, getExtent()));
@@ -717,7 +717,7 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.events.MapEvent.BEGIN_EXTENT_CHANGE
 	*/
-	function onExtentChanging():Void
+	public function onExtentChanging():Void
 	{
 		if (hasEventListener(MapEvent.BEGIN_EXTENT_CHANGE)) {
 		dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, getExtent()));
@@ -726,7 +726,7 @@ class Map extends Sprite
 
 	//override public var doubleClickEnabled(null, setDoubleClickEnabled):Bool;
 	
-	function setDoubleClickEnabled(enabled:Bool):Void
+	public function setDoubleClickEnabled(enabled:Bool):Void
 	{
 		super.doubleClickEnabled = enabled;
 		trace("doubleClickEnabled on Map is no longer necessary!"); 
@@ -735,7 +735,7 @@ class Map extends Sprite
 	}
 
 	/** pans and zooms in on double clicked location */
-	function onDoubleClick(event:MouseEvent):Void
+	public function onDoubleClick(event:MouseEvent):Void
 	{
 		if (!__draggable) return;
 		
@@ -765,7 +765,7 @@ class Map extends Sprite
 	var previousWheelEvent:Float = 0;
 	var minMouseWheelInterval:Float = 100;
 
-	function onMouseWheel(event:MouseEvent):Void
+	public function onMouseWheel(event:MouseEvent):Void
 	{
 		if (getTimer() - previousWheelEvent > minMouseWheelInterval) {
 			if (event.delta > 0) {

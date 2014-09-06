@@ -6,18 +6,18 @@ import com.modestmaps.core.TileGrid;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
 
-import flash.display.Bitmap;
-import flash.display.Loader;
-import flash.display.LoaderInfo;
-import flash.events.Event;
-import flash.events.EventDispatcher;
-import flash.events.IOErrorEvent;
-import flash.events.ProgressEvent;
-import flash.events.TimerEvent;
-import flash.net.URLRequest;
-import flash.system.LoaderContext;
+import openfl.display.Bitmap;
+import openfl.display.Loader;
+import openfl.display.LoaderInfo;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
+import openfl.events.IOErrorEvent;
+import openfl.events.ProgressEvent;
+import openfl.events.TimerEvent;
+import openfl.net.URLRequest;
+import openfl.system.LoaderContext;
 import flash.utils.Dictionary;
-import flash.utils.Timer;
+import openfl.utils.Timer;
 
 class TilePainter extends EventDispatcher implements ITilePainter
 {
@@ -298,7 +298,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				}
 			}
 			catch (error:Error) {
-				// ???
+				
 			}
 		}
 			

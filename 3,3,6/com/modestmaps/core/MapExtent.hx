@@ -167,11 +167,12 @@ class MapExtent
 	*/
 	public static function fromString(str:String):MapExtent
 	{
-		var parts:Array = new Array<Dynamic>(); //str.split(/\s*,\s*/, 4);
+		var parts:Array<String> = null ; //str.split("'/\s*,\s*/'");
 		return new MapExtent(Std.parseFloat(parts[0]),
-				 Std.parseFloat(parts[1]),
-				 Std.parseFloat(parts[2]),
-				 Std.parseFloat(parts[3]));
+			Std.parseFloat(parts[1]),
+			Std.parseFloat(parts[2]),
+			Std.parseFloat(parts[3])
+		);
 	}
 
 	/**

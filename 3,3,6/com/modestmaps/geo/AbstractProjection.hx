@@ -23,7 +23,7 @@ class AbstractProjection implements IProjection
 	public function new(zoom:Float, T:Transformation)
 	{
 		// a transformation is not strictly necessary
-		if(T)
+		if(T!=null)
 		this.T = T;
 		
 		this.zoom = zoom;

@@ -44,8 +44,8 @@ class AbstractMapProvider
 								  
 		__projection = new MercatorProjection(26, t);
 
-		__topLeftOutLimit = new Coordinate(0, Float.NEGATIVE_INFINITY, minZoom);
-		__bottomRightInLimit = (new Coordinate(1, Float.POSITIVE_INFINITY, 0)).zoomTo(maxZoom);
+		__topLeftOutLimit = new Coordinate(0, Math.NEGATIVE_INFINITY, minZoom);
+		__bottomRightInLimit = (new Coordinate(1, Math.POSITIVE_INFINITY, 0)).zoomTo(maxZoom);
 	}
 
 	/**
