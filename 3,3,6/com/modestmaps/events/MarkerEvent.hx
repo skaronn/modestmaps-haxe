@@ -4,10 +4,10 @@
 
 package com.modestmaps.events;
 
-import flash.events.Event;
+import openfl.events.Event;
 import com.modestmaps.geo.Location;
 
-import flash.display.DisplayObject;	
+import openfl.display.DisplayObject;	
 	
 class MarkerEvent extends Event
 {

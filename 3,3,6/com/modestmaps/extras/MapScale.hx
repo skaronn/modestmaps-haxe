@@ -4,10 +4,10 @@ import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.geo.Location;
 
-import flash.display.Sprite;
-import flash.geom.Point;
-import flash.text.TextField;
-import flash.text.TextFormat;	
+import openfl.display.Sprite;
+import openfl.geom.Point;
+import openfl.text.TextField;
+import openfl.text.TextFormat;	
 
 class MapScale extends Sprite
 {
@@ -66,7 +66,7 @@ private function redraw(event:MapEvent):Void
 	var metersPerPixel:Float = d / pixelWidth;
 	
 	// powers of ten, two?
-	//var nearestPower:Float = Math.pow(2, Math.round(Math.log(d) / Math.LN2)); 
+	//var nearestPower:Float = Math.pow(2, Math.round(Math.log(d) / Math.log(2))); 
 	var nearestPower:Float = Std.parseFloat(d.toPrecision(1));
 	
 	var pixels:Float = nearestPower / metersPerPixel;

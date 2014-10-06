@@ -6,11 +6,11 @@ import com.modestmaps.geo.Location;
 
 import flash.display.LineScaleMode;
 import flash.display.Shape;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 
 class ZoomBox extends Sprite
 {

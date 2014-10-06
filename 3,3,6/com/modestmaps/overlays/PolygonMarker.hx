@@ -9,10 +9,10 @@ import com.modestmaps.mapproviders.IMapProvider;
 
 import flash.display.BitmapData;
 import flash.display.LineScaleMode;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.geom.Matrix;
-import flash.geom.Point;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 
 class PolygonMarker extends Sprite implements Redrawable
 {
@@ -22,8 +22,8 @@ private var drawZoom:Float;
 
 public var zoomTolerance:Float = 4;
 
-public var locations:Array;
-private var coordinates:Array; // cached after converting locations with the map provider
+public var locations:Array<Dynamic>;
+private var coordinates:Array<Dynamic>; // cached after converting locations with the map provider
 public var extent:MapExtent;
 public var location:Location;
 
@@ -60,7 +60,7 @@ public var bitmapSmooth:Bool = false;
  * ring of the polygon, and subsequent arrays will be treated as holes if they overlap it.
  * 
  */
-public function new(map:Map, locations:Array, autoClose:Bool=true)
+public function new(map:Map, locations:Array<Dynamic>, autoClose:Bool=true)
 {
 	this.map = map;
 	this.provider = map.getMapProvider();
@@ -73,7 +73,7 @@ public function new(map:Map, locations:Array, autoClose:Bool=true)
 	{
 		locations = [ locations ];
 	}
-	if (locations[0].length > 0 && locations[0] is Array)
+	if (locations[0].length > 0 && locations[0] is Array<Dynamic>)
 	{
 		this.locations = [ locations[0] ];
 		this.extent = MapExtent.fromLocations(locations[0]);
@@ -88,7 +88,7 @@ public function new(map:Map, locations:Array, autoClose:Bool=true)
 	}
 }
 
-public function addHole(hole:Array):Void
+public function addHole(hole:Array<Dynamic>):Void
 {
 	this.locations.push(hole);
 	this.extent.encloseExtent(MapExtent.fromLocations(hole));

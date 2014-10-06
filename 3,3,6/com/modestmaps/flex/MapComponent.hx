@@ -28,7 +28,7 @@ import com.modestmaps.mapproviders.*;
 import com.modestmaps.mapproviders.microsoft.*;
 import com.modestmaps.mapproviders.yahoo.*;
 
-import flash.events.Event;
+import openfl.events.Event;
 import mx.core.UIComponent;
 
 [Event(name="startZooming",	  type="com.modestmaps.events.MapEvent")]
@@ -72,7 +72,7 @@ public function new()
  * Since we're not yet supporting the full Map interface,
  * make the instance gettable, read-only.
  */
-public function get map():com.modestmaps.Map
+public function get_map():com.modestmaps.Map
 {
 	return _map;
 }

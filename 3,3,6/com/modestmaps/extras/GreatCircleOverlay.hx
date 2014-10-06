@@ -4,9 +4,9 @@ import com.modestmaps.Map;
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.geo.Location;
 
-import flash.display.Sprite;
+import openfl.display.Sprite;
 //import flash.filters.DropShadowFilter;
-import flash.geom.Point;
+import openfl.geom.Point;
 import flash.utils.Dictionary;
 
 /** 

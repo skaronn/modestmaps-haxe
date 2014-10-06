@@ -21,7 +21,7 @@ package com.modestmaps.overlays;
 class Polyline
 {
 public var id:String;
-public var locationsArray:Array;
+public var locationsArray:Array<Dynamic>;
 public var lineThickness:Float;
 public var lineColor:Float;
 public var lineAlpha:Float;
@@ -32,7 +32,7 @@ public var joints:String;
 public var miterLimit:Float;
 	
 public function new(id:String, 
-			 locationsArray:Array,
+			 locationsArray:Array<Dynamic>,
 			 lineThickness:Float=3, 
 			 lineColor:Float=0xFF0000, 
 			 lineAlpha:Float=1, 
@@ -43,7 +43,7 @@ public function new(id:String,
 			 miterLimit:Float=3)
 {
 	this.id = id;
-	this.locationsArray = locationsArray;
+	this.locationsArray = locations:Array<Dynamic>;
 	this.lineThickness = lineThickness;
 	this.lineColor = lineColor;
 	this.lineAlpha = lineAlpha;

@@ -3,19 +3,19 @@ package com.modestmaps.extras;
 import com.modestmaps.Map;
 
 import flash.display.Bitmap;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
 import flash.filters.DropShadowFilter;
 import flash.ui.Mouse;
 
 class HandCursor extends Sprite
 {
 [Embed(source='hand.png')]
-private var HandUp:Class;
+private var HandUp:Type;
 
 [Embed(source='hand_down.png')]
-private var HandDown:Class;
+private var HandDown:Type;
 
 private var map:Map;
 private var enabled:Bool = false;
@@ -132,7 +132,7 @@ public function disable(event:Event=null):Void
 	enabled = false;		
 }
 
-private function callNextFrame(callback:Function):Void
+private function callNextFrame(callback:Dynamic):Void
 {
 	if (!hasEventListener(Event.ENTER_FRAME)) {
 	addEventListener(Event.ENTER_FRAME, onEnterFrame);
@@ -143,7 +143,7 @@ private function callNextFrame(callback:Function):Void
 private function onEnterFrame(event:Event):Void
 {
 	while (callbacks.length > 0) {
-	var callback:Function = callbacks.shift() as Function;
+	var callback:Dynamic = callbacks.shift() as Function;
 	callback();
 	}
 	removeEventListener(Event.ENTER_FRAME, onEnterFrame);

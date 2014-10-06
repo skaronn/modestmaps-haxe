@@ -4,14 +4,14 @@ package com.modestmaps.extras;
 import com.modestmaps.Map;
 	import com.modestmaps.events.MapEvent;
 	
-	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.events.MouseEvent;
+	import openfl.display.Sprite;
+	import openfl.events.Event;
+	import openfl.events.MouseEvent;
 	import flash.filters.BevelFilter;
 	import flash.filters.BitmapFilterType;
 	import flash.filters.DropShadowFilter;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
+	import openfl.geom.Point;
+	import openfl.geom.Rectangle;
 	
 	import gs.TweenLite;	
 

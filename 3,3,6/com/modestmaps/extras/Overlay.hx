@@ -1,8 +1,8 @@
 package com.modestmaps.extras;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.geom.Point;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.geom.Point;
 
 import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;	

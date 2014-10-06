@@ -1,7 +1,7 @@
 package com.modestmaps.extras.ui;
 
 
-import flash.display.Sprite;	import flash.events.MouseEvent;	import flash.geom.ColorTransform;
+import openfl.display.Sprite;	import openfl.events.MouseEvent;	import flash.geom.ColorTransform;
 
 class Button extends Sprite
 {

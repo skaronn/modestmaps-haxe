@@ -9,19 +9,19 @@ import com.modestmaps.core.TweenTile;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
 
-import flash.display.DisplayObject;
-import flash.events.Event;
-import flash.events.EventDispatcher;
-import flash.events.TimerEvent;
-import flash.geom.Point;
+import openfl.display.DisplayObject;
+import openfl.events.Event;
+import openfl.events.EventDispatcher;
+import openfl.events.TimerEvent;
+import openfl.geom.Point;
 import flash.utils.Dictionary;
-import flash.utils.Timer;
+import openfl.utils.Timer;
 
 class GoogleTilePainter extends EventDispatcher implements ITilePainter
 {
 	private var type:IMapType;	
 	private var googleMap:Map;
-	private var tileClass:Class;
+	private var tileClass:Type;
 	private var timer:Timer;
 	private var cache:Dictionary = new Dictionary();
 
@@ -36,7 +36,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 		timer.start();
 	}
 
-	public function setTileClass(tileClass:Class):Void
+	public function setTileClass(tileClass:Type):Void
 	{
 		this.tileClass = tileClass;
 	}
@@ -57,13 +57,15 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 		return null;
 	}
 
-	public function retainKeysInCache(recentlySeen:Array):Void
+	public function retainKeysInCache(recentlySeen:Array<Dynamic>):Void
 	{
-	/*  		var tempCache:Dictionary = new Dictionary();
-		for each (var key:String in recentlySeen) {
+	/*
+	var tempCache:Dictionary = new Dictionary();
+	for each (var key:String in recentlySeen) {
 		if (key in cache) tempCache[key] = cache[key];
-		}
-		this.cache = tempCache; */
+	}
+	this.cache = tempCache;
+	*/
 	}
 
 	public function createAndPopulateTile(coord:Coordinate, key:String):Tile
@@ -131,16 +133,17 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 
 	public function cancelPainting(tile:Tile):Void
 	{
-		while (tile.numChildren) {
+		while (tile.numChildren)
+		{
 			tile.removeChildAt(0);
 		}
-		delete cache[tile.name];
+		untyped __delete__(cache, tile.name);
 	}
 
 	public function isPainting(tile:Tile):Bool
 	{
-		var img:Object = tile.numChildren > 0 ? (cast(tile.getChildAt(0), Object) : false;  
-		return img && img.hasOwnProperty('loadComplete') && !img['loadComplete'];
+		var img:Dynamic = tile.numChildren > 0 ? (cast(tile.getChildAt(0), Object) : false;  
+		return img!=null && img.hasOwnProperty('loadComplete') && !img['loadComplete'];
 	}
 
 	public function reset():Void

@@ -2,9 +2,11 @@
 package com.modestmaps.mapproviders.microsoft;
 
 import com.modestmaps.core.Coordinate;
+import com.modestmaps.Map;
 import com.modestmaps.mapproviders.AbstractMapProvider;
 import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.util.BinaryUtil;
+import haxe.ds.ObjectMap;
 
 /**
  * @author tom
@@ -21,19 +23,19 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 
 	public static var serverSalt:Int = cast((Math.random() * 4), Int);
 
-	private static inline var urlStart:Dynamic = {
+	private static inline var URLSTART:ObjectMap<String, String> = {
 		AERIAL: "http://a",
 		ROAD:   "http://r",
 		HYBRID: "http://h"
 	};
 	
-	private static inline var urlMiddle:Dynamic = {
+	private static inline var URLMIDDLE:ObjectMap<String, String> = {
 		AERIAL: ".ortho.tiles.virtualearth.net/tiles/a",
 		ROAD:   ".ortho.tiles.virtualearth.net/tiles/r",
 		HYBRID: ".ortho.tiles.virtualearth.net/tiles/h"
-	}
+	};
 	
-	private static inline var urlEnd:Dynamic = {
+	private static inline var URLEND:ObjectMap<String, String> = {
 		AERIAL: ".jpeg?g=90",
 		ROAD:   ".png?g=90",
 		HYBRID: ".jpeg?g=90"
@@ -51,7 +53,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		this.hillShading = hillShading;
 
 		if (hillShading) {
-			urlEnd[ROAD] += "&shading=hill"; 
+			URLEND.set(ROAD, URLEND.get(ROAD)+"&shading=hill"); 
 		}
 
 		// Microsoft don't have a zoom level 0 right now:
@@ -64,17 +66,18 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		
 		// convert row + col to zoom string
 		// padded with zeroes so we end up with zoom digits after slicing:
-		var rowBinaryString:String = BinaryUtil.convertToBinary(sourceCoord.row);
+		var rowBinaryString:String = Std.string(sourceCoord.row);
 		rowBinaryString = rowBinaryString.slice(-sourceCoord.zoom);
 		
-		var colBinaryString : String = BinaryUtil.convertToBinary(sourceCoord.column);
-		colBinaryString = colBinaryString.slice(-sourceCoord.zoom);
+		var colBinaryString : String = Std.string(sourceCoord.column);
+		//colBinaryString = colBinaryString.slice(-sourceCoord.zoom);
+		colBinaryString = colBinaryString.split(-sourceCoord.zoom);
 
 		// generate zoom string by combining strings
 		var zoomString : String = "";
 
 		//for(var i:Float = 0; i < sourceCoord.zoom; i += 1) {
-		for( i in 0...sourceCoord.zoom) {
+		for( i in 0...cast(sourceCoord.zoom, Int)) {
 			zoomString += BinaryUtil.convertToDecimal(rowBinaryString.charAt( i ) + colBinaryString.charAt( i ));
 		}
 		
@@ -92,8 +95,9 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 			return null;
 		}
 		// this is so that requests will be consistent in this session, rather than totally random
-		var server:Int = Math.abs(serverSalt + coord.row + coord.column + coord.zoom) % 4;
-		return [ urlStart[type] + server + urlMiddle[type] + getZoomString(coord) + urlEnd[type] ];
+		var serverRequest:Float = cast((serverSalt + coord.row + coord.column + coord.zoom) % 4, Float);
+		var server:Int = cast(Math.abs(serverRequest), Int);
+		return [ URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) ];
 	}
 
 }

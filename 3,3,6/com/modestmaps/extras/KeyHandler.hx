@@ -2,9 +2,9 @@ package com.modestmaps.extras;
 
 import com.modestmaps.Map;
 
-import flash.events.Event;
+import openfl.events.Event;
 import flash.events.KeyboardEvent;
-import flash.events.MouseEvent;
+import openfl.events.MouseEvent;
 import flash.ui.Keyboard;
 
 class KeyHandler

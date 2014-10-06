@@ -45,7 +45,7 @@ interface IMapProvider
 	*/
 	function sourceCoordinate(coord:Coordinate):Coordinate;
 
-	function get_tileWidth():Float;
+	function tileWidth():Float;
 
-	function get_tileHeight():Float;
+	function tileHeight():Float;
 }

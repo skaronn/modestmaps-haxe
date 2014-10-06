@@ -9,6 +9,7 @@ import openfl.display.Sprite;
 import openfl.system.System;
 import com.modestmaps.core.painter.TilePainter;
 import com.modestmaps.core.painter.ITilePainter;	
+import de.polygonal.core.fmt.NumberFormat;
 
 class DebugField extends TextField
 {
@@ -27,15 +28,15 @@ class DebugField extends TextField
 		selectable = false;
 		multiline = true;
 		wordWrap = false;
-		lastFrameTime = getTimer();	
+		lastFrameTime = flash.Lib.getTimer(); 
 	}
 
 	public function update(grid:TileGrid, blankCount:Int, recentCount:Int, tilePainter:ITilePainter):Void
 	{
 		// for stats...
-		var frameDuration:Float = getTimer() - lastFrameTime;
+		var frameDuration:Float = flash.Lib.getTimer() - lastFrameTime;
 
-		lastFrameTime = getTimer();
+		lastFrameTime = flash.Lib.getTimer();
 
 		fps = (0.9 * fps) + (0.1 * (1000.0/frameDuration));
 
@@ -48,10 +49,10 @@ class DebugField extends TextField
 			tileChildren += cast(well.getChildAt(i), Tile).numChildren;
 		}
 	  
-		this.text = "tx: " + grid.tx.toFixed(3)
-			+ "\nty: " + grid.ty.toFixed(3)
-			+ "\nsc: " + grid.scale.toFixed(4)
-			+ "\nfps: " + fps.toFixed(0)
+		this.text = "tx: " + NumberFormat.toFixed(grid.tx,3)
+			+ "\nty: " + NumberFormat.toFixed(grid.ty,3)
+			+ "\nsc: " + NumberFormat.toFixed(grid.scale,4)
+			+ "\nfps: " + NumberFormat.toFixed(fps,0)
 			+ "\ncurrent child count: " + well.numChildren
 			+ "\ncurrent child of tile count: " + tileChildren
 			+ "\nvisible tile count: " + grid.getVisibleTiles().length
@@ -62,7 +63,7 @@ class DebugField extends TextField
 			+ "\nrequests: " + tilePainter.getRequestCount()
 			+ "\nfinished (cached) tiles: " + tilePainter.getCacheSize()
 			+ "\ncachedLoaders: " + tilePainter.getLoaderCacheCount()
-			+ "\nmemory: " + (System.totalMemory/1048576).toFixed(1) + "MB"; 
+			+ "\nmemory: " + NumberFormat.toFixed((System.totalMemory/1048576),1) + "MB"; 
 		width = textWidth+8;
 		height = textHeight+4;
 	}

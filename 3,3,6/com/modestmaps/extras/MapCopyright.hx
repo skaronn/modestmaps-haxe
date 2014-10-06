@@ -5,11 +5,11 @@ import com.modestmaps.core.MapExtent;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.geo.Location;
 
-import flash.display.Sprite;
+import openfl.display.Sprite;
 import flash.external.ExternalInterface;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import flash.text.TextFormatAlign;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
 import flash.utils.ClearTimeout;
 import flash.utils.SetTimeout;
 

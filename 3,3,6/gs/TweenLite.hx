@@ -145,10 +145,10 @@ Copyright 2007, GreenSock (This work is subject to the terms in http://www.green
 
 package gs;
 
-import flash.events.Event;
-import flash.display.Sprite;
+import openfl.events.Event;
+import openfl.display.Sprite;
 import flash.display.MovieClip;
-import flash.display.DisplayObject;
+import openfl.display.DisplayObject;
 import flash.events.TimerEvent;
 import flash.media.SoundTransform;
 import flash.geom.ColorTransform;
@@ -156,27 +156,27 @@ import flash.utils.*;
 
 class TweenLite {
 	public static var version:Float = 5.87;
-	public static var killDelayedCallsTo:Function = killTweensOf;
+	public static var killDelayedCallsTo:Dynamic = killTweensOf;
 	private static var _sprite:Sprite = new Sprite(); //A reference to the sprite that we use to drive all our ENTER_FRAME events.
 	private static var _listening:Bool; //If true, the ENTER_FRAME is being listened for (there are tweens that are in the queue)
 	private static var _timer:Timer = new Timer(2000);
 	private static var _all:Dictionary = new Dictionary(); //Holds references to all our tween targets.
 	private var _sound:SoundTransform; //We only use this in cases where the user wants to change the volume of a MovieClip (they pass in a "volume" property in the v)
-	private var _endTarget:Object; //End target. It's almost always the same as this.target except for volume and color tweens. It helps us to see what object or MovieClip the tween really pertains to (so that we can killTweensOf() properly and hijack auto-overwritten ones)
+	private var _endTarget:Dynamic; //End target. It's almost always the same as this.target except for volume and color tweens. It helps us to see what object or MovieClip the tween really pertains to (so that we can killTweensOf() properly and hijack auto-overwritten ones)
 	private var _active:Bool; //If true, this tween is active.
 	private var _color:ColorTransform;
 	private var _endColor:ColorTransform; 
 
 	public var duration:Float; //Duration (in seconds)
-	public var vars:Object; //Variables (holds things like _alpha or _y or whatever we're tweening)
+	public var vars:Dynamic; //Variables (holds things like _alpha or _y or whatever we're tweening)
 	public var delay:Float; //Delay (in seconds)
 	public var startTime:UInt; //Start time
 	public var initTime:UInt; //Time of initialization. Remember, we can build in delays so this property tells us when the frame action was born, not when it actually started doing anything.
-	public var tweens:Object; //Contains parsed data for each property that's being tweened (each has to have a target, property, start, a change, and an ease).
-	public var extraTweens:Object; //If we run into a property that's supposed to be tweening but the target has no such property, those tweens get dumped in here.
-	public var target:Object; //Target object (often a MovieClip)
+	public var tweens:Dynamic; //Contains parsed data for each property that's being tweened (each has to have a target, property, start, a change, and an ease).
+	public var extraTweens:Dynamic; //If we run into a property that's supposed to be tweening but the target has no such property, those tweens get dumped in here.
+	public var target:Dynamic; //Target object (often a MovieClip)
 
-	public function new($target:Object, $duration:Float, $vars:Object) {
+	public function new($target:Dynamic, $duration:Float, $vars:Dynamic) {
 		//if ($target == null) {return };
 		if (($vars.overwrite != false && $target != null) || _all[$target] == undefined) { 
 			untyped __delete__(_all, $target);
@@ -212,7 +212,7 @@ class TweenLite {
 		
 		this.tweens = {};
 		this.extraTweens = {};
-		this.initTime = getTimer();
+		this.initTime = flash.Lib.getTimer();
 		
 		if (this.vars.runBackwards == true) {
 			initTweenVals();
@@ -232,11 +232,11 @@ class TweenLite {
 	}
 
 	public function initTweenVals():Void {
-		var ndl:Float = this.delay - ((getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
+		var ndl:Float = this.delay - ((flash.Lib.getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
 		var p:String, valChange:Float; //For looping (for p in this.vars)
 		if (Std.is(this.target, Array))
 		{
-			var endArray:Array = this.vars.endArray || [];
+			var endArray:Array<Dynamic> = this.vars.endArray || [];
 			for (i in 0...endArray.length)
 			{
 				if (this.target[i] != endArray[i] && this.target[i] != undefined)
@@ -288,7 +288,7 @@ class TweenLite {
 			}
 		}
 		if (this.vars.runBackwards == true) {
-			var tp:Object;
+			var tp:Dynamic;
 			for (p in this.tweens) {
 				tp = this.tweens[p];
 				tp.s += tp.c;
@@ -304,31 +304,32 @@ class TweenLite {
 		}
 	}
 
-	public static function to($target:Object, $duration:Float, $vars:Object):TweenLite {
+	public static function to($target:Dynamic, $duration:Float, $vars:Dynamic):TweenLite {
 		return new TweenLite($target, $duration, $vars);
 	}
 
 	//This function really helps if there are objects (usually MovieClips) that we just want to animate into place (they are already at their end position on the stage for example). 
-	public static function from($target:Object, $duration:Float, $vars:Object):TweenLite {
+	public static function from($target:Dynamic, $duration:Float, $vars:Dynamic):TweenLite {
 		$vars.runBackwards = true;
 		return new TweenLite($target, $duration, $vars);
 	}
 
-	public static function delayedCall($delay:Float, $onComplete:Function, $onCompleteParams:Array<Dynamic> = null):TweenLite {
-		return new TweenLite($onComplete, 0, {delay:$delay, onComplete:$onComplete, onCompleteParams:$onCompleteParams, overwrite:false}); //NOTE / TO-DO: There may be a bug in the Dictionary class that causes it not to handle references to objects correctly! (I haven't verified this yet)
+	public static function delayedCall($delay:Float, $onComplete:Dynamic, $onCompleteParams:Array<Dynamic> = null):TweenLite {
+		return new TweenLite($onComplete, 0, {
+			delay:$delay, onComplete:$onComplete, onCompleteParams:$onCompleteParams, overwrite:false
+		}); //NOTE / TO-DO: There may be a bug in the Dictionary class that causes it not to handle references to objects correctly! (I haven't verified this yet)
 	}
 
 	public static function removeTween($t:TweenLite = null):Void {
 		if ($t != null && _all[$t.endTarget] != undefined) {
-			//delete _all[$t.endTarget][$t];
 			untyped __delete__(_all, _all[$t.endTarget][$t]);
 		}
 	}
 
-	public static function killTweensOf($tg:Object = null, $complete:Bool = false):Void {
+	public static function killTweensOf($tg:Dynamic = null, $complete:Bool = false):Void {
 		if ($tg != null && _all[$tg] != undefined) {
 			if ($complete) {
-				var o:Object = _all[$tg];
+				var o:Dynamic = _all[$tg];
 				for (tw in o){
 					o[tw].complete(false);
 				}
@@ -343,7 +344,7 @@ class TweenLite {
 			time = this.duration;
 		}
 		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
-		var tp:Object;
+		var tp:Dynamic;
 		for (p in this.tweens) {
 			tp = this.tweens[p];
 			tp.o[p] = tp.s + (factor * tp.c);
@@ -357,9 +358,9 @@ class TweenLite {
 	}
 
 	public static function executeAll($e:Event):Void {
-		var a:Object = _all;
-		var t:UInt = getTimer();
-		var p:Object, tw:Object;
+		var a:Dynamic = _all;
+		var t:UInt = flash.Lib.getTimer();
+		var p:Dynamic, tw:Dynamic;
 		for (p in a) {
 			for (tw in a[p]) {
 				if (a[p][tw] != undefined && a[p][tw].active) {
@@ -388,10 +389,10 @@ class TweenLite {
 	}
 
 	public static function killGarbage($e:TimerEvent):Void {
-		var a:Object = _all;
+		var a:Dynamic = _all;
 		var tg_cnt:UInt = 0;
 		var found:Bool;
-		var p:Object, twp:Object, tw:Object;
+		var p:Dynamic, twp:Dynamic, tw:Dynamic;
 		for (p in a) {
 			found = false;
 			for (twp in a[p]) {
@@ -429,7 +430,7 @@ class TweenLite {
 			if (_active) {
 				return true;
 			}
-			else if ((getTimer() - this.initTime) / 1000 > this.delay) {
+			else if ((flash.Lib.getTimer() - this.initTime) / 1000 > this.delay) {
 				_active = true;		
 				this.startTime = this.initTime + (this.delay * 1000);
 				
@@ -453,7 +454,7 @@ class TweenLite {
 			}
 		}
 		
-		public function set_endTarget($t:Object):Void {
+		public function set_endTarget($t:Dynamic):Void {
 			if (this.duration == 0.001 && this.delay <= 0) { //Otherwise subtweens (like for color or volume) that have a duration of 0 will stick around for 1 frame and get rendered in the executeAll() loop which means they'll render incorrectly
 				removeTween(this);
 			} else {
@@ -467,9 +468,9 @@ class TweenLite {
 			}
 		}
 	
-		public var endTarget(getEndTarget, null):Object;
+		public var endTarget(getEndTarget, null):Dynamic;
 		
-		private function getEndTarget():Object {
+		private function getEndTarget():Dynamic {
 			return _endTarget;
 		}
 		
@@ -502,10 +503,10 @@ class TweenLite {
 		/* If you want to be able to set or get the progress of a Tween, uncomment these getters/setters. 0 = beginning, 0.5 = halfway through, and 1 = complete
 		public var progress(getProgress, null):Float;
 			private function getProgress():Float {
-			return ((getTimer() - this.startTime) / 1000) / this.duration || 0;
+			return ((flash.Lib.getTimer() - this.startTime) / 1000) / this.duration || 0;
 		}
 		public function set progress($n:Float):Void {
-			var tmr:Int = getTimer();
+			var tmr:Int = flash.Lib.getTimer();
 			var t:Float = tmr - ((this.duration * $n) * 1000);
 			this.initTime = t - (this.delay * 1000);
 			var s:Bool = this.active; //Just to trigger all the onStart stuff.

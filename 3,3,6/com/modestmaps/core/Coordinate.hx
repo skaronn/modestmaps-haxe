@@ -4,7 +4,7 @@
 
 package com.modestmaps.core;
 
-//class Coordinate extends Object
+//class Coordinate 
 class Coordinate
 {
 	public var row:Float;

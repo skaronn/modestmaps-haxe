@@ -6,7 +6,7 @@ import flash.display.JointStyle;
 import flash.display.Shape;
 import flash.display.StageDisplayState;
 import flash.events.ContextMenuEvent;
-import flash.events.Event;
+import openfl.events.Event;
 import flash.events.FullScreenEvent;
 import flash.ui.ContextMenu;
 import flash.ui.ContextMenuItem;

@@ -7,8 +7,8 @@ package com.modestmaps.events;
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.mapproviders.IMapProvider;
 
-import flash.events.Event;
-import flash.geom.Point;
+import openfl.events.Event;
+import openfl.geom.Point;
 
 class MapEvent extends Event
 {
@@ -61,44 +61,37 @@ class MapEvent extends Event
 				{
 					panDelta = rest[0];
 				}
-				//break;
 			case ZOOMED_BY:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
 					zoomDelta = rest[0];
 				}
-				//break;
 			case EXTENT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
 					newExtent = rest[0];
-				}
-				//break;		
+				}		
 			case START_ZOOMING:
 			case STOP_ZOOMING:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
 					zoomLevel = rest[0];
-				}
-				//break;			
+				}			
 			case RESIZED:
 				if (rest.length > 0 && Std.is(rest[0], Array))
 				{
 					newSize = rest[0];
 				}
-				//break;
 			case COPYRIGHT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], String))
 				{
 					newCopyright = rest[0];
-				}
-				//break;		
+				}	
 			case BEGIN_EXTENT_CHANGE:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
 					oldExtent = rest[0];
-				}
-				//break;		
+				}		
 			case MAP_PROVIDER_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], IMapProvider))
 				{

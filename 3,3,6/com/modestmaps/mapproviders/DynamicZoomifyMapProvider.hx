@@ -5,7 +5,7 @@ import com.modestmaps.geo.Location;
 import com.modestmaps.geo.MercatorProjection;
 import com.modestmaps.geo.Transformation;
 
-import flash.geom.Point;
+import openfl.geom.Point;
 
 class DynamicZoomifyMapProvider extends AbstractZoomifyMapProvider implements IMapProvider
 {
@@ -13,7 +13,7 @@ public function new(baseURL:String, imageWidth:Float, imageHeight:Float, mercato
 					  l1:Location, p1:Point, l2:Location, p2:Point, l3:Location, p3:Point)
 {
 	defineImageProperties(baseURL, imageWidth, imageHeight);
-	var projectionZoom:Int = Math.ceil(Math.log(Math.max(imageWidth, imageHeight)) / Math.LN2);
+	var projectionZoom:Int = Math.ceil(Math.log(Math.max(imageWidth, imageHeight)) / Math.log(2));
 	var t:Transformation = deriveTransformation(mercator, l1, p1, l2, p2, l3, p3);
 	__projection = mercator ? new MercatorProjection(projectionZoom, t) : new LinearProjection(projectionZoom, t);
 }

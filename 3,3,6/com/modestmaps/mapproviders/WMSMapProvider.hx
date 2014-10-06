@@ -17,7 +17,7 @@ class WMSMapProvider extends AbstractMapProvider implements IMapProvider
 	public static inline var EPSG_4326:String = "EPSG:4326";
 	public static inline var EPSG_900913:String = "EPSG:900913";
 
-	public static inline var DEFAULT_PARAMS:Object = {
+	public static inline var DEFAULT_PARAMS:Dynamic = {
 		LAYERS: '0,1',
 		FORMAT: 'image/png',
 		VERSION: '1.1.1',
@@ -29,10 +29,10 @@ class WMSMapProvider extends AbstractMapProvider implements IMapProvider
 	};
 
 	private var serverUrl:String;
-	private var wmsParams:Object;
+	private var wmsParams:Dynamic;
 	private var wms:String;			 
 
-	public function new(serverURL:String, wmsParams:Object=null)
+	public function new(serverURL:String, wmsParams:Dynamic=null)
 	{
 		super();
 		
@@ -90,7 +90,7 @@ class WMSMapProvider extends AbstractMapProvider implements IMapProvider
 		// they get us into the raw mercator-ish units that WMS servers expect
 		// ...don't ask me, I just read http://wiki.osgeo.org/wiki/WMS_Tiling_Client_Recommendation#Tile_Grid_Definition
 		var quadrantWidth:Float = 20037508.34;
-		var magicZoom:Float = Math.log(2*quadrantWidth) / Math.LN2;		
+		var magicZoom:Float = Math.log(2*quadrantWidth) / Math.log(2);		
 
 		// apply that number os a zoom, it's basically getting us tile coordinates for zoom level 25.something...
 		bottomLeftCoord = bottomLeftCoord.zoomTo(magicZoom);

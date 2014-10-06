@@ -26,7 +26,7 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider impl
 		return tilePainter.toString();
 	}
 
-	public function getTileUrls(coord:Coordinate):Array
+	public function getTileUrls(coord:Coordinate):Array<Dynamic>
 	{
 		return [];
 	}

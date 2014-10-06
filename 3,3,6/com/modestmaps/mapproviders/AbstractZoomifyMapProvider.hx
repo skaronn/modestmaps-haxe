@@ -11,7 +11,7 @@ import com.modestmaps.core.Coordinate;
 class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProvider
 {
 	private var __baseDirectory:String;
-	private var __groups:/*Coordinate*/Array;
+	private var __groups:/*Coordinate*/:Array<Dynamic>;
 
 	public function new()
 	{
@@ -67,7 +67,7 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 	{
 		__baseDirectory = baseDirectory;
 
-		var zoom:Float = Math.ceil(Math.log(Math.max(width, height)) / Math.LN2);
+		var zoom:Float = Math.ceil(Math.log(Math.max(width, height)) / Math.log(2));
 
 		__topLeftOutLimit = new Coordinate(0, 0, 0);
 		__bottomRightInLimit = (new Coordinate(height, width, zoom)).zoomTo(zoom - 8);

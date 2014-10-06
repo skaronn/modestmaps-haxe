@@ -7,11 +7,11 @@ import com.modestmaps.geo.Location;
 
 import flash.display.LineScaleMode;
 import flash.display.Shape;
-import flash.display.Sprite;
-import flash.events.MouseEvent;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
 import flash.filters.DropShadowFilter;
-import flash.geom.Point;
-import flash.geom.Rectangle;	
+import openfl.geom.Point;
+import openfl.geom.Rectangle;	
 
 /** 
  * NavigatorWindow creates a small navigator map that will stick to the bottom 

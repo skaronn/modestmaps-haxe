@@ -4,7 +4,7 @@
 
 package com.modestmaps.geo;
 
-import flash.geom.Point;
+import openfl.geom.Point;
 import com.modestmaps.geo.Transformation;
 import com.modestmaps.geo.AbstractProjection; 
  

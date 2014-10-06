@@ -47,7 +47,7 @@ class Tile extends Sprite
 			if (Std.is(child, Loader))
 			{
 				try {
-					Loader(child).unload();
+					cast(child, Loader).unload();
 				}
 				catch (error:Error) {
 					error.getStackTrace();

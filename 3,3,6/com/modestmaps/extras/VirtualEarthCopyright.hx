@@ -6,13 +6,13 @@ import com.modestmaps.events.MapEvent;
 import flash.display.Bitmap;
 import flash.filters.GlowFilter;
 import flash.text.AntiAliasType;
-import flash.text.TextFormat;
+import openfl.text.TextFormat;
 
 class VirtualEarthCopyright extends MapCopyright
 {
 // required by MS to use Flash to show tiles
 [Embed(source='ve_logo.png')]
-public var VirtualEarthLogo:Class;	
+public var VirtualEarthLogo:Type;	
 
 public var veLogo:Bitmap;
 

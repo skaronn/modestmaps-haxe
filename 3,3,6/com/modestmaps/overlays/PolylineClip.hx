@@ -5,10 +5,10 @@ import com.modestmaps.core.Coordinate;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.geo.Location;
 
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.geom.Point;
-import flash.geom.Rectangle;	
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;	
 
 /** 
  * Polyline clip for rendering Polyline instances on your map.
@@ -32,7 +32,7 @@ private var map:Map;
 private var drawCoord:Coordinate;
 
 private var polylines:Array = []; // all markers
-private var polylinesByName:Object = {};
+private var polylinesByName:Dynamic = {};
 
 // enable this if you want intermediate zooming steps to
 // stretch your graphics instead of reprojecting the points

@@ -2,8 +2,8 @@ package com.modestmaps.overlays;
 
 import com.modestmaps.Map;
 
-import flash.display.DisplayObject;
-import flash.geom.Rectangle;
+import openfl.display.DisplayObject;
+import openfl.geom.Rectangle;
 
 /** 
  *  PolygonClip extends MarkerClip to take the bounds of the marker into account when showing/hiding,

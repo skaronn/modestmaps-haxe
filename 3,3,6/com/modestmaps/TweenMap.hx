@@ -15,9 +15,9 @@ import com.modestmaps.core.TweenTile;
 import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
 
-import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.geom.Point;
+import openfl.events.MouseEvent;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
 
 import gs.TweenLite;
 
@@ -105,7 +105,7 @@ class TweenMap extends Map
 		
 		var p:Point = locationPoint(location);
 		
-		var constrainedDelta:Float = Math.log(sc) / Math.LN2;
+		var constrainedDelta:Float = Math.log(sc) / Math.log(2);
 
 		if (grid.zoomLevel + constrainedDelta < grid.minZoom) {
 			constrainedDelta = grid.minZoom - grid.zoomLevel;		
