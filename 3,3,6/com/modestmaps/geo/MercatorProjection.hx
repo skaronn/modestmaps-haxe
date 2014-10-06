@@ -4,7 +4,7 @@
 
 package com.modestmaps.geo;
 
-import flash.geom.Point;
+import openfl.geom.Point;
 import com.modestmaps.geo.Transformation;
 import com.modestmaps.geo.AbstractProjection; 
  
@@ -38,6 +38,6 @@ class MercatorProjection extends AbstractProjection
 	*/
 	override private function rawUnproject(point:Point):Point
 	{
-		return new Point(point.x, 2 * Math.atan(Math.pow(Math.E, point.y)) - 0.5 * Math.PI);
+		return new Point(point.x, 2 * Math.atan(Math.pow(Math.exp(1.0), point.y)) - 0.5 * Math.PI);
 	}
 }

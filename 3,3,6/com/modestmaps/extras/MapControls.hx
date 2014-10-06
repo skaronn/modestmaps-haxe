@@ -5,15 +5,15 @@ import com.modestmaps.events.MapEvent;
 import com.modestmaps.extras.ui.Button;
 import com.modestmaps.extras.ui.FullScreenButton;
 
-import flash.display.DisplayObject;
-import flash.display.Sprite;
-import flash.events.Event;
+import openfl.display.DisplayObject;
+import openfl.display.Sprite;
+import openfl.events.Event;
 import flash.events.FullScreenEvent;
 import flash.events.KeyboardEvent;
-import flash.events.MouseEvent;
+import openfl.events.MouseEvent;
 import flash.filters.DropShadowFilter;
 import flash.geom.ColorTransform;
-import flash.text.TextField;
+import openfl.text.TextField;
 import flash.ui.Keyboard;	
 
 /** 
@@ -220,7 +220,7 @@ class MapControls extends Sprite
 	{
 		if (!stage || Std.is(stage.focus, TextField)) return;
 
-		var buttonKeys:Object = {
+		var buttonKeys:Dynamic = {
 		'+': inButton,		
 		'=': inButton,		
 		'-': outButton,		
@@ -262,7 +262,7 @@ class MapControls extends Sprite
 		
 		for (child in positions)
 		{
-			var position:Object = positions[child];
+			var position:Dynamic = positions[child];
 			for (reference in position)
 			{
 				if (reference == 'align') continue;

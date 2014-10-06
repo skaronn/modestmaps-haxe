@@ -17,10 +17,12 @@ class Location
 	public var lat:Float;
 	public var lon:Float;
 
-	public static function fromString(str:String, lonlat:Bool=false):Location
+	public static function fromString(location:String, lonlat:Bool=false):Location
 	{
-		var parts:Array = new Array<Dynamic>(); //str.split(/\s*,\s*/, 2);
-		if (lonlat) parts = parts.reverse();
+		//var regexp = "/\s*,\s*/";
+		var regexp = new EReg("[0-9]*,[0-9]*", "i");
+		var parts:Array<String> = regexp.split(location);
+		if (lonlat) parts.reverse();
 		return new Location(Std.Std.parseFloat(parts[0]), Std.Std.parseFloat(parts[1]));
 	}
 
@@ -56,8 +58,6 @@ class Location
 	public function toString(precision:Int=5):String
 	{
 		//return [lat.toFixed(precision), lon.toFixed(precision)].join(',');
-		var latitude : NumberFormat = cast(lat, NumberFormat);
-		var longitude : NumberFormat = cast(lon, NumberFormat);
-		return [latitude.toFixed(precision), longitude.toFixed(precision)].join(',');
+		return [NumberFormat.toFixed(lat, precision), NumberFormat.toFixed(lon, precision)].join(',');
 	}
 }

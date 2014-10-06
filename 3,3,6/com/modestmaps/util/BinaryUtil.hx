@@ -21,7 +21,7 @@ class BinaryUtil
 		var result:String = Std.string(num);
 		if (result.length < 32)
 		{
-			result = PADDING.slice(result.length)+result;
+			result = PADDING.split(result)+result;
 		}
 		return result;
 	}

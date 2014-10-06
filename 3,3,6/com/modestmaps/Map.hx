@@ -32,13 +32,13 @@ import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.mapproviders.microsoft.MicrosoftProvider;
 import com.modestmaps.overlays.MarkerClip;
 
-import flash.display.DisplayObject;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Matrix;
-import flash.geom.Point;
-import flash.geom.Rectangle;
+import openfl.display.DisplayObject;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
 //import flash.utils.GetTimer;
 
 //[Event(name="startZooming",	  type="com.modestmaps.events.MapEvent")]
@@ -115,7 +115,7 @@ class Map extends Sprite
 
 		// if rest was passed in from super constructor in a subclass,
 		// it will be an array...
-		if (rest!=null && rest.length > 0 && Std.is (rest[0], Array)){
+		if (rest!=null && rest.length > 0 && Std.is (rest[0], Dynamic)){
 			rest = rest[0];
 		}
 		// (doing that is OK because none of the arguments we're expecting are Arrays)
@@ -247,7 +247,7 @@ class Map extends Sprite
 		var hFactor:Float = (BR.column - TL.column) / (fitWidth / mapProvider.tileWidth);
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
-		var hZoomDiff:Float = Math.log(hFactor) / Math.LN2;
+		var hZoomDiff:Float = Math.log(hFactor) / Math.log(2);
 		
 		// possible horizontal zoom to fit geographical extent in map width
 		var hPossibleZoom:Float = TL.zoom - Math.ceil(hZoomDiff);
@@ -256,7 +256,7 @@ class Map extends Sprite
 		var vFactor:Float = (BR.row - TL.row) / (fitHeight / mapProvider.tileHeight);
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
-		var vZoomDiff:Float = Math.log(vFactor) / Math.LN2;
+		var vZoomDiff:Float = Math.log(vFactor) / Math.log(2);
 		
 		// possible vertical zoom to fit geographical extent in map height
 		var vPossibleZoom:Float = TL.zoom - Math.ceil(vZoomDiff);
@@ -767,14 +767,14 @@ class Map extends Sprite
 
 	public function onMouseWheel(event:MouseEvent):Void
 	{
-		if (getTimer() - previousWheelEvent > minMouseWheelInterval) {
+		if (flash.Lib.getTimer() - previousWheelEvent > minMouseWheelInterval) {
 			if (event.delta > 0) {
 				zoomInAbout(new Point(mouseX, mouseY), 0);
 			}
 			else if (event.delta < 0) {
 				zoomOutAbout(new Point(mouseX, mouseY), 0);
 			}
-			previousWheelEvent = getTimer(); 
+			previousWheelEvent = flash.Lib.getTimer(); 
 		}
 	}
 

@@ -8,13 +8,13 @@ import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
 //import openfl.utils.Dictionary;
 
-import flash.display.DisplayObject;
-import flash.display.Sprite;
-import flash.events.Event;
-import flash.events.MouseEvent;
-import flash.geom.Point;
+import openfl.display.DisplayObject;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.events.MouseEvent;
+import openfl.geom.Point;
 import haxe.ds.ObjectMap;
-import flash.utils.Timer;
+import openfl.utils.Timer;
 
 //[Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent")]
 //[Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent")]
@@ -26,10 +26,8 @@ class MarkerClip extends Sprite
 	private var map:Map;
 
 	private var drawCoord:Coordinate;
-	//private var locations:Dictionary = new Dictionary();
-	private var locations:ObjectMap = new ObjectMap();
-	//private var coordinates:Dictionary = new Dictionary();
-	private var coordinates:ObjectMap = new ObjectMap();
+	private var locations:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
+	private var coordinates:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
 	private var markers:Array<Dynamic> = []; // all markers
 	private var markersByName:Dynamic = {};
 
@@ -111,14 +109,14 @@ class MarkerClip extends Sprite
 		return markers.length;
 	}
 
-	override public var x(null, set_x):Float;
+	//override public var x(null, set_x):Float;
 	
 	private function set_x(value:Float):Void
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 	}
 
-	override public var y(null, set_y):Float;
+	//override public var y(null, set_y):Float;
 	
 	private function set_y(value:Float):Void
 	{
@@ -149,7 +147,7 @@ class MarkerClip extends Sprite
 		if (markers.indexOf(marker) == -1)
 		{
 		locations[marker] = location.clone();
-		coordinates[marker] = map.getMapProvider().locationCoordinate(location);
+		coordinates.set(marker) = map.getMapProvider().locationCoordinate(location);
 		markersByName[marker.name] = marker;
 		markers.push(marker);
 		
@@ -183,8 +181,8 @@ class MarkerClip extends Sprite
 
 	public function setMarkerLocation(marker:DisplayObject, location:Location):Void
 	{
-		locations[marker] = new Location(location.lat, location.lon);
-		coordinates[marker] = map.getMapProvider().locationCoordinate(location);
+		locations.set(marker, new Location(location.lat, location.lon));
+		coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
 		sortMarkers();
 		dirty = true;
 	}
@@ -277,7 +275,7 @@ class MarkerClip extends Sprite
 		// use a timer so we don't do this every single frame, otherwise
 		// sorting markers and applying depths pretty much doubles the 
 		// time to run updateClips 
-		if (sortTimer) {
+		if (sortTimer!=null) {
 			clearTimeout(sortTimer);
 		}
 		sortTimer = setTimeout(sortMarkers, 50, updateOrder);
@@ -288,7 +286,7 @@ class MarkerClip extends Sprite
 		// only sort if we have a function:		
 		if (updateOrder && markerSortFunction != null)
 		{
-			markers = markers.sort(markerSortFunction, Array.NUMERIC);
+			markers.sort(markerSortFunction, Array.NUMERIC);
 		}
 		// apply depths to maintain the order things were added in
 		var index:Float = 0;
@@ -310,7 +308,7 @@ class MarkerClip extends Sprite
 		// this method previously used the location of the marker
 		// but map.locationPoint hands off to grid to grid.coordinatePoint
 		// in the end so we may as well cache the first step
-		var point:Point = map.grid.coordinatePoint(coordinates[marker], this);
+		var point:Point = map.grid.coordinatePoint(cast(coordinates.get(marker), Coordinate), this);
 		marker.x = snapToPixels ? Math.round(point.x) : point.x;
 		marker.y = snapToPixels ? Math.round(point.y) : point.y;
 

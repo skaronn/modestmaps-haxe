@@ -5,6 +5,7 @@ import com.modestmaps.core.Tile;
 import com.modestmaps.core.TileGrid;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
+import haxe.ds.ObjectMap;
 
 import openfl.display.Bitmap;
 import openfl.display.Loader;
@@ -18,6 +19,7 @@ import openfl.net.URLRequest;
 import openfl.system.LoaderContext;
 import flash.utils.Dictionary;
 import openfl.utils.Timer;
+import openfl.errors.Error;
 
 class TilePainter extends EventDispatcher implements ITilePainter
 {
@@ -53,8 +55,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	// TODO: document this in IMapProvider, so that provider implementers know
 	// they are free to check the bounds of their overlays and don't have to serve
 	// millions of 404s
-	private var layersNeeded:Dynamic = {};
-	private var loaderTiles:Dictionary = new Dictionary(true);
+	private var layersNeeded:ObjectMap<Dynamic, Dynamic>;
+	private var loaderTiles:ObjectMap<Dynamic, Dynamic>;
 
 	// open requests
 	private var openRequests:Array<Dynamic> = [];
@@ -63,7 +65,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private var previousOpenRequests:Int = 0;
 
 	// loader cache is shared across map instances, hence this is static for the time being	
-	private static var loaderCache:Dynamic = {};
+	private static var loaderCache:ObjectMap<Dynamic, Dynamic>;
 	private static var cachedUrls:Array<String> = [];
 
 	public function new(tileGrid:TileGrid, provider:IMapProvider, queueFunction:Dynamic)
@@ -116,24 +118,24 @@ class TilePainter extends EventDispatcher implements ITilePainter
 
 	public function createAndPopulateTile(coord:Coordinate, key:String):Tile
 	{
-		var tile:Tile = tilePool.getTile(coord.column, coord.row, coord.zoom);
+		var tile:Tile = tilePool.getTile(Std.int(coord.column), Std.int(coord.row), Std.int(coord.zoom));
 		tile.name = key;
-		var urls:Array = provider.getTileUrls(coord);
-		if (urls && urls.length > 0) {
-		// keep a local copy of the URLs so we don't have to call this twice:
-		layersNeeded[tile.name] = urls;
-		tileQueue.push(tile);
+		var urls:Array<Dynamic> = provider.getTileUrls(coord);
+		if (urls!=null && urls.length > 0) {
+			// keep a local copy of the URLs so we don't have to call this twice:
+			layersNeeded.set(tile.name, urls);
+			tileQueue.push(tile);
 		}
 		else {
-		// trace("no urls needed for that tile", tempCoord);
-		tile.show();
+			// trace("no urls needed for that tile", tempCoord);
+			tile.show();
 		}
 		return tile;		
 	}
 
 	public function isPainted(tile:Tile):Bool
 	{
-		return !layersNeeded[tile.name];	
+		return layersNeeded.get(tile.name)==null;	
 	}
 
 	public function cancelPainting(tile:Tile):Void
@@ -145,7 +147,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		for (i in openRequests.length - 1...0) {
 			var loader:Loader = cast(openRequests[i], Loader);
 			if (loader.name == tile.name) {
-				loaderTiles[loader] = null;
+				loaderTiles.set(loader, null);
 				untyped __delete__(loaderTiles, loader);
 			}
 		}
@@ -157,14 +159,14 @@ class TilePainter extends EventDispatcher implements ITilePainter
 
 	public function isPainting(tile:Tile):Bool
 	{
-		return layersNeeded[tile.name] == null;	
+		return layersNeeded.get(tile.name) == null;	
 	}
 
 	public function reset():Void
 	{
 		for (loader in openRequests) {
-			var tile:Tile = cast(loaderTiles[loader], Tile);
-			loaderTiles[loader] = null;
+			var tile:Tile = cast(loaderTiles.get(loader), Tile);
+			loaderTiles.set(loader, null);
 			untyped __delete__(loaderTiles, loader);
 			if (!tileCache.containsKey(tile.name)) {
 				tilePool.returnTile(tile);
@@ -184,7 +186,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		for (key in layersNeeded) {
 			untyped __delete__(layersNeeded, key);
 		}
-		layersNeeded = {};
+		//layersNeeded = {};
+		layersNeeded = null;
 		
 		tileQueue.clear();
 			
@@ -194,11 +197,11 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private function loadNextURLForTile(tile:Tile):Void
 	{
 		// TODO: add urls to Tile?
-		var urls:Array = cast(layersNeeded[tile.name], Array<Dynamic>);
-		if (urls && urls.length > 0) {
+		var urls:Array<Dynamic> = cast(layersNeeded.get(tile.name), Array<Dynamic>);
+		if (urls!=null && urls.length > 0) {
 			var url:Dynamic = urls.shift();
-			if (cacheLoaders && Std.is(url, String) && loaderCache[url]) {
-				var original:Bitmap = cast(loaderCache[url], Bitmap);
+			if (cacheLoaders && Std.is(url, String) && loaderCache.get(url)) {
+				var original:Bitmap = cast(loaderCache.get(url), Bitmap);
 				var bitmap:Bitmap = new Bitmap(original.bitmapData); 
 				tile.addChild(bitmap);
 				loadNextURLForTile(tile);
@@ -206,7 +209,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			else {
 				//trace("requesting", url);
 				var tileLoader:Loader = new Loader();
-				loaderTiles[tileLoader] = tile;
+				loaderTiles.set(tileLoader, tile);
 				tileLoader.name = tile.name;
 				try {
 					if (cacheLoaders || smoothContent) {
@@ -224,7 +227,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 					tile.paintError();
 				}
 			}
-		}else if (urls && urls.length == 0) {
+		}else if (urls!=null && urls.length == 0) {
 			tileGrid.tilePainted(tile);
 			tileCache.putTile(tile);
 			untyped __delete__(layersNeeded, tile.name);
@@ -238,7 +241,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		if (openRequests.length < maxOpenRequests && tileQueue.length > 0) {
 
 			// prune queue for tiles that aren't visible
-			var removedTiles:Array = tileQueue.retainAll(tileGrid.getVisibleTiles());
+			var removedTiles:Array<Dynamic> = tileQueue.retainAll(tileGrid.getVisibleTiles());
 			
 			// keep layersNeeded tidy:
 			for (removedTile in removedTiles) {
@@ -257,7 +260,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			{
 				var tile:Tile = tileQueue.shift();
 				// if it's still on the stage:
-				if (tile.parent) {
+				if (tile.parent!=null) {
 					loadNextURLForTile(tile);
 				}
 			}
@@ -287,11 +290,11 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	{
 		var loader:Loader = cast(event.target,LoaderInfo).loader;
 		
-		if (cacheLoaders && !loaderCache[loader.contentLoaderInfo.url]) {
+		if (cacheLoaders && !loaderCache.get(loader.contentLoaderInfo.url)) {
 			//trace('caching content for', loader.contentLoaderInfo.url);
 			try {
 				var content:Bitmap = cast(loader.content, Bitmap);
-				loaderCache[loader.contentLoaderInfo.url] = content;
+				loaderCache.get(loader.contentLoaderInfo.url) = content;
 				cachedUrls.push(loader.contentLoaderInfo.url);
 				if (cachedUrls.length > maxLoaderCacheSize) {
 					untyped __delete__(loaderCache, cachedUrls.shift());
@@ -318,8 +321,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			openRequests.splice(index,1);
 		}
 		
-		var tile:Tile = cast(loaderTiles[loader], Tile);
-		if (tile) { 
+		var tile:Tile = cast(loaderTiles.get(loader), Tile);
+		if (tile!=null) { 
 			tile.addChild(loader);
 			loadNextURLForTile(tile);
 		}
@@ -328,7 +331,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		// so we'll have to throw it away
 		}
 		
-		loaderTiles[loader] = null;
+		loaderTiles.set(loader, null);
 		untyped __delete__(loaderTiles, loader);
 	}
 
@@ -341,11 +344,12 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			if (loader.contentLoaderInfo == loaderInfo) {
 				openRequests.splice(i,1);
 				untyped __delete__(layersNeeded, loader.name);
-				var tile:Tile = cast(loaderTiles[loader], Tile);
-				if (tile) {
+				var tile:Tile = cast(loaderTiles.get(loader), Tile);
+				if (tile != null)
+				{
 					tile.paintError(provider.tileWidth, provider.tileHeight);
 					tileGrid.tilePainted(tile);
-					loaderTiles[loader] = null;
+					loaderTiles.set(loader, null);
 					untyped __delete__(loaderTiles, loader);
 				}		
 			}

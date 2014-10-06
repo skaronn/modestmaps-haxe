@@ -26,6 +26,7 @@ class AbstractMapProvider
 {	
 	private static inline var MIN_ZOOM:Int = 1;
 	private static inline var MAX_ZOOM:Int = 20;
+	private static inline var DEFAULT_TILE_SIZE:Float = 256;
 
 	private var __projection:IProjection;
 
@@ -104,18 +105,18 @@ class AbstractMapProvider
 		return __projection.coordinateLocation(coordinate);
 	}
 
-	public var tileWidth(getTileWidth, null):Float;
+	public var tileWidth(get, null):Float;
 	
 	private function get_tileWidth():Float
 	{
-		return 256;
+		return DEFAULT_TILE_SIZE;
 	}
 
-	public var tileHeight(getTileHeight, null):Float;
+	public var tileHeight(get, null):Float;
 	
 	private function get_tileHeight():Float
 	{
-		return 256;
+		return DEFAULT_TILE_SIZE;
 	}
 
 }

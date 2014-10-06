@@ -4,11 +4,12 @@
 package com.modestmaps.core;
 
 import com.modestmaps.geo.Location;
+import de.polygonal.ds.Map;
 import openfl.utils.Object;
 
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 
-//class MapExtent extends Object
+//class MapExtent 
 class MapExtent
 {
 	// TODO: OK for rectangular projections, but we need a better way for other projections
@@ -56,73 +57,78 @@ class MapExtent
 		west = Math.min(location.lon, west);
 	}
 
-	public var northWest(getNorthWest, setNorthWest):Location;
+	public var northWest(get, set):Location;
 	
-	private function getNorthWest():Location
+	private function get_northWest():Location
 	{
 		return new Location(north, west);
+	}	
+	
+	private function set_northWest(nw:Location)
+	{
+		north = nw.lat;
+		west = nw.lon;
+		return northWest;
 	}
 
-	public var southWest(getSouthWest, setSouthWest):Location;
+	public var southWest(get, set):Location;
 	
-	private function getSouthWest():Location
+	private function get_southWest()
 	{
 		return new Location(south, west);
 	}
-
-	public var northEast(getNorthEast, setNorthEast):Location;
 	
-	private function getNorthEast():Location
+	private function set_southWest(sw:Location)
+	{
+		south = sw.lat;
+		west = sw.lon;
+		return southWest;
+	}
+
+	public var northEast(get, set):Location;
+	
+	private function get_northEast()
 	{
 		return new Location(north, east);
 	}
-
-	public var southEast(getSouthEast, setSouthEast):Location;
 	
-	private function getSouthEast():Location
+	private function set_northEast(ne:Location)
+	{
+		north = ne.lat;
+		east = ne.lon;
+		return northEast;
+	}
+
+	public var southEast(get, set):Location;
+	
+	private function get_southEast()
 	{
 		return new Location(south, east);
 	}
 
-	private function setNorthWest(nw:Location):Void
-	{
-		north = nw.lat;
-		west = nw.lon;
-	}
-
-	private function setSouthWest(sw:Location):Void
-	{
-		south = sw.lat;
-		west = sw.lon;
-	}
-
-	private function setNorthEast(ne:Location):Void
-	{
-		north = ne.lat;
-		east = ne.lon;
-	}
-
-	private function setSouthEast(se:Location):Void
+	private function set_southEast(se:Location)
 	{
 		south = se.lat;
 		east = se.lon;
+		return southEast;
 	}
-
-	public var center(getCenter, setCenter):Location;
 	
-	private function getCenter():Location
-	{   
+	public var center(get, set):Location;
+	
+	private function get_center()
+	{ 
 		return new Location(south + (north - south) / 2, east + (west - east) / 2);
 	}
-
-	private function setCenter(location:Location):Void
-	{   
+	
+	private function set_center(location:Location)
+	{
 		var w:Float = east - west;
 		var h:Float = north - south;
 		north = location.lat - h / 2;
 		south = location.lat + h / 2;
 		east = location.lon + w / 2;
 		west = location.lon - w / 2;
+		return center;
 	}
 
 	public function inflate(lat:Float, lon:Float):Void
@@ -165,9 +171,11 @@ class MapExtent
 	* @param str "north, south, east, west"
 	* @return a new MapExtent from the given string
 	*/
-	public static function fromString(str:String):MapExtent
+	public static function fromString(mapExtent:String):MapExtent
 	{
-		var parts:Array<String> = null ; //str.split("'/\s*,\s*/'");
+		//str.split("'/\s*,\s*/'");
+		var regexp = new EReg("[0-9]*,[0-9]*", "i");
+		var parts:Array<String> = regexp.split(mapExtent);
 		return new MapExtent(Std.parseFloat(parts[0]),
 			Std.parseFloat(parts[1]),
 			Std.parseFloat(parts[2]),
@@ -185,8 +193,8 @@ class MapExtent
 	{
 		if (locations==null || locations.length == 0) return new MapExtent();
 		
-		var extent:MapExtent;
-		var location:Location;
+		var extent:MapExtent = null;
+		var location:Location = null;
 		
 		for (location in locations)
 		{
@@ -226,10 +234,12 @@ class MapExtent
 	* @param	locationProp
 	* @return
 	*/
-	public static function fromLocationProperties(objects:Array<Dynamic>, locationProp:String='location'):MapExtent
+	public static function fromLocationProperties(objects:Map<String, Dynamic>, locationProp:String="location"):MapExtent
 	{
-		//return fromLocations(objects.map(function(obj:Object, ...rest):Location { return obj[locationProp] as Location }));
-		return fromLocations(objects.map(function(obj:Dynamic, rest:Dynamic = null):Location { return cast (obj[locationProp], Location);  } ));
+		var fromLocationProp : Location = cast(objects.get(locationProp), Location);
+		var locations : Array<Dynamic> = [fromLocationProp];
+		return fromLocations(locations);
+		//return fromLocations(objects.map(function(obj:Dynamic, ...rest):Location { return obj[locationProp] as Location })); } ));
 	}
 
 }

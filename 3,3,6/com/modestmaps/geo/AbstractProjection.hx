@@ -63,7 +63,7 @@ class AbstractProjection implements IProjection
 	{
 		point = rawProject(point);
 
-		if(T)
+		if(T!=null)
 		point = T.transform(point);
 		
 		return point;
@@ -74,7 +74,7 @@ class AbstractProjection implements IProjection
 	*/
 	public function unproject(point:Point):Point
 	{
-		if(T)
+		if(T!=null)
 		point = T.untransform(point);
 
 		point = rawUnproject(point);
