@@ -5,6 +5,7 @@ import com.modestmaps.core.painter.ITilePainterOverride;
 import com.modestmaps.core.painter.TilePainter;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
+import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -156,6 +157,7 @@ class TileGrid extends Sprite
 
 	public function new(w:Float, h:Float, draggable:Bool, provider:IMapProvider)
 	{
+		super();
 		doubleClickEnabled = true;
 		
 		//this.map = map;
@@ -370,10 +372,10 @@ class TileGrid extends Sprite
 		// TODO: investigate giving a directional bias to TILE_BUFFER when panning quickly
 		// NB:- I'm pretty sure these calculations are accurate enough that using 
 		//	  Math.ceil for the maxCols will load one column too many -- Tom
-		var minCol:Int = Math.floor(Math.min(tlC.column, brC.column, trC.column, blC.column)) - tileBuffer;
-		var maxCol:Int = Math.floor(Math.max(tlC.column,brC.column,trC.column,blC.column)) + tileBuffer;
-		var minRow:Int = Math.floor(Math.min(tlC.row,brC.row,trC.row,blC.row)) - tileBuffer;
-		var maxRow:Int = Math.floor(Math.max(tlC.row,brC.row,trC.row,blC.row)) + tileBuffer;
+		var minCol:Int = Math.floor(Math.min(Math.min(tlC.column, brC.column), Math.min(trC.column, blC.column))) - tileBuffer;
+		var maxCol:Int = Math.floor(Math.max(Math.max(tlC.column, brC.column), Math.max(trC.column, blC.column))) + tileBuffer;
+		var minRow:Int = Math.floor(Math.min(Math.min(tlC.row, brC.row), Math.min(trC.row, blC.row))) - tileBuffer;
+		var maxRow:Int = Math.floor(Math.max(Math.max(tlC.row, brC.row), Math.max(trC.row, blC.row))) + tileBuffer;
 
 		// loop over all tiles and find parent or child tiles from cache to compensate for unloaded tiles:
 		
@@ -416,15 +418,17 @@ class TileGrid extends Sprite
 		if (recentlySeen.length > maxRecentlySeen)
 		{
 			// can we sort so that biggest zoom levels get removed first, without removing currently visible tiles?
-			//var visibleKeys:Array = recentlySeen.slice(recentlySeen.length - visibleTiles.length, recentlySeen.length);
+			/*
+			var visibleKeys:Array = recentlySeen.slice(recentlySeen.length - visibleTiles.length, recentlySeen.length);
 
 			// take a look at everything else
 			recentlySeen = recentlySeen.slice(0, recentlySeen.length - visibleTiles.length);
-			recentlySeen.sort(Array.DESCENDING);
+			recentlySeen.sort((cast Array).DESCENDING);
 			recentlySeen = recentlySeen.concat(visibleKeys);
+			*/
 			
-				// throw away keys at the beginning of recentlySeen
-			recentlySeen = recentlySeen.slice(recentlySeen.length - maxRecentlySeen, recentlySeen.length);
+			// throw away keys at the beginning of recentlySeen
+			recentlySeen = recentlySeen.slice(cast(recentlySeen.length - maxRecentlySeen, Int), recentlySeen.length);
 			
 			// loop over our internal tile cache 
 			// and throw out tiles not in recentlySeen
@@ -460,7 +464,7 @@ class TileGrid extends Sprite
 		// for use in loops etc.
 		var coord:Coordinate = new Coordinate(0,0,0);
 
-		var searchedParentKeys:Dynamic = {};
+		var searchedParentKeys:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>();
 
 		// loop over currently visible tiles
 		//for (var col:Int = minCol; col <= maxCol; col++)
@@ -511,15 +515,16 @@ class TileGrid extends Sprite
 				if (_currentTileZoom > previousTileZoom) {					
 					// if it still doesn't have enough images yet, or it's fading in, try a double size parent instead
 					if (maxParentSearch > 0 && _currentTileZoom > minZoom) {
-						var firstParentKey:String = parentKey(col, row, _currentTileZoom, _currentTileZoom-1);
-						if (!searchedParentKeys[firstParentKey]) {
-							searchedParentKeys[firstParentKey] = true;
+						var firstParentKey:String = parentKey(col, row, cast(_currentTileZoom, Int), cast(_currentTileZoom-1, Int));
+						if (!searchedParentKeys.get(firstParentKey))
+						{
+							searchedParentKeys.set(firstParentKey, true);
 							if (ensureVisible(firstParentKey) != null) {
 								foundParent = true;
 							}
 							if (!foundParent && (_currentTileZoom - 1 < maxParentLoad)) {
 								//trace("requesting parent tile at zoom", pzoom);
-								var firstParentCoord:Array<Dynamic> = parentCoord(col, row, _currentTileZoom, _currentTileZoom-1);
+								var firstParentCoord:Array<Dynamic> = parentCoord(col, row, cast(_currentTileZoom, Int), cast(_currentTileZoom-1, Int));
 								visibleTiles.push(requestLoad(firstParentCoord[0], firstParentCoord[1], cast(_currentTileZoom-1, Int)));
 							}					
 						}
@@ -534,12 +539,12 @@ class TileGrid extends Sprite
 					// if it doesn't have an image yet, see if we can make it from smaller images
 					if (!foundParent && maxChildSearch > 0 && _currentTileZoom < maxZoom)
 					{
-						for (czoom in _currentTileZoom + 1...Math.min(maxZoom, _currentTileZoom + maxChildSearch))
+						for (czoom in cast(_currentTileZoom + 1, Int)...Math.min(cast(maxZoom, Int), cast(cast(_currentTileZoom, Int) + maxChildSearch, Int)))
 						{
-							var ckeys:Array<Dynamic> = childKeys(col, row, _currentTileZoom, czoom);
+							var ckeys:Array<Dynamic> = childKeys(col, row, cast(_currentTileZoom, Int), czoom);
 							for (ckey in ckeys)
 							{
-								if (ensureVisible(ckey))
+								if (ensureVisible(ckey) != null)
 								{
 									foundChildren++;
 								}
@@ -557,29 +562,30 @@ class TileGrid extends Sprite
 				// if it still doesn't have an image yet, try more parent zooms
 					if (stillNeedsAnImage && maxParentSearch > 1 && _currentTileZoom > minZoom) {
 
-					var startZoomSearch:Int = _currentTileZoom - 1;
+					var startZoomSearch:Int = cast(_currentTileZoom - 1, Int);
 					
 					if (_currentTileZoom > previousTileZoom) {
 						// we already looked for parent level 1, and didn't find it, so:
 						startZoomSearch -= 1;
 					}
 					
-					var endZoomSearch:Int = Math.max(minZoom, _currentTileZoom-maxParentSearch);
+					var endZoomSearch:Int = cast(Math.max(cast(minZoom, Int), cast(_currentTileZoom-maxParentSearch, Int)), Int);
+					var pzoom:Int;
 					
-					//for (var pzoom:Int = startZoomSearch; pzoom >= endZoomSearch; pzoom--)
-					for (pzoom in startZoomSearch...pzoom >= endZoomSearch)
+					for (pzoom in startZoomSearch...cast(pzoom >= endZoomSearch, Int))
 					{
-						var pkey:String = parentKey(col, row, _currentTileZoom, pzoom);
-						if (!searchedParentKeys[pkey]) {
-							searchedParentKeys[pkey] = true;
-							if (ensureVisible(pkey)) {				
+						var pkey:String = parentKey(col, row, cast(_currentTileZoom, Int), pzoom);
+						if (!searchedParentKeys.get(pkey) != null)
+						{
+							searchedParentKeys.set(pkey, true);
+							if (ensureVisible(pkey) != null) {				
 								stillNeedsAnImage = false;
 								break;
 							}
 							if (_currentTileZoom - pzoom < maxParentLoad)
 							{
 								//trace("requesting parent tile at zoom", pzoom);
-								var pcoord:Array = parentCoord(col, row, _currentTileZoom, pzoom);
+								var pcoord:Array = parentCoord(col, row, cast(_currentTileZoom, Int), pzoom);
 								visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
 							}
 						}
@@ -628,7 +634,8 @@ class TileGrid extends Sprite
 	{
 		// sort children by difference from current zoom level
 		// this means current is on top, +1 and -1 are next, then +2 and -2, etc.
-		visibleTiles.sort(distanceFromCurrentZoomCompare, Array.DESCENDING);
+		//visibleTiles.sort(distanceFromCurrentZoomCompare, Array.DESCENDING);
+		visibleTiles.sort(distanceFromCurrentZoomCompare);
 		
 		// for positioning tile according to current transform, based on current tile zoom
 		var scaleFactors:Array = new Array(maxZoom+1);
@@ -636,7 +643,7 @@ class TileGrid extends Sprite
 		var tileScales:Array = new Array(maxZoom+1);
 		
 		//for (var z:Int = 0; z <= maxZoom; z++)
-		for (z in 0...maxZoom)
+		for (z in 0...cast(maxZoom, Int))
 		{
 			scaleFactors[z] = Math.pow(2.0, _currentTileZoom - z);
 			// round up to the nearest pixel to avoid seams between zoom levels
@@ -706,8 +713,8 @@ class TileGrid extends Sprite
 	 */
 	private function distanceFromCurrentZoomCompare(t1:Tile, t2:Tile):Int
 	{
-		var d1:Int = Math.abs(t1.zoom-_currentTileZoom);
-		var d2:Int = Math.abs(t2.zoom-_currentTileZoom);
+		var d1:Int = cast(Math.abs(t1.zoom-_currentTileZoom), Int);
+		var d2:Int = cast(Math.abs(t2.zoom-_currentTileZoom), Int);
 		return d1 < d2 ? -1 : d1 > d2 ? 1 : zoomCompare(t2, t1); // t2, t1 so that big tiles are on top of small 
 	}
 
@@ -763,7 +770,9 @@ class TileGrid extends Sprite
 		return tile;
 	}
 
-	private static inline var zoomLetter:Array<String> = "abcdefghijklmnopqrstuvwxyz".split('');
+	private static inline var AZ : String = "abcdefghijklmnopqrstuvwxyz";
+	
+	private static inline var zoomLetter:Array<String> = AZ.split('');
 
 	/**
 	 * zoom is translated into a letter so that keys can easily be sorted (alphanumerically) by zoom level

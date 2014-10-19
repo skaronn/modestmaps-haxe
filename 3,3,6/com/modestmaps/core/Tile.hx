@@ -22,6 +22,7 @@ class Tile extends Sprite
 		
 	public function new(column:Int, row:Int, zoom:Int)
 	{
+		super();
 		init(column, row, zoom);
 		
 		// otherwise you'll get seams between tiles :(
@@ -86,36 +87,36 @@ class Tile extends Sprite
 		var padding:UInt = 4;
 		var weight:UInt = 4;
 		
-		with (graphics);
+		if (this.graphics != null)
 		{
-			clear();		
+			this.graphics.clear();		
 			
-			beginFill(0x808080);
-			drawRect(0, 0, w, h);
+			this.graphics.beginFill(0x808080);
+			this.graphics.drawRect(0, 0, w, h);
 
-			moveTo(0, 0);
-			beginFill(0x444444, 1);
-			lineTo(size, 0);
-			lineTo(size, size);
-			lineTo(0, size);
-			lineTo(0, 0);
-			endFill();
+			this.graphics.moveTo(0, 0);
+			this.graphics.beginFill(0x444444, 1);
+			this.graphics.lineTo(size, 0);
+			this.graphics.lineTo(size, size);
+			this.graphics.lineTo(0, size);
+			this.graphics.lineTo(0, 0);
+			this.graphics.endFill();
 			
-			moveTo(weight+padding, padding);
-			beginFill(0x888888, 1);
-			lineTo(padding, weight+padding);
-			lineTo(size-weight-padding, size-padding);
-			lineTo(size-padding, size-weight-padding);
-			lineTo(weight+padding, padding);
-			endFill();
+			this.graphics.moveTo(weight+padding, padding);
+			this.graphics.beginFill(0x888888, 1);
+			this.graphics.lineTo(padding, weight+padding);
+			this.graphics.lineTo(size-weight-padding, size-padding);
+			this.graphics.lineTo(size-padding, size-weight-padding);
+			this.graphics.lineTo(weight+padding, padding);
+			this.graphics.endFill();
 			
-			moveTo(size-weight-padding, padding);
-			beginFill(0x888888, 1);
-			lineTo(size-padding, weight+padding);
-			lineTo(weight+padding, size-padding);
-			lineTo(padding, size-weight-padding);
-			lineTo(size-weight-padding, padding);
-			endFill();
+			this.graphics.moveTo(size-weight-padding, padding);
+			this.graphics.beginFill(0x888888, 1);
+			this.graphics.lineTo(size-padding, weight+padding);
+			this.graphics.lineTo(weight+padding, size-padding);
+			this.graphics.lineTo(padding, size-weight-padding);
+			this.graphics.lineTo(size-weight-padding, padding);
+			this.graphics.endFill();
 		}		
 	}
 

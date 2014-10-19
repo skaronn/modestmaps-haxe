@@ -26,7 +26,7 @@ class MarkerClip extends Sprite
 	private var map:Map;
 
 	private var drawCoord:Coordinate;
-	private var locations:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
+	private var locations:ObjectMap<DisplayObject, Dynamic> = new ObjectMap<DisplayObject, Coordinate>();
 	private var coordinates:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
 	private var markers:Array<Dynamic> = []; // all markers
 	private var markersByName:Dynamic = {};
@@ -73,6 +73,7 @@ class MarkerClip extends Sprite
 
 	public function new(map:Map)
 	{
+		super();
 		// client code can listen to mouse events on this clip
 		// to get all events bubbled up from the markers
 		buttonMode = false;
@@ -146,16 +147,16 @@ class MarkerClip extends Sprite
 	{
 		if (markers.indexOf(marker) == -1)
 		{
-		locations[marker] = location.clone();
-		coordinates.set(marker) = map.getMapProvider().locationCoordinate(location);
-		markersByName[marker.name] = marker;
-		markers.push(marker);
-		
-		var added:Bool = updateClip(marker);
-		
-		if (added) {
-			requestSort(true);
-		}
+			locations.set(marker, location.clone());
+			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
+			markersByName.set(marker.name, marker);
+			markers.push(marker);
+			
+			var added:Bool = updateClip(marker);
+			
+			if (added) {
+				requestSort(true);
+			}
 		}
 	}
 
@@ -167,11 +168,11 @@ class MarkerClip extends Sprite
 
 	public function getMarker(id:String):DisplayObject
 	{
-		return cast(markersByName[id], DisplayObject);
+		return cast(markersByName.get(id), DisplayObject);
 	}
 
 	public function getMarkerLocation( marker:DisplayObject ) : Location {
-		return locations[marker];
+		return cast(locations.get(marker), Location);
 	}
 
 	public function hasMarker(marker:DisplayObject):Bool
@@ -263,7 +264,7 @@ class MarkerClip extends Sprite
 		var provider:IMapProvider = map.getMapProvider();
 		// I wish Array.map didn't require three parameters!
 		for (marker in markers) {
-			coordinates[marker] = provider.locationCoordinate(locations[marker]);
+			coordinates.set(marker, provider.locationCoordinate(locations.get(marker)));
 		}
 		dirty = true;
 	}
@@ -286,15 +287,18 @@ class MarkerClip extends Sprite
 		// only sort if we have a function:		
 		if (updateOrder && markerSortFunction != null)
 		{
-			markers.sort(markerSortFunction, Array.NUMERIC);
+			//markers.sort(markerSortFunction, Array.NUMERIC);
+			markers.sort(markerSortFunction);
 		}
 		// apply depths to maintain the order things were added in
-		var index:Float = 0;
+		var index:Int = 0;
 		for (marker in markers)
 		{
 			if (contains(marker))
 			{
-				setChildIndex(marker, Math.min(index, cast(numChildren - 1, Float)));
+				var nc:Int = numChildren - 1;
+				//setChildIndex(marker, Math.min(index, nc));
+				setChildIndex(marker, Math.min(0, 1));
 				index++;
 			}
 		}

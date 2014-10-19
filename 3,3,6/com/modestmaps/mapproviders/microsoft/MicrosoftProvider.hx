@@ -22,30 +22,30 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 	public static inline var HYBRID:String = "HYBRID";
 
 	public static var serverSalt:Int = cast((Math.random() * 4), Int);
-
-	private static inline var URLSTART:ObjectMap<String, String> = {
-		AERIAL: "http://a",
-		ROAD:   "http://r",
-		HYBRID: "http://h"
-	};
+		
+	private static var URLSTART:ObjectMap<String, String> = [
+		AERIAL => "http://a",
+		ROAD => "http://r",
+		HYBRID => "http://h"
+	];
+		
+	private static var URLMIDDLE:ObjectMap<String, String> = [
+		AERIAL => ".ortho.tiles.virtualearth.net/tiles/a",
+		ROAD => ".ortho.tiles.virtualearth.net/tiles/r",
+		HYBRID => ".ortho.tiles.virtualearth.net/tiles/h"
+	];
 	
-	private static inline var URLMIDDLE:ObjectMap<String, String> = {
-		AERIAL: ".ortho.tiles.virtualearth.net/tiles/a",
-		ROAD:   ".ortho.tiles.virtualearth.net/tiles/r",
-		HYBRID: ".ortho.tiles.virtualearth.net/tiles/h"
-	};
-	
-	private static inline var URLEND:ObjectMap<String, String> = {
-		AERIAL: ".jpeg?g=90",
-		ROAD:   ".png?g=90",
-		HYBRID: ".jpeg?g=90"
-	};
+	private static var URLEND:ObjectMap<String, String> = [
+		AERIAL => ".jpeg?g=90",
+		ROAD => ".png?g=90",
+		HYBRID => ".jpeg?g=90"
+	];
 
 	private var type:String;
 	
 	private var hillShading:Bool;
 
-	public function new(type:String=ROAD, hillShading:Bool=true, minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
+	public function new(type:String=ROAD, hillShading:Bool=true, minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM)
 	{
 		super(minZoom, maxZoom);
 		
@@ -67,17 +67,16 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		// convert row + col to zoom string
 		// padded with zeroes so we end up with zoom digits after slicing:
 		var rowBinaryString:String = Std.string(sourceCoord.row);
-		rowBinaryString = rowBinaryString.slice(-sourceCoord.zoom);
+		rowBinaryString = rowBinaryString.substr(cast(-sourceCoord.zoom, Int));
 		
 		var colBinaryString : String = Std.string(sourceCoord.column);
-		//colBinaryString = colBinaryString.slice(-sourceCoord.zoom);
-		colBinaryString = colBinaryString.split(-sourceCoord.zoom);
+		colBinaryString = colBinaryString.substr(cast(-sourceCoord.zoom, Int));
 
 		// generate zoom string by combining strings
 		var zoomString : String = "";
 
-		//for(var i:Float = 0; i < sourceCoord.zoom; i += 1) {
-		for( i in 0...cast(sourceCoord.zoom, Int)) {
+		for (i in 0...cast(sourceCoord.zoom, Int))
+		{
 			zoomString += BinaryUtil.convertToDecimal(rowBinaryString.charAt( i ) + colBinaryString.charAt( i ));
 		}
 		

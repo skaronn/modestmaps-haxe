@@ -78,6 +78,7 @@ class Map extends Sprite
 	 * @default 0.333333333  
 	 */
 	public var panFraction:Float = 0.333333333;
+	
 
 	/**
 	* Initialize the map: set properties, add a tile grid, draw it.
@@ -91,9 +92,9 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.core.TileGrid
 	*/
-	//public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, ...rest)
 	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
+		super();
 		if (mapProvider==null) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
 
 		// TODO getter/setter for this that disables interaction in TileGrid
@@ -225,8 +226,8 @@ class Map extends Sprite
 		
 	public function locationsCoordinate(locations:Array<Dynamic>, fitWidth:Float=0, fitHeight:Float=0):Coordinate
 	{
-		if (!fitWidth) fitWidth = mapWidth;
-		if (!fitHeight) fitHeight = mapHeight;
+		if (fitWidth == 0) fitWidth = mapWidth;
+		if (fitHeight == 0) fitHeight = mapHeight;
 		
 		var TL:Coordinate = mapProvider.locationCoordinate(locations[0].normalize());
 		var BR:Coordinate = TL.copy();
@@ -244,7 +245,7 @@ class Map extends Sprite
 		}
 		
 		// multiplication factor between horizontal span and map width
-		var hFactor:Float = (BR.column - TL.column) / (fitWidth / mapProvider.tileWidth);
+		var hFactor:Float = (BR.column - TL.column) / (fitWidth / cast(mapProvider.tileWidth, Int));
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
 		var hZoomDiff:Float = Math.log(hFactor) / Math.log(2);
@@ -253,7 +254,7 @@ class Map extends Sprite
 		var hPossibleZoom:Float = TL.zoom - Math.ceil(hZoomDiff);
 		
 		// multiplication factor between vertical span and map height
-		var vFactor:Float = (BR.row - TL.row) / (fitHeight / mapProvider.tileHeight);
+		var vFactor:Float = (BR.row - TL.row) / (fitHeight / cast(mapProvider.tileHeight, Int));
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
 		var vZoomDiff:Float = Math.log(vFactor) / Math.log(2);
