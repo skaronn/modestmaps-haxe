@@ -338,7 +338,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private function onLoadError(event:IOErrorEvent):Void
 	{
 		var loaderInfo:LoaderInfo = cast(event.target, LoaderInfo);
-		//for (var i:Int = openRequests.length-1; i >= 0; i--) {
 		for (i in openRequests.length-1...0) {
 			var loader:Loader = cast(openRequests[i], Loader);
 			if (loader.contentLoaderInfo == loaderInfo) {

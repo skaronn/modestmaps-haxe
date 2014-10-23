@@ -16,9 +16,9 @@ import openfl.geom.Point;
 import haxe.ds.ObjectMap;
 import openfl.utils.Timer;
 
-//[Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent")]
-//[Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent")]
-//[Event(name="markerClick",	   type="com.modestmaps.events.MarkerEvent")]
+@:meta(Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent"))
+@:meta(Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent"))
+@:meta(Event(name="markerClick",	   type="com.modestmaps.events.MarkerEvent"))
 class MarkerClip extends Sprite
 {
 	public static inline var DEFAULT_ZOOM_TOLERANCE:Int = 4;
@@ -296,9 +296,7 @@ class MarkerClip extends Sprite
 		{
 			if (contains(marker))
 			{
-				var nc:Int = numChildren - 1;
-				//setChildIndex(marker, Math.min(index, nc));
-				setChildIndex(marker, Math.min(0, 1));
+				setChildIndex(marker, cast(Math.min(cast(index, Float), cast(numChildren - 1, Float)), Int) );
 				index++;
 			}
 		}

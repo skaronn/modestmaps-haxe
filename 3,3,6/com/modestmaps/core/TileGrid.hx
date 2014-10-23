@@ -539,7 +539,7 @@ class TileGrid extends Sprite
 					// if it doesn't have an image yet, see if we can make it from smaller images
 					if (!foundParent && maxChildSearch > 0 && _currentTileZoom < maxZoom)
 					{
-						for (czoom in cast(_currentTileZoom + 1, Int)...Math.min(cast(maxZoom, Int), cast(cast(_currentTileZoom, Int) + maxChildSearch, Int)))
+						for (czoom in cast(_currentTileZoom + 1, Int)...cast(Math.min(cast(maxZoom, Int), cast(cast(_currentTileZoom, Int) + maxChildSearch, Int)), Int))
 						{
 							var ckeys:Array<Dynamic> = childKeys(col, row, cast(_currentTileZoom, Int), czoom);
 							for (ckey in ckeys)
@@ -585,7 +585,7 @@ class TileGrid extends Sprite
 							if (_currentTileZoom - pzoom < maxParentLoad)
 							{
 								//trace("requesting parent tile at zoom", pzoom);
-								var pcoord:Array = parentCoord(col, row, cast(_currentTileZoom, Int), pzoom);
+								var pcoord:Array<Dynamic> = parentCoord(col, row, cast(_currentTileZoom, Int), pzoom);
 								visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
 							}
 						}
@@ -638,20 +638,19 @@ class TileGrid extends Sprite
 		visibleTiles.sort(distanceFromCurrentZoomCompare);
 		
 		// for positioning tile according to current transform, based on current tile zoom
-		var scaleFactors:Array = new Array(maxZoom+1);
+		var scaleFactors:Array<Int> = new Array<Int>();
 		// scales to compensate for zoom differences between current grid zoom level		
-		var tileScales:Array = new Array(maxZoom+1);
+		var tileScales:Array<Int> = new Array<Int>();
 		
-		//for (var z:Int = 0; z <= maxZoom; z++)
 		for (z in 0...cast(maxZoom, Int))
 		{
-			scaleFactors[z] = Math.pow(2.0, _currentTileZoom - z);
+			scaleFactors[z] = cast(Math.pow(2.0, _currentTileZoom - z), Int);
 			// round up to the nearest pixel to avoid seams between zoom levels
 			if (roundScalesEnabled) {
-				tileScales[z] = Math.ceil(Math.pow(2, zoomLevel-z) * _tileWidth) / _tileWidth; 
+				tileScales[z] = cast(Math.ceil(Math.pow(2, zoomLevel-z) * _tileWidth) / _tileWidth, Int); 
 			}
 			else {
-				tileScales[z] = Math.pow(2, zoomLevel-z);
+				tileScales[z] = cast(Math.pow(2, zoomLevel-z), Int);
 			}
 		}
 		
@@ -769,10 +768,8 @@ class TileGrid extends Sprite
 		}
 		return tile;
 	}
-
-	private static inline var AZ : String = "abcdefghijklmnopqrstuvwxyz";
 	
-	private static inline var zoomLetter:Array<String> = AZ.split('');
+	private var zoomLetter:Array<String> = "abcdefghijklmnopqrstuvwxyz".split('');
 
 	/**
 	 * zoom is translated into a letter so that keys can easily be sorted (alphanumerically) by zoom level
@@ -1193,8 +1190,8 @@ class TileGrid extends Sprite
 		// TODO: set limits independently of provider
 		this.limits = provider.outerLimits();
 
-		_tileWidth = provider.tileWidth;
-		_tileHeight = provider.tileHeight;
+		this._tileWidth = provider.tileWidth;
+		this._tileHeight = provider.tileHeight;
 		
 		calculateBounds();
 		
@@ -1348,8 +1345,6 @@ class TileGrid extends Sprite
 
 		return touched;		
 	}
-
-	public var d(null, set):Float;
 	
 	private var dirty(get, set):Bool;
 	
@@ -1384,10 +1379,28 @@ class TileGrid extends Sprite
 		matrixChanged = true;
 		_dirty = true;
 	}
-
+	
+	@:isVar public var a(get, set):Float;
+	
+	private function set_a(n:Float)
+	{
+		worldMatrix.a = n;
+		_dirty = true;
+		return;
+	}
+	
 	public function get_a():Float
 	{
 		return worldMatrix.a;
+	}
+	
+	@:isVar public var b(get, set):Float;
+	
+	private function set_b(n:Float)
+	{
+		worldMatrix.b = n;
+		_dirty = true;
+		return;
 	}
 	
 	public function get_b():Float
@@ -1395,11 +1408,29 @@ class TileGrid extends Sprite
 		return worldMatrix.b;
 	}
 	
+	@:isVar public var c(get, set):Float;
+	
+	private function set_c(n:Float)
+	{
+		worldMatrix.c = n;
+		_dirty = true;
+		return;
+	}
+	
 	public function get_c():Float
 	{
 		return worldMatrix.c;
 	}
 	
+	@:isVar public var d(get, set):Float;
+	
+	private function set_d(n:Float)
+	{
+		worldMatrix.d = n;
+		_dirty = true;
+		return;
+	}
+		
 	public function get_d():Float
 	{
 		return worldMatrix.d;
@@ -1431,42 +1462,6 @@ class TileGrid extends Sprite
 	private function get_ty():Float
 	{
 		return worldMatrix.ty;
-	}
-
-	@:isVar public var a(null, set):Float;
-	
-	private function set_a(n:Float)
-	{
-		worldMatrix.a = n;
-		_dirty = true;
-		return;
-	}
-	
-	@:isVar public var b(null, set):Float;
-	
-	private function set_b(n:Float)
-	{
-		worldMatrix.b = n;
-		_dirty = true;
-		return;
-	}
-	
-	@:isVar public var c(null, set):Float;
-	
-	private function set_c(n:Float)
-	{
-		worldMatrix.c = n;
-		_dirty = true;
-		return;
-	}
-	
-	@:isVar public var d(null, set):Float;
-	
-	private function set_d(n:Float)
-	{
-		worldMatrix.d = n;
-		_dirty = true;
-		return;
 	}
 					
 }

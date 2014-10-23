@@ -40,25 +40,24 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 //import flash.utils.GetTimer;
-
-//[Event(name="startZooming",	  type="com.modestmaps.events.MapEvent")]
-//[Event(name="stopZooming",	   type="com.modestmaps.events.MapEvent")]
-//[Event(name="zoomedBy",	  type="com.modestmaps.events.MapEvent")]
-//[Event(name="startPanning",	  type="com.modestmaps.events.MapEvent")]
-//[Event(name="stopPanning",	   type="com.modestmaps.events.MapEvent")]
-//[Event(name="panned",		type="com.modestmaps.events.MapEvent")]
-//[Event(name="resized",	   type="com.modestmaps.events.MapEvent")]
-//[Event(name="mapProviderChanged",type="com.modestmaps.events.MapEvent")]
-//[Event(name="beginExtentChange", type="com.modestmaps.events.MapEvent")]
-//[Event(name="extentChanged",	 type="com.modestmaps.events.MapEvent")]
-//[Event(name="beginTileLoading",  type="com.modestmaps.events.MapEvent")]
-//[Event(name="allTilesLoaded",	type="com.modestmaps.events.MapEvent")]
-//[Event(name="rendered",	  type="com.modestmaps.events.MapEvent")]
-//[Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent")]
-//[Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent")]
-//[Event(name="markerClick",	   type="com.modestmaps.events.MarkerEvent")]
 import flash.errors.Error;
 
+@:meta(Event(name="startZooming",	  type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="stopZooming",	   type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="zoomedBy",	  type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="startPanning",	  type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="stopPanning",	   type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="panned",		type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="resized",	   type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="mapProviderChanged",type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="beginExtentChange", type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="extentChanged",	 type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="beginTileLoading",  type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="allTilesLoaded",	type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="rendered",	  type="com.modestmaps.events.MapEvent"))
+@:meta(Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent"))
+@:meta(Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent"))
+@:meta(Event(name="markerClick",	   type="com.modestmaps.events.MarkerEvent"))
 class Map extends Sprite
 {
 	private var mapWidth:Float;
@@ -77,8 +76,7 @@ class Map extends Sprite
 	/** fraction of width/height to pan panLeft, panRight, panUp, panDown
 	 * @default 0.333333333  
 	 */
-	public var panFraction:Float = 0.333333333;
-	
+	public var panFraction:Float = 0.333333333;	
 
 	/**
 	* Initialize the map: set properties, add a tile grid, draw it.

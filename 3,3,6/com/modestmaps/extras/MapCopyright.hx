@@ -22,7 +22,7 @@ import flash.utils.SetTimeout;
  * In general, lots of this needs reworking... at least, IMapProviders should be able to provide copyright strings 
  * without requiring javascript, and without needing to edit this file.
  */
-[Event(name="copyrightChanged", type="com.modestmaps.events.MapEvent")] 
+@:meta(Event(name="copyrightChanged", type="com.modestmaps.events.MapEvent")] 
 class MapCopyright extends Sprite
 {
 private static inline var script_js:XML = <script>

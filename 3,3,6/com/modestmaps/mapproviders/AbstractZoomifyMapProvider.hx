@@ -11,7 +11,7 @@ import com.modestmaps.core.Coordinate;
 class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProvider
 {
 	private var __baseDirectory:String;
-	private var __groups:/*Coordinate*/:Array<Dynamic>;
+	private var __groups:Array<Dynamic>;
 
 	public function new()
 	{
@@ -87,9 +87,11 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 			var bri:Coordinate = __bottomRightInLimit.zoomTo(c.zoom);
 			
 			// left-to-right, top-to-bottom, like reading a book
-			for (c.row = tlo.row; c.row <= bri.row; c.row += 1)
+			//for (c.row = tlo.row; c.row <= bri.row; c.row += 1)
+			for (c.row in tlo.row ... bri.row)
 			{
-				for (c.column = tlo.column; c.column <= bri.column; c.column += 1)
+				//for (c.column = tlo.column; c.column <= bri.column; c.column += 1)
+				for (c.column in tlo.column ... bri.column)
 				{				
 					// zoomify groups tiles into folders of 256 each
 					if(i % 256 == 0)
@@ -103,7 +105,8 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 
 	private function coordinateGroup(c:Coordinate):Float
 	{
-		for (var i:Float = 0; i < __groups.length; i += 1)
+		//for (var i:Float = 0; i < __groups.length; i += 1)
+		for (i in 0 ... __groups.length)
 		{
 			if(i+1 == __groups.length)
 				return i;
@@ -116,7 +119,7 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 		return -1;
 	}
 
-	public function getTileUrls(coord:Coordinate):Array
+	public function getTileUrls(coord:Coordinate):Array<Dynamic>
 	{
 		return [ __baseDirectory+'TileGroup'+coordinateGroup(coord)+'/'+(coord.zoom)+'-'+(coord.column)+'-'+(coord.row)+'.jpg' ];
 	}
