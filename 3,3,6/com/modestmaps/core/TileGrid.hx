@@ -180,8 +180,8 @@ class TileGrid extends Sprite
 		this.limits = provider.outerLimits();
 		
 		// but do grab tile dimensions:
-		_tileWidth = provider.tileWidth;
-		_tileHeight = provider.tileHeight;
+		_tileWidth = provider.tileWidth();
+		_tileHeight = provider.tileHeight();
 
 		// and calculate bounds from provider
 		calculateBounds();
@@ -249,7 +249,7 @@ class TileGrid extends Sprite
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:Type):Void
+	public function setTileClass(tileClass:String/*Class<Dynamic>*/):Void
 	{
 		// first get rid of everything, which passes tiles back to the pool
 		clearEverything();
@@ -570,12 +570,12 @@ class TileGrid extends Sprite
 					}
 					
 					var endZoomSearch:Int = cast(Math.max(cast(minZoom, Int), cast(_currentTileZoom-maxParentSearch, Int)), Int);
-					var pzoom:Int;
+					var pzoom:Int = 0;
 					
 					for (pzoom in startZoomSearch...cast(pzoom >= endZoomSearch, Int))
 					{
 						var pkey:String = parentKey(col, row, cast(_currentTileZoom, Int), pzoom);
-						if (!searchedParentKeys.get(pkey) != null)
+						if (searchedParentKeys.get(pkey) != null)
 						{
 							searchedParentKeys.set(pkey, true);
 							if (ensureVisible(pkey) != null) {				
@@ -821,7 +821,7 @@ class TileGrid extends Sprite
 	{
 			var scaleFactor:Float = Math.pow(2, zoom-childZoom); // one zoom in = 0.5
 			var rowColSpan:Float = Math.pow(2, childZoom-zoom); // one zoom in = 2, two = 4
-			var keys:Array<Dynamic>;
+			var keys:Array<Dynamic> = new Array<Dynamic>();
 			//for (var ccol:Int = col/scaleFactor; ccol < (col/scaleFactor)+rowColSpan; ccol++) {
 			for (ccol in cast(col / scaleFactor, Int)...cast((col / scaleFactor) + rowColSpan, Int))
 			{
@@ -876,7 +876,8 @@ class TileGrid extends Sprite
 	
 	private function get_invertedMatrix():Matrix
 	{
-		if (_invertedMatrix==null) {
+		if (_invertedMatrix == null)
+		{
 			_invertedMatrix = worldMatrix.clone();
 			_invertedMatrix.invert();
 			_invertedMatrix.scale(scale/_tileWidth, scale/_tileHeight);
@@ -901,20 +902,20 @@ class TileGrid extends Sprite
 	}
 
 	/** convenience method for tileWidth */
-	public var tileWidth(get, null):Float;
-	
-	private function get_tileWidth():Float
-	{
-		return _tileWidth;
-	}
+	//public var tileWidth(get, null):Float;
+	//
+	//private function get_tileWidth():Float
+	//{
+		//return _tileWidth;
+	//}
 	
 	/** convenience method for tileHeight */
-	public var tileHeight(get, null):Float;
-	
-	private function get_tileHeight():Float
-	{
-		return _tileHeight;
-	}
+	//public var tileHeight(get, null):Float;
+	//
+	//private function get_tileHeight():Float
+	//{
+		//return _tileHeight;
+	//}
 
 	/** read-only, this is the level of tiles we'll be loading first */
 	public var currentTileZoom(get, null):Float;
@@ -1190,8 +1191,8 @@ class TileGrid extends Sprite
 		// TODO: set limits independently of provider
 		this.limits = provider.outerLimits();
 
-		this._tileWidth = provider.tileWidth;
-		this._tileHeight = provider.tileHeight;
+		this._tileWidth = provider.tileWidth();
+		this._tileHeight = provider.tileHeight();
 		
 		calculateBounds();
 		
@@ -1386,7 +1387,7 @@ class TileGrid extends Sprite
 	{
 		worldMatrix.a = n;
 		_dirty = true;
-		return;
+		return worldMatrix.a;
 	}
 	
 	public function get_a():Float
@@ -1400,7 +1401,7 @@ class TileGrid extends Sprite
 	{
 		worldMatrix.b = n;
 		_dirty = true;
-		return;
+		return worldMatrix.b;
 	}
 	
 	public function get_b():Float
@@ -1414,7 +1415,7 @@ class TileGrid extends Sprite
 	{
 		worldMatrix.c = n;
 		_dirty = true;
-		return;
+		return worldMatrix.c;
 	}
 	
 	public function get_c():Float
@@ -1428,7 +1429,7 @@ class TileGrid extends Sprite
 	{
 		worldMatrix.d = n;
 		_dirty = true;
-		return;
+		return worldMatrix.d;
 	}
 		
 	public function get_d():Float

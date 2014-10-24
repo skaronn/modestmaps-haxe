@@ -26,16 +26,16 @@ class MarkerEvent extends Event
 		_location = location;
 	}
 
-	public var marker(getMarker, null):DisplayObject;
+	public var marker(get, null):DisplayObject;
 	
-	private function getMarker():DisplayObject
+	private function get_marker():DisplayObject
 	{
 		return _marker;
 	}
 
-	public var location(getLocation, null):Location;
+	public var location(get, null):Location;
 	
-	private function getLocation():Location
+	private function get_location():Location
 	{
 		return _location;
 	}

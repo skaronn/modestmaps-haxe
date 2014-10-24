@@ -6,6 +6,7 @@ import com.modestmaps.core.TileGrid;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
 import haxe.ds.ObjectMap;
+import haxe.macro.Type;
 
 import openfl.display.Bitmap;
 import openfl.display.Loader;
@@ -68,6 +69,12 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private static var loaderCache:ObjectMap<Dynamic, Dynamic>;
 	private static var cachedUrls:Array<String> = [];
 
+	/**
+	 * 
+	 * @param	tileGrid
+	 * @param	provider
+	 * @param	queueFunction
+	 */
 	public function new(tileGrid:TileGrid, provider:IMapProvider, queueFunction:Dynamic)
 	{
 		super(null);
@@ -78,7 +85,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 
 		// TODO: pass all these into the constructor so they can be shared, swapped out or overridden
 		this.tileQueue = new TileQueue();
-		this.tilePool = new TilePool(Tile);
+		this.tilePool = new TilePool("com.modestmaps.core.Tile"/*Tile*/);
 		this.tileCache = new TileCache(tilePool);
 		queueTimer = new Timer(200);
 
@@ -94,34 +101,53 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:Type):Void
+	public function setTileClass(tileClass:String/*Class<Dynamic>*/):Void
 	{
 		// assign the new class, which creates a new pool array
 		tilePool.setTileClass(tileClass);
 	}
 
+	/**
+	 * 
+	 * @param	provider
+	 */
 	public function setMapProvider(provider:IMapProvider):Void
 	{
 		this.provider = provider;
 		// TODO: clear various things, no doubt?	
 	}
 
+	/**
+	 * 
+	 * @param	key
+	 * @return
+	 */
 	public function getTileFromCache(key:String):Tile
 	{
 		return tileCache.getTile(key);
 	}
 
+	/**
+	 * 
+	 * @param	recentlySeen
+	 */
 	public function retainKeysInCache(recentlySeen:Array<Dynamic>):Void
 	{
 		tileCache.retainKeys(recentlySeen); 		
 	}
 
+	/**
+	 * 
+	 * @param	coord
+	 * @param	key
+	 * @return
+	 */
 	public function createAndPopulateTile(coord:Coordinate, key:String):Tile
 	{
 		var tile:Tile = tilePool.getTile(Std.int(coord.column), Std.int(coord.row), Std.int(coord.zoom));
 		tile.name = key;
 		var urls:Array<Dynamic> = provider.getTileUrls(coord);
-		if (urls!=null && urls.length > 0) {
+		if (urls != null && urls.length > 0) {
 			// keep a local copy of the URLs so we don't have to call this twice:
 			layersNeeded.set(tile.name, urls);
 			tileQueue.push(tile);
@@ -133,17 +159,26 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		return tile;		
 	}
 
+	/**
+	 * 
+	 * @param	tile
+	 * @return
+	 */
 	public function isPainted(tile:Tile):Bool
 	{
 		return layersNeeded.get(tile.name)==null;	
 	}
 
+	/**
+	 * 
+	 * @param	tile
+	 */
 	public function cancelPainting(tile:Tile):Void
 	{
 		if (tileQueue.contains(tile)) {
 			tileQueue.remove(tile);
 		}
-		//for (var i:Int = openRequests.length - 1; i >= 0; i--) {
+		
 		for (i in openRequests.length - 1...0) {
 			var loader:Loader = cast(openRequests[i], Loader);
 			if (loader.name == tile.name) {
@@ -151,12 +186,19 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				untyped __delete__(loaderTiles, loader);
 			}
 		}
+		
 		if (!tileCache.containsKey(tile.name)) {
 			tilePool.returnTile(tile);
 		}
+		
 		untyped __delete__(layersNeeded, tile.name);
 	}
 
+	/**
+	 * 
+	 * @param	tile
+	 * @return
+	 */
 	public function isPainting(tile:Tile):Bool
 	{
 		return layersNeeded.get(tile.name) == null;	
@@ -164,7 +206,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 
 	public function reset():Void
 	{
-		for (loader in openRequests) {
+		for (loader in openRequests)
+		{
 			var tile:Tile = cast(loaderTiles.get(loader), Tile);
 			loaderTiles.set(loader, null);
 			untyped __delete__(loaderTiles, loader);
@@ -181,12 +224,14 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				// close often doesn't work, no biggie
 			}
 		}
+		
 		openRequests = [];
 		
-		for (key in layersNeeded) {
+		for (key in layersNeeded)
+		{
 			untyped __delete__(layersNeeded, key);
 		}
-		//layersNeeded = {};
+
 		layersNeeded = null;
 		
 		tileQueue.clear();
@@ -194,13 +239,19 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		tileCache.clear();			
 	}
 
+	/**
+	 * 
+	 * @param	tile
+	 */
 	private function loadNextURLForTile(tile:Tile):Void
 	{
 		// TODO: add urls to Tile?
 		var urls:Array<Dynamic> = cast(layersNeeded.get(tile.name), Array<Dynamic>);
-		if (urls!=null && urls.length > 0) {
+		if (urls != null && urls.length > 0)
+		{
 			var url:Dynamic = urls.shift();
-			if (cacheLoaders && Std.is(url, String) && loaderCache.get(url)) {
+			if (cacheLoaders && Std.is(url, String) && loaderCache.get(url))
+			{
 				var original:Bitmap = cast(loaderCache.get(url), Bitmap);
 				var bitmap:Bitmap = new Bitmap(original.bitmapData); 
 				tile.addChild(bitmap);
@@ -234,17 +285,22 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		}		
 	}	
 
-	/** called by the onEnterFrame handler to manage the tileQueue
-	 *  usual operation is extremely quick, ~1ms or so */
+	/**
+	 * called by the onEnterFrame handler to manage the tileQueue
+	 * usual operation is extremely quick, ~1ms or so 
+	 * 
+	 * @param	event
+	 */
 	private function processQueue(event:TimerEvent=null):Void
 	{
-		if (openRequests.length < maxOpenRequests && tileQueue.length > 0) {
-
+		if (openRequests.length < maxOpenRequests && tileQueue.length > 0)
+		{
 			// prune queue for tiles that aren't visible
 			var removedTiles:Array<Dynamic> = tileQueue.retainAll(tileGrid.getVisibleTiles());
 			
 			// keep layersNeeded tidy:
-			for (removedTile in removedTiles) {
+			for (removedTile in removedTiles)
+			{
 				this.cancelPainting(removedTile);
 			}
 			
@@ -286,6 +342,10 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		previousOpenRequests = openRequests.length;
 	}
 
+	/**
+	 * 
+	 * @param	event
+	 */
 	private function onLoadEnd(event:Event):Void
 	{
 		var loader:Loader = cast(event.target,LoaderInfo).loader;
@@ -335,18 +395,24 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		untyped __delete__(loaderTiles, loader);
 	}
 
+	/**
+	 * 
+	 * @param	event
+	 */
 	private function onLoadError(event:IOErrorEvent):Void
 	{
 		var loaderInfo:LoaderInfo = cast(event.target, LoaderInfo);
-		for (i in openRequests.length-1...0) {
+		for (i in openRequests.length - 1...0)
+		{
 			var loader:Loader = cast(openRequests[i], Loader);
-			if (loader.contentLoaderInfo == loaderInfo) {
+			if (loader.contentLoaderInfo == loaderInfo)
+			{
 				openRequests.splice(i,1);
 				untyped __delete__(layersNeeded, loader.name);
 				var tile:Tile = cast(loaderTiles.get(loader), Tile);
 				if (tile != null)
 				{
-					tile.paintError(provider.tileWidth, provider.tileHeight);
+					tile.paintError(provider.tileWidth(), provider.tileHeight());
 					tileGrid.tilePainted(tile);
 					loaderTiles.set(loader, null);
 					untyped __delete__(loaderTiles, loader);

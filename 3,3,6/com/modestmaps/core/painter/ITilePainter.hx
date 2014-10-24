@@ -8,7 +8,7 @@ import openfl.events.IEventDispatcher;
 
 interface ITilePainter extends IEventDispatcher
 {
-	function setTileClass(tileClass:Type):Void;
+	function setTileClass(tileClass:String/*Class<Dynamic>*/):Void;
 	function setMapProvider(provider:IMapProvider):Void;
 	function getTileFromCache(key:String):Tile;
 	function retainKeysInCache(recentlySeen:Array<Dynamic>):Void;

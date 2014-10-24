@@ -17,16 +17,16 @@ class TilePool
 	private static inline var MAX_NEW_TILES:Int = 256;
 
 	private var pool:Array<Dynamic> = [];
-	private var tileClass:Type;
+	private var tileClassName:String /*Class<Dynamic>*/;
 
-	public function new(tileClass:Type)
+	public function new(tileClass:String/*Class<Dynamic>*/)
 	{
-		this.tileClass = tileClass;
+		this.tileClassName = tileClass;
 	}
 
-	public function setTileClass(tileClass:Type):Void
+	public function setTileClass(tileClass:String/*Class<Dynamic>*/):Void
 	{
-		this.tileClass = tileClass;
+		this.tileClassName = tileClass;
 		pool = [];
 	}
 
@@ -36,8 +36,8 @@ class TilePool
 		{
 			while (pool.length < MAX_NEW_TILES)
 			{
-				//pool.push(new tileClass(0, 0, 0));
-				pool.push(new Tile(0, 0, 0));
+				//pool.push(Type.createInstance(tileClassName, [0, 0, 0]));
+				pool.push(Type.createInstance(Type.resolveClass(tileClassName), [0, 0, 0]));
 			}
 		}			
 		var tile:Tile = cast(pool.pop(), Tile);
@@ -50,5 +50,4 @@ class TilePool
 		tile.destroy();
 		pool.push(tile);
 	}
-
 }

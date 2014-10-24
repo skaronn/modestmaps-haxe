@@ -407,7 +407,8 @@ class Map extends Sprite
 	*/
 	public function setMapProvider(newProvider:IMapProvider):Void
 	{
-		var previousGeometry:String;
+		var previousGeometry:String = null;
+		
 		if (mapProvider!=null)
 		{
 			previousGeometry = mapProvider.geometry();
@@ -415,6 +416,7 @@ class Map extends Sprite
 		var extent:MapExtent = getExtent();
 
 		mapProvider = newProvider;
+		
 		if (grid!=null)
 		{
 			grid.setMapProvider(mapProvider);

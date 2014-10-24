@@ -31,8 +31,11 @@ class ZoomSlider extends Sprite
 
 	private static inline var DEFAULT_HEIGHT:Float = 100;
 	
+	private var _proportion:Float;
+	
 	public function new(map:Map, trackHeight:Float=DEFAULT_HEIGHT)
 	{
+		super();
 		this.map = map;
 		this.trackHeight = trackHeight;
 
@@ -104,33 +107,36 @@ class ZoomSlider extends Sprite
 		}
 
 		if (Std.is(event, MouseEvent)) {
-			MouseEvent(event).updateAfterEvent();
+			cast(event, MouseEvent).updateAfterEvent();
 		}
 	}
 
 	public function update(event:MapEvent=null):Void
 	{
-		//if (event) trace(event.type, "in ZoomSlider.update");
+		if (event != null) trace(event.type, "in ZoomSlider.update");
 		if (!dragging) {
-			proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
+			_proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
 		}
 	}
 
-	public var proportion(getProportion, setProportion):Float;
+	public var proportion(get, set):Float;
 	
-	private function getProportion():Float
+	private function get_proportion():Float
 	{
-		return thumb.y / trackHeight;
+		_proportion = thumb.y / trackHeight;
+		return _proportion;
 	}
 
-	private function setProportion(prop:Float):Void
+	private function set_proportion(prop:Float)
 	{
 		if (!dragging) {
-			thumb.y = prop * trackHeight;
+			_proportion = thumb.y = prop * trackHeight;
 		}
 		else {
 			map.grid.zoomLevel = map.grid.minZoom + (map.grid.maxZoom - map.grid.minZoom) * (1.0 - prop);
+			//_proportion = map.grid.zoomLevel
 		}
+		return _proportion;
 	}
 
 }

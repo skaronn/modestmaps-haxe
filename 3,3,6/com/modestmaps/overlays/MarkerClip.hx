@@ -6,7 +6,7 @@ import com.modestmaps.events.MapEvent;
 import com.modestmaps.events.MarkerEvent;
 import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
-//import openfl.utils.Dictionary;
+import haxe.Timer;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -14,7 +14,6 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import haxe.ds.ObjectMap;
-import openfl.utils.Timer;
 
 @:meta(Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent"))
 @:meta(Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent"))
@@ -110,18 +109,20 @@ class MarkerClip extends Sprite
 		return markers.length;
 	}
 
-	//override public var x(null, set_x):Float;
+	@isvar public var xx(null, set):Float;
 	
-	private function set_x(value:Float):Void
+	private function set_xx(value:Float)
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
+		return super.x;
 	}
 
-	//override public var y(null, set_y):Float;
+	@isvar public var yy(null, set):Float;
 	
-	private function set_y(value:Float):Void
+	private function set_yy(value:Float)
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
+		return super.y;
 	}
 
 	private function onAddedToStage(event:Event):Void
@@ -269,17 +270,20 @@ class MarkerClip extends Sprite
 		dirty = true;
 	}
 
-	private var sortTimer:Int;		
+	//private var sortTimer:Int;
+	private var sortTimer:Timer;
 
 	private function requestSort(updateOrder:Bool=false):Void
 	{
 		// use a timer so we don't do this every single frame, otherwise
 		// sorting markers and applying depths pretty much doubles the 
-		// time to run updateClips 
-		if (sortTimer!=null) {
-			clearTimeout(sortTimer);
-		}
-		sortTimer = setTimeout(sortMarkers, 50, updateOrder);
+		// time to run updateClips
+		if (sortTimer != null)
+		{
+			sortTimer.stop();
+			sortTimer = null;
+		}	
+		sortTimer = haxe.Timer.delay(function () { sortMarkers(updateOrder); }, 50);
 	}	
 
 	public function sortMarkers(updateOrder:Bool=false):Void
@@ -359,8 +363,10 @@ class MarkerClip extends Sprite
 	private function onMapZoomedBy(event:MapEvent):Void
 	{
 		if (autoCache) cacheAsBitmap = false;
-		if (scaleZoom!=null && drawCoord!=null) {
-			if (Math.abs(map.grid.zoomLevel - drawCoord.zoom) < zoomTolerance) {
+		if (scaleZoom && drawCoord != null)
+		{
+			if (Math.abs(map.grid.zoomLevel - drawCoord.zoom) < zoomTolerance)
+			{
 				scaleX = scaleY = Math.pow(2, map.grid.zoomLevel - drawCoord.zoom);
 			}
 			else {
@@ -417,19 +423,18 @@ class MarkerClip extends Sprite
 
 	///// Invalidations...
 
-	private var dirty(null, setDirty):Bool;
+	private var dirty(get, set):Bool;
 	
-	private function setDirty(d:Bool):Void
+	private function set_dirty(d:Bool)
 	{
 		_dirty = d;
 		if (d) {
 			if (stage!=null) stage.invalidate();
 		}
+		return _dirty;
 	}
-
-	//private var dirty(getDirty, setDirty):Bool;
 	
-	private function get_Dirty():Bool
+	private function get_dirty():Bool
 	{
 		return _dirty;
 	}
