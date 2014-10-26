@@ -6,49 +6,48 @@ import com.modestmaps.geo.Transformation;
 
 class DailyPlanetProvider extends AbstractMapProvider implements IMapProvider
 {
-private static inline var MIN_ZOOM:Int = 1;
-private static inline var MAX_ZOOM:Int = 6;
+	private static inline var MIN_ZOOM:Int = 1;
+	private static inline var MAX_ZOOM:Int = 6;
 
-/** WARNING: this is extremely experimental, and 
- * it might not make the correct calls to NASA every time 
- * we are still testing 512px providers, too */
-public function new(minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
-{
-	super();
-	
-	var t:Transformation = new Transformation(0.3183098861837907, 0, 1,
+	/** WARNING: this is extremely experimental, and 
+	 * it might not make the correct calls to NASA every time 
+	 * we are still testing 512px providers, too */
+	public function new(minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
+	{
+		super();
+
+		var t:Transformation = new Transformation(0.3183098861837907, 0, 1,
 						  0, -0.3183098861837907, 0.5);
-	
-	__projection = new LinearProjection(1, t);
 
-	__topLeftOutLimit = new Coordinate(0, Float.NEGATIVE_INFINITY, 0).zoomTo(minZoom);
-	__bottomRightInLimit = (new Coordinate(1, Float.POSITIVE_INFINITY, 0)).zoomTo(maxZoom);
-	
-}
+		__projection = new LinearProjection(1, t);
 
-public function getTileUrls(coord:Coordinate):Array
-{
-	// zoom level 0 is a 512x512 tile containing a linearly projected map of the world in the top half:
-	// http://wms.jpl.nasa.gov/wms.cgi?request=GetMap&width=512&height=512&layers=daily_planet&styles=&srs=EPSG:4326&format=image/jpeg&bbox=-180,-270,180,90
-	// the -270 there works, and kind of makes sense, and gives the same image as:
-	// http://wms.jpl.nasa.gov/wms.cgi?request=GetMap&width=512&height=512&layers=daily_planet&styles=&srs=EPSG:4326&format=image/jpeg&bbox=-180,-90,180,90
+		__topLeftOutLimit = new Coordinate(0, Math.NEGATIVE_INFINITY, 0).zoomTo(minZoom);
+		__bottomRightInLimit = (new Coordinate(1, Math.POSITIVE_INFINITY, 0)).zoomTo(maxZoom);
+	}
 
-	coord = sourceCoordinate(coord);
+	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	{
+		// zoom level 0 is a 512x512 tile containing a linearly projected map of the world in the top half:
+		// http://wms.jpl.nasa.gov/wms.cgi?request=GetMap&width=512&height=512&layers=daily_planet&styles=&srs=EPSG:4326&format=image/jpeg&bbox=-180,-270,180,90
+		// the -270 there works, and kind of makes sense, and gives the same image as:
+		// http://wms.jpl.nasa.gov/wms.cgi?request=GetMap&width=512&height=512&layers=daily_planet&styles=&srs=EPSG:4326&format=image/jpeg&bbox=-180,-90,180,90
 
-	var tilesWide:Float = Math.pow(2, coord.zoom);
-	var tilesHigh:Float = Math.pow(2, coord.zoom-1);
+		coord = sourceCoordinate(coord);
 
-	var w:Float = -180.0 + (360.0 * coord.column / tilesWide);
-	var n:Float = 90 - (180.0 * coord.row / tilesHigh);
-	var e:Float = w + (360.0 / tilesWide);
-	var s:Float = n + (180.0 / tilesHigh);
+		var tilesWide:Float = Math.pow(2, coord.zoom);
+		var tilesHigh:Float = Math.pow(2, coord.zoom-1);
 
-	var bbox:String = [ w, s, e, n ].join(',');
+		var w:Float = -180.0 + (360.0 * coord.column / tilesWide);
+		var n:Float = 90 - (180.0 * coord.row / tilesHigh);
+		var e:Float = w + (360.0 / tilesWide);
+		var s:Float = n + (180.0 / tilesHigh);
 
-	// don't use URLVariables to build this URL, because there's a chance that the cache might require things in a particular order
-	// here's the pattern: request=GetMap&layers=daily_planet&srs=EPSG:4326&format=image/jpeg&styles=&width=512&height=512&bbox=-180,88,-178,90
-	// from http://onearth.jpl.nasa.gov/wms.cgi?request=GetTileService
-	var url:String = "http://wms.jpl.nasa.gov/wms.cgi?" + 
+		var bbox:String = [ w, s, e, n ].join(',');
+
+		// don't use URLVariables to build this URL, because there's a chance that the cache might require things in a particular order
+		// here's the pattern: request=GetMap&layers=daily_planet&srs=EPSG:4326&format=image/jpeg&styles=&width=512&height=512&bbox=-180,88,-178,90
+		// from http://onearth.jpl.nasa.gov/wms.cgi?request=GetTileService
+		var url:String = "http://wms.jpl.nasa.gov/wms.cgi?" + 
 		"request=GetMap" + 
 		"&layers=daily_planet" + 
 		"&srs=EPSG:4326" + 
@@ -57,38 +56,40 @@ public function getTileUrls(coord:Coordinate):Array
 		"&width=512" + 
 		"&height=512" + 
 		"&bbox=" + bbox;
-		
-	//trace(coord, bbox);
-	//trace(url);
-	return [ url ];
-}
+
+		//trace(coord, bbox);
+		//trace(url);
+		return [ url ];
+	}
+
+	public function toString():String
+	{
+		return "DAILY_PLANET";
+	}
+
+	override public function sourceCoordinate(coord:Coordinate):Coordinate
+	{
+		var tilesWide:Float = Math.pow(2, coord.zoom);
+		var tilesHigh:Float = Math.ceil(Math.pow(2, coord.zoom-1));
+		coord = coord.copy();
+		while (coord.row < 0) coord.row += tilesHigh;
+		while (coord.column < 0) coord.column += tilesWide;
+		coord.row %= tilesHigh;
+		coord.column %= tilesWide;
+		return coord;
+	}
+
+	public var tileWidth(get, null):Float;
 	
-public function toString():String
-{
-	return "DAILY_PLANET";
-}
+	private function get_tileWidth():Float
+	{
+		return 512;
+	}
 
-override public function sourceCoordinate(coord:Coordinate):Coordinate
-{
-	var tilesWide:Float = Math.pow(2, coord.zoom);
-	var tilesHigh:Float = Math.ceil(Math.pow(2, coord.zoom-1));
-	coord = coord.copy();
-	while (coord.row < 0) coord.row += tilesHigh;
-	while (coord.column < 0) coord.column += tilesWide;
-	coord.row %= tilesHigh;
-	coord.column %= tilesWide;
-	return coord;
-}
-
-override public var tileWidth(getTileWidth, null):Float;
- 	private function getTileWidth():Float
-{
-	return 512;
-}
-
-override public var tileHeight(getTileHeight, null):Float;
- 	private function getTileHeight():Float
-{
-	return 512;
-}	
+	public var tileHeight(get, null):Float;
+	
+	private function get_tileHeight():Float
+	{
+		return 512;
+	}	
 }

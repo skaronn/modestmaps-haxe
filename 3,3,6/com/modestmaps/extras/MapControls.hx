@@ -4,6 +4,7 @@ import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.extras.ui.Button;
 import com.modestmaps.extras.ui.FullScreenButton;
+import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -54,7 +55,7 @@ class MapControls extends Sprite
 	// if you use %, be aware the default alignment is left-top
 	// but that you'll probably want top-center for horizontal %
 	// and center-left for vertical %
-	public static inline var GROUPED:Dynamic = {
+	public static var GROUPED:Dynamic = {
 		leftButton: { left: '15px', bottom: '15px' },
 		rightButton: { left: '65px', bottom: '15px' },
 		upButton: { left: '40px', bottom: '40px' },
@@ -64,7 +65,7 @@ class MapControls extends Sprite
 		fullScreenButton: { left: '125px', bottom: '15px' }
 	};
 
-	public static inline var SIDES:Dynamic = {
+	public static var SIDES:Dynamic = {
 		leftButton: { left: '15px', top: '50%', align: 'center-left' },
 		rightButton: { right: '15px', bottom: '50%', align: 'center-left' },
 		upButton: { left: '50%', top: '15px', align: 'top-center' },
@@ -101,55 +102,56 @@ class MapControls extends Sprite
 	}
 
 	private var positionFunctions:Dynamic = {
-		left: function(child:DisplayObject, s:String, a:String):Void {
-		if (s.lastIndexOf("%") >= 0) {
-			child.x = map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0;
-		}
-		else { 
-			child.x = Std.parseFloat(s.substring(-2));
-		} 
-		child.x -= a ? hAlignFunctions[a.split('-')[1]](child) : 0;
+		left: function(child:DisplayObject, s:String, a:String):Void{
+			if (s.lastIndexOf("%") >= 0) {
+				//child.x = map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0;
+			}
+			else { 
+				child.x = Std.parseFloat(s.substring(-2));
+			} 
+			//child.x -= a != null ? cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float) : 0;
 		},
 		right: function(child:DisplayObject, s:String, a:String):Void { 
-		if (s.lastIndexOf("%") >= 0) { 
-			child.x = map.getWidth() - (map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0) - child.width;
-		}
-		else { 
-			child.x = map.getWidth() - Std.parseFloat(s.substring(-2)) - child.width;
-		} 
-		child.x += a ? hAlignFunctions[a.split('-')[1]](child) : 0;
+			if (s.lastIndexOf("%") >= 0) { 
+				//child.x = map.getWidth() - (map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0) - child.width;
+			}
+			else { 
+				//child.x = map.getWidth() - Std.parseFloat(s.substring(-2)) - child.width;
+			} 
+			//child.x += a != null ? cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float) : 0;
 		},
 		top: function(child:DisplayObject, s:String, a:String):Void { 
-		if (s.lastIndexOf("%") >= 0) { 
-			child.y = map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0;
-		}
-		else { 
-			child.y = Std.parseFloat(s.substring(-2));
-		} 
-		child.y -= a ? vAlignFunctions[a.split('-')[0]](child) : 0;
+			if (s.lastIndexOf("%") >= 0) { 
+				//child.y = map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0;
+			}
+			else { 
+				child.y = Std.parseFloat(s.substring(-2));
+			} 
+			//child.y -= a != null ? cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float) : 0;
 		},
 		bottom: function(child:DisplayObject, s:String, a:String):Void { 
-		if (s.lastIndexOf("%") >= 0) { 
-			child.y = map.getHeight() - (map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0) - child.height;
-		}
-		else { 
-			child.y = map.getHeight() - Std.parseFloat(s.substring(-2)) - child.height;
-		} 
-		child.y += a ? vAlignFunctions[a.split('-')[0]](child) : 0;
+			if (s.lastIndexOf("%") >= 0) { 
+				//child.y = map.getHeight() - (map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0) - child.height;
+			}
+			else { 
+				//child.y = map.getHeight() - Std.parseFloat(s.substring(-2)) - child.height;
+			} 
+			//child.y += a != null ? cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float) : 0;
 		}
 	};
 
-	public function new(map:Map, keyboard:Bool=true, fullScreen:Bool=false, buttonPositions:Dynamic=null, buttonClass:Type=null)
+	public function new(map:Map, keyboard:Bool=true, fullScreen:Bool=false, buttonPositions:Dynamic=null, buttonClass:Class<Dynamic>=null)
 	{
-		if (!buttonClass) buttonClass = Button;
+		super();
+		if (buttonClass != null) buttonClass = Button;
 		
-		leftButton = new Type(Button.LEFT);
-		rightButton = new Type(Button.RIGHT);
-		upButton = new Type(Button.UP);
-		downButton = new Type(Button.DOWN);
+		leftButton = new Button(Button.LEFT);
+		rightButton = new Button(Button.RIGHT);
+		upButton = new Button(Button.UP);
+		downButton = new Button(Button.DOWN);
 		
-		inButton = new Type(Button.IN);
-		outButton = new Type(Button.OUT);
+		inButton = new Button(Button.IN);
+		outButton = new Button(Button.OUT);
 
 		this.map = map;
 		this.keyboard = keyboard;
@@ -186,9 +188,9 @@ class MapControls extends Sprite
 	public function setButtonTransforms(overTransform:ColorTransform, outTransform:ColorTransform):Void
 	{		
 		for (button in buttons) {
-		button.overTransform = overTransform;
-		button.outTransform = outTransform;	
-		button.transform.colorTransform = outTransform;
+			button.overTransform = overTransform;
+			button.outTransform = outTransform;	
+			button.transform.colorTransform = outTransform;
 		}
 	}
 
@@ -198,8 +200,9 @@ class MapControls extends Sprite
 			map.addEventListener(KeyboardEvent.KEY_UP, onKeyboardEvent);
 			map.addEventListener(KeyboardEvent.KEY_DOWN, onKeyboardEvent);
 		}
+		
 		if (fullScreen) { 
-		stage.addEventListener(FullScreenEvent.FULL_SCREEN, onFullScreenEvent);
+			stage.addEventListener(FullScreenEvent.FULL_SCREEN, onFullScreenEvent);
 		}
 		
 		// since our size is based on map size, wait for map to be resized, so we don't 
@@ -218,38 +221,38 @@ class MapControls extends Sprite
 
 	private function onKeyboardEvent(event:KeyboardEvent):Void
 	{
-		if (!stage || Std.is(stage.focus, TextField)) return;
+		if (stage != null || Std.is(stage.focus, TextField)) return;
 
-		var buttonKeys:Dynamic = {
-		'+': inButton,		
-		'=': inButton,		
-		'-': outButton,		
-		'_': outButton		
-		};
+		var buttonKeys:ObjectMap<Dynamic, Dynamic> = [
+			'+' => inButton,		
+			'=' => inButton,		
+			'-' => outButton,		
+			'_' => outButton		
+		];
 		
-		buttonKeys[Keyboard.LEFT] = leftButton;	   	
-		buttonKeys[Keyboard.RIGHT] = rightButton;
-		buttonKeys[Keyboard.DOWN] = downButton;	   	
-		buttonKeys[Keyboard.UP] = upButton;
+		buttonKeys.set(Keyboard.LEFT, leftButton);	   	
+		buttonKeys.set(Keyboard.RIGHT, rightButton);
+		buttonKeys.set(Keyboard.DOWN, downButton);	   	
+		buttonKeys.set(Keyboard.UP, upButton);
 		
 		var char:String = String.fromCharCode(event.charCode);
 		
-		if (buttonKeys[char]) {
+		if (buttonKeys.get(char) != null) {
 			if (event.type == KeyboardEvent.KEY_DOWN) {
-				buttonKeys[char].onMouseOver();
+				buttonKeys.get(char).onMouseOver();
 			}
 			else {
-				buttonKeys[char].onMouseOut();
-				cast(actions[buttons.indexOf(buttonKeys[char])], Dynamic).call();
+				buttonKeys.get(char).onMouseOut();
+				actions[buttons.indexOf(buttonKeys.get(char))].call();
 			}
 		}
-		else if (buttonKeys[event.keyCode]) {
+		else if (buttonKeys.get(event.keyCode) != null) {
 			if (event.type == KeyboardEvent.KEY_DOWN) {
-				buttonKeys[event.keyCode].onMouseOver();
+				buttonKeys.get(event.keyCode).onMouseOver();
 			}
 			else {
-				buttonKeys[event.keyCode].onMouseOut();
-				cast(actions[buttons.indexOf(buttonKeys[event.keyCode])], Dynamic).call();
+				buttonKeys.get(event.keyCode).onMouseOut();
+				actions[buttons.indexOf(buttonKeys.get(event.keyCode))].call();
 			}
 		}
 		//event.stopImmediatePropagation();
@@ -260,15 +263,15 @@ class MapControls extends Sprite
 		var w:Float = map.getWidth();
 		var h:Float = map.getHeight();
 		
-		for (child in positions)
-		{
-			var position:Dynamic = positions[child];
-			for (reference in position)
-			{
-				if (reference == 'align') continue;
-				positionFunctions[reference](this[child], position[reference], position['align']);
-			}
-		}
+		//for (child in positions)
+		//{
+			//var position:Dynamic = positions[child];
+			//for (reference in position)
+			//{
+				//if (reference == 'align') continue;
+				//positionFunctions[reference](this[child], position[reference], position['align']);
+			//}
+		//}
 	}
 
 	public function onFullScreenEvent(event:Event):Void

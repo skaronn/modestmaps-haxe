@@ -80,7 +80,8 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 		* bottom, zoomed-out to zoomed-in. Note the first tile coordinate
 		* in each group of 256.
 		*/
-		for (var c:Coordinate = __topLeftOutLimit.copy(); c.zoom <= __bottomRightInLimit.zoom; c.zoom += 1)
+		//for (var c:Coordinate = __topLeftOutLimit.copy(); c.zoom <= __bottomRightInLimit.zoom; c.zoom += 1)
+		for (c in __topLeftOutLimit.copy() ... cast(__bottomRightInLimit.zoom, Int))
 		{	
 			// edges of the image at current zoom level
 			var tlo:Coordinate = __topLeftOutLimit.zoomTo(c.zoom);

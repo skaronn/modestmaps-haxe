@@ -10,32 +10,32 @@ import com.modestmaps.geo.AbstractProjection;
  
 class LinearProjection extends AbstractProjection
 {
-function new(zoom:Float, T:Transformation)
-{
-	super(zoom, T);
-}
+	public function new(zoom:Float, T:Transformation)
+	{
+		super(zoom, T);
+	}
 
-   /*
-* String signature of the current projection.
-*/
-override public function toString():String
-{
-	return 'Linear('+zoom+', '+T.toString()+')';
-}
+	/**
+	* String signature of the current projection.
+	*/
+	override public function toString():String
+	{
+		return 'Linear('+zoom+', '+T.toString()+')';
+	}
 
-   /*
-* Return raw projected point.
-*/
-override private function rawProject(point:Point):Point
-{
-	return new Point(point.x, point.y);
-}
+	/**
+	* Return raw projected point.
+	*/
+	override private function rawProject(point:Point):Point
+	{
+		return new Point(point.x, point.y);
+	}
 
-   /*
-* Return raw unprojected point.
-*/
-override private function rawUnproject(point:Point):Point
-{
-	return new Point(point.x, point.y);
-}
+	/**
+	* Return raw unprojected point.
+	*/
+	override private function rawUnproject(point:Point):Point
+	{
+		return new Point(point.x, point.y);
+	}
 }

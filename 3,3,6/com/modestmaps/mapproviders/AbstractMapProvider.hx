@@ -34,8 +34,11 @@ class AbstractMapProvider
 	private var __topLeftOutLimit:Coordinate;
 	private var __bottomRightInLimit:Coordinate;
 
-	/*
+	/**
 	 * Abstract constructor, should not be instantiated directly.
+	 * 
+	 * @param	minZoom
+	 * @param	maxZoom
 	 */
 	public function new(minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
 	{
@@ -80,17 +83,19 @@ class AbstractMapProvider
 	}
 
 	/**
-	* Get top left outer-zoom limit and bottom right inner-zoom limits,
-	* as Coordinates in a two element array.
-	*/
+	 * Get top left outer-zoom limit and bottom right inner-zoom limits,
+	 * as Coordinates in a two element array.
+	 * 
+	 * @return
+	 */
 	public function outerLimits():Array<Dynamic>
 	{
 		return [ __topLeftOutLimit.copy(), __bottomRightInLimit.copy() ];
 	}
 
 	/**
-	 * @param	location
-	 * @return projected and transformed coordinate for a location.
+	* @param	location
+	* @return projected and transformed coordinate for a location.
 	*/
 	public function locationCoordinate(location:Location):Coordinate
 	{
@@ -98,8 +103,11 @@ class AbstractMapProvider
 	}
 
 	/**
-	* Return untransformed and unprojected location for a coordinate.
-	*/
+	 * Return untransformed and unprojected location for a coordinate.
+	 * 
+	 * @param	coordinate
+	 * @return
+	 */
 	public function coordinateLocation(coordinate:Coordinate):Location
 	{
 		return __projection.coordinateLocation(coordinate);

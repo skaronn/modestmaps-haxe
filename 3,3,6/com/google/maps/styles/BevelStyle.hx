@@ -14,13 +14,14 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 		super();
 		if (arg1 != null)
 		{
-		copyFromObject(arg1);
+			copyFromObject(arg1);
 		}
 		return;
 	}
 
 	public var bevelAlpha(getBevelAlpha, setBevelAlpha):Dynamic;
-		private function getBevelAlpha():Dynamic
+	
+	private function getBevelAlpha():Dynamic
 	{
 		return this._bevelAlpha;
 	}
@@ -33,25 +34,28 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 		}
 		else 
 		{
-		this._shadowColor = arg1 as Number;
+		this._shadowColor = cast(arg1, Float);
 		}
 		return;
 	}
 
 	public var highlightColor(getHighlightColor, setHighlightColor):Dynamic;
-		private function getHighlightColor():Dynamic
+	
+	private function getHighlightColor():Dynamic
 	{
 		return this._highlightColor;
 	}
 
 	public var bevelStyle(getBevelStyle, setBevelStyle):Dynamic;
-		private function getBevelStyle():Dynamic
+	
+	private function getBevelStyle():Dynamic
 	{
 		return this._bevelStyle;
 	}
 
 	public var bevelThickness(getBevelThickness, setBevelThickness):Dynamic;
-		private function getBevelThickness():Dynamic
+	
+	private function getBevelThickness():Dynamic
 	{
 		return this._bevelThickness;
 	}
@@ -60,11 +64,11 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 	{
 		if (arg1 == null)
 		{
-		this._highlightColor = null;
+			this._highlightColor = null;
 		}
 		else 
 		{
-		this._highlightColor = arg1 as Number;
+			this._highlightColor = cast(arg1, Float);
 		}
 		return;
 	}
@@ -73,11 +77,11 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 	{
 		if (arg1 == null)
 		{
-		this._bevelAlpha = null;
+			this._bevelAlpha = null;
 		}
 		else 
 		{
-		this._bevelAlpha = arg1 as Number;
+			this._bevelAlpha = cast(arg1, Float);
 		}
 		return;
 	}
@@ -90,7 +94,8 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 	}
 
 	public var shadowColor(getShadowColor, setShadowColor):Dynamic;
-		private function getShadowColor():Dynamic
+	
+	private function getShadowColor():Dynamic
 	{
 		return this._shadowColor;
 	}
@@ -104,11 +109,11 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 	{
 		if (arg1 == null)
 		{
-		this._bevelThickness = null;
+			this._bevelThickness = null;
 		}
 		else 
 		{
-		this._bevelThickness = arg1 as Number;
+			this._bevelThickness = cast(arg1, Float);
 		}
 		return;
 	}
@@ -117,11 +122,11 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 	{
 		if (arg1 == null)
 		{
-		this._bevelStyle = null;
+			this._bevelStyle = null;
 		}
 		else 
 		{
-		this._bevelStyle = arg1 as Number;
+			this._bevelStyle = cast(arg1, Float);
 		}
 		return;
 	}
@@ -132,7 +137,7 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 		loc1 = null;
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		loc1 = new BevelStyle();
 		loc1.copyFromObject(arg1);

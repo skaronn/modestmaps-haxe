@@ -6,8 +6,8 @@ package com.modestmaps.mapproviders.microsoft;
  */
 class MicrosoftRoadMapProvider extends MicrosoftProvider
 {
-public function new(hillShading:Bool=true, minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
-{
-	super(ROAD, hillShading, minZoom, maxZoom);
-}
+	public function new(hillShading:Bool=true, minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM)
+	{
+		super(MicrosoftProvider.ROAD, hillShading, minZoom, maxZoom);
+	}
 }

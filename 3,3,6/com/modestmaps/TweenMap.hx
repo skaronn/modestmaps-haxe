@@ -51,17 +51,17 @@ class TweenMap extends Map
 	*
 	* @see com.modestmaps.core.TileGrid
 	*/
-	//public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, ...rest)
-	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, rest:Array<Dynamic> = null)
+	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
 		super(width, height, draggable, provider, rest);
-		grid.setTileClass(TweenTile);
+		grid.setTileClass("com.modestmaps.core.TweenTile"/*TweenTile*/);
 	}
 
 	   /** Pan by px and py, in panDuration (used by panLeft, panRight, panUp and panDown) */
 	override public function panBy(px:Float, py:Float):Void
 	{
-		if (!grid.panning && !grid.zooming) {
+		if (!grid.panning && !grid.zooming)
+		{
 			grid.prepareForPanning();
 			TweenLite.to(grid, panDuration, { tx: grid.tx+px, ty: grid.ty+py, onComplete: grid.donePanning, ease: panEase });
 		}
@@ -101,7 +101,7 @@ class TweenMap extends Map
 	override public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
 	{
 		if (duration < 0) duration = panAndZoomDuration;
-		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint != null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
 		
 		var p:Point = locationPoint(location);
 		
@@ -132,7 +132,7 @@ class TweenMap extends Map
 	override public function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
 	{
 		if (duration < 0) duration = panAndZoomDuration;
-		if (!targetPoint) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint != null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
 
 		var constrainedDelta:Float = zoomDelta;
 
@@ -229,7 +229,7 @@ class TweenMap extends Map
 
 	// keeping it DRY, as they say	
 		// dir should be 1, for in, or -1, for out
-	override private function zoomBy(dir:Int):Void
+	override public function zoomBy(dir:Int):Void
 	{
 		if (!grid.panning)
 		{
@@ -254,17 +254,20 @@ class TweenMap extends Map
 
 		TweenLite.killTweensOf(grid);
 		TweenLite.killDelayedCallsTo(doneMouseWheeling);
-
+		var sc:Float = 0;
+		
 		if (event.delta < 0) {
-			var sc:Float;
+			
 			if (grid.zoomLevel > grid.minZoom) {
 				mouseWheelingOut = true;
 				mouseWheelingIn = false;
 				sc = Math.max(0.5, 1.0+event.delta/20.0);
 			}
 		}
-		else if (event.delta > 0) {
-			if (grid.zoomLevel < grid.maxZoom) {
+		else if (event.delta > 0)
+		{
+			if (grid.zoomLevel < grid.maxZoom)
+			{
 				mouseWheelingIn = true;
 				mouseWheelingOut = false;			
 				sc = Math.min(2.0, 1.0+event.delta/20.0);		
@@ -276,7 +279,8 @@ class TweenMap extends Map
 		trace('mouseWheelingIn', mouseWheelingIn);
 		trace('mouseWheelingOut', mouseWheelingOut); */
 		
-		if (sc) {
+		if (sc != 0)
+		{
 			var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));		
 			var m:Matrix = grid.getMatrix();
 			m.translate(-p.x, -p.y);

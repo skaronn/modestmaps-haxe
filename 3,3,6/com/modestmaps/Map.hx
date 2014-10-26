@@ -39,7 +39,6 @@ import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-//import flash.utils.GetTimer;
 import flash.errors.Error;
 
 @:meta(Event(name="startZooming",	  type="com.modestmaps.events.MapEvent"))
@@ -123,7 +122,7 @@ class Map extends Sprite
 		if (rest!=null && rest.length > 0 && Std.is(rest[0], MapExtent)){
 			setExtent(cast(rest[0], MapExtent));
 		}
-		else if (rest!=null && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
+		else if (rest != null && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
 			setCenterZoom(cast(rest[0], Location), cast(rest[1], Float));
 		}
 		else {
@@ -281,7 +280,7 @@ class Map extends Sprite
 	*
 	* @return   MapExtent object
 	*/
-	function getExtent():MapExtent
+	public function getExtent():MapExtent
 	{
 		var extent:MapExtent = new MapExtent();
 		
@@ -319,7 +318,7 @@ class Map extends Sprite
 	*
 	* @return   zoom number
 	*/
-	function getZoom():Int
+	public function getZoom():Int
 	{
 		return Math.floor(grid.zoomLevel);
 	}
@@ -333,7 +332,7 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.events.MapEvent.RESIZED
 	*/
-	function setSize(w:Float, h:Float):Void
+	public function setSize(w:Float, h:Float):Void
 	{
 		if (w != mapWidth || h != mapHeight)
 		{
@@ -354,25 +353,16 @@ class Map extends Sprite
 	*
 	* @return   Array of [width, height].
 	*/
-	function getSize():Array<Dynamic>
+	public function getSize():Array<Dynamic>
 	{
 		var size:Array<Dynamic> = [mapWidth, mapHeight];
 		return size;
 	}
 
-	function getSizePoint():Point
+	public function getSizePoint():Point
 	{
 		return new Point(mapWidth, mapHeight);
 	}
-	
-	//function set_size(getSize, setSize):Point {
-		//
-	//}
-
-	//function setSize(value:Point):Void
-	//{
-		//set_Size(value.x, value.y);
-	//}
 
 	/** Get map width. */
 	public function getWidth():Float
@@ -413,6 +403,7 @@ class Map extends Sprite
 		{
 			previousGeometry = mapProvider.geometry();
 		}
+		
 		var extent:MapExtent = getExtent();
 
 		mapProvider = newProvider;
@@ -462,25 +453,25 @@ class Map extends Sprite
 	/** Pan up by 1/3 (or panFraction) of the map height. */
 	public function panUp(event:Event=null):Void
 	{
-		panBy(0, mapHeight*panFraction);
+		panBy(0, mapHeight * panFraction);
 	}	  
 
 	   /** Pan down by 1/3 (or panFraction) of the map height. */
 	public function panDown(event:Event=null):Void
 	{
-		panBy(0, -mapHeight*panFraction);
+		panBy(0, -mapHeight * panFraction);
 	}
 
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
 	public function panLeft(event:Event=null):Void
 	{
-		panBy((mapWidth*panFraction), 0);
+		panBy((mapWidth * panFraction), 0);
 	}	  
 
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
-	function panRight(event:Event=null):Void
+	public function panRight(event:Event=null):Void
 	{
-		panBy(-(mapWidth*panFraction), 0);
+		panBy(-(mapWidth * panFraction), 0);
 	}
 
 	public function panBy(px:Float, py:Float):Void
