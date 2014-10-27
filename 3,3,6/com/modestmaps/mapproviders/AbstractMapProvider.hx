@@ -116,11 +116,15 @@ class AbstractMapProvider
 	//@:isVar public var tileWidth(get, null):Float;
 	//function get_tileWidth() { return DEFAULT_TILE_SIZE; }
 	
-	public function tileWidth() { return DEFAULT_TILE_SIZE; }
+	public function tileWidth():Float{ 
+		return DEFAULT_TILE_SIZE;
+	}
 	
 	//@:isVar public var tileHeight(get, null):Float;
 	//function get_tileHeight() { return DEFAULT_TILE_SIZE; }
 	
-	public function tileHeight() { return DEFAULT_TILE_SIZE; }
+	public function tileHeight():Float{
+		return DEFAULT_TILE_SIZE;
+	}
 
 }

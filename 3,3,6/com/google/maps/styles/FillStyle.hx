@@ -6,7 +6,6 @@ class FillStyle
 {
 	public function new(arg1:Dynamic=null)
 	{
-		super();
 		if (arg1 != null)
 		{
 			copyFromObject(arg1);
@@ -41,7 +40,7 @@ class FillStyle
 
 	public function copyFromObject(arg1:Dynamic):Void
 	{
-		com.google.maps.wrappers.Wrapper.copyProperties(this, arg1, ["color", "alpha"], Number);
+		com.google.maps.wrappers.Wrapper.copyProperties(this, arg1, ["color", "alpha"], Float);
 		if (arg1.gradient != null)
 		{
 			this.gradient = com.google.maps.styles.GradientStyle.fromObject(arg1.gradient);

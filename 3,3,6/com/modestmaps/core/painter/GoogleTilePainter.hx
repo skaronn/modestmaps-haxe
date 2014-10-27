@@ -128,7 +128,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 
 	public function isPainted(tile:Tile):Bool
 	{
-		return tile.numChildren > 0 ? (cast(tile.getChildAt(0), Object)['loadComplete'] : false;
+		return tile.numChildren > 0 ? (cast(tile.getChildAt(0), Dynamic)['loadComplete'] : false;
 	}
 
 	public function cancelPainting(tile:Tile):Void
@@ -142,7 +142,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 
 	public function isPainting(tile:Tile):Bool
 	{
-		var img:Dynamic = tile.numChildren > 0 ? (cast(tile.getChildAt(0), Object) : false;  
+		var img:Dynamic = tile.numChildren > 0 ? (cast(tile.getChildAt(0), Dynamic) : false;  
 		return img!=null && img.hasOwnProperty('loadComplete') && !img['loadComplete'];
 	}
 

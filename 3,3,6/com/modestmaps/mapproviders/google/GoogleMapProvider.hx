@@ -13,6 +13,7 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider impl
 
 	public function new(tilePainter:GoogleTilePainter)
 	{
+		super();
 		this.tilePainter = tilePainter;
 	}
 

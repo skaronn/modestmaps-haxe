@@ -121,7 +121,7 @@ class OverviewMapControlOptions
 
 	public static function merge(arg1:Array<Dynamic>):com.google.maps.controls.OverviewMapControlOptions
 	{
-		return com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.controls.OverviewMapControlOptions, arg1) as com.google.maps.controls.OverviewMapControlOptions;
+		return cast(com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.controls.OverviewMapControlOptions, arg1), com.google.maps.controls.OverviewMapControlOptions);
 	}
 
 	public static function fromObject(arg1:Dynamic):com.google.maps.controls.OverviewMapControlOptions

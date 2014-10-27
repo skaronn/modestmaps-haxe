@@ -40,7 +40,7 @@ class TweenMap extends Map
 	private var mouseWheelingIn:Bool = false;
 	private var mouseWheelingOut:Bool = false;
 
-	/*
+	/**
 	* Initialize the map: set properties, add a tile grid, draw it.
 	* Default extent covers the entire globe, (+/-85, +/-180).
 	*
@@ -57,7 +57,9 @@ class TweenMap extends Map
 		grid.setTileClass("com.modestmaps.core.TweenTile"/*TweenTile*/);
 	}
 
-	   /** Pan by px and py, in panDuration (used by panLeft, panRight, panUp and panDown) */
+	/** 
+	* Pan by px and py, in panDuration (used by panLeft, panRight, panUp and panDown)
+	*/
 	override public function panBy(px:Float, py:Float):Void
 	{
 		if (!grid.panning && !grid.zooming)
@@ -67,7 +69,9 @@ class TweenMap extends Map
 		}
 	}	  
 		
-	/** default easing function for panUp, panDown, panLeft, panRight, etc. */
+	/** 
+	* default easing function for panUp, panDown, panLeft, panRight, etc.
+	*/
 	private static function quadraticEaseOut(t:Float, b:Float, c:Float, d:Float):Float
 	{
 		return -c * (t /= d) * (t - 2) + b;
@@ -87,8 +91,10 @@ class TweenMap extends Map
 		TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
 	}
 
-	/** call grid.donePanning() and grid.doneZooming(), used by tweenExtent, 
-	 *  panAndZoomBy and zoomByAbout as a TweenLite onComplete function */
+	/** 
+	* call grid.donePanning() and grid.doneZooming(), used by tweenExtent, 
+	*  panAndZoomBy and zoomByAbout as a TweenLite onComplete function
+	*/
 	private function panAndZoomComplete():Void
 	{
 		grid.enforceBoundsEnabled = enforceToRestore;
@@ -204,8 +210,7 @@ class TweenMap extends Map
 							 onStart: grid.prepareForPanning,
 							 onComplete: grid.donePanning});
 		}
-		else
-		{
+		else{
 			setCenter(location);
 		}
 	}
@@ -227,8 +232,11 @@ class TweenMap extends Map
 					   onComplete: grid.donePanning });
 	}
 
-	// keeping it DRY, as they say	
-		// dir should be 1, for in, or -1, for out
+	/**
+	 * keeping it DRY, as they say	
+	 * dir should be 1, for in, or -1, for out
+	 * @param	dir
+	 */
 	override public function zoomBy(dir:Int):Void
 	{
 		if (!grid.panning)
@@ -295,6 +303,9 @@ class TweenMap extends Map
 		
 	}
 
+	/**
+	 * 
+	 */
 	private function doneMouseWheeling():Void
 	{
 		var p:Point = grid.globalToLocal(new Point(stage.mouseX, stage.mouseY));

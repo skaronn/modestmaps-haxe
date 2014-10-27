@@ -7,6 +7,7 @@ import com.modestmaps.mapproviders.AbstractMapProvider;
 import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.util.BinaryUtil;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 
 /**
  * @author tom
@@ -21,21 +22,21 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 	public static inline var ROAD:String = "ROAD";
 	public static inline var HYBRID:String = "HYBRID";
 
-	public static var serverSalt:Int = cast((Math.random() * 4), Int);
-		
-	private static var URLSTART:ObjectMap<String, String> = [
+	public static var serverSalt:Int = cast((Math.random() * 4), Int);		
+	
+	private static var URLSTART:StringMap<String> = [
 		AERIAL => "http://a",
 		ROAD => "http://r",
 		HYBRID => "http://h"
 	];
 		
-	private static var URLMIDDLE:ObjectMap<String, String> = [
+	private static var URLMIDDLE:StringMap<String> = [
 		AERIAL => ".ortho.tiles.virtualearth.net/tiles/a",
 		ROAD => ".ortho.tiles.virtualearth.net/tiles/r",
 		HYBRID => ".ortho.tiles.virtualearth.net/tiles/h"
 	];
 	
-	private static var URLEND:ObjectMap<String, String> = [
+	private static var URLEND:StringMap<String> = [
 		AERIAL => ".jpeg?g=90",
 		ROAD => ".png?g=90",
 		HYBRID => ".jpeg?g=90"

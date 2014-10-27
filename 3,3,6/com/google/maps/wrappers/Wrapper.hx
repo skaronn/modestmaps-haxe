@@ -16,7 +16,6 @@ class Wrapper
 {
 	public function new()
 	{
-		super();
 		initializeObjectMaps();
 		return;
 	}
@@ -61,8 +60,8 @@ class Wrapper
 		loc3 = 0;
 		while (loc3 < loc2) 
 		{
-		loc1.push(this.wrapCopyrightNotice(arg1[loc3]));
-		loc3 = (loc3 + 1);
+			loc1.push(this.wrapCopyrightNotice(arg1[loc3]));
+			loc3 = (loc3 + 1);
 		}
 		return loc1;
 	}
@@ -77,15 +76,15 @@ class Wrapper
 		loc3 = NaN;
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		loc1 = [];
 		loc2 = arg1.length;
 		loc3 = 0;
 		while (loc3 < loc2) 
 		{
-		loc1.push(this.wrapITileLayer(arg1[loc3]));
-		loc3 = (loc3 + 1);
+			loc1.push(this.wrapITileLayer(arg1[loc3]));
+			loc3 = (loc3 + 1);
 		}
 		return loc1;
 	}
@@ -99,7 +98,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.overlays.PolylineOptions.fromObject(arg1);
 	}
@@ -133,7 +132,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.Copyright.fromObject(arg1);
 	}
@@ -142,7 +141,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.controls.ZoomControlOptions.fromObject(arg1);
 	}
@@ -218,7 +217,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.services.Placemark.fromObject(arg1);
 	}
@@ -227,7 +226,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.controls.MapTypeControlOptions.fromObject(arg1);
 	}
@@ -236,7 +235,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.styles.StrokeStyle.fromObject(arg1);
 	}
@@ -245,7 +244,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.services.GeocodingResponse.fromObject(arg1);
 	}
@@ -264,7 +263,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.styles.GradientStyle.fromObject(arg1);
 	}
@@ -273,7 +272,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.Color.fromObject(arg1);
 	}
@@ -288,8 +287,8 @@ class Wrapper
 		target = arg2;
 		return function (arg1:flash.events.Event):Void
 		{
-		handler(wrapEvent(arg1, target ? target : arg1.target));
-		return;
+			handler(wrapEvent(arg1, target ? target : arg1.target));
+			return;
 		}
 	}
 
@@ -303,15 +302,15 @@ class Wrapper
 		loc3 = NaN;
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		loc1 = [];
 		loc2 = arg1.length;
 		loc3 = 0;
 		while (loc3 < loc2) 
 		{
-		loc1.push(this.wrapCopyright(arg1[loc3]));
-		loc3 = (loc3 + 1);
+			loc1.push(this.wrapCopyright(arg1[loc3]));
+			loc3 = (loc3 + 1);
 		}
 		return loc1;
 	}
@@ -325,7 +324,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.styles.BevelStyle.fromObject(arg1);
 	}
@@ -334,7 +333,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.LatLngBounds.fromObject(arg1);
 	}
@@ -349,15 +348,15 @@ class Wrapper
 		loc3 = NaN;
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		loc1 = [];
 		loc2 = arg1.length;
 		loc3 = 0;
 		while (loc3 < loc2) 
 		{
-		loc1.push(this.wrapLatLng(arg1[loc3]));
-		loc3 = (loc3 + 1);
+			loc1.push(this.wrapLatLng(arg1[loc3]));
+			loc3 = (loc3 + 1);
 		}
 		return loc1;
 	}
@@ -422,8 +421,8 @@ class Wrapper
 	{
 		if (this.alienWrapper == null)
 		{
-		this.alienWrapper = arg1;
-		arg1.setAlienWrapper(this);
+			this.alienWrapper = arg1;
+			arg1.setAlienWrapper(this);
 		}
 		return;
 	}
@@ -465,7 +464,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.styles.FillStyle.fromObject(arg1);
 	}
@@ -474,7 +473,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.R1Interval.fromObject(arg1);
 	}
@@ -483,7 +482,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.InfoWindowOptions.fromObject(arg1);
 	}
@@ -497,7 +496,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.controls.OverviewMapControlOptions.fromObject(arg1);
 	}
@@ -506,7 +505,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.CopyrightNotice.fromObject(arg1);
 	}
@@ -525,7 +524,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.overlays.MarkerOptions.fromObject(arg1);
 	}
@@ -539,7 +538,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.styles.RectangleStyle.fromObject(arg1);
 	}
@@ -548,7 +547,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.S1Interval.fromObject(arg1);
 	}
@@ -595,7 +594,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.MapTypeOptions.fromObject(arg1);
 	}
@@ -604,7 +603,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.controls.PositionControlOptions.fromObject(arg1);
 	}
@@ -613,7 +612,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.overlays.PolygonOptions.fromObject(arg1);
 	}
@@ -632,7 +631,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.controls.ControlPosition.fromObject(arg1);
 	}
@@ -646,7 +645,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		return com.google.maps.overlays.GroundOverlayOptions.fromObject(arg1);
 	}
@@ -687,7 +686,7 @@ class Wrapper
 	{
 		if (arg1 == null)
 		{
-		throw new flash.errors.IllegalOperationError("Object not initialized");
+			throw new flash.errors.IllegalOperationError("Object not initialized");
 		}
 		return;
 	}
@@ -696,7 +695,7 @@ class Wrapper
 	{
 		if (com.google.maps.wrappers.Wrapper.nativeWrapper == null)
 		{
-		com.google.maps.wrappers.Wrapper.nativeWrapper = new Wrapper();
+			com.google.maps.wrappers.Wrapper.nativeWrapper = new Wrapper();
 		}
 		return com.google.maps.wrappers.Wrapper.nativeWrapper;
 	}
@@ -758,11 +757,11 @@ class Wrapper
 		loc3 = arg2;
 		for (loc1 in loc3)
 		{
-		if (arg1[loc1] != null)
-		{
-			continue;
-		}
-		arg1[loc1] = arg2[loc1];
+			if (arg1[loc1] != null)
+			{
+				continue;
+			}
+			arg1[loc1] = arg2[loc1];
 		}
 		return;
 	}
@@ -792,9 +791,9 @@ class Wrapper
 		var loc2:Dynamic;
 		loc2 = null;
 		var loc3:Dynamic;
-		loc3 = undefined;
+		loc3 = null;
 		var loc4:Dynamic;
-		loc4 = undefined;
+		loc4 = null;
 		loc1 = 0;
 		while (loc1 < arg3.length) 
 		{
@@ -809,7 +808,7 @@ class Wrapper
 			loc3 = cast arg4;
 			if ((loc4 = loc3) != null)
 			{
-			arg1[loc2] = loc3;
+				arg1[loc2] = loc3;
 			}
 		}
 		loc1 = (loc1 + 1);

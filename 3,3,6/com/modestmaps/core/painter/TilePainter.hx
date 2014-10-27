@@ -6,6 +6,7 @@ import com.modestmaps.core.TileGrid;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
 import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 import haxe.macro.Type;
 
 import openfl.display.Bitmap;
@@ -51,11 +52,14 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private var tilePool:TilePool;	
 	private var queueFunction:Dynamic;
 	private var queueTimer:Timer;
+	
+	
 
 	// per-tile, the array of images we're going to load, which can be empty
 	// TODO: document this in IMapProvider, so that provider implementers know
 	// they are free to check the bounds of their overlays and don't have to serve
 	// millions of 404s
+	//private var layersNeeded:StringMap<Int>;
 	private var layersNeeded:ObjectMap<Dynamic, Dynamic>;
 	private var loaderTiles:ObjectMap<Dynamic, Dynamic>;
 
@@ -166,7 +170,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 */
 	public function isPainted(tile:Tile):Bool
 	{
-		return layersNeeded.get(tile.name)==null;	
+		return layersNeeded.get(tile.name) == null;	
 	}
 
 	/**
@@ -222,15 +226,21 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			}
 			catch (error:Error) {
 				// close often doesn't work, no biggie
+				error.getStackTrace();
 			}
 		}
 		
 		openRequests = [];
 		
-		for (key in layersNeeded)
+		flash.Lib.trace("TilePainter.hx - layersNeeded : " + layersNeeded);
+		
+		if (layersNeeded != null)
 		{
-			untyped __delete__(layersNeeded, key);
-		}
+			for (key in layersNeeded)
+			{
+				untyped __delete__(layersNeeded, key);
+			}
+		}		
 
 		layersNeeded = null;
 		
@@ -258,7 +268,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				loadNextURLForTile(tile);
 			}
 			else {
-				//trace("requesting", url);
+				flash.Lib.trace("requesting : "+ url);
 				var tileLoader:Loader = new Loader();
 				loaderTiles.set(tileLoader, tile);
 				tileLoader.name = tile.name;
@@ -351,7 +361,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		var loader:Loader = cast(event.target,LoaderInfo).loader;
 		
 		if (cacheLoaders && !loaderCache.get(loader.contentLoaderInfo.url)) {
-			//trace('caching content for', loader.contentLoaderInfo.url);
+			flash.Lib.trace("caching content for" + loader.contentLoaderInfo.url);
 			try {
 				var content:Bitmap = cast(loader.content, Bitmap);
 				loaderCache.get(loader.contentLoaderInfo.url) = content;
@@ -361,7 +371,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				}
 			}
 			catch (error:Error) {
-				
+				error.getStackTrace();
 			}
 		}
 			
@@ -371,18 +381,20 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				smoothContent.smoothing = true;
 			}
 			catch (error:Error) {
-				// ???
+				error.getStackTrace();
 			}
 		}		
 
 		// tidy up the request monitor
 		var index:Int = openRequests.indexOf(loader);
+		
 		if (index >= 0) {
 			openRequests.splice(index,1);
 		}
 		
 		var tile:Tile = cast(loaderTiles.get(loader), Tile);
-		if (tile!=null) { 
+		
+		if (tile != null){ 
 			tile.addChild(loader);
 			loadNextURLForTile(tile);
 		}

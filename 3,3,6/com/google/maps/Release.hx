@@ -1,14 +1,12 @@
 package com.google.maps;
 
-public @:final class Release 
+@:final  class Release 
 {
-public function Release()
-{
-	super();
-	return;
-}
+	public function new()
+	{
+	}
 
-public static inline var version:String="3";
+	public static inline var VERSION:String="3";
 
-public static inline var mfeHost:String="maps.googleapis.com";
+	public static inline var MFEHOST:String="maps.googleapis.com";
 }

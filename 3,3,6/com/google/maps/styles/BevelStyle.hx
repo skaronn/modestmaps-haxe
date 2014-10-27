@@ -89,7 +89,7 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 	public override function copyFromObject(arg1:Dynamic):Void
 	{
 		super.copyFromObject(arg1);
-		com.google.maps.wrappers.Wrapper.copyProperties(this, arg1, ["bevelStyle", "highlightColor", "shadowColor", "bevelAlpha", "bevelThickness"], Number);
+		com.google.maps.wrappers.Wrapper.copyProperties(this, arg1, ["bevelStyle", "highlightColor", "shadowColor", "bevelAlpha", "bevelThickness"], Float);
 		return;
 	}
 
@@ -146,7 +146,7 @@ class BevelStyle extends com.google.maps.styles.RectangleStyle
 
 	public static function mergeStyles(arg1:Array<Dynamic>):com.google.maps.styles.BevelStyle
 	{
-		return com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.styles.BevelStyle, arg1) as com.google.maps.styles.BevelStyle;
+		return cast(com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.styles.BevelStyle, arg1), com.google.maps.styles.BevelStyle);
 	}
 
 	public static inline var BEVEL_NONE:Float=0;

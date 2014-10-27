@@ -61,12 +61,12 @@ class RectangleStyle
 		return this._strokeStyle;
 	}
 
-	public var fillStyle(null, setFillStyle):com;
+	public var fillStyle(null, set):com.google.maps.styles.FillStyle;
 	
-	private function setFillStyle(arg1:com.google.maps.styles.FillStyle):Void
+	private function set_fillStyle(arg1:com.google.maps.styles.FillStyle):Void
 	{
 		this._fillStyle = arg1;
-		return;
+		return _fillStyle;
 	}
 
 	public static function fromObject(arg1:Dynamic):com.google.maps.styles.RectangleStyle

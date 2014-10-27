@@ -31,21 +31,20 @@ class Button extends Sprite
 		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		
 		graphics.clear();
-		if (beveled)
-		{
-		graphics.beginFill(0xdddddd);
-		graphics.drawRoundRect(0, 0, 20, 20, radius, radius);
-		graphics.beginFill(bgColor);
-		graphics.drawRoundRect(0, 0, 18, 18, radius, radius);
-		graphics.beginFill(0xbbbbbb);
-		graphics.drawRoundRect(2, 2, 18, 18, radius, radius);
-		graphics.beginFill(0xdddddd);
-		graphics.drawRoundRect(1, 1, 18, 18, radius, radius);
+		
+		if (beveled){
+			graphics.beginFill(0xdddddd);
+			graphics.drawRoundRect(0, 0, 20, 20, radius, radius);
+			graphics.beginFill(bgColor);
+			graphics.drawRoundRect(0, 0, 18, 18, radius, radius);
+			graphics.beginFill(0xbbbbbb);
+			graphics.drawRoundRect(2, 2, 18, 18, radius, radius);
+			graphics.beginFill(0xdddddd);
+			graphics.drawRoundRect(1, 1, 18, 18, radius, radius);
 		}
-		else
-		{
-		graphics.beginFill(bgColor);
-		graphics.drawRoundRect(0, 0, 20, 20, radius, radius);
+		else{
+			graphics.beginFill(bgColor);
+			graphics.drawRoundRect(0, 0, 20, 20, radius, radius);
 		}
 		
 		switch(type) {

@@ -276,12 +276,12 @@ class TileGrid extends Sprite
 	private function onPanned():Void
 	{
 		var pt:Point = coordinatePoint(startPan);
-		dispatchEvent(new MapEvent(MapEvent.PANNED, pt.subtract(new Point(mapWidth/2, mapHeight/2))));		
+		dispatchEvent(new MapEvent(MapEvent.PANNED, [ { pt.subtract(new Point(mapWidth / 2, mapHeight / 2)) ; } ] ));		
 	}
 
 	private function onZoomed():Void
 	{
-		var zoomEvent:MapEvent = new MapEvent(MapEvent.ZOOMED_BY, zoomLevel-startZoom);
+		var zoomEvent:MapEvent = new MapEvent(MapEvent.ZOOMED_BY, [ { zoomLevel - startZoom; } ] );
 		// this might also be useful
 		zoomEvent.zoomLevel = zoomLevel;
 		dispatchEvent(zoomEvent);		
@@ -879,6 +879,7 @@ class TileGrid extends Sprite
 		if (_invertedMatrix == null)
 		{
 			_invertedMatrix = worldMatrix.clone();
+			flash.Lib.trace("TileGrid - _invertedMatrix : " + _invertedMatrix);
 			_invertedMatrix.invert();
 			_invertedMatrix.scale(scale/_tileWidth, scale/_tileHeight);
 		}
@@ -931,7 +932,7 @@ class TileGrid extends Sprite
 	{
 		if (_topLeftCoordinate == null)
 		{
-			var tl:Point = _invertedMatrix.transformPoint(new Point());
+			var tl:Point = invertedMatrix.transformPoint(new Point());
 			_topLeftCoordinate = new Coordinate(tl.y, tl.x, zoomLevel);		
 		}
 		return _topLeftCoordinate;
@@ -942,7 +943,7 @@ class TileGrid extends Sprite
 	private function get_bottomRightCoordinate():Coordinate
 	{
 		if (_bottomRightCoordinate==null) {
-			var br:Point = _invertedMatrix.transformPoint(new Point(mapWidth, mapHeight));
+			var br:Point = invertedMatrix.transformPoint(new Point(mapWidth, mapHeight));
 			_bottomRightCoordinate = new Coordinate(br.y, br.x, zoomLevel);		
 		}
 		return _bottomRightCoordinate;
@@ -954,7 +955,7 @@ class TileGrid extends Sprite
 	{
 		if (_topRightCoordinate == null)
 		{
-			var tr:Point = _invertedMatrix.transformPoint(new Point(mapWidth,0));
+			var tr:Point = invertedMatrix.transformPoint(new Point(mapWidth,0));
 			_topRightCoordinate = new Coordinate(tr.y, tr.x, zoomLevel);		
 		}
 		return _topRightCoordinate;
@@ -966,7 +967,7 @@ class TileGrid extends Sprite
 	{
 		if (_bottomLeftCoordinate == null)
 		{
-			var bl:Point = _invertedMatrix.transformPoint(new Point(0, mapHeight));
+			var bl:Point = invertedMatrix.transformPoint(new Point(0, mapHeight));
 			_bottomLeftCoordinate = new Coordinate(bl.y, bl.x, zoomLevel);		
 		}
 		return _bottomLeftCoordinate;
@@ -1064,7 +1065,7 @@ class TileGrid extends Sprite
 
 	private function onStartZooming():Void
 	{
-		dispatchEvent(new MapEvent(MapEvent.START_ZOOMING, startZoom));
+		dispatchEvent(new MapEvent(MapEvent.START_ZOOMING, [ { startZoom; } ] ));
 	}
 			
 	public function doneZooming():Void
@@ -1076,7 +1077,7 @@ class TileGrid extends Sprite
 
 	private function onStopZooming():Void
 	{
-		var event:MapEvent = new MapEvent(MapEvent.STOP_ZOOMING, zoomLevel);
+		var event:MapEvent = new MapEvent(MapEvent.STOP_ZOOMING, [ { zoomLevel; } ]);
 		event.zoomDelta = zoomLevel - startZoom;
 		dispatchEvent(event);
 	}

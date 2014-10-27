@@ -158,7 +158,7 @@ class Map extends com.google.maps.wrappers.IMapWrapper implements com.google.map
 
 	public function getInterfaceVersion():String
 	{
-		return com.google.maps.Release.version;
+		return com.google.maps.Release.VERSION;
 	}
 
 	public var channel(getChannel, setChannel):String;

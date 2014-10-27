@@ -19,7 +19,7 @@ private function setWrapper(arg1:Dynamic):Void
 
 public function getSwcVersion():String
 {
-	return com.google.maps.Release.version;
+	return com.google.maps.Release.VERSION;
 }
 
 public function createTextField():flash.text.TextField

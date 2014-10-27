@@ -50,7 +50,7 @@ class MapEvent extends Event
 	public static inline var RENDERED:String = 'rendered';
 
 	//public function new(type:String, ...rest)
-	public function new(type:String, rest:Dynamic=null)
+	public function new(type:String, rest:Array<Dynamic>=null)
 	{
 		super(type, true, true);
 		

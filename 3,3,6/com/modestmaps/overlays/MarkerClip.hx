@@ -111,7 +111,7 @@ class MarkerClip extends Sprite
 
 	@isvar public var xx(null, set):Float;
 	
-	private function set_xx(value:Float)
+	private function set_x(value:Float)
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 		return super.x;
@@ -119,7 +119,7 @@ class MarkerClip extends Sprite
 
 	@isvar public var yy(null, set):Float;
 	
-	private function set_yy(value:Float)
+	private function set_y(value:Float)
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
 		return super.y;
@@ -150,7 +150,7 @@ class MarkerClip extends Sprite
 		{
 			locations.set(marker, location.clone());
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
-			markersByName.set(marker.name, marker);
+			markersByName[marker.name] = marker;
 			markers.push(marker);
 			
 			var added:Bool = updateClip(marker);
@@ -409,7 +409,6 @@ class MarkerClip extends Sprite
 		dirty = true;
 		updateClips(); // force redraw because flash seems stingy about it
 	}
-
 
 	private function onMapProviderChanged(event:MapEvent):Void
 	{

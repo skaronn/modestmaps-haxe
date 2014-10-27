@@ -2,26 +2,24 @@ package com.google.maps;
 
 import flash.display.*;
 
-internal class ClientUtil 
+private class ClientUtil 
 {
-public function ClientUtil()
-{
-	super();
-	return;
-}
-
-public static function getFlashVar(arg1:flash.display.LoaderInfo, arg2:String):String
-{
-	var loc1:Dynamic;
-	loc1 = null;
-	var loc2:Dynamic;
-	loc2 = null;
-	loc1 = arg1.parameters;
-	loc2 = null;
-	if (loc1 == null)
+	public function new()
 	{
-	return null;
 	}
-	return loc1[arg2] as String;
-}
+
+	public static function getFlashVar(arg1:flash.display.LoaderInfo, arg2:String):String
+	{
+		var loc1:Dynamic;
+		loc1 = null;
+		var loc2:Dynamic;
+		loc2 = null;
+		loc1 = arg1.parameters;
+		loc2 = null;
+		if (loc1 == null)
+		{
+			return null;
+		}
+		return cast(loc1[arg2], String);
+	}
 }

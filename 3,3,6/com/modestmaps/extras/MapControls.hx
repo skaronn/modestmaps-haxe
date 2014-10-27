@@ -181,8 +181,7 @@ class MapControls extends Sprite
 			buttonSprite.addChild(buttons[i]);		
 		}
 
-		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);	   
-
+		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
 	public function setButtonTransforms(overTransform:ColorTransform, outTransform:ColorTransform):Void

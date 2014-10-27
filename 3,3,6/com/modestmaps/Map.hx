@@ -91,9 +91,9 @@ class Map extends Sprite
 	*/
 	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
-		super();
-		if (mapProvider==null) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
-
+		super();		
+		if (mapProvider == null) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
+		flash.Lib.trace("Map.hx - mapProvider : " + mapProvider);
 		// TODO getter/setter for this that disables interaction in TileGrid
 		__draggable = draggable;
 
@@ -113,7 +113,7 @@ class Map extends Sprite
 
 		// if rest was passed in from super constructor in a subclass,
 		// it will be an array...
-		if (rest!=null && rest.length > 0 && Std.is (rest[0], Dynamic)){
+		if (rest!=null && rest.length > 0 && Std.is (rest[0], Array)){
 			rest = rest[0];
 		}
 		// (doing that is OK because none of the arguments we're expecting are Arrays)
@@ -242,7 +242,8 @@ class Map extends Sprite
 		}
 		
 		// multiplication factor between horizontal span and map width
-		var hFactor:Float = (BR.column - TL.column) / (fitWidth / cast(mapProvider.tileWidth, Int));
+		flash.Lib.trace("Map.hx - mapProvider.tileWidth : " + mapProvider.tileWidth());
+		var hFactor:Float = (BR.column - TL.column) / (fitWidth / mapProvider.tileWidth());
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
 		var hZoomDiff:Float = Math.log(hFactor) / Math.log(2);
@@ -251,7 +252,8 @@ class Map extends Sprite
 		var hPossibleZoom:Float = TL.zoom - Math.ceil(hZoomDiff);
 		
 		// multiplication factor between vertical span and map height
-		var vFactor:Float = (BR.row - TL.row) / (fitHeight / cast(mapProvider.tileHeight, Int));
+		flash.Lib.trace("Map.hx - mapProvider.tileHeight : " + mapProvider.tileHeight());
+		var vFactor:Float = (BR.row - TL.row) / (fitHeight / mapProvider.tileHeight());
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
 		var vZoomDiff:Float = Math.log(vFactor) / Math.log(2);
@@ -284,7 +286,7 @@ class Map extends Sprite
 	{
 		var extent:MapExtent = new MapExtent();
 		
-		if(mapProvider==null) {
+		if(mapProvider == null) {
 			throw new Error("WHOAH, no mapProvider in getExtent!");
 		}
 
@@ -419,7 +421,7 @@ class Map extends Sprite
 		}
 		
 		// among other things this will notify the marker clip that its cached coordinates are invalid
-		dispatchEvent(new MapEvent(MapEvent.MAP_PROVIDER_CHANGED, newProvider));
+		dispatchEvent(new MapEvent(MapEvent.MAP_PROVIDER_CHANGED, [ { newProvider; } ]));
 	}
 
 	/**
@@ -698,8 +700,9 @@ class Map extends Sprite
 	*/
 	public function onExtentChanged(event:Event=null):Void
 	{
-		if (hasEventListener(MapEvent.EXTENT_CHANGED)) {
-			dispatchEvent(new MapEvent(MapEvent.EXTENT_CHANGED, getExtent()));
+		if (hasEventListener(MapEvent.EXTENT_CHANGED))
+		{
+			dispatchEvent(new MapEvent(MapEvent.EXTENT_CHANGED, [ { getExtent(); } ]));
 		}
 	}
 
@@ -712,13 +715,13 @@ class Map extends Sprite
 	public function onExtentChanging():Void
 	{
 		if (hasEventListener(MapEvent.BEGIN_EXTENT_CHANGE)) {
-		dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, getExtent()));
+		dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, [ { getExtent(); } ]));
 		}
 	}
 
-	//override public var doubleClickEnabled(null, setDoubleClickEnabled):Bool;
+	//@isVar override public var doubleClickEnabled(null, set):Bool;
 	
-	public function setDoubleClickEnabled(enabled:Bool):Void
+	public function set_doubleClickEnabled(enabled:Bool):Void
 	{
 		super.doubleClickEnabled = enabled;
 		trace("doubleClickEnabled on Map is no longer necessary!"); 
@@ -726,7 +729,9 @@ class Map extends Sprite
 		trace("\tmap.addEventListener(MouseEvent.DOUBLE_CLICK, map.onDoubleClick);");
 	}
 
-	/** pans and zooms in on double clicked location */
+	/**
+	* pans and zooms in on double clicked location
+	*/
 	public function onDoubleClick(event:MouseEvent):Void
 	{
 		if (!__draggable) return;
@@ -759,7 +764,8 @@ class Map extends Sprite
 
 	public function onMouseWheel(event:MouseEvent):Void
 	{
-		if (flash.Lib.getTimer() - previousWheelEvent > minMouseWheelInterval) {
+		if (flash.Lib.getTimer() - previousWheelEvent > minMouseWheelInterval)
+		{
 			if (event.delta > 0) {
 				zoomInAbout(new Point(mouseX, mouseY), 0);
 			}

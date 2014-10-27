@@ -3,7 +3,7 @@ package com.google.maps.controls;
 import com.google.maps.interfaces.*;
 import com.google.maps.wrappers.*;
 
-public @:final class ZoomControl extends com.google.maps.wrappers.IZoomControlWrapper
+@:final  class ZoomControl extends com.google.maps.wrappers.IZoomControlWrapper
 {
 public function ZoomControl(arg1:com.google.maps.controls.ZoomControlOptions=null)
 {
