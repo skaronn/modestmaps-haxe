@@ -111,7 +111,7 @@ class MarkerClip extends Sprite
 
 	@isvar public var xx(null, set):Float;
 	
-	private function set_x(value:Float)
+	private function set_xx(value:Float)
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 		return super.x;
@@ -119,7 +119,7 @@ class MarkerClip extends Sprite
 
 	@isvar public var yy(null, set):Float;
 	
-	private function set_y(value:Float)
+	private function set_yy(value:Float)
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
 		return super.y;
@@ -150,7 +150,7 @@ class MarkerClip extends Sprite
 		{
 			locations.set(marker, location.clone());
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
-			markersByName[marker.name] = marker;
+			markersByName.set(marker.name, marker);
 			markers.push(marker);
 			
 			var added:Bool = updateClip(marker);
@@ -203,7 +203,9 @@ class MarkerClip extends Sprite
 		if (this.contains(marker)) {
 			removeChild(marker);
 		}
+		
 		var index:Int = markers.indexOf(marker);
+		
 		if (index >= 0) {
 			markers.splice(index,1);
 		}
@@ -296,6 +298,7 @@ class MarkerClip extends Sprite
 		}
 		// apply depths to maintain the order things were added in
 		var index:Int = 0;
+		
 		for (marker in markers)
 		{
 			if (contains(marker))
@@ -311,31 +314,31 @@ class MarkerClip extends Sprite
 	{		
 		if (marker.visible)
 		{
-		// this method previously used the location of the marker
-		// but map.locationPoint hands off to grid to grid.coordinatePoint
-		// in the end so we may as well cache the first step
-		var point:Point = map.grid.coordinatePoint(cast(coordinates.get(marker), Coordinate), this);
-		marker.x = snapToPixels ? Math.round(point.x) : point.x;
-		marker.y = snapToPixels ? Math.round(point.y) : point.y;
+			// this method previously used the location of the marker
+			// but map.locationPoint hands off to grid to grid.coordinatePoint
+			// in the end so we may as well cache the first step
+			var point:Point = map.grid.coordinatePoint(cast(coordinates.get(marker), Coordinate), this);
+			marker.x = snapToPixels ? Math.round(point.x) : point.x;
+			marker.y = snapToPixels ? Math.round(point.y) : point.y;
 
-		var w:Float = map.getWidth() * 2;
-		var h:Float = map.getHeight() * 2;
-		
-		if (markerInBounds(marker, w, h))
-		{
-			if (!contains(marker))
+			var w:Float = map.getWidth() * 2;
+			var h:Float = map.getHeight() * 2;
+			
+			if (markerInBounds(marker, w, h))
 			{
-				addChild(marker);
-				// notify the caller that we've added something and need to sort markers
-				return true;
+				if (!contains(marker))
+				{
+					addChild(marker);
+					// notify the caller that we've added something and need to sort markers
+					return true;
+				}
 			}
-		}
-		else if (contains(marker))
-		{
-			removeChild(marker);
-			// only need to sort if we've added something
-			return false;
-		}
+			else if (contains(marker))
+			{
+				removeChild(marker);
+				// only need to sort if we've added something
+				return false;
+			}
 		}
 		
 		return false;		
@@ -415,8 +418,8 @@ class MarkerClip extends Sprite
 		var mapProvider:IMapProvider = map.getMapProvider();	
 		if (mapProvider.geometry() != previousGeometry)
 		{
-		resetCoordinates();
-		previousGeometry = mapProvider.geometry();
+			resetCoordinates();
+			previousGeometry = mapProvider.geometry();
 		}
 	}
 

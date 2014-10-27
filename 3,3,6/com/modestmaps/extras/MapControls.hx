@@ -161,7 +161,7 @@ class MapControls extends Sprite
 			this.positions = buttonPositions;
 		}
 		
-		filters = [ new DropShadowFilter(1,45,0,1,3,3,.7,2) ];
+		filters = [ new DropShadowFilter(1, 45, 0, 1, 3, 3, .7 ,2) ];
 		
 		var buttonSprite:Sprite = new Sprite();
 		addChild(buttonSprite);
@@ -275,6 +275,6 @@ class MapControls extends Sprite
 
 	public function onFullScreenEvent(event:Event):Void
 	{
-		onMapResize(null);
+		onMapResize(event);
 	}
 }
