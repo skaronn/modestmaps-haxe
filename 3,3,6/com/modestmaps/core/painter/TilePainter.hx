@@ -5,6 +5,7 @@ import com.modestmaps.core.Tile;
 import com.modestmaps.core.TileGrid;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
+import de.polygonal.ds.Map;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
 import haxe.macro.Type;
@@ -51,17 +52,14 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private var tileCache:TileCache;
 	private var tilePool:TilePool;	
 	private var queueFunction:Dynamic;
-	private var queueTimer:Timer;
-	
-	
+	private var queueTimer:Timer;	
 
 	// per-tile, the array of images we're going to load, which can be empty
 	// TODO: document this in IMapProvider, so that provider implementers know
 	// they are free to check the bounds of their overlays and don't have to serve
 	// millions of 404s
-	//private var layersNeeded:StringMap<Int>;
-	private var layersNeeded:ObjectMap<Dynamic, Dynamic>;
-	private var loaderTiles:ObjectMap<Dynamic, Dynamic>;
+	private var layersNeeded:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>();	
+	private var loaderTiles:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>();
 
 	// open requests
 	private var openRequests:Array<Dynamic> = [];
@@ -150,7 +148,10 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	{
 		var tile:Tile = tilePool.getTile(Std.int(coord.column), Std.int(coord.row), Std.int(coord.zoom));
 		tile.name = key;
+		//flash.Lib.trace("TilePainter.hx - createAndPopulateTile - provider : " + provider);
 		var urls:Array<Dynamic> = provider.getTileUrls(coord);
+		//flash.Lib.trace("TilePainter.hx - createAndPopulateTile - urls : " + urls);
+		//flash.Lib.trace("TilePainter.hx - createAndPopulateTile - layersNeeded : " + layersNeeded);
 		if (urls != null && urls.length > 0) {
 			// keep a local copy of the URLs so we don't have to call this twice:
 			layersNeeded.set(tile.name, urls);
@@ -187,7 +188,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			var loader:Loader = cast(openRequests[i], Loader);
 			if (loader.name == tile.name) {
 				loaderTiles.set(loader, null);
-				untyped __delete__(loaderTiles, loader);
+				//untyped __delete__(loaderTiles, loader);
+				loaderTiles.remove(loader);
 			}
 		}
 		
@@ -195,7 +197,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			tilePool.returnTile(tile);
 		}
 		
-		untyped __delete__(layersNeeded, tile.name);
+		//untyped __delete__(layersNeeded, tile.name);
+		layersNeeded.remove(tile.name);
 	}
 
 	/**
@@ -214,7 +217,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		{
 			var tile:Tile = cast(loaderTiles.get(loader), Tile);
 			loaderTiles.set(loader, null);
-			untyped __delete__(loaderTiles, loader);
+			//untyped __delete__(loaderTiles, loader);
+			loaderTiles.remove(loader);
 			if (!tileCache.containsKey(tile.name)) {
 				tilePool.returnTile(tile);
 			}
@@ -231,18 +235,20 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		}
 		
 		openRequests = [];
-		
-		flash.Lib.trace("TilePainter.hx - layersNeeded : " + layersNeeded);
+				
+		flash.Lib.trace("TilePainter.hx - reset - layersNeeded : " + layersNeeded);
 		
 		if (layersNeeded != null)
 		{
 			for (key in layersNeeded)
 			{
-				untyped __delete__(layersNeeded, key);
+				trace("TilePainter.hx - reset - layersNeeded.get("+key+") : " + layersNeeded.get(key));
+				//untyped __delete__(layersNeeded, key);
+				layersNeeded.remove(key);
 			}
 		}		
 
-		layersNeeded = null;
+		layersNeeded = new ObjectMap<Dynamic, Dynamic>();
 		
 		tileQueue.clear();
 			
@@ -256,7 +262,10 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private function loadNextURLForTile(tile:Tile):Void
 	{
 		// TODO: add urls to Tile?
+		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - tile : " + tile);
+		flash.Lib.trace("TilePainter.hx - loadNextURLForTile - layersNeeded.get("+tile.name+") : "+ layersNeeded.get(tile.name));
 		var urls:Array<Dynamic> = cast(layersNeeded.get(tile.name), Array<Dynamic>);
+		flash.Lib.trace("TilePainter.hx - loadNextURLForTile - urls : "+ urls);
 		if (urls != null && urls.length > 0)
 		{
 			var url:Dynamic = urls.shift();
@@ -268,8 +277,9 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				loadNextURLForTile(tile);
 			}
 			else {
-				flash.Lib.trace("requesting : "+ url);
+				flash.Lib.trace("TilePainter.hx - loadNextURLForTile - requesting : "+ url);
 				var tileLoader:Loader = new Loader();
+				//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - loaderTiles : "+ loaderTiles);
 				loaderTiles.set(tileLoader, tile);
 				tileLoader.name = tile.name;
 				try {
@@ -278,7 +288,9 @@ class TilePainter extends EventDispatcher implements ITilePainter
 						tileLoader.load(Std.is(url, URLRequest) ? url : new URLRequest(url), new LoaderContext(true));
 					}
 					else {
-						tileLoader.load(Std.is(url, URLRequest) ? url : new URLRequest(url));
+						var urlRequest:URLRequest = Std.is(url, URLRequest) ? url : new URLRequest(url);
+						//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - urlRequest.url : "+ urlRequest.url);
+						tileLoader.load(urlRequest);
 					}
 					tileLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadEnd, false, 0, true);
 					tileLoader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, onLoadError, false, 0, true);
@@ -288,7 +300,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 					tile.paintError();
 				}
 			}
-		}else if (urls!=null && urls.length == 0) {
+		}
+		else if (urls!=null && urls.length == 0) {
 			tileGrid.tilePainted(tile);
 			tileCache.putTile(tile);
 			untyped __delete__(layersNeeded, tile.name);
@@ -358,7 +371,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 */
 	private function onLoadEnd(event:Event):Void
 	{
-		var loader:Loader = cast(event.target,LoaderInfo).loader;
+		var loader:Loader = cast(event.target, LoaderInfo).loader;
 		
 		if (cacheLoaders && !loaderCache.get(loader.contentLoaderInfo.url)) {
 			flash.Lib.trace("caching content for" + loader.contentLoaderInfo.url);
@@ -367,7 +380,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				loaderCache.get(loader.contentLoaderInfo.url) = content;
 				cachedUrls.push(loader.contentLoaderInfo.url);
 				if (cachedUrls.length > maxLoaderCacheSize) {
-					untyped __delete__(loaderCache, cachedUrls.shift());
+					//untyped __delete__(loaderCache, cachedUrls.shift());
+					loaderCache.remove(cachedUrls.shift());
 				}
 			}
 			catch (error:Error) {
@@ -404,7 +418,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		}
 		
 		loaderTiles.set(loader, null);
-		untyped __delete__(loaderTiles, loader);
+		//untyped __delete__(loaderTiles, loader);
+		loaderTiles.remove(loader);
 	}
 
 	/**
@@ -420,14 +435,16 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			if (loader.contentLoaderInfo == loaderInfo)
 			{
 				openRequests.splice(i,1);
-				untyped __delete__(layersNeeded, loader.name);
+				//untyped __delete__(layersNeeded, loader.name);
+				layersNeeded.remove(loader.name);
 				var tile:Tile = cast(loaderTiles.get(loader), Tile);
 				if (tile != null)
 				{
 					tile.paintError(provider.tileWidth(), provider.tileHeight());
 					tileGrid.tilePainted(tile);
 					loaderTiles.set(loader, null);
-					untyped __delete__(loaderTiles, loader);
+					//untyped __delete__(loaderTiles, loader);
+					loaderTiles.remove(loader);
 				}		
 			}
 		}

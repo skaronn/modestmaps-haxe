@@ -24,8 +24,10 @@ class OpenStreetMapProvider extends AbstractMapProvider implements IMapProvider
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
 		if (sourceCoord.row < 0 || sourceCoord.row >= Math.pow(2, coord.zoom)) {
+			flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - []");
 			return [];
 		}
+		flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png'");
 		return [ 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png' ];
 	}
 }

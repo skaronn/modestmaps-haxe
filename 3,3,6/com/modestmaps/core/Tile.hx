@@ -31,7 +31,9 @@ class Tile extends Sprite
 		count++;
 	} 
 
-	/** override this in a subclass and call grid.setTileClass if you want to draw on your tiles */
+	/** 
+	* override this in a subclass and call grid.setTileClass if you want to draw on your tiles
+	*/
 	public function init(column:Int, row:Int, zoom:Int):Void
 	{
 		this.zoom = zoom;
@@ -40,7 +42,9 @@ class Tile extends Sprite
 		hide();
 	}	
 
-	/** once TileGrid is done with a tile, it will call destroy and possibly reuse it later */
+	/**
+	* once TileGrid is done with a tile, it will call destroy and possibly reuse it later
+	*/
 	public function destroy():Void
 	{
 		while (numChildren > 0) {

@@ -188,6 +188,7 @@ class TileGrid extends Sprite
 		
 		this.mapWidth = w;
 		this.mapHeight = h;
+		
 		scrollRect = new Rectangle(0, 0, mapWidth, mapHeight);
 
 		debugField = new DebugField();
@@ -312,12 +313,13 @@ class TileGrid extends Sprite
 		_dirty = true;		
 	}
 
-	/** 
-	 * figures out from worldMatrix which tiles we should be showing, adds them to the stage, adds them to the tileQueue if needed, etc.
+	/**
+	 * Figures out from worldMatrix which tiles we should be showing, adds them to the stage, adds them to the tileQueue if needed, etc.
 	 * 
 	 * from my recent testing, TileGrid.onRender takes < 5ms most of the time, and rarely >10ms
 	 * (Flash Player 9, Firefox, Macbook Pro)
-	 *  
+	 * 
+	 * @param	event
 	 */
 	private function onRender(event:Event=null):Void
 	{
@@ -349,13 +351,13 @@ class TileGrid extends Sprite
 		
 		// what zoom level of tiles should we be loading, taking into account min/max zoom?
 		// (0 when scale == 1, 1 when scale == 2, 2 when scale == 4, etc.)
-		var maxZoomLevel :Float = cast(Math.max(minZoom, Math.round(zoomLevel)), Float);
+		var maxZoomLevel :Float = Math.max(minZoom, cast(Math.round(zoomLevel), Float));
 		var newZoom:Float = Math.min(maxZoom, maxZoomLevel);
 		
 		// see if the newZoom is different to currentZoom
 		// so we know which way we're zooming, if any:
-		if (_currentTileZoom != newZoom) {
-			previousTileZoom = _currentTileZoom;
+		if (currentTileZoom != newZoom) {
+			previousTileZoom = currentTileZoom;
 		}
 		
 		// this is the level of tiles we'll be loading:
@@ -363,10 +365,10 @@ class TileGrid extends Sprite
 
 		// find start and end columns for the visible tiles, at current tile zoom
 		// we project all four corners to take account of potential rotation in worldMatrix
-		var tlC:Coordinate = _topLeftCoordinate.zoomTo(_currentTileZoom);
-		var brC:Coordinate = _bottomRightCoordinate.zoomTo(_currentTileZoom);
-		var trC:Coordinate = _topRightCoordinate.zoomTo(_currentTileZoom);
-		var blC:Coordinate = _bottomLeftCoordinate.zoomTo(_currentTileZoom);
+		var tlC:Coordinate = topLeftCoordinate.zoomTo(currentTileZoom);
+		var brC:Coordinate = bottomRightCoordinate.zoomTo(currentTileZoom);
+		var trC:Coordinate = topRightCoordinate.zoomTo(currentTileZoom);
+		var blC:Coordinate = bottomLeftCoordinate.zoomTo(currentTileZoom);
 		
 		// optionally pad it out a little bit more with a tile buffer
 		// TODO: investigate giving a directional bias to TILE_BUFFER when panning quickly
@@ -436,7 +438,7 @@ class TileGrid extends Sprite
 		}
 		
 		// update centerRow and centerCol for sorting the tileQueue in processQueue()
-		var center:Coordinate = _centerCoordinate.zoomTo(_currentTileZoom);
+		var center:Coordinate = centerCoordinate.zoomTo(currentTileZoom);
 		centerRow = center.row;
 		centerColumn = center.column;
 
@@ -480,13 +482,15 @@ class TileGrid extends Sprite
 				var tile:Tile = cast(well.getChildByName(key), Tile);
 						
 				// create it if not, and add it to the load queue
-				if (tile==null) {
+				if (tile == null) {
 					tile = tilePainter.getTileFromCache(key);
-					if (tile==null) {
+					if (tile == null) {
 						coord.row = row;
 						coord.column = col;
-						coord.zoom = _currentTileZoom;
-						tile = tilePainter.createAndPopulateTile(coord, key); 
+						coord.zoom = currentTileZoom;
+						//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - coord : " + coord);
+						//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - key : " + key);
+						tile = tilePainter.createAndPopulateTile(coord, key);
 					}
 					else {
 						tile.show();
@@ -509,96 +513,95 @@ class TileGrid extends Sprite
 				
 				if (!tileReady) {
 				
-				var foundParent:Bool = false;
-				var foundChildren:Int = 0;
+					var foundParent:Bool = false;
+					var foundChildren:Int = 0;
 
-				if (_currentTileZoom > previousTileZoom) {					
-					// if it still doesn't have enough images yet, or it's fading in, try a double size parent instead
-					if (maxParentSearch > 0 && _currentTileZoom > minZoom) {
-						var firstParentKey:String = parentKey(col, row, cast(_currentTileZoom, Int), cast(_currentTileZoom-1, Int));
-						if (!searchedParentKeys.get(firstParentKey))
-						{
-							searchedParentKeys.set(firstParentKey, true);
-							if (ensureVisible(firstParentKey) != null) {
-								foundParent = true;
-							}
-							if (!foundParent && (_currentTileZoom - 1 < maxParentLoad)) {
-								//trace("requesting parent tile at zoom", pzoom);
-								var firstParentCoord:Array<Dynamic> = parentCoord(col, row, cast(_currentTileZoom, Int), cast(_currentTileZoom-1, Int));
-								visibleTiles.push(requestLoad(firstParentCoord[0], firstParentCoord[1], cast(_currentTileZoom-1, Int)));
-							}					
-						}
-					}
-					
-				}
-				else {
-					 
-					// currentZoom <= previousZoom, so we're zooming out
-					// and therefore we might want to reuse 'smaller' tiles
-					
-					// if it doesn't have an image yet, see if we can make it from smaller images
-					if (!foundParent && maxChildSearch > 0 && _currentTileZoom < maxZoom)
-					{
-						for (czoom in cast(_currentTileZoom + 1, Int)...cast(Math.min(cast(maxZoom, Int), cast(cast(_currentTileZoom, Int) + maxChildSearch, Int)), Int))
-						{
-							var ckeys:Array<Dynamic> = childKeys(col, row, cast(_currentTileZoom, Int), czoom);
-							for (ckey in ckeys)
+					if (currentTileZoom > previousTileZoom) {			
+						// if it still doesn't have enough images yet, or it's fading in, try a double size parent instead
+						if (maxParentSearch > 0 && currentTileZoom > minZoom) {
+							var firstParentKey:String = parentKey(col, row, cast(currentTileZoom, Int), cast(currentTileZoom-1, Int));
+							if (!searchedParentKeys.get(firstParentKey))
 							{
-								if (ensureVisible(ckey) != null)
-								{
-									foundChildren++;
+								searchedParentKeys.set(firstParentKey, true);
+								if (ensureVisible(firstParentKey) != null) {
+									foundParent = true;
 								}
-							} // ckeys
-							if (foundChildren == ckeys.length)
-							{
-								break;
-							} 
-						} // czoom
+								if (!foundParent && (_currentTileZoom - 1 < maxParentLoad)) {
+									//trace("requesting parent tile at zoom", pzoom);
+									var firstParentCoord:Array<Dynamic> = parentCoord(col, row, cast(currentTileZoom, Int), cast(currentTileZoom-1, Int));
+									visibleTiles.push(requestLoad(firstParentCoord[0], firstParentCoord[1], cast(currentTileZoom-1, Int)));
+								}					
+							}
+						}
+						
 					}
-				}
-
-				var stillNeedsAnImage:Bool = !foundParent && foundChildren < 4; 			
-
-				// if it still doesn't have an image yet, try more parent zooms
-					if (stillNeedsAnImage && maxParentSearch > 1 && _currentTileZoom > minZoom) {
-
-					var startZoomSearch:Int = cast(_currentTileZoom - 1, Int);
-					
-					if (_currentTileZoom > previousTileZoom) {
-						// we already looked for parent level 1, and didn't find it, so:
-						startZoomSearch -= 1;
-					}
-					
-					var endZoomSearch:Int = cast(Math.max(cast(minZoom, Int), cast(_currentTileZoom-maxParentSearch, Int)), Int);
-					var pzoom:Int = 0;
-					
-					for (pzoom in startZoomSearch...cast(pzoom >= endZoomSearch, Int))
-					{
-						var pkey:String = parentKey(col, row, cast(_currentTileZoom, Int), pzoom);
-						if (searchedParentKeys.get(pkey) != null)
+					else {
+						// currentZoom <= previousZoom, so we're zooming out
+						// and therefore we might want to reuse 'smaller' tiles
+						
+						// if it doesn't have an image yet, see if we can make it from smaller images
+						if (!foundParent && maxChildSearch > 0 && currentTileZoom < maxZoom)
 						{
-							searchedParentKeys.set(pkey, true);
-							if (ensureVisible(pkey) != null) {				
-								stillNeedsAnImage = false;
-								break;
-							}
-							if (_currentTileZoom - pzoom < maxParentLoad)
+							for (czoom in cast(currentTileZoom + 1, Int)...cast(Math.min(cast(maxZoom, Int), cast(cast(currentTileZoom, Int) + maxChildSearch, Int)), Int))
 							{
-								//trace("requesting parent tile at zoom", pzoom);
-								var pcoord:Array<Dynamic> = parentCoord(col, row, cast(_currentTileZoom, Int), pzoom);
-								visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
-							}
-						}
-						else {
-							break;
+								var ckeys:Array<Dynamic> = childKeys(col, row, cast(currentTileZoom, Int), czoom);
+								for (ckey in ckeys)
+								{
+									if (ensureVisible(ckey) != null)
+									{
+										foundChildren++;
+									}
+								} // ckeys
+								if (foundChildren == ckeys.length)
+								{
+									break;
+								} 
+							} // czoom
 						}
 					}
-					
-				}
-							
-				if (stillNeedsAnImage) {
-					blankCount++;
-				}
+
+					var stillNeedsAnImage:Bool = !foundParent && foundChildren < 4; 			
+
+					// if it still doesn't have an image yet, try more parent zooms
+						if (stillNeedsAnImage && maxParentSearch > 1 && currentTileZoom > minZoom) {
+
+						var startZoomSearch:Int = cast(currentTileZoom - 1, Int);
+						
+						if (currentTileZoom > previousTileZoom) {
+							// we already looked for parent level 1, and didn't find it, so:
+							startZoomSearch -= 1;
+						}
+						
+						var endZoomSearch:Int = cast(Math.max(cast(minZoom, Int), cast(currentTileZoom-maxParentSearch, Int)), Int);
+						var pzoom:Int = 0;
+						
+						for (pzoom in startZoomSearch...cast(endZoomSearch, Int))
+						{
+							var pkey:String = parentKey(col, row, cast(_currentTileZoom, Int), pzoom);
+							if (searchedParentKeys.get(pkey) != null)
+							{
+								searchedParentKeys.set(pkey, true);
+								if (ensureVisible(pkey) != null) {				
+									stillNeedsAnImage = false;
+									break;
+								}
+								if (currentTileZoom - pzoom < maxParentLoad)
+								{
+									//trace("requesting parent tile at zoom", pzoom);
+									var pcoord:Array<Dynamic> = parentCoord(col, row, cast(currentTileZoom, Int), pzoom);
+									visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
+								}
+							}
+							else {
+								break;
+							}
+						}
+						
+					}
+								
+					if (stillNeedsAnImage) {
+						blankCount++;
+					}
 
 				} // if !tileReady
 				
@@ -609,22 +612,26 @@ class TileGrid extends Sprite
 		
 	} // repopulateVisibleTiles
 
-	// TODO: do this with events instead?
+	/**
+	* TODO: do this with events instead?
+	* 
+	* @param	tile
+	*/
 	public function tilePainted(tile:Tile):Void
 	{		
-		if (_currentTileZoom-tile.zoom <= maxParentLoad) {
-		tile.show();
+		if (currentTileZoom-tile.zoom <= maxParentLoad) {
+			tile.show();
 		}
 		else {
-		tile.showNow();
+			tile.showNow();
 		}
 	}
 
 	/** 
-	 * returns an array of all the tiles that are on the screen
-	 * (including parent and child tiles currently visible until
-	 * the current zoom level finishes loading)
-	 * */
+	* Returns an array of all the tiles that are on the screen
+	* (including parent and child tiles currently visible until
+	* the current zoom level finishes loading)
+	*/
 	public function getVisibleTiles():Array<Dynamic>
 	{
 		return visibleTiles;
@@ -754,15 +761,24 @@ class TileGrid extends Sprite
 	// for use in requestLoad
 	private var tempCoord:Coordinate = new Coordinate(0,0,0);
 
-	/** create a tile and add it to the queue - WARNING: this is buggy for the current zoom level, it's only used for parent zooms when maxParentLoad is > 0 */ 
+	/**
+	 * Creates a tile and add it to the queue - WARNING: this is buggy for the current zoom level,
+	 * it's only used for parent zooms when maxParentLoad is > 0 
+	 * 
+	 * @param	col
+	 * @param	row
+	 * @param	zoom
+	 * @return
+	 */
 	private function requestLoad(col:Int, row:Int, zoom:Int):Tile
 	{
 		var key:String = tileKey(col, row, zoom);		
 		var tile:Tile = cast(well.getChildByName(key), Tile); 
-		if (tile==null) {
+		if (tile == null) {
 			tempCoord.row = row;
 			tempCoord.column = col;
 			tempCoord.zoom = zoom;
+			flash.Lib.trace("TileGrid.hx - requestLoad - key : " + key);
 			tile = tilePainter.createAndPopulateTile(tempCoord, key);
 			well.addChild(tile);
 		}
@@ -879,7 +895,7 @@ class TileGrid extends Sprite
 		if (_invertedMatrix == null)
 		{
 			_invertedMatrix = worldMatrix.clone();
-			flash.Lib.trace("TileGrid - _invertedMatrix : " + _invertedMatrix);
+			flash.Lib.trace("TileGrid - get_invertedMatrix - _invertedMatrix : " + _invertedMatrix);
 			_invertedMatrix.invert();
 			_invertedMatrix.scale(scale/_tileWidth, scale/_tileHeight);
 		}

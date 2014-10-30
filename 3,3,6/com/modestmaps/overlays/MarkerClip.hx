@@ -27,7 +27,7 @@ class MarkerClip extends Sprite
 	private var drawCoord:Coordinate;
 	private var locations:ObjectMap<DisplayObject, Dynamic> = new ObjectMap<DisplayObject, Coordinate>();
 	private var coordinates:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
-	private var markers:Array<Dynamic> = []; // all markers
+	private var markers:ObjectMap<Dynamic, Dynamic> = new ObjectMap<DisplayObject, Coordinate>(); // all markers
 	private var markersByName:Dynamic = {};
 
 	/** enable this if you want intermediate zooming steps to
@@ -145,8 +145,9 @@ class MarkerClip extends Sprite
 	}
 
 	public function attachMarker(marker:DisplayObject, location:Location):Void
-	{
-		if (markers.indexOf(marker) == -1)
+	{		
+		//if (markers.indexOf(marker) == -1)
+		if (markers.exists(marker))
 		{
 			locations.set(marker, location.clone());
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));

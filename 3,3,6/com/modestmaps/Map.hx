@@ -149,7 +149,7 @@ class Map extends Sprite
 			setExtent(extent);
 		}
 		
-		//addChild(grid.debugField);
+		addChild(grid.debugField);
 	}
 
 	/**

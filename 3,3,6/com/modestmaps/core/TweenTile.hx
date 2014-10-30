@@ -5,7 +5,9 @@
 
 package com.modestmaps.core;
 
-import gs.TweenLite;
+import com.greensock.TweenLite;
+//import com.gskinner.motion.GTweener;
+//import tink.tween.Tweener;
 
 class TweenTile extends Tile
 {
@@ -28,7 +30,7 @@ class TweenTile extends Tile
 	override public function show():Void 
 	{
 		if (alpha < 1) {
-		TweenLite.to(this, FADE_TIME, { alpha: 1 });
+			TweenLite.to(this, FADE_TIME, { alpha: 1 });
 		}
 	}	
 
