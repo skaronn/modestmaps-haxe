@@ -14,7 +14,7 @@ package com.greensock.easing.core;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class EasePoint {
+@:final class EasePoint {
 public var time:Float;
 public var gap:Float;
 public var value:Float;

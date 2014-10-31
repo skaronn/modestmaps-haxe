@@ -56,7 +56,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	return _initFilter(target, value, tween, DropShadowFilter, new DropShadowFilter(0, 45, 0x000000, 0, 0, 0, 1, value.quality || 2, value.inner, value.knockout, value.hideObject), _propNames);
 }
 

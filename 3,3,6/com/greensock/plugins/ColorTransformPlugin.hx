@@ -18,9 +18,9 @@ import flash.geom.ColorTransform;
  * <p><b>PROPERTIES:</b></p>
  * <ul>
  * 	<li><code> tint (or color) : UInt</code> - Color of the tint. Use a hex value, like 0xFF0000 for red.</li>
- * 	<li><code> tintAmount : Float</code> - Number between 0 and 1. Works with the "tint" property and indicats how much of an effect the tint should have. 0 makes the tint invisible, 0.5 is halfway tinted, and 1 is completely tinted.</li>
- * 	<li><code> brightness : Float</code> - Number between 0 and 2 where 1 is normal brightness, 0 is completely dark/black, and 2 is completely bright/white</li>
- * 	<li><code> exposure : Float</code> - Number between 0 and 2 where 1 is normal exposure, 0, is completely underexposed, and 2 is completely overexposed. Overexposing an object is different then changing the brightness - it seems to almost bleach the image and looks more dynamic and interesting (subjectively speaking).</li> 
+ * 	<li><code> tintAmount : Float</code> - Float between 0 and 1. Works with the "tint" property and indicats how much of an effect the tint should have. 0 makes the tint invisible, 0.5 is halfway tinted, and 1 is completely tinted.</li>
+ * 	<li><code> brightness : Float</code> - Float between 0 and 2 where 1 is normal brightness, 0 is completely dark/black, and 2 is completely bright/white</li>
+ * 	<li><code> exposure : Float</code> - Float between 0 and 2 where 1 is normal exposure, 0, is completely underexposed, and 2 is completely overexposed. Overexposing an object is different then changing the brightness - it seems to almost bleach the image and looks more dynamic and interesting (subjectively speaking).</li> 
  * 	<li><code> redOffset : Float</code></li>
  * 	<li><code> greenOffset : Float</code></li>
  * 	<li><code> blueOffset : Float</code></li>
@@ -56,7 +56,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	var start:ColorTransform, end:ColorTransform = new ColorTransform();
 	if (target is DisplayObject) {
 	_transform = DisplayObject(target).transform;
@@ -83,16 +83,16 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	}
 	}
 	if (!(value is ColorTransform)) {
-	if (!isNaN(value.tintAmount)) {
+	if (!is0(value.tintAmount)) {
 		var ratio:Float = value.tintAmount / (1 - ((end.redMultiplier + end.greenMultiplier + end.blueMultiplier) / 3));
 		end.redOffset *= ratio;
 		end.greenOffset *= ratio;
 		end.blueOffset *= ratio;
 		end.redMultiplier = end.greenMultiplier = end.blueMultiplier = 1 - value.tintAmount;
-	} else if (!isNaN(value.exposure)) {
+	} else if (!is0(value.exposure)) {
 		end.redOffset = end.greenOffset = end.blueOffset = 255 * (value.exposure - 1);
 		end.redMultiplier = end.greenMultiplier = end.blueMultiplier = 1;
-	} else if (!isNaN(value.brightness)) {
+	} else if (!is0(value.brightness)) {
 		end.redOffset = end.greenOffset = end.blueOffset = Math.max(0, (value.brightness - 1) * 255);
 		end.redMultiplier = end.greenMultiplier = end.blueMultiplier = 1 - Math.abs(value.brightness - 1);
 	}

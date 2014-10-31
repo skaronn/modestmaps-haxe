@@ -61,7 +61,7 @@ private static inline var _2PI:Float = Math.PI * 2;
 private static inline var _RAD2DEG:Float = 180 / Math.PI;
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _autoRemove:Bool;
 /** @private **/
@@ -81,7 +81,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	if (!("path" in value) || !(value.path is CirclePath2D)) {
 	trace("CirclePath2DPlugin error: invalid 'path' property. Please define a CirclePath2D instance.");
 	return false;
@@ -98,12 +98,12 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	_start = _circle.angleToProgress(value.startAngle || 0, value.useRadians);
 	_circle.renderObjectAt(_target, _start);
 	}
-	_change = Number(_circle.anglesToProgressChange(_circle.progressToAngle(_start), value.endAngle || 0, value.direction || "clockwise", value.extraRevolutions || 0, Boolean(value.useRadians)));
+	_change = Float(_circle.anglesToProgressChange(_circle.progressToAngle(_start), value.endAngle || 0, value.direction || "clockwise", value.extraRevolutions || 0, Boolean(value.useRadians)));
 	return true;
 }
 
 /** @private **/
-override public function _kill(lookup:Object):Bool {
+override public function _kill(lookup:Map<String, Int>):Bool {
 	if (("x" in lookup) || ("y" in lookup)) {
 	_overwriteProps = [];
 	}

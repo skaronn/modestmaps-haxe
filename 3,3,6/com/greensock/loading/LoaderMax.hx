@@ -117,19 +117,19 @@ trace("error occured with " + event.target + ": " + event.text);
  * 	<li><strong> autoDispose : Bool</strong> - When <code>autoDispose</code> is <code>true</code>, the loader will be disposed immediately after it completes (it calls the <code>dispose()</code> method internally after dispatching its <code>COMPLETE</code> event). This will remove any listeners that were defined in the vars object (like onComplete, onProgress, onError, onInit). Once a loader is disposed, it can no longer be found with <code>LoaderMax.getLoader()</code> or <code>LoaderMax.getContent()</code> - it is essentially destroyed but its content is not unloaded (you must call <code>unload()</code> or <code>dispose(true)</code> to unload its content). The default <code>autoDispose</code> value is <code>false</code>.
  * 		
  * 	<p>----EVENT HANDLER SHORTCUTS----</p></li>
- * 	<li><strong> onOpen : Function</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onProgress : Function</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
- * 	<li><strong> onComplete : Function</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onCancel : Function</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either an error or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onError : Function</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader or any of its children fails (typically because of an IO_ERROR or SECURITY_ERROR). Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildOpen : Function</strong> - A handler function for <code>LoaderEvent.CHILD_OPEN</code> events which are dispatched each time one of the loader's children (or any descendant) begins loading. Make sure your onChildOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildProgress : Function</strong> - A handler function for <code>LoaderEvent.CHILD_PROGRESS</code> events which are dispatched each time one of the loader's children (or any descendant) dispatches a <code>PROGRESS</code> event. To listen for changes in the LoaderMax's overall progress, use the <code>onProgress</code> special property instead. You can use the LoaderEvent's <code>target.progress</code> to get the child loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>. The LoaderEvent's <code>currentTarget</code> refers to the LoaderMax, so you can check its overall progress with the LoaderEvent's <code>currentTarget.progress</code>. Make sure your onChildProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildComplete : Function</strong> - A handler function for <code>LoaderEvent.CHILD_COMPLETE</code> events which are dispatched each time one of the loader's children (or any descendant) finishes loading successfully. Make sure your onChildComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildCancel : Function</strong> - A handler function for <code>LoaderEvent.CHILD_CANCEL</code> events which are dispatched each time loading is aborted on one of the loader's children (or any descendant) due to either an error or because another loader was prioritized in the queue or because <code>cancel()</code> was manually called on the child loader. Make sure your onChildCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildFail : Function</strong> - A handler function for <code>LoaderEvent.CHILD_FAIL</code> events which are dispatched each time one of the loader's children (or any descendant) fails (and its <code>status</code> chances to <code>LoaderStatus.FAILED</code>). Make sure your onChildFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onIOError : Function</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onHTTPStatus : Function</strong> - A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onScriptAccessDenied : Function</strong> - A handler function for <code>LoaderEvent.SCRIPT_ACCESS_DENIED</code> events which are dispatched when one of the LoaderMax's children (or any descendant) is loaded from another domain and no crossdomain.xml is in place to grant full script access for things like smoothing or BitmapData manipulation. Make sure your function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onOpen : Dynamic</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onProgress : Dynamic</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
+ * 	<li><strong> onComplete : Dynamic</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onCancel : Dynamic</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either an error or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onError : Dynamic</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader or any of its children fails (typically because of an IO_ERROR or SECURITY_ERROR). Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildOpen : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_OPEN</code> events which are dispatched each time one of the loader's children (or any descendant) begins loading. Make sure your onChildOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildProgress : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_PROGRESS</code> events which are dispatched each time one of the loader's children (or any descendant) dispatches a <code>PROGRESS</code> event. To listen for changes in the LoaderMax's overall progress, use the <code>onProgress</code> special property instead. You can use the LoaderEvent's <code>target.progress</code> to get the child loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>. The LoaderEvent's <code>currentTarget</code> refers to the LoaderMax, so you can check its overall progress with the LoaderEvent's <code>currentTarget.progress</code>. Make sure your onChildProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildComplete : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_COMPLETE</code> events which are dispatched each time one of the loader's children (or any descendant) finishes loading successfully. Make sure your onChildComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildCancel : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_CANCEL</code> events which are dispatched each time loading is aborted on one of the loader's children (or any descendant) due to either an error or because another loader was prioritized in the queue or because <code>cancel()</code> was manually called on the child loader. Make sure your onChildCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildFail : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_FAIL</code> events which are dispatched each time one of the loader's children (or any descendant) fails (and its <code>status</code> chances to <code>LoaderStatus.FAILED</code>). Make sure your onChildFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onIOError : Dynamic</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onHTTPStatus : Dynamic</strong> - A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onScriptAccessDenied : Dynamic</strong> - A handler function for <code>LoaderEvent.SCRIPT_ACCESS_DENIED</code> events which are dispatched when one of the LoaderMax's children (or any descendant) is loaded from another domain and no crossdomain.xml is in place to grant full script access for things like smoothing or BitmapData manipulation. Make sure your function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
  * </ul>
  * 
  * <p><strong>Note:</strong> Using a <code><a href="data/LoaderMaxVars.html">LoaderMaxVars</a></code> instance 
@@ -142,7 +142,7 @@ trace("error occured with " + event.target + ": " + event.text);
  * 
  * @author Jack Doyle, jack@greensock.com
  */	
-import flash.Error;
+import flash.errors.Error;
 
 class LoaderMax extends LoaderCore {	
 /** @private **/
@@ -162,7 +162,7 @@ LoaderMax.contentDisplayClass = FlexContentDisplay;
 public static var contentDisplayClass:Class;
 
 /** @private **/
-private var _loaders:Array;
+private var _loaders:Array<Dynamic>;
 /** @private **/
 private var _activeLoaders:Dictionary;
 
@@ -194,23 +194,23 @@ public var autoLoad:Bool;
  * 	<li><strong> autoDispose : Bool</strong> - When <code>autoDispose</code> is <code>true</code>, the loader will be disposed immediately after it completes (it calls the <code>dispose()</code> method internally after dispatching its <code>COMPLETE</code> event). This will remove any listeners that were defined in the vars object (like onComplete, onProgress, onError, onInit). Once a loader is disposed, it can no longer be found with <code>LoaderMax.getLoader()</code> or <code>LoaderMax.getContent()</code> - it is essentially destroyed but its content is not unloaded (you must call <code>unload()</code> or <code>dispose(true)</code> to unload its content). The default <code>autoDispose</code> value is <code>false</code>.
  * 		
  * 	<p>----EVENT HANDLER SHORTCUTS----</p></li>
- * 	<li><strong> onOpen : Function</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onProgress : Function</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
- * 	<li><strong> onComplete : Function</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onCancel : Function</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either an error or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onError : Function</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader or any of its children fails (typically because of an IO_ERROR or SECURITY_ERROR). Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildOpen : Function</strong> - A handler function for <code>LoaderEvent.CHILD_OPEN</code> events which are dispatched each time one of the loader's children (or any descendant) begins loading. Make sure your onChildOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildProgress : Function</strong> - A handler function for <code>LoaderEvent.CHILD_PROGRESS</code> events which are dispatched each time one of the loader's children (or any descendant) dispatches a <code>PROGRESS</code> event. To listen for changes in the LoaderMax's overall progress, use the <code>onProgress</code> special property instead. You can use the LoaderEvent's <code>target.progress</code> to get the child loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>. The LoaderEvent's <code>currentTarget</code> refers to the LoaderMax, so you can check its overall progress with the LoaderEvent's <code>currentTarget.progress</code>. Make sure your onChildProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildComplete : Function</strong> - A handler function for <code>LoaderEvent.CHILD_COMPLETE</code> events which are dispatched each time one of the loader's children (or any descendant) finishes loading successfully. Make sure your onChildComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildCancel : Function</strong> - A handler function for <code>LoaderEvent.CHILD_CANCEL</code> events which are dispatched each time loading is aborted on one of the loader's children (or any descendant) due to either an error or because another loader was prioritized in the queue or because <code>cancel()</code> was manually called on the child loader. Make sure your onChildCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onChildFail : Function</strong> - A handler function for <code>LoaderEvent.CHILD_FAIL</code> events which are dispatched each time one of the loader's children (or any descendant) fails (and its <code>status</code> chances to <code>LoaderStatus.FAILED</code>). Make sure your onChildFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onIOError : Function</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onHTTPStatus : Function</strong> - A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onScriptAccessDenied : Function</strong> - A handler function for <code>LoaderEvent.SCRIPT_ACCESS_DENIED</code> events which are dispatched when one of the LoaderMax's children (or any descendant) is loaded from another domain and no crossdomain.xml is in place to grant full script access for things like smoothing or BitmapData manipulation. Make sure your function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onOpen : Dynamic</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onProgress : Dynamic</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
+ * 	<li><strong> onComplete : Dynamic</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onCancel : Dynamic</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either an error or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onError : Dynamic</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader or any of its children fails (typically because of an IO_ERROR or SECURITY_ERROR). Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildOpen : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_OPEN</code> events which are dispatched each time one of the loader's children (or any descendant) begins loading. Make sure your onChildOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildProgress : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_PROGRESS</code> events which are dispatched each time one of the loader's children (or any descendant) dispatches a <code>PROGRESS</code> event. To listen for changes in the LoaderMax's overall progress, use the <code>onProgress</code> special property instead. You can use the LoaderEvent's <code>target.progress</code> to get the child loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>. The LoaderEvent's <code>currentTarget</code> refers to the LoaderMax, so you can check its overall progress with the LoaderEvent's <code>currentTarget.progress</code>. Make sure your onChildProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildComplete : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_COMPLETE</code> events which are dispatched each time one of the loader's children (or any descendant) finishes loading successfully. Make sure your onChildComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildCancel : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_CANCEL</code> events which are dispatched each time loading is aborted on one of the loader's children (or any descendant) due to either an error or because another loader was prioritized in the queue or because <code>cancel()</code> was manually called on the child loader. Make sure your onChildCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onChildFail : Dynamic</strong> - A handler function for <code>LoaderEvent.CHILD_FAIL</code> events which are dispatched each time one of the loader's children (or any descendant) fails (and its <code>status</code> chances to <code>LoaderStatus.FAILED</code>). Make sure your onChildFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onIOError : Dynamic</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onHTTPStatus : Dynamic</strong> - A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onScriptAccessDenied : Dynamic</strong> - A handler function for <code>LoaderEvent.SCRIPT_ACCESS_DENIED</code> events which are dispatched when one of the LoaderMax's children (or any descendant) is loaded from another domain and no crossdomain.xml is in place to grant full script access for things like smoothing or BitmapData manipulation. Make sure your function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
  * </ul>
  * @see com.greensock.loading.data.LoaderMaxVars
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	super(vars);
 	_type = "LoaderMax";
 	_loaders = [];
@@ -277,7 +277,7 @@ trace("finished loading " + loader.numChildren + " loaders.");
  * @param childrenVars The <code>vars</code> object that will be passed to each child loader's constructor (only applicable when the <code>data</code> parameter is an array which means <code>parse()</code> will return a LoaderMax). For example, if you <code>parse()</code> and array of video urls and want <code>autoPlay</code> set to <code>false</code> for all of them, you'd do <code>LoaderMax.parse(["1.flv","2.f4v","3.mp4"], null, {autoPlay:false});</code>. 
  * @return If <code>data</code> is an array, <code>parse()</code> will return a LoaderMax. Otherwise, it will return the appropriate loader based on the file extension found in the URL. In any case, the object returned will be a <code>LoaderCore</code> object (all LoaderMax loaders extend LoaderCore, so if you need to datatype your object use <code>com.greensock.loading.core.LoaderCore</code>). The return value is typed as "*" in order to avoid compiler errors when developers forget to cast ther objects like <code>var image:ImageLoader = LoaderMax.parse("photo.jpg") as ImageLoader</code>
  */
-public static function parse(data:Dynamic, vars:Object=null, childrenVars:Object=null):Dynamic {
+public static function parse(data:Dynamic, vars:Map<String, Int>=null, childrenVars:Map<String, Int>=null):Dynamic {
 	if (data is Array) {
 	var queue:LoaderMax = new LoaderMax(vars);
 	var l:Int = data.length;
@@ -417,7 +417,7 @@ private function _removeLoader(loader:LoaderCore, rootLoaderAppend:Bool):Void {
 	_removeLoaderListeners(loader, true);
 	_loaders.splice(getChildIndex(loader), 1);
 	if (loader in _activeLoaders) {
-	delete _activeLoaders[loader];
+	untyped __delete__(_activeLoaders[loader];
 	loader.cancel();
 	if (_status == LoaderStatus.LOADING) {
 		_loadNext(null);
@@ -454,7 +454,7 @@ override private function _dump(scrubLevel:Int=0, newStatus:Int=0, suppressEvent
 	_status = LoaderStatus.DISPOSED; //must set it first so that when events from children are dispatched, it doesn't trigger other unnecessary actions.
 	empty(true, Boolean(scrubLevel == 3));
 	if (this.vars.requireWithRoot is DisplayObject) {
-		delete _rootLookup[this.vars.requireWithRoot];
+		untyped __delete__(_rootLookup[this.vars.requireWithRoot];
 	}
 	_activeLoaders = null;
 	}
@@ -495,7 +495,7 @@ private function _cancelActiveLoaders():Void {
 	while (--i > -1) {
 	loader = _loaders[i];
 	if (loader.status == LoaderStatus.LOADING) {
-		delete _activeLoaders[loader];
+		untyped __delete__(_activeLoaders[loader];
 		_removeLoaderListeners(loader, false);
 		loader.cancel();
 	}
@@ -532,7 +532,7 @@ private function _removeLoaderListeners(loader:LoaderCore, all:Bool):Void {
  * @see #getLoader()
  * @see #numChildren
  */
-public function getChildrenByStatus(status:Int, includeNested:Bool=false, omitLoaderMaxes:Bool=false):Array {
+public function getChildrenByStatus(status:Int, includeNested:Bool=false, omitLoaderMaxes:Bool=false):Array<Dynamic> {
 	var a:Array = [];
 	var loaders:Array = getChildren(includeNested, omitLoaderMaxes);
 	var l:Int = loaders.length;
@@ -570,7 +570,7 @@ public function getChildAt(index:Int):Dynamic {
  * @see #getLoader()
  * @see #numChildren
  */
-public function getChildren(includeNested:Bool=false, omitLoaderMaxes:Bool=false):Array {
+public function getChildren(includeNested:Bool=false, omitLoaderMaxes:Bool=false):Array<Dynamic> {
 	var a:Array = [];
 	var l:Int = _loaders.length;
 	for (var i:Int = 0; i < l; i++) {
@@ -787,7 +787,7 @@ private function _auditSize(event:Event=null):Void {
 /** @private **/
 private function _loadNext(event:Event=null):Void {
 	if (event != null && _activeLoaders != null) {
-	delete _activeLoaders[event.target];
+	untyped __delete__(_activeLoaders[event.target];
 	_removeLoaderListeners(LoaderCore(event.target), false);
 	}
 	
@@ -997,7 +997,7 @@ override private function _passThroughEvent(event:Event):Void {
 
 //---- GETTERS / SETTERS -------------------------------------------------------------------------
 
-/** Number of child loaders currently contained in the LoaderMax instance (does not include deeply nested loaders - only children). To get the quantity of all children including nested ones, use <code>getChildren(true, true).length</code> @see #getChildren() **/
+/** Float of child loaders currently contained in the LoaderMax instance (does not include deeply nested loaders - only children). To get the quantity of all children including nested ones, use <code>getChildren(true, true).length</code> @see #getChildren() **/
 public var numChildren(getNumChildren, null):UInt;
  	private function getNumChildren():UInt {
 	return _loaders.length;

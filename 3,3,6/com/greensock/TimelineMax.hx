@@ -90,7 +90,7 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 	  
  * 	<li> Add <code>onComplete, onStart, onUpdate, onRepeat</code> and/or <code>onReverseComplete</code> 
  * 		callbacks using the constructor's <code>vars</code> object like
- * 		<code>var tl = new TimelineMax({onComplete:myFunction});</code></li>
+ * 		<code>var tl = new TimelineMax({onComplete:myDynamic});</code></li>
  * 
  * 	<li> Kill the tweens of a particular object inside the timeline with <code>kill(null, target)</code> 
  * 		or get the tweens of an object with <code>getTweensOf()</code> or get all the tweens/timelines 
@@ -124,10 +124,10 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 
  * <p><strong>SPECIAL PROPERTIES:</strong></p>
  * <p>You can optionally use the constructor's <code>vars</code> parameter to define any of
- * the special properties below (syntax example: <code>new TimelineMax({onComplete:myFunction, repeat:2, repeatDelay:1, yoyo:true});</code></p>
+ * the special properties below (syntax example: <code>new TimelineMax({onComplete:myDynamic, repeat:2, repeatDelay:1, yoyo:true});</code></p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the timeline should begin.</li>
  * 
  *  <li><strong> paused </strong>:<em> Boolean</em> -
@@ -136,12 +136,12 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		 then populate it later (after one or more frames elapse), it is typically best to set 
  * 		 <code>paused:true</code> and then <code>play()</code> after you populate it.</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>new TimelineMax({onComplete:myFunction, onCompleteParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineMax({onComplete:myDynamic, onCompleteParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onCompleteParams:["{self}", "param2"]</code></li>
  * 	
@@ -177,7 +177,7 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		initially placed into the timeline through the <code>tweens</code> special property of 
  * 		the <code>vars</code> object.</li>
  * 					
- * 	<li><strong> stagger </strong>:<em> Number</em> -
+ * 	<li><strong> stagger </strong>:<em> Float</em> -
  * 		 Only used in conjunction with the <code>tweens</code> special property when multiple 
  * 		 tweens are	to be inserted immediately. It staggers the tweens by a set amount of time 
  * 		 in seconds (or in frames if <code>useFrames</code> is true). For example, if the 
@@ -187,28 +187,28 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		 there would be 0.5 seconds added between each tween. This value simply gets 
  * 		 passed to the <code>add()</code> method. Default is 0.</li>
  * 
- *  <li><strong> onStart </strong>:<em> Function</em> -
+ *  <li><strong> onStart </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline begins (when its <code>time</code>
  * 		 changes from 0 to some other value which can happen more than once if the 
  * 		 timeline is restarted multiple times).</li>
  * 	
  * 	<li><strong> onStartParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onStart</code> function. For example, 
- * 		 <code>new TimelineMax({onStart:myFunction, onStartParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineMax({onStart:myDynamic, onStartParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onStartParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the timeline updates  
  * 		 (on every frame while the timeline is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>new TimelineMax({onUpdate:myFunction, onUpdateParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineMax({onUpdate:myDynamic, onUpdateParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onUpdateParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onReverseComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onReverseComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has reached its beginning again from the 
  * 		 reverse direction. For example, if <code>reverse()</code> is called, the timeline will move
  * 		 back towards its beginning and when its <code>time</code> reaches 0, <code>onReverseComplete</code>
@@ -217,7 +217,7 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 	
  * 	<li><strong> onReverseCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onReverseComplete</code> function. For example, 
- * 		 <code>new TimelineMax({onReverseComplete:myFunction, onReverseCompleteParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineMax({onReverseComplete:myDynamic, onReverseCompleteParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onReverseCompleteParams:["{self}", "param2"]</code></li>
  * 
@@ -254,12 +254,12 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		are: <code>reversed, timeScale, progress, totalProgress, time, totalTime, delay, pause, 
  * 		resume, duration,</code> and <code>totalDuration</code>.</li>
  * 	
- *  <li><strong> repeat </strong>:<em> Number</em> -
- * 		 Number of times that the timeline should repeat after its first iteration. For example, 
+ *  <li><strong> repeat </strong>:<em> Float</em> -
+ * 		 Float of times that the timeline should repeat after its first iteration. For example, 
  * 		 if <code>repeat</code> is 1, the timeline will play a total of twice (the initial play
  * 		 plus 1 repeat). To repeat indefinitely, use -1. <code>repeat</code> should always be an integer.</li>
  * 	
- * 	<li><strong> repeatDelay </strong>:<em> Number</em> -
+ * 	<li><strong> repeatDelay </strong>:<em> Float</em> -
  * 		 Amount of time in seconds (or frames for frames-based timelines) between repeats. For example,
  * 		 if <code>repeat</code> is 2 and <code>repeatDelay</code> is 1, the timeline will play initially,
  * 		 then wait for 1 second before it repeats, then play again, then wait 1 second again before 
@@ -273,38 +273,38 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		 start - 1 - 2 - 3 - 1 - 2 - 3 - 1 - 2 - 3 - end. But if <code>yoyo</code> is <code>true</code>, 
  * 		 it will look like: start - 1 - 2 - 3 - 3 - 2 - 1 - 1 - 2 - 3 - end.</li>
  *  
- * 	<li><strong> onRepeat </strong>:<em> Function</em> -
+ * 	<li><strong> onRepeat </strong>:<em> Dynamic</em> -
  * 		 A function that should be called each time the timeline repeats</li>
  * 	
  * 	<li><strong> onRepeatParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the onRepeat function. For example, 
- * 		 <code>new TimelineMax({repeat:3, onRepeat:myFunction, onRepeatParams:[mc, "param2"]});</code>
+ * 		 <code>new TimelineMax({repeat:3, onRepeat:myDynamic, onRepeatParams:[mc, "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onRepeatParams:["{self}", "param2"]</code></li>
  * 					
- * 	<li><strong> onStartListener </strong>:<em> Function</em> (AS3 only) -
+ * 	<li><strong> onStartListener </strong>:<em> Dynamic</em> (AS3 only) -
  * 		 A function that should be called (and passed an event parameter) when the timeline begins 
  * 		 (when its <code>totalTime</code> changes from 0 to some other value which can happen more 
  * 		 than once if the timeline is restarted multiple times). Identical to <code>onStart</code> except
  * 		 that the function will always be passed an event parameter whose <code>target</code> property points
- * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("start", myFunction);</code>. 
+ * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("start", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onStart</code>.</li>
  * 	
- * 	<li><strong> onUpdateListener </strong>:<em> Function</em> (AS3 only) -
+ * 	<li><strong> onUpdateListener </strong>:<em> Dynamic</em> (AS3 only) -
  * 		 A function that should be called (and passed an event parameter) each time the timeline updates 
  * 		 (on every frame while the timeline is active). Identical to <code>onUpdate</code> except
  * 		 that the function will always be passed an event parameter whose <code>target</code> property points
- * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("update", myFunction);</code>. 
+ * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("update", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onUpdate</code>.</li>
  * 	  
- * 	<li><strong> onCompleteListener </strong>:<em> Function</em> (AS3 only) - 
+ * 	<li><strong> onCompleteListener </strong>:<em> Dynamic</em> (AS3 only) - 
  * 		 A function that should be called (and passed an event parameter) each time the timeline completes. 
  * 		 Identical to <code>onComplete</code> except that the function will always be passed an event 
  * 		 parameter whose <code>target</code> property points to the timeline. It's the same as doing 
- * 		 <code>myTimeline.addEventListener("complete", myFunction);</code>. 
+ * 		 <code>myTimeline.addEventListener("complete", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onComplete</code>.</li>
  * 
- *  <li><strong> onReverseCompleteListener </strong>:<em> Function</em> (AS3 only) -
+ *  <li><strong> onReverseCompleteListener </strong>:<em> Dynamic</em> (AS3 only) -
  * 		 A function that should be called (and passed an event parameter) each time the timeline has reached 
  * 		 its beginning again from the reverse direction. For example, if <code>reverse()</code> is called 
  * 		 the timeline will move back towards its beginning and when its <code>totalTime</code> reaches 0, 
@@ -312,21 +312,21 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		 in another TimelineLite or TimelineMax instance that gets reversed and plays the timeline backwards to 
  * 		 (or past) the beginning. Identical to <code>onReverseComplete</code> except that the function 
  * 		 will always be passed an event parameter whose <code>target</code> property points to the timeline. 
- * 		 It's the same as doing <code>myTimeline.addEventListener("reverseComplete", myFunction);</code>. 
+ * 		 It's the same as doing <code>myTimeline.addEventListener("reverseComplete", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onReverseComplete</code>.</li>
  * 
- *  <li><strong> onRepeatListener </strong>:<em> Function</em> (AS3 only) -
+ *  <li><strong> onRepeatListener </strong>:<em> Dynamic</em> (AS3 only) -
  * 		 A function that should be called (and passed an event parameter) each time the timeline repeats. 
  * 		 Identical to <code>onRepeat</code> except that the function will always be passed an event 
  * 		 parameter whose <code>target</code> property points to the timeline. It's the same as doing 
- * 		 <code>myTimeline.addEventListener("repeat", myFunction);</code>. 
+ * 		 <code>myTimeline.addEventListener("repeat", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onRepeat</code>.</li>
  * 	
  * 	</ul>
  * 
  * @example Sample code:<listing version="3.0">
-//create the timeline that repeats 3 times with 1 second between each repeat and then calls myFunction() when it completes
-var tl = new TimelineMax({repeat:3, repeatDelay:1, onComplete:myFunction});
+//create the timeline that repeats 3 times with 1 second between each repeat and then calls myDynamic() when it completes
+var tl = new TimelineMax({repeat:3, repeatDelay:1, onComplete:myDynamic});
 
 //add a tween
 tl.add( new TweenLite(mc, 1, {x:200, y:100}) );
@@ -391,7 +391,7 @@ class TimelineMax extends TimelineLite implements IEventDispatcher {
 /** @private **/
 public static inline var version:String = "12.1.5";
 /** @private **/
-private static var _listenerLookup:Object = {onCompleteListener:TweenEvent.COMPLETE, onUpdateListener:TweenEvent.UPDATE, onStartListener:TweenEvent.START, onRepeatListener:TweenEvent.REPEAT, onReverseCompleteListener:TweenEvent.REVERSE_COMPLETE};
+private static var _listenerLookup:Map<String, Int> = {onCompleteListener:TweenEvent.COMPLETE, onUpdateListener:TweenEvent.UPDATE, onStartListener:TweenEvent.START, onRepeatListener:TweenEvent.REPEAT, onReverseCompleteListener:TweenEvent.REVERSE_COMPLETE};
 /** @private **/
 private static var _easeNone:Ease = new Ease(null, null, 1, 0);
 
@@ -422,10 +422,10 @@ private var _hasUpdateListener:Bool;
  * 
  * <p><strong>SPECIAL PROPERTIES</strong></p>
  * <p>The following special properties may be passed in via the constructor's vars parameter, like
- * <code>new TimelineMax({paused:true, onComplete:myFunction, repeat:2, yoyo:true})</code> </p>
+ * <code>new TimelineMax({paused:true, onComplete:myDynamic, repeat:2, yoyo:true})</code> </p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the timeline should begin.</li>
  * 
  *  <li><strong> paused </strong>:<em> Boolean</em> -
@@ -434,12 +434,12 @@ private var _hasUpdateListener:Bool;
  * 		 then populate it later (after one or more frames elapse), it is typically best to set 
  * 		 <code>paused:true</code> and then <code>play()</code> after you populate it.</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>new TimelineMax({onComplete:myFunction, onCompleteParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineMax({onComplete:myDynamic, onCompleteParams:["param1", "param2"]});</code></li>
  * 	
  * 	<li><strong> useFrames </strong>:<em> Boolean</em> -
  * 		 If <code>useFrames</code> is <code>true</code>, the timelines's timing will be 
@@ -473,7 +473,7 @@ private var _hasUpdateListener:Bool;
  * 		initially placed into the timeline through the <code>tweens</code> special property of 
  * 		the <code>vars</code> object.</li>
  * 					
- * 	<li><strong> stagger </strong>:<em> Number</em> -
+ * 	<li><strong> stagger </strong>:<em> Float</em> -
  * 		 Only used in conjunction with the <code>tweens</code> special property when multiple 
  * 		 tweens are	to be inserted immediately. It staggers the tweens by a set amount of time 
  * 		 in seconds (or in frames if <code>useFrames</code> is true). For example, if the 
@@ -483,24 +483,24 @@ private var _hasUpdateListener:Bool;
  * 		 there would be 0.5 seconds added between each tween. This value simply gets 
  * 		 passed to the <code>add()</code> method. Default is 0.</li>
  * 
- *  <li><strong> onStart </strong>:<em> Function</em> -
+ *  <li><strong> onStart </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline begins (when its <code>time</code>
  * 		 changes from 0 to some other value which can happen more than once if the 
  * 		 timeline is restarted multiple times).</li>
  * 	
  * 	<li><strong> onStartParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onStart</code> function. For example, 
- * 		 <code>new TimelineMax({onStart:myFunction, onStartParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineMax({onStart:myDynamic, onStartParams:["param1", "param2"]});</code></li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the timeline updates  
  * 		 (on every frame while the timeline is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>new TimelineMax({onUpdate:myFunction, onUpdateParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineMax({onUpdate:myDynamic, onUpdateParams:["param1", "param2"]});</code></li>
  * 	
- * 	<li><strong> onReverseComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onReverseComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has reached its beginning again from the 
  * 		 reverse direction. For example, if <code>reverse()</code> is called, the timeline will move
  * 		 back towards its beginning and when its <code>time</code> reaches 0, <code>onReverseComplete</code>
@@ -509,7 +509,7 @@ private var _hasUpdateListener:Bool;
  * 	
  * 	<li><strong> onReverseCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onReverseComplete</code> function. For example, 
- * 		 <code>new TimelineMax({onReverseComplete:myFunction, onReverseCompleteParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineMax({onReverseComplete:myDynamic, onReverseCompleteParams:["param1", "param2"]});</code></li>
  * 
  *  <li><strong> autoRemoveChildren </strong>:<em> Boolean</em> -
  * 		If <code>autoRemoveChildren</code> is set to <code>true</code>, as soon as child 
@@ -544,12 +544,12 @@ private var _hasUpdateListener:Bool;
  * 		are: <code>reversed, timeScale, progress, totalProgress, time, totalTime, delay, pause, 
  * 		resume, duration,</code> and <code>totalDuration</code>.</li>
  * 	
- *  <li><strong> repeat </strong>:<em> Number</em> -
- * 		 Number of times that the timeline should repeat after its first iteration. For example, 
+ *  <li><strong> repeat </strong>:<em> Float</em> -
+ * 		 Float of times that the timeline should repeat after its first iteration. For example, 
  * 		 if <code>repeat</code> is 1, the timeline will play a total of twice (the initial play
  * 		 plus 1 repeat). To repeat indefinitely, use -1. <code>repeat</code> should always be an integer.</li>
  * 	
- * 	<li><strong> repeatDelay </strong>:<em> Number</em> -
+ * 	<li><strong> repeatDelay </strong>:<em> Float</em> -
  * 		 Amount of time in seconds (or frames for frames-based timelines) between repeats. For example,
  * 		 if <code>repeat</code> is 2 and <code>repeatDelay</code> is 1, the timeline will play initially,
  * 		 then wait for 1 second before it repeats, then play again, then wait 1 second again before 
@@ -563,36 +563,36 @@ private var _hasUpdateListener:Bool;
  * 		 start - 1 - 2 - 3 - 1 - 2 - 3 - 1 - 2 - 3 - end. But if <code>yoyo</code> is <code>true</code>, 
  * 		 it will look like: start - 1 - 2 - 3 - 3 - 2 - 1 - 1 - 2 - 3 - end.</li>
  *  
- * 	<li><strong> onRepeat </strong>:<em> Function</em> -
+ * 	<li><strong> onRepeat </strong>:<em> Dynamic</em> -
  * 		 A function that should be called each time the timeline repeats</li>
  * 	
  * 	<li><strong> onRepeatParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the onRepeat function. For example, 
- * 		 <code>new TimelineMax({repeat:3, onRepeat:myFunction, onRepeatParams:[mc, "param2"]});</code></li>
+ * 		 <code>new TimelineMax({repeat:3, onRepeat:myDynamic, onRepeatParams:[mc, "param2"]});</code></li>
  * 					
- * 	<li><strong> onStartListener </strong>:<em> Function</em> -
+ * 	<li><strong> onStartListener </strong>:<em> Dynamic</em> -
  * 		 A function that should be called (and passed an event parameter) when the timeline begins 
  * 		 (when its <code>totalTime</code> changes from 0 to some other value which can happen more 
  * 		 than once if the timeline is restarted multiple times). Identical to <code>onStart</code> except
  * 		 that the function will always be passed an event parameter whose <code>target</code> property points
- * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("start", myFunction);</code>. 
+ * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("start", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onStart</code>.</li>
  * 	
- * 	<li><strong> onUpdateListener </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdateListener </strong>:<em> Dynamic</em> -
  * 		 A function that should be called (and passed an event parameter) each time the timeline updates 
  * 		 (on every frame while the timeline is active). Identical to <code>onUpdate</code> except
  * 		 that the function will always be passed an event parameter whose <code>target</code> property points
- * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("update", myFunction);</code>. 
+ * 		 to the timeline. It's the same as doing <code>myTimeline.addEventListener("update", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onUpdate</code>.</li>
  * 	  
- * 	<li><strong> onCompleteListener </strong>:<em> Function</em> - 
+ * 	<li><strong> onCompleteListener </strong>:<em> Dynamic</em> - 
  * 		 A function that should be called (and passed an event parameter) each time the timeline completes. 
  * 		 Identical to <code>onComplete</code> except that the function will always be passed an event 
  * 		 parameter whose <code>target</code> property points to the timeline. It's the same as doing 
- * 		 <code>myTimeline.addEventListener("complete", myFunction);</code>. 
+ * 		 <code>myTimeline.addEventListener("complete", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onComplete</code>.</li>
  * 
- *  <li><strong> onReverseCompleteListener </strong>:<em> Function</em> -
+ *  <li><strong> onReverseCompleteListener </strong>:<em> Dynamic</em> -
  * 		 A function that should be called (and passed an event parameter) each time the timeline has reached 
  * 		 its beginning again from the reverse direction. For example, if <code>reverse()</code> is called 
  * 		 the timeline will move back towards its beginning and when its <code>totalTime</code> reaches 0, 
@@ -600,21 +600,21 @@ private var _hasUpdateListener:Bool;
  * 		 in another TimelineLite or TimelineMax instance that gets reversed and plays the timeline backwards to 
  * 		 (or past) the beginning. Identical to <code>onReverseComplete</code> except that the function 
  * 		 will always be passed an event parameter whose <code>target</code> property points to the timeline. 
- * 		 It's the same as doing <code>myTimeline.addEventListener("reverseComplete", myFunction);</code>. 
+ * 		 It's the same as doing <code>myTimeline.addEventListener("reverseComplete", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onReverseComplete</code>.</li>
  * 
- *  <li><strong> onRepeatListener </strong>:<em> Function</em> -
+ *  <li><strong> onRepeatListener </strong>:<em> Dynamic</em> -
  * 		 A function that should be called (and passed an event parameter) each time the timeline repeats. 
  * 		 Identical to <code>onRepeat</code> except that the function will always be passed an event 
  * 		 parameter whose <code>target</code> property points to the timeline. It's the same as doing 
- * 		 <code>myTimeline.addEventListener("repeat", myFunction);</code>. 
+ * 		 <code>myTimeline.addEventListener("repeat", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onRepeat</code>.</li>
  * 	
  * 	</ul>
  * 
  * @param vars optionally pass in special properties like useFrames, onComplete, onCompleteParams, onUpdate, onUpdateParams, onStart, onStartParams, tweens, align, stagger, delay, autoRemoveChildren, onCompleteListener, onStartListener, onUpdateListener, repeat, repeatDelay, and/or yoyo.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	super(vars);
 	_repeat = this.vars.repeat || 0;
 	_repeatDelay = this.vars.repeatDelay || 0;
@@ -644,8 +644,8 @@ override public function invalidate():Dynamic {
  * 
  * <p>If your goal is to append the callback to the end of the timeline, it would be easier
  * (more concise) to use the <code>call()</code> method. Technically the <code>add()</code> method
- * can accommodate adding a callback too (like <code>myTimeline.add(myFunction, 2)</code>
- * or <code>myTimeline.add(myFunction, "+=2")</code>) but <code>add()</code> doesn't accommodate parameters.</p>
+ * can accommodate adding a callback too (like <code>myTimeline.add(myDynamic, 2)</code>
+ * or <code>myTimeline.add(myDynamic, "+=2")</code>) but <code>add()</code> doesn't accommodate parameters.</p>
  * 
  * <p><strong>JavaScript and AS2 note:</strong> - Due to the way JavaScript and AS2 don't 
  * maintain scope (what "<code>this</code>" refers to, or the context) in function calls, 
@@ -653,7 +653,7 @@ override public function invalidate():Dynamic {
  * versions accept an extra (4th) parameter for <code>scope</code>.</p>
  * 
  * @param function The function to be called
- * @param position The time in seconds (or frames for frames-based timelines) or label at which the callback should be inserted. For example, <code>myTimeline.addCallback(myFunction, 3)</code> would call myFunction() 3 seconds into the timeline, and <code>myTimeline.addCallback(myFunction, "myLabel")</code> would call it at the "myLabel" label. <code>myTimeline.addCallback(myFunction, "+=2")</code> would insert the callback 2 seconds after the end of the timeline.
+ * @param position The time in seconds (or frames for frames-based timelines) or label at which the callback should be inserted. For example, <code>myTimeline.addCallback(myDynamic, 3)</code> would call myDynamic() 3 seconds into the timeline, and <code>myTimeline.addCallback(myDynamic, "myLabel")</code> would call it at the "myLabel" label. <code>myTimeline.addCallback(myDynamic, "+=2")</code> would insert the callback 2 seconds after the end of the timeline.
  * @param params An Array of parameters to pass the callback
  * @return self (makes chaining easier)
  * 
@@ -661,7 +661,7 @@ override public function invalidate():Dynamic {
  * @see #add()
  * @see #removeCallback()
  */
-public function addCallback(callback:Function, position:Dynamic, params:Array=null):TimelineMax {
+public function addCallback(callback:Dynamic, position:Dynamic, params:Array<Dynamic>=null):TimelineMax {
 	return add( TweenLite.delayedCall(0, callback, params), position) as TimelineMax;
 }
 
@@ -670,14 +670,14 @@ public function addCallback(callback:Function, position:Dynamic, params:Array=nu
  * is null, all callbacks of that function are removed from the timeline.
  * 
  * @param function callback function to be removed
- * @param position the time in seconds (or frames for frames-based timelines) or label from which the callback should be removed. For example, <code>myTimeline.removeCallback(myFunction, 3)</code> would remove the callback from 3-seconds into the timeline, and <code>myTimeline.removeCallback(myFunction, "myLabel")</code> would remove it from the "myLabel" label, and <code>myTimeline.removeCallback(myFunction, null)</code> would remove ALL callbacks of that function regardless of where they are on the timeline.
+ * @param position the time in seconds (or frames for frames-based timelines) or label from which the callback should be removed. For example, <code>myTimeline.removeCallback(myDynamic, 3)</code> would remove the callback from 3-seconds into the timeline, and <code>myTimeline.removeCallback(myDynamic, "myLabel")</code> would remove it from the "myLabel" label, and <code>myTimeline.removeCallback(myDynamic, null)</code> would remove ALL callbacks of that function regardless of where they are on the timeline.
  * @return self (makes chaining easier)
  * 
  * @see #addCallback()
  * @see #call()
  * @see #kill()
  */
-public function removeCallback(callback:Function, position:Dynamic=null):TimelineMax {
+public function removeCallback(callback:Dynamic, position:Dynamic=null):TimelineMax {
 	if (callback != null) {
 	if (position == null) {
 		_kill(null, callback);
@@ -686,7 +686,7 @@ public function removeCallback(callback:Function, position:Dynamic=null):Timelin
 		i:Int = a.length,
 		time:Float = _parseTimeOrLabel(position);
 		while (--i > -1) {
-		if (a[i]._startTime === time) {
+		if (a[i]._startTime == time) {
 			a[i]._enabled(false, false);
 		}
 		}
@@ -705,11 +705,11 @@ public function removeCallback(callback:Function, position:Dynamic=null):Timelin
  * 
  * <p>If you want advanced control over the tween, like adding an onComplete or changing the ease or 
  * adding a delay, just pass in a <code>vars</code> object with the appropriate properties. For example, 
- * to tween to the 5-second point on the timeline and then call a function named <code>myFunction</code> 
+ * to tween to the 5-second point on the timeline and then call a function named <code>myDynamic</code> 
  * and pass in a parameter that's references this TimelineMax and use a <code>Strong.easeOut</code> ease, you'd do:</p>
  * 
  * <p><code>
- * myTimeline.tweenTo(5, {onComplete:myFunction, onCompleteParams:[myTimeline], ease:Strong.easeOut});
+ * myTimeline.tweenTo(5, {onComplete:myDynamic, onCompleteParams:[myTimeline], ease:Strong.easeOut});
  * </code></p>
  * 
  * <p>Remember, this method simply creates a TweenLite instance that pauses the timeline and then tweens 
@@ -733,18 +733,18 @@ public function removeCallback(callback:Function, position:Dynamic=null):Timelin
  * @see #tweenFromTo()
  * @see #seek()
  */
-public function tweenTo(position:Dynamic, vars:Object=null):TweenLite {
+public function tweenTo(position:Dynamic, vars:Map<String, Int>=null):TweenLite {
 	vars = vars || {};
-	var copy:Object = {ease:_easeNone, overwrite:(vars.delay ? 2 : 1), useFrames:usesFrames(), immediateRender:false};
+	var copy:Map<String, Int> = {ease:_easeNone, overwrite:(vars.delay ? 2 : 1), useFrames:usesFrames(), immediateRender:false};
 	for (var p:String in vars) {
 	copy[p] = vars[p];
 	}
 	copy.time = _parseTimeOrLabel(position);
-	var duration:Float = (Math.abs(Number(copy.time) - _time) / _timeScale) || 0.001;
+	var duration:Float = (Math.abs(Float(copy.time) - _time) / _timeScale) || 0.001;
 	var t:TweenLite = new TweenLite(this, duration, copy);
 	copy.onStart = function():Void {
 	t.target.paused(true);
-	if (t.vars.time != t.target.time() && duration === t.duration()) { //don't make the duration zero - if it's supposed to be zero, don't worry because it's already initting the tween and will complete immediately, effectively making the duration zero anyway. If we make duration zero, the tween won't run at all.
+	if (t.vars.time != t.target.time() && duration == t.duration()) { //don't make the duration zero - if it's supposed to be zero, don't worry because it's already initting the tween and will complete immediately, effectively making the duration zero anyway. If we make duration zero, the tween won't run at all.
 		t.duration( Math.abs( t.vars.time - t.target.time()) / t.target._timeScale );
 	}
 	if (vars.onStart) { //in case the user had an onStart in the vars - we don't want to overwrite it.
@@ -772,11 +772,11 @@ tl.add( myTimeline.tweenFromTo("myLabel2", 0) );
  * <p>If you want advanced control over the tween, like adding an onComplete or changing the ease 
  * or adding a delay, just pass in a vars object with the appropriate properties. For example, 
  * to tween from the start (0) to the 5-second point on the timeline and then call a function 
- * named <code>myFunction</code> and pass in a parameter that references this TimelineMax and 
+ * named <code>myDynamic</code> and pass in a parameter that references this TimelineMax and 
  * use a <code>Strong.easeOut</code> ease, you'd do: </p>
  * 
  * <p><code>
- * myTimeline.tweenFromTo(0, 5, {onComplete:myFunction, onCompleteParams:[myTimeline], ease:Strong.easeOut});
+ * myTimeline.tweenFromTo(0, 5, {onComplete:myDynamic, onCompleteParams:[myTimeline], ease:Strong.easeOut});
  * </code></p>
  * 
  * <p>Remember, this method simply creates a TweenLite instance that tweens the <code>time()</code> 
@@ -800,11 +800,11 @@ tl.add( myTimeline.tweenFromTo("myLabel2", 0) );
  * @see #tweenTo()
  * @see #seek()
  */
-public function tweenFromTo(fromPosition:Dynamic, toPosition:Dynamic, vars:Object=null):TweenLite {
+public function tweenFromTo(fromPosition:Dynamic, toPosition:Dynamic, vars:Map<String, Int>=null):TweenLite {
 	vars = vars || {};
 	fromPosition = _parseTimeOrLabel(fromPosition);
 	vars.startAt = {onComplete:seek, onCompleteParams:[fromPosition]};
-	vars.immediateRender = (vars.immediateRender !== false);
+	vars.immediateRender = (vars.immediateRender != false);
 	var t:TweenLite = tweenTo(toPosition, vars);
 	return t.duration((Math.abs( t.vars.time - fromPosition) / _timeScale) || 0.001) as TweenLite;
 }
@@ -833,14 +833,14 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	if (!_reversed) if (!_hasPausedChild()) {
 		isComplete = true;
 		callback = "onComplete";
-		if (_duration === 0) if (time === 0 || _rawPrevTime < 0 || _rawPrevTime === _tinyNum) if (_rawPrevTime !== time && _first != null) {
+		if (_duration == 0) if (time == 0 || _rawPrevTime < 0 || _rawPrevTime == _tinyNum) if (_rawPrevTime != time && _first != null) {
 		internalForce = true;
 		if (_rawPrevTime > _tinyNum) {
 			callback = "onReverseComplete";
 		}
 		}
 	}
-	_rawPrevTime = (_duration || !suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+	_rawPrevTime = (_duration || !suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 	if (_yoyo && (_cycle & 1) != 0) {
 		_time = time = 0;
 	} else {
@@ -853,7 +853,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 		_totalTime = _cycle = 0;
 	}
 	_time = 0;
-	if (prevTime !== 0 || (_duration === 0 && _rawPrevTime !== _tinyNum && (_rawPrevTime > 0 || (time < 0 && _rawPrevTime >= 0)) && !_locked)) {
+	if (prevTime != 0 || (_duration == 0 && _rawPrevTime != _tinyNum && (_rawPrevTime > 0 || (time < 0 && _rawPrevTime >= 0)) && !_locked)) {
 		callback = "onReverseComplete";
 		isComplete = _reversed;
 	}
@@ -864,7 +864,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 		}
 		_rawPrevTime = time;		
 	} else {
-		_rawPrevTime = (_duration || !suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+		_rawPrevTime = (_duration || !suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 		time = 0; //to avoid occasional floating point rounding errors (could cause problems especially with zero-duration tweens at the very beginning of the timeline)
 		if (!_initted) {
 		internalForce = true;
@@ -872,7 +872,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	}
 	
 	} else {
-	if (_duration === 0 && _rawPrevTime < 0) { //without this, zero-duration repeating timelines (like with a simple callback nested at the very beginning and a repeatDelay) wouldn't render the first time through.
+	if (_duration == 0 && _rawPrevTime < 0) { //without this, zero-duration repeating timelines (like with a simple callback nested at the very beginning and a repeatDelay) wouldn't render the first time through.
 		internalForce = true;
 	}
 	_time = _rawPrevTime = time;
@@ -881,7 +881,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 		if (_repeat != 0) {
 		var cycleDuration:Float = _duration + _repeatDelay;
 		_cycle = (_totalTime / cycleDuration) >> 0; //originally _totalTime % cycleDuration but floating point errors caused problems, so I normalized it. (4 % 0.8 should be 0 but Flash reports it as 0.79999999!)
-		if (_cycle !== 0) if (_cycle === _totalTime / cycleDuration) {
+		if (_cycle != 0) if (_cycle == _totalTime / cycleDuration) {
 			_cycle--; //otherwise when rendered exactly at the end time, it will act as though it is repeating (at the beginning)
 		}
 		_time = _totalTime - (_cycle * cycleDuration);
@@ -909,8 +909,8 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	we need to push the timeline to the end (and/or beginning depending on its yoyo value). Also we must
 	ensure that zero-duration tweens at the very beginning or end of the TimelineMax work. 
 	*/
-	var backwards:Bool = (_yoyo && (prevCycle & 1) !== 0),
-		wrap:Bool = (backwards == (_yoyo && (_cycle & 1) !== 0)),
+	var backwards:Bool = (_yoyo && (prevCycle & 1) != 0),
+		wrap:Bool = (backwards == (_yoyo && (_cycle & 1) != 0)),
 		recTotalTime:Float = _totalTime,
 		recCycle:Int = _cycle,
 		recRawPrevTime:Float = _rawPrevTime,
@@ -952,7 +952,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	}
 
 	if ((_time == prevTime || !_first) && !force && !internalForce) {
-	if (prevTotalTime !== _totalTime) if (_onUpdate != null) if (!suppressEvents) { //so that onUpdate fires even during the repeatDelay - as long as the totalTime changed, we should trigger onUpdate.
+	if (prevTotalTime != _totalTime) if (_onUpdate != null) if (!suppressEvents) { //so that onUpdate fires even during the repeatDelay - as long as the totalTime changed, we should trigger onUpdate.
 		_onUpdate.apply(vars.onUpdateScope || this, vars.onUpdateParams);
 	}
 	return;
@@ -960,7 +960,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	_initted = true;
 	}
 	
-	if (!_active) if (!_paused && _totalTime !== prevTotalTime && time > 0) {
+	if (!_active) if (!_paused && _totalTime != prevTotalTime && time > 0) {
 	_active = true;  //so that if the user renders the timeline (as opposed to the parent timeline rendering it), it is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the timeline already finished but the user manually re-renders it as halfway done, for example.
 	}
 	
@@ -1016,7 +1016,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	_dispatcher.dispatchEvent(new TweenEvent(TweenEvent.UPDATE));
 	}
 	
-	if (callback) if (!_locked) if (!_gc) if (prevStart === _startTime || prevTimeScale !== _timeScale) if (_time === 0 || totalDur >= totalDuration()) { //if one of the tweens that was rendered altered this timeline's startTime (like if an onComplete reversed the timeline), it probably isn't complete. If it is, don't worry, because whatever call altered the startTime would complete if it was necessary at the new time. The only exception is the timeScale property. Also check _gc because there's a chance that kill() could be called in an onUpdate
+	if (callback) if (!_locked) if (!_gc) if (prevStart == _startTime || prevTimeScale != _timeScale) if (_time == 0 || totalDur >= totalDuration()) { //if one of the tweens that was rendered altered this timeline's startTime (like if an onComplete reversed the timeline), it probably isn't complete. If it is, don't worry, because whatever call altered the startTime would complete if it was necessary at the new time. The only exception is the timeScale property. Also check _gc because there's a chance that kill() could be called in an onUpdate
 	if (isComplete) {
 		if (_timeline.autoRemoveChildren) {
 		_enabled(false, false);
@@ -1043,7 +1043,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
  * @param timelines Determines whether or not child timelines (TimelineLite and TimelineMax instances) should be included in the results
  * @return an Array of active tweens/timelines
  */
-public function getActive(nested:Bool=true, tweens:Bool=true, timelines:Bool=false):Array {
+public function getActive(nested:Bool=true, tweens:Bool=true, timelines:Bool=false):Array<Dynamic> {
 	var a:Array = [], 
 	all:Array = getChildren(nested, tweens, timelines), 
 	cnt:Int = 0, 
@@ -1088,7 +1088,7 @@ private static function _getGlobalPaused(tween:Animation):Bool {
  * @see #getLabelBefore()
  * @see #currentLabel()
  */
-public function getLabelAfter(time:Float=NaN):String {
+public function getLabelAfter(time:Float=0):String {
 	if (!time) if (time != 0) { //faster than isNan()
 	time = _time;
 	}
@@ -1121,7 +1121,7 @@ public function getLabelAfter(time:Float=NaN):String {
  * @see #getLabelBefore()
  * @see #currentLabel()
  */
-public function getLabelBefore(time:Float=NaN):String {
+public function getLabelBefore(time:Float=0):String {
 	if (!time) if (time != 0) { //faster than isNan()
 	time = _time;
 	}
@@ -1150,7 +1150,7 @@ trace("label name: " + labels[i].name + ", time: " + labels[i].time); //or in JS
  * 
  * @return An array of generic objects (one for each label) with a "name" property and a "time" property in the order they occur in the TimelineMax.
  **/
-public function getLabelsArray():Array {
+public function getLabelsArray():Array<Dynamic> {
 	var a:Array = [],
 	cnt:Int = 0,
 	p:String;
@@ -1168,7 +1168,7 @@ public function getLabelsArray():Array {
 private function _initDispatcher():Bool {
 	var found:Bool = false, p:String;
 	for (p in _listenerLookup) {
-	if (p in vars) if (vars[p] is Function) {
+	if (p in vars) if (vars[p] is Dynamic) {
 		if (_dispatcher == null) {
 		_dispatcher = new EventDispatcher(this);
 		}
@@ -1200,7 +1200,7 @@ private function _initDispatcher():Bool {
  * @param useWeakReference Determines whether the reference to the listener is strong or weak. A strong reference (the default) prevents your listener from being garbage-collected. A weak reference does not. 
  * @see #removeEventListener()
  **/
-public function addEventListener(type:String, listener:Function, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
+public function addEventListener(type:String, listener:Dynamic, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
 	if (_dispatcher == null) {
 	_dispatcher = new EventDispatcher(this);
 	}
@@ -1219,7 +1219,7 @@ public function addEventListener(type:String, listener:Function, useCapture:Bool
  * @param listener The listener object to remove. 
  * @param useCapture Specifies whether the listener was registered for the capture phase or the target and bubbling phases. If the listener was registered for both the capture phase and the target and bubbling phases, two calls to removeEventListener() are required to remove both, one call with useCapture() set to true, and another call with useCapture() set to false.
  **/
-public function removeEventListener(type:String, listener:Function, useCapture:Bool=false):Void {
+public function removeEventListener(type:String, listener:Dynamic, useCapture:Bool=false):Void {
 	if (_dispatcher != null) {
 	_dispatcher.removeEventListener(type, listener, useCapture);
 	}
@@ -1272,8 +1272,8 @@ myTimeline.progress( 0.25 ); //sets progress to one quarter finished
  * @see #time()
  * @see #totalTime()
  **/
-override public function progress(value:Float=NaN, suppressEvents:Bool=false):Dynamic {
-	return (!arguments.length) ? _time / duration() : totalTime( duration() * ((_yoyo && (_cycle & 1) !== 0) ? 1 - value : value) + (_cycle * (_duration + _repeatDelay)), suppressEvents);
+override public function progress(value:Float=0, suppressEvents:Bool=false):Dynamic {
+	return (!arguments.length) ? _time / duration() : totalTime( duration() * ((_yoyo && (_cycle & 1) != 0) ? 1 - value : value) + (_cycle * (_duration + _repeatDelay)), suppressEvents);
 }
 
 /** 
@@ -1305,7 +1305,7 @@ myAnimation.totalProgress(0.25); //sets total progress to one quarter finished
  * @see #time()
  * @see #totalTime()
  **/
-override public function totalProgress(value:Float=NaN, suppressEvents:Bool=true):Dynamic {
+override public function totalProgress(value:Float=0, suppressEvents:Bool=true):Dynamic {
 	return (!arguments.length) ? _totalTime / totalDuration() : totalTime( totalDuration() * value, suppressEvents);
 }
 
@@ -1331,7 +1331,7 @@ myTimeline.totalDuration(10); //sets the total duration
  * @see #duration()
  * @see #timeScale()
  **/
-override public function totalDuration(value:Float=NaN):Dynamic {
+override public function totalDuration(value:Float=0):Dynamic {
 	if (!arguments.length) {
 	if (_dirty) {
 		super.totalDuration(); //just forces refresh
@@ -1375,7 +1375,7 @@ myTimeline.time(2); //sets time, jumping to new value just like seek().
  * @see #pause()
  * @see #totalTime()
  **/
-override public function time(value:Float=NaN, suppressEvents:Bool=false):Dynamic {
+override public function time(value:Float=0, suppressEvents:Bool=false):Dynamic {
 	if (!arguments.length) {
 	return _time;
 	}
@@ -1385,7 +1385,7 @@ override public function time(value:Float=NaN, suppressEvents:Bool=false):Dynami
 	if (value > _duration) {
 	value = _duration;
 	}
-	if (_yoyo && (_cycle & 1) !== 0) {
+	if (_yoyo && (_cycle & 1) != 0) {
 	value = (_duration - value) + (_cycle * (_duration + _repeatDelay));
 	} else if (_repeat != 0) {
 	value += _cycle * (_duration + _repeatDelay);

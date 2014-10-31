@@ -39,7 +39,7 @@ public static inline var API:Float = 2; //If the API/Framework for plugins chang
 private static const _RAD2DEG:Float = 180 / Math.PI; //precalculate for speed
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _quaternions:Array = [];
 
@@ -50,7 +50,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	if (value == null) {
 	return false;
 	}
@@ -62,9 +62,9 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 }
 
 /** @private **/
-public function _initQuaternion(end:Object, p:String):Void {
-	var angle:Float, q1:Object, q2:Object, x1:Float, x2:Float, y1:Float, y2:Float, z1:Float, z2:Float, w1:Float, w2:Float, theta:Float;
-	var isFunc:Bool = (_target[p] is Function);
+public function _initQuaternion(end:Map<String, Int>, p:String):Void {
+	var angle:Float, q1:Map<String, Int>, q2:Map<String, Int>, x1:Float, x2:Float, y1:Float, y2:Float, z1:Float, z2:Float, w1:Float, w2:Float, theta:Float;
+	var isFunc:Bool = (_target[p] is Dynamic);
 	q1 = (!isFunc) ? _target[p] : _target[ ((p.indexOf("set") || !("get" + p.substr(3) in _target)) ? p : "get" + p.substr(3)) ]();
 	q2 = end;
 	x1 = q1.x; x2 = q2.x;
@@ -91,7 +91,7 @@ public function _initQuaternion(end:Object, p:String):Void {
 }
 
 /** @private **/
-override public function _kill(lookup:Object):Bool {
+override public function _kill(lookup:Map<String, Int>):Bool {
 	var i:Int = _quaternions.length;
 	while (--i > -1) {
 	if (lookup[_quaternions[i][1]] != null) {
@@ -143,7 +143,7 @@ override public function setRatio(v:Float):Void {
 	10 = angle
 	11 = theta
 	12 = invTheta
-	13 = isFunction
+	13 = isDynamic
 	*/
 }
 

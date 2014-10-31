@@ -16,7 +16,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Bounce {
+@:final class Bounce {
 
 /** Eases out, bouncing at the end. **/
 public static var easeOut:BounceOut = new BounceOut();

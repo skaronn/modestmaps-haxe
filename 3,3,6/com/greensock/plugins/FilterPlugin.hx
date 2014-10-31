@@ -23,7 +23,7 @@ class FilterPlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _type:Class;
 /** @private **/
@@ -41,12 +41,12 @@ public function new(props:String="", priority:Float=0) {
 }
 
 /** @private **/
-private function _initFilter(target:Dynamic, props:Object, tween:TweenLite, type:Class, defaultFilter:BitmapFilter, propNames:Array):Bool {
+private function _initFilter(target:Dynamic, props:Map<String, Int>, tween:TweenLite, type:Class, defaultFilter:BitmapFilter, propNames:Array):Bool {
 	_target = target;
 	_tween = tween;
 	_type = type;
 	var filters:Array = _target.filters, p:String, i:Int, colorTween:HexColorsPlugin;
-	var extras:Object = (props is BitmapFilter) ? {} : props;
+	var extras:Map<String, Int> = (props is BitmapFilter) ? {} : props;
 	if (extras.index != null) {
 	_index = extras.index;
 	} else {

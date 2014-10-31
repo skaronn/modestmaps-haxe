@@ -14,7 +14,7 @@ import flash.display.DisplayObjectContainer;
  * <p>There are 2 primary benefits of using a VideoLoaderVars instance to define your VideoLoader variables:</p>
  *  <ol>
  *	<li> In most code editors, code hinting will be activated which helps remind you which special properties are available in VideoLoader</li>
- *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Function is expected).</li>
+ *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Dynamic is expected).</li>
  *  </ol>
  * 
  * <p>The down side, of course, is that the code is more verbose and the VideoLoaderVars class adds slightly more kb to your swf.</p>
@@ -46,13 +46,13 @@ class VideoLoaderVars {
 public static inline var version:Float = 1.23;
 
 /** @private **/
-private var _vars:Object;
+private var _vars:Map<String, Int>;
 
 /**
  * Constructor 
  * @param vars A generic Object containing properties that you'd like to add to this VideoLoaderVars instance.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	_vars = {};
 	if (vars != null) {
 	for (var p:String in vars) {
@@ -64,7 +64,7 @@ public function new(vars:Object=null) {
 /** @private **/
 private function _set(property:String, value:Dynamic):VideoLoaderVars {
 	if (value == null) {
-	delete _vars[property]; //in case it was previously set
+	untyped __delete__(_vars[property]; //in case it was previously set
 	} else {
 	_vars[property] = value;
 	}
@@ -102,47 +102,47 @@ public function name(value:String):VideoLoaderVars {
 }
 
 /** A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onCancel(value:Function):VideoLoaderVars {
+public function onCancel(value:Dynamic):VideoLoaderVars {
 	return _set("onCancel", value);
 }
 
 /** A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onComplete(value:Function):VideoLoaderVars {
+public function onComplete(value:Dynamic):VideoLoaderVars {
 	return _set("onComplete", value);
 }
 
 /** A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR or SECURITY_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onError(value:Function):VideoLoaderVars {
+public function onError(value:Dynamic):VideoLoaderVars {
 	return _set("onError", value);
 }
 
 /** A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onFail(value:Function):VideoLoaderVars {
+public function onFail(value:Dynamic):VideoLoaderVars {
 	return _set("onFail", value);
 }
 
 /** A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can determine the httpStatus code using the LoaderEvent's <code>target.httpStatus</code> (LoaderItems keep track of their <code>httpStatus</code> when possible, although certain environments prevent Flash from getting httpStatus information).**/
-public function onHTTPStatus(value:Function):VideoLoaderVars {
+public function onHTTPStatus(value:Dynamic):VideoLoaderVars {
 	return _set("onHTTPStatus", value);
 }
 
 /** A handler function for <code>LoaderEvent.INIT</code> events which will be called when the video's metaData has been received and the video is placed into the <code>ContentDisplay</code>. Make sure your onInit function accepts a single parameter of type <code>LoaderEvent</code> (com.greensock.events.LoaderEvent). **/
-public function onInit(value:Function):VideoLoaderVars {
+public function onInit(value:Dynamic):VideoLoaderVars {
 	return _set("onInit", value);
 }
 
 /** A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onIOError(value:Function):VideoLoaderVars {
+public function onIOError(value:Dynamic):VideoLoaderVars {
 	return _set("onIOError", value);
 }
 
 /** A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).**/
-public function onOpen(value:Function):VideoLoaderVars {
+public function onOpen(value:Dynamic):VideoLoaderVars {
 	return _set("onOpen", value);
 }
 
 /** A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.**/
-public function onProgress(value:Function):VideoLoaderVars {
+public function onProgress(value:Dynamic):VideoLoaderVars {
 	return _set("onProgress", value);
 }
 
@@ -230,7 +230,7 @@ public function height(value:Float):VideoLoaderVars {
 }
 
 /** A handler function for <code>LoaderEvent.SECURITY_ERROR</code> events which onError handles as well, so you can use that as more of a catch-all whereas onSecurityError is specifically for SECURITY_ERROR events. Make sure your onSecurityError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onSecurityError(value:Function):VideoLoaderVars {
+public function onSecurityError(value:Dynamic):VideoLoaderVars {
 	return _set("onSecurityError", value);
 }
 
@@ -360,7 +360,7 @@ public function estimatedDuration(value:Float):VideoLoaderVars {
 	return _set("estimatedDuration", value);
 }
 
-/** Number of times that the video should repeat. To repeat indefinitely, use -1. Default is 0. **/
+/** Float of times that the video should repeat. To repeat indefinitely, use -1. Default is 0. **/
 public function repeat(value:Int):VideoLoaderVars {
 	return _set("repeat", value);
 }
@@ -379,8 +379,8 @@ public function volume(value:Float):VideoLoaderVars {
 //---- GETTERS / SETTERS -----------------------------------------------------------------
 
 /** The generic Object populated by all of the method calls in the VideoLoaderVars instance. This is the raw data that gets passed to the loader. **/
-public var vars(getVars, null):Object;
- 	private function getVars():Object {
+public var vars(getVars, null):Map<String, Int>;
+ 	private function getVars():Map<String, Int> {
 	return _vars;
 }
 

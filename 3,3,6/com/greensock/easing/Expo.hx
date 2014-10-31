@@ -16,7 +16,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Expo {
+@:final class Expo {
 
 /** 
  * Eases out in a strong fashion starting out fast and then decelerating. Produces an effect similar to the 

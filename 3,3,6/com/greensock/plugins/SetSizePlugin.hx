@@ -36,7 +36,7 @@ public var width:Float;
 public var height:Float;
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _setWidth:Bool;
 /** @private **/
@@ -50,7 +50,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_target = target;
 	_hasSetSize = Boolean("setSize" in _target);
 	if ("width" in value && _target.width != value.width) {
@@ -69,7 +69,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 
 
 /** @private **/
-override public function _kill(lookup:Object):Bool {
+override public function _kill(lookup:Map<String, Int>):Bool {
 	if ("setSize" in lookup || "width" in lookup || "scaleX" in lookup) {
 	_setWidth = false;
 	}

@@ -74,7 +74,7 @@ function dispose(event:Event):Void {
 public static inline var UNLOAD:String="unload";
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _ready:Bool;
 
@@ -90,7 +90,7 @@ public var data:Dynamic;
  * @param target Target
  * @param text Error text (if any)
  */
-public function new(type:String, target:Object, text:String="", data:Dynamic=null){
+public function new(type:String, target:Map<String, Int>, text:String="", data:Dynamic=null){
 	super(type, false, false);
 	_target = target;
 	this.text = text;
@@ -109,8 +109,8 @@ public override function clone():Event{
  * event, the event's <code>target</code> will refer to the ImageLoader whereas the <code>currentTarget</code> will
  * refer to the LoaderMax instance that is currently processing the event. 
  **/
-override public var target(getTarget, null):Object;
- 	private function getTarget():Object {
+override public var target(getTarget, null):Map<String, Int>;
+ 	private function getTarget():Map<String, Int> {
 	if (_ready) {
 	return _target;
 	} else {

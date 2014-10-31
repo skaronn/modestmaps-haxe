@@ -30,7 +30,7 @@ class EndArrayPlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _a:Array;
+private var _a:Array<Dynamic>;
 /** @private If the values should be rounded to the nearest integer, <code>_round</code> will be set to <code>true</code>. **/
 private var _round:Bool;
 /** @private **/
@@ -42,7 +42,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	if (!(target is Array) || !(value is Array)) {
 	return false;
 	}
@@ -61,7 +61,7 @@ public function _init(start:Array, end:Array):Void {
 	}
 }
 
-override public function _roundProps(lookup:Object, value:Bool=true):Void {
+override public function _roundProps(lookup:Map<String, Int>, value:Bool=true):Void {
 	if ("endArray" in lookup) {
 	_round = value;
 	}

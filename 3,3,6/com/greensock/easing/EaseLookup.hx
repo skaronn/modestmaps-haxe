@@ -17,7 +17,7 @@ package com.greensock.easing;
  */
 class EaseLookup {
 /** @private **/
-private static var _lookup:Object;
+private static var _lookup:Map<String, Int>;
 
 /**
  * Finds the easing function associated with a particular name (String), like "strongEaseOut". This can be useful when

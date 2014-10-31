@@ -19,7 +19,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Elastic {
+@:final class Elastic {
 
 /** Eases using a sine wave that starts fast and then decelerates over time. **/
 public static var easeOut:ElasticOut = new ElasticOut();

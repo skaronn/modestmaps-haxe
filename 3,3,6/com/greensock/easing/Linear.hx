@@ -22,7 +22,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Linear extends Ease {
+@:final class Linear extends Ease {
 
 /** Linear ease with no acceleration or deceleration (for backwards compatibility) **/
 public static var easeNone:Linear = new Linear();

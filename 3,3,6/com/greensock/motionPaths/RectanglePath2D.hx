@@ -138,7 +138,7 @@ override public function update(event:Event=null):Void {
 }
 
 /** @inheritDoc **/
-override public function renderObjectAt(target:Object, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
+override public function renderObjectAt(target:Map<String, Int>, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
 	if (progress > 1) {
 	progress -= int(progress);
 	} else if (progress < 0) {

@@ -91,7 +91,7 @@ class LinePath2D extends MotionPath {
 /** @private **/
 private var _first:PathPoint;
 /** @private **/
-private var _points:Array;
+private var _points:Array<Dynamic>;
 /** @private **/
 private var _totalLength:Float;
 /** @private **/
@@ -110,7 +110,7 @@ public var autoUpdatePoints:Bool;
  * @param y The y coordinate of the origin of the line
  * @param autoUpdatePoints If true, the LinePath2D will analyze every Point whenever it renders to see if any Point's x or y value has changed, thus making it possible to tween them dynamically. Setting <code>autoUpdatePoints</code> to <code>true</code> increases the CPU load due to the extra processing, so only set it to <code>true</code> if you plan to change one or more of the Points' position.
  */
-public function new(points:Array=null, x:Float=0, y:Float=0, autoUpdatePoints:Bool=false) {
+public function new(points:Array<Dynamic>=null, x:Float=0, y:Float=0, autoUpdatePoints:Bool=false) {
 	super();
 	_points = [];
 	_totalLength = 0;
@@ -326,7 +326,7 @@ override public function update(event:Event=null):Void {
 }
 
 /** @inheritDoc **/
-override public function renderObjectAt(target:Object, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
+override public function renderObjectAt(target:Map<String, Int>, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
 	if (progress > 1) {
 	progress -= int(progress);
 	} else if (progress < 0) {
@@ -401,7 +401,7 @@ public function getSegmentProgress(segment:UInt, progress:Float):Float {
  * @param progress The <code>progress</code> along the entire LinePath2D (a value between 0 and 1). For example, the midpoint would be <code>getSegment(0.5);</code>.
  * @return An integer describing the segment number where the first is 1, second is 2, etc.
  */
-public function getSegment(progress:Float=NaN):UInt {
+public function getSegment(progress:Float=0):UInt {
 	if (!(progress || progress == 0)) {
 	progress = _progress;
 	}
@@ -427,7 +427,7 @@ public function getSegment(progress:Float=NaN):UInt {
  * @param rotationOffset When <code>autoRotate</code> is <code>true</code>, this value will always be added to the resulting <code>rotation</code> of the target.
  * @return A PathFollower instance that was created for the target.
  */
-public function snap(target:Object, autoRotate:Bool=false, rotationOffset:Float=0):PathFollower {
+public function snap(target:Map<String, Int>, autoRotate:Bool=false, rotationOffset:Float=0):PathFollower {
 	return this.addFollower(target, getClosestProgress(target), autoRotate, rotationOffset);
 }
 
@@ -444,7 +444,7 @@ public function snap(target:Object, autoRotate:Bool=false, rotationOffset:Float=
  * @param target The target object whose position (x/y property values) are analyzed for proximity to the LinePath2D.
  * @return The overall <code>progress</code> value describing the position on the LinePath2D that is closest to the target's current position.
  */
-public function getClosestProgress(target:Object):Float {
+public function getClosestProgress(target:Map<String, Int>):Float {
 	if (_first == null || _points.length == 1) {
 	return 0;
 	}
@@ -516,8 +516,8 @@ public var totalLength(getTotalLength, setTotalLength):Float;
 }
 
 /** The array of Points through which the LinePath2D is drawn. <strong>IMPORTANT:</strong> Changes to the array are NOT automatically applied or reflected in the LinePath2D - just like the <code>filters</code> property of a DisplayObject, you must set the <code>points</code> property of a LinePath2D directly to ensure that any changes are applied internally. **/
-public var points(getPoints, setPoints):Array;
- 	private function getPoints():Array {
+public var points(getPoints, setPoints):Array<Dynamic>;
+ 	private function getPoints():Array<Dynamic> {
 	var a:Array = [];
 	var l:Int = _points.length;
 	for (var i:Int = 0; i < l; i++) {

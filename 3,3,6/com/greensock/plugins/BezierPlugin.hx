@@ -94,7 +94,7 @@ import flash.geom.Point;
  * 			<li> Position property 1 (typically <code>"x"</code>)</li>
  * 			<li> Position property 2 (typically <code>"y"</code>)</li>
  * 			<li> Rotational property (typically <code>"rotation"</code>)</li>
- * 			<li> Number of degrees (or radians) to add to the new rotation (optional - makes it easy to orient your target properly)</li>
+ * 			<li> Float of degrees (or radians) to add to the new rotation (optional - makes it easy to orient your target properly)</li>
  * 			<li> Boolean value indicating whether or not the rotational property should be defined in radians rather than degrees (default is <code>false</code> which results in degrees)</li>
  * 		</ol>
  * 		The <code>autoRotate</code> property should be an Array containing these values, like 
@@ -135,7 +135,7 @@ TweenMax.to(obj, 5, {bezier:{type:"cubic", values:[{x:100, y:250}, {x:150, y:100
  * 
  * @author Jack Doyle, jack@greensock.com
  */
-import flash.Error;
+import flash.errors.Error;
 
 class BezierPlugin extends TweenPlugin {
 /** @private **/
@@ -150,24 +150,24 @@ private static var _r2:Array = [];
 /** @private temporary storage for bezierThrough calculations. **/
 private static var _r3:Array = []; 
 /** @private used to store a boolean value indicating whether or not a particular property should be correlated. Basically a lookup table to speed things up. This allows us to avoid garbage collection headaches because bezierThrough() might be called a LOT in an app, thus creating a temporary local variable each time in the method would be more problematic. **/
-private static var _corProps:Object = {};
+private static var _corProps:Map<String, Int> = {};
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
-private var _autoRotate:Array;
+private var _autoRotate:Array<Dynamic>;
 /** @private If the values should be rounded to the nearest integer, <code>_round</code> will be set to <code>true</code>. **/
-private var _round:Object;
+private var _round:Map<String, Int>;
 /** @private array containing the numeric length of each segment, like [3, 5, 19, 2] **/
-private var _lengths:Array;
+private var _lengths:Array<Dynamic>;
 /** @private array containing arrays of length values for each segment, like [[2,4,12,56], [3,6,23,45,3]] (all arrays will contain the same number of elements, determined by "precision") **/
-private var _segments:Array;
+private var _segments:Array<Dynamic>;
 /** @private approximate total length of all Bezier segments combined **/
 private var _length:Float;
 /** @private a lookup table to figure out if a property is a function or not **/
-private var _func:Object;
+private var _func:Map<String, Int>;
 /** @private array of properties that are being tweened, like ["x","y"] **/
-private var _props:Array;
+private var _props:Array<Dynamic>;
 /** @private the lower (minimum) threshold that still applies to the current segment. Like if the entire group of Beziers is 100 long, the first one might be from 0 to 50, the next 50 to 70, and the last 70 to 100, so _l1 would be 0, 50, or 70 depending on which segment was rendered last (this is like a caching mechanism that enhances performance and avoids lookups in many situations) **/
 private var _l1:Float; //length 1 (lower)
 /** @private the upper (maximum) threshold that still applies to the current segment. Like if the entire group of Beziers is 100 long, the first one might be from 0 to 50, the next 50 to 70, and the last 70 to 100, so _l2 would be 50, 70, or 100 depending on which segment was rendered last (this is like a caching mechanism that enhances performance and avoids lookups in many situations) **/
@@ -175,7 +175,7 @@ private var _l2:Float; //length 2 (upper)
 /** @private the index number of the current segment (from the _lengths array) **/
 private var _li:Float; //length index
 /** @private the current array of segment lengths from the _segments array. **/
-private var _curSeg:Array; //segment array
+private var _curSeg:Array<Dynamic>; //segment array
 /** @private the lower (minimum) threshold that still applies to the current segment length from inside the _curSeg array. Like if the current segment is 100 long, the first measurement might be from 0 to 50, the next 50 to 70, and the last 70 to 100, so _s1 would be 0, 50, or 70 depending on which segment piece was rendered last (this is like a caching mechanism that enhances performance and avoids lookups in many situations) **/
 private var _s1:Float; //segment 1 (lower)
 /** @private the upper (maximum) threshold that still applies to the current segment length from inside the _curSeg array. Like if the current segment is 100 long, the first measurement might be from 0 to 50, the next 50 to 70, and the last 70 to 100, so _s2 would be 50, 70, or 100 depending on which segment piece was rendered last (this is like a caching mechanism that enhances performance and avoids lookups in many situations) **/
@@ -183,7 +183,7 @@ private var _s2:Float; //segment 2 (upper)
 /** @private  the index number of the current segment length from _curSeg **/
 private var _si:Float; //segment index;
 /** @private **/
-private var _beziers:Object;
+private var _beziers:Map<String, Int>;
 /** @private total number of segments **/
 private var _segCount:Int;
 /** @private 1 / precision (precalculated for speed) **/
@@ -191,7 +191,7 @@ private var _prec:Float; //precision
 /** @private **/
 private var _timeRes:Int;
 /** @private we need to store the initial rotation for autoRotate tweens so that if/when the tween is rewound completely, the original value gets re-applied. **/
-private var _initialRotations:Array;
+private var _initialRotations:Array<Dynamic>;
 /** @private we determine the starting ratio when the tween inits which is always 0 unless the tween has runBackwards:true (which indicates it's a from() tween) in which case it's 1. **/
 private var _startRatio:Int;
 
@@ -205,18 +205,18 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	this._target = target;
-	var vars:Object = (value is Array) ? {values:value} : value;
+	var vars:Map<String, Int> = (value is Array) ? {values:value} : value;
 	this._props = [];
 	this._timeRes = (vars.timeResolution == null) ? 6 : Int(vars.timeResolution);
 	var values:Array = vars.values || [],
-	first:Object = {},
-	second:Object = values[0],
-	autoRotate:Object = vars.autoRotate || tween.vars.orientToBezier,
-	p:String, isFunc:Bool, i:Int, j:Int, ar:Array, prepend:Object;
+	first:Map<String, Int> = {},
+	second:Map<String, Int> = values[0],
+	autoRotate:Map<String, Int> = vars.autoRotate || tween.vars.orientToBezier,
+	p:String, isFunc:Bool, i:Int, j:Int, ar:Array, prepend:Map<String, Int>;
 	
-	this._autoRotate = autoRotate ? (autoRotate is Array) ? autoRotate as Array : [["x","y","rotation",((autoRotate === true) ? 0 : Float(autoRotate))]] : null;
+	this._autoRotate = autoRotate ? (autoRotate is Array) ? autoRotate as Array : [["x","y","rotation",((autoRotate == true) ? 0 : Float(autoRotate))]] : null;
 	
 	if (second is Point) {
 	this._props = ["x","y"];
@@ -230,17 +230,17 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	while (--i > -1) {
 	p = this._props[i];
 	this._overwriteProps.push(p);
-	isFunc = this._func[p] = (target[p] is Function);
+	isFunc = this._func[p] = (target[p] is Dynamic);
 	first[p] = (!isFunc) ? target[p] : target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]();
-	if (!prepend) if (first[p] !== values[0][p]) {
+	if (!prepend) if (first[p] != values[0][p]) {
 		prepend = first;
 	}
 	}
-	this._beziers = (vars.type !== "cubic" && vars.type !== "quadratic" && vars.type !== "soft") ? bezierThrough(values, isNaN(vars.curviness) ? 1 : vars.curviness, false, (vars.type === "thruBasic"), vars.correlate || "x,y,z", prepend) : _parseBezierData(values, vars.type, first);
+	this._beziers = (vars.type != "cubic" && vars.type != "quadratic" && vars.type != "soft") ? bezierThrough(values, is0(vars.curviness) ? 1 : vars.curviness, false, (vars.type == "thruBasic"), vars.correlate || "x,y,z", prepend) : _parseBezierData(values, vars.type, first);
 	this._segCount = this._beziers[p].length;
 	
 	if (this._timeRes) {
-	var ld:Object = _parseLengthData(this._beziers, this._timeRes);
+	var ld:Map<String, Int> = _parseLengthData(this._beziers, this._timeRes);
 	this._length = ld.length;
 	this._lengths = ld.lengths;
 	this._segments = ld.segments;
@@ -260,7 +260,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	while (--i > -1) {
 		for (j = 0; j < 3; j++) {
 		p = ar[i][j];
-		this._func[p] = (target[p] is Function) ? target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ] : false;
+		this._func[p] = (target[p] is Dynamic) ? target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ] : false;
 		}
 		p = ar[i][2];
 		this._initialRotations[i] = this._func[p] ? this._func[p]() : this._target[p];
@@ -312,7 +312,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
  * 
  * <listing version="3.0">
  //input:
- var beziers:Object = BezierPlugin.bezierThrough([{x:0, y:0}, {x:250, y:400}, {x:500, y:0}]);
+ var beziers:Map<String, Int> = BezierPlugin.bezierThrough([{x:0, y:0}, {x:250, y:400}, {x:500, y:0}]);
  
  //output:
  {
@@ -323,7 +323,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
  * 
  * <listing version="3.0">
  //get quadratic beziers so that we can use Flash's drawing API...
- var beziers:Object = BezierPlugin.bezierThrough([{x:0, y:0}, {x:250, y:400}, {x:500, y:0}], 1, true);
+ var beziers:Map<String, Int> = BezierPlugin.bezierThrough([{x:0, y:0}, {x:250, y:400}, {x:500, y:0}], 1, true);
  
  var bx:Array = beziers.x; //the "x" Beziers
  var by:Array = beziers.y; //the "y" Beziers
@@ -345,10 +345,10 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
  * @param prepend [optional] an object to treat as though it is the first element in the <code>values</code> array (typically only used internally for adding a tween's starting values)
  * @return An object with properties matching those from the objects in the <code>values</code> array, with an array assigned to each property populated with an object for each Bezier. The Bezier objects will contain <code>a, b, c</code> (and <code>d</code> if <code>quadratic</code> is not <code>true</code>) properties for the anchors and control points.
  */
-public static function bezierThrough(values:Array, curviness:Float=1, quadratic:Bool=false, basic:Bool=false, correlate:String="x,y,z", prepend:Object=null):Object {
-	var obj:Object = {},
-	first:Object = prepend || values[0],
-	props:Array, i:Int, p:String, j:Int, a:Array, l:Int, r:Float, seamless:Bool, last:Object;
+public static function bezierThrough(values:Array, curviness:Float=1, quadratic:Bool=false, basic:Bool=false, correlate:String="x,y,z", prepend:Map<String, Int>=null):Map<String, Int> {
+	var obj:Map<String, Int> = {},
+	first:Map<String, Int> = prepend || values[0],
+	props:Array, i:Int, p:String, j:Int, a:Array, l:Int, r:Float, seamless:Bool, last:Map<String, Int>;
 	correlate = ","+correlate+",";
 	if (first is Point) {
 	props = ["x","y"];
@@ -383,7 +383,7 @@ public static function bezierThrough(values:Array, curviness:Float=1, quadratic:
 	i = props.length;
 	while (--i > -1) {
 	p = props[i];
-	_corProps[p] = (correlate.indexOf(","+p+",") !== -1);
+	_corProps[p] = (correlate.indexOf(","+p+",") != -1);
 	obj[p] = _parseAnchors(values, p, _corProps[p], prepend);
 	}
 	i = _r1.length;
@@ -423,12 +423,12 @@ public static function bezierThrough(values:Array, curviness:Float=1, quadratic:
 }
 
 /** @private parses the bezier data passed into the tween and organizes it into the appropriate format with an array for each property. **/
-public static function _parseBezierData(values:Array, type:String, prepend:Object=null):Object {
+public static function _parseBezierData(values:Array, type:String, prepend:Map<String, Int>=null):Map<String, Int> {
 	type = type || "soft";
-	var obj:Object = {},
-	inc:Int = (type === "cubic") ? 3 : 2,
-	soft:Bool = (type === "soft"),
-	a:Float, b:Float, c:Float, d:Float, cur:Array, props:Array, i:Int, j:Int, l:Int, p:String, cnt:Int, tmp:Object;
+	var obj:Map<String, Int> = {},
+	inc:Int = (type == "cubic") ? 3 : 2,
+	soft:Bool = (type == "soft"),
+	a:Float, b:Float, c:Float, d:Float, cur:Array, props:Array, i:Int, j:Int, l:Int, p:String, cnt:Int, tmp:Map<String, Int>;
 	if (soft && prepend) {
 	values = [prepend].concat(values);
 	}
@@ -449,7 +449,7 @@ public static function _parseBezierData(values:Array, type:String, prepend:Objec
 	cnt = 0;
 	l = values.length;
 	for (j = 0; j < l; j++) {
-		a = (prepend == null) ? values[j][p] : (typeof( (tmp = values[j][p]) ) === "string" && tmp.charAt(1) === "=") ? prepend[p] + Number(tmp.charAt(0) + tmp.substr(2)) : Float(tmp);
+		a = (prepend == null) ? values[j][p] : (Type.typeof( (tmp = values[j][p]) ) == "string" && tmp.charAt(1) == "=") ? prepend[p] + Float(tmp.charAt(0) + tmp.substr(2)) : Float(tmp);
 		if (soft) if (j > 1) if (j < l - 1) {
 		cur[cnt++] = (a + cur[cnt-2]) / 2;
 		}
@@ -461,8 +461,8 @@ public static function _parseBezierData(values:Array, type:String, prepend:Objec
 		a = cur[j];
 		b = cur[j+1];
 		c = cur[j+2];
-		d = (inc === 2) ? 0 : cur[j+3];
-		cur[cnt++] = (inc === 3) ? new Segment(a, b, c, d) : new Segment(a, (2 * b + a) / 3, (2 * b + c) / 3, c);
+		d = (inc == 2) ? 0 : cur[j+3];
+		cur[cnt++] = (inc == 3) ? new Segment(a, b, c, d) : new Segment(a, (2 * b + a) / 3, (2 * b + c) / 3, c);
 	}
 	cur.length = cnt;
 	}
@@ -490,15 +490,15 @@ public static function _parseBezierData(values:Array, type:String, prepend:Objec
  * @param prepend An object to treat as though it is the first element in the <code>values</code> array (typically only used internally for adding a tween's starting values)
  * @return An array of partially populated Bezier data (only "a" and "d" properties)
  */
-private static function _parseAnchors(values:Array, p:String, correlate:Bool, prepend:Object):Array {
+private static function _parseAnchors(values:Array, p:String, correlate:Bool, prepend:Map<String, Int>):Array<Dynamic> {
 	var a:Array = [],
-	l:Int, i:Int, p1:Float, p2:Float, p3:Float, tmp:Object;
+	l:Int, i:Int, p1:Float, p2:Float, p3:Float, tmp:Map<String, Int>;
 	if (prepend) {
 	values = [prepend].concat(values);
 	i = values.length;
 	while (--i > -1) {
-		if (typeof( (tmp = values[i][p]) ) === "string") if (tmp.charAt(1) === "=") {
-		values[i][p] = prepend[p] + Number(tmp.charAt(0) + tmp.substr(2)); //accommodate relative values. Do it inline instead of breaking it out into a function for speed reasons
+		if (Type.typeof( (tmp = values[i][p]) ) == "string") if (tmp.charAt(1) == "=") {
+		values[i][p] = prepend[p] + Float(tmp.charAt(0) + tmp.substr(2)); //accommodate relative values. Do it inline instead of breaking it out into a function for speed reasons
 		}
 	}
 	}
@@ -550,8 +550,8 @@ private static function _calculateControlPoints(a:Array, curviness:Float=1, quad
 		r1 = _r1[i];
 		r2 = _r2[i];
 		tl = ((r2 + r1) * curviness * 0.25) / (basic ? 0.5 : _r3[i] || 0.5);
-		m1 = p2 - (p2 - p1) * (basic ? curviness * 0.5 : (r1 !== 0 ? tl / r1 : 0));
-		m2 = p2 + (p3 - p2) * (basic ? curviness * 0.5 : (r2 !== 0 ? tl / r2 : 0));
+		m1 = p2 - (p2 - p1) * (basic ? curviness * 0.5 : (r1 != 0 ? tl / r1 : 0));
+		m2 = p2 + (p3 - p2) * (basic ? curviness * 0.5 : (r2 != 0 ? tl / r2 : 0));
 		mm = p2 - (m1 + (((m2 - m1) * ((r1 * 3 / (r1 + r2)) + 0.5) / 4) || 0));
 	} else {
 		m1 = p2 - (p2 - p1) * curviness * 0.5;
@@ -606,11 +606,11 @@ private static function _calculateControlPoints(a:Array, curviness:Float=1, quad
  * @param d final anchor of the cubic Bezier
  * @return an array of 4 objects, one for each quadratic Bezier with a, b, and c properties
  */
-public static function cubicToQuadratic(a:Float, b:Float, c:Float, d:Float):Array {
-	var q1:Object = {a:a},
-	q2:Object = {},
-	q3:Object = {},
-	q4:Object = {c:d},
+public static function cubicToQuadratic(a:Float, b:Float, c:Float, d:Float):Array<Dynamic> {
+	var q1:Map<String, Int> = {a:a},
+	q2:Map<String, Int> = {},
+	q3:Map<String, Int> = {},
+	q4:Map<String, Int> = {c:d},
 	mab:Float = (a + b) / 2, 
 	mbc:Float = (b + c) / 2, 
 	mcd:Float = (c + d) / 2, 
@@ -637,7 +637,7 @@ public static function cubicToQuadratic(a:Float, b:Float, c:Float, d:Float):Arra
  * @param c The ending anchor value
  * @return An object with a, b, c, and d properties representing the starting anchor value (a), first control point (b), second control point (c), and ending anchor value (d) of a Cubic Bezier matching the Quadratic Bezier data passed in.
  */
-public static function quadraticToCubic(a:Float, b:Float, c:Float):Object {
+public static function quadraticToCubic(a:Float, b:Float, c:Float):Map<String, Int> {
 	return new Segment(a, (2 * b + a) / 3, (2 * b + c) / 3, c);
 }
 
@@ -656,10 +656,10 @@ public static function quadraticToCubic(a:Float, b:Float, c:Float):Object {
  * such that [almost] perfectly linear easing is possible on the Bezier(s). </p>
  * 
  * @param obj The object containing the arrays of Bezier data like <code>{x:[{a:1, b:2, c:3, d:4}], y:[{a:3, b:2, c:4, d:3}]}</code>
- * @param precision Number of segments to use when determining the length of each Bezier segment (default 6)
+ * @param precision Float of segments to use when determining the length of each Bezier segment (default 6)
  * @return An object with "length", "lengths", and "segements" properties where "length" is the total length of all Bezier segments
  */
-private static function _parseLengthData(obj:Object, precision:UInt=6):Object {
+private static function _parseLengthData(obj:Map<String, Int>, precision:UInt=6):Map<String, Int> {
 	var a:Array = [],
 	lengths:Array = [],
 	d:Float = 0,
@@ -711,16 +711,16 @@ private static function _addCubicLengths(a:Array, steps:Array, precision:UInt=6)
 }
 
 /** @private **/
-override public function _kill(lookup:Object):Bool {
+override public function _kill(lookup:Map<String, Int>):Bool {
 	var a:Array = this._props, 
 	p:String, i:Int;
 	for (p in _beziers) {
 	if (p in lookup) {
-		delete _beziers[p];
-		delete _func[p];
+		untyped __delete__(_beziers[p];
+		untyped __delete__(_func[p];
 		i = a.length;
 		while (--i > -1) {
-		if (a[i] === p) {
+		if (a[i] == p) {
 			a.splice(i, 1);
 		}
 		}
@@ -730,7 +730,7 @@ override public function _kill(lookup:Object):Bool {
 }
 
 /** @private **/
-override public function _roundProps(lookup:Object, value:Bool=true):Void {
+override public function _roundProps(lookup:Map<String, Int>, value:Bool=true):Void {
 	var op:Array = this._overwriteProps,
 	i:Int = op.length;
 	while (--i > -1) {
@@ -744,10 +744,10 @@ override public function _roundProps(lookup:Object, value:Bool=true):Void {
 /** @private **/
 override public function setRatio(v:Float):Void {
 	var segments:Int = this._segCount,
-	func:Object = this._func,
-	target:Object = this._target,
-	notStart:Bool = (v !== this._startRatio),
-	curIndex:Int, inv:Float, i:Int, p:String, b:Segment, t:Float, val:Float, l:Int, lengths:Array, curSeg:Array;
+	func:Map<String, Int> = this._func,
+	target:Map<String, Int> = this._target,
+	notStart:Bool = (v != this._startRatio),
+	curIndex:Int, inv:Float, i:Int, p:String, b:Segment, t:Float, val:Float, l:Int, lengths:Array, curSeg:Array<Dynamic>;
 	if (this._timeRes == 0) {
 	curIndex = (v < 0) ? 0 : (v >= 1) ? segments - 1 : (segments * v) >> 0;
 	t = (v - (curIndex * (1 / segments))) * segments;
@@ -766,7 +766,7 @@ override public function setRatio(v:Float):Void {
 		this._s2 = curSeg[(this._s1 = this._si = 0)];
 	} else if (v < this._l1 && i > 0) {
 		while (i > 0 && (this._l1 = lengths[--i]) >= v) { 	}
-		if (i === 0 && v < this._l1) {
+		if (i == 0 && v < this._l1) {
 		this._l1 = 0;
 		} else {
 		i++;
@@ -788,7 +788,7 @@ override public function setRatio(v:Float):Void {
 		this._si = i;
 	} else if (v < this._s1 && i > 0) {
 		while (i > 0 && (this._s1 = curSeg[--i]) >= v) {	}
-		if (i === 0 && v < this._s1) {
+		if (i == 0 && v < this._s1) {
 		this._s1 = 0;
 		} else {
 		i++;

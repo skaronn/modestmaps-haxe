@@ -30,7 +30,7 @@ import flash.filters.ColorMatrixFilter;
 import flash.display.DisplayObject; 
 import flash.filters.ColorMatrixFilter;
 
-function getColorMatrix(mc:DisplayObject):Array { 
+function getColorMatrix(mc:DisplayObject):Array<Dynamic> { 
    var f:Array = mc.filters, i:UInt; 
    for (i = 0; i &lt; f.length; i++) { 
   if (f[i] is ColorMatrixFilter) { 
@@ -74,7 +74,7 @@ private static var _lumG:Float = 0.715160; //Green constant - used for a few col
 private static var _lumB:Float = 0.072169; //Blue constant - used for a few color matrix filter functions
 
 /** @private **/
-private var _matrix:Array;
+private var _matrix:Array<Dynamic>;
 /** @private **/
 private var _matrixTween:EndArrayPlugin;
 
@@ -84,8 +84,8 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
-	var cmf:Object = value;
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
+	var cmf:Map<String, Int> = value;
 	_initFilter(target, {remove:value.remove, index:value.index, addFilter:value.addFilter}, tween, ColorMatrixFilter, new ColorMatrixFilter(_idMatrix.slice()), _propNames);
 	if (_filter == null) {
 	trace("FILTER NULL! ");
@@ -108,7 +108,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	endMatrix = setHue(endMatrix, cmf.hue);
 	endMatrix = setSaturation(endMatrix, cmf.saturation);
 	endMatrix = setThreshold(endMatrix, cmf.threshold);
-	if (!isNaN(cmf.colorize)) {
+	if (!is0(cmf.colorize)) {
 		endMatrix = colorize(endMatrix, cmf.colorize, cmf.amount);
 	}
 	}
@@ -128,10 +128,10 @@ override public function setRatio(v:Float):Void {
 //---- MATRIX OPERATIONS --------------------------------------------------------------------------------
 
 /** @private **/
-public static function colorize(m:Array, color:Float, amount:Float = 1):Array {
-	if (isNaN(color)) {
+public static function colorize(m:Array, color:Float, amount:Float = 1):Array<Dynamic> {
+	if (is0(color)) {
 	return m;
-	} else if (isNaN(amount)) {
+	} else if (is0(amount)) {
 	amount = 1;
 	}
 	var r:Float = ((color >> 16) & 0xff) / 255,
@@ -146,8 +146,8 @@ public static function colorize(m:Array, color:Float, amount:Float = 1):Array {
 }
 
 /** @private **/
-public static function setThreshold(m:Array, n:Float):Array {
-	if (isNaN(n)) {
+public static function setThreshold(m:Array, n:Float):Array<Dynamic> {
+	if (is0(n)) {
 	return m;
 	}
 	var temp:Array = [_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * n, 
@@ -158,8 +158,8 @@ public static function setThreshold(m:Array, n:Float):Array {
 }
 
 /** @private **/
-public static function setHue(m:Array, n:Float):Array {
-	if (isNaN(n)) {
+public static function setHue(m:Array, n:Float):Array<Dynamic> {
+	if (is0(n)) {
 	return m;
 	}
 	n *= Math.PI / 180;
@@ -170,8 +170,8 @@ public static function setHue(m:Array, n:Float):Array {
 }
 
 /** @private **/
-public static function setBrightness(m:Array, n:Float):Array {
-	if (isNaN(n)) {
+public static function setBrightness(m:Array, n:Float):Array<Dynamic> {
+	if (is0(n)) {
 	return m;
 	}
 	n = (n * 100) - 100;
@@ -183,8 +183,8 @@ public static function setBrightness(m:Array, n:Float):Array {
 }
 
 /** @private **/
-public static function setSaturation(m:Array, n:Float):Array {
-	if (isNaN(n)) {
+public static function setSaturation(m:Array, n:Float):Array<Dynamic> {
+	if (is0(n)) {
 	return m;
 	}
 	var inv:Float = 1 - n,
@@ -199,8 +199,8 @@ public static function setSaturation(m:Array, n:Float):Array {
 }
 
 /** @private **/
-public static function setContrast(m:Array, n:Float):Array {
-	if (isNaN(n)) {
+public static function setContrast(m:Array, n:Float):Array<Dynamic> {
+	if (is0(n)) {
 	return m;
 	}
 	n += 0.01;
@@ -212,7 +212,7 @@ public static function setContrast(m:Array, n:Float):Array {
 }
 
 /** @private **/
-public static function applyMatrix(m:Array, m2:Array):Array {
+public static function applyMatrix(m:Array, m2:Array):Array<Dynamic> {
 	if (!(m is Array) || !(m2 is Array)) {
 	return m2;
 	}

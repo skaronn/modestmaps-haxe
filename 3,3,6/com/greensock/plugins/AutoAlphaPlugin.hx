@@ -33,7 +33,7 @@ class AutoAlphaPlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _ignoreVisible:Bool;
 
@@ -43,14 +43,14 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_target = target;
 	_addTween(target, "alpha", target.alpha, value, "alpha");
 	return true;
 }
 
 /** @private **/
-override public function _kill(lookup:Object):Bool {
+override public function _kill(lookup:Map<String, Int>):Bool {
 	_ignoreVisible = ("visible" in lookup);
 	return super._kill(lookup);
 }

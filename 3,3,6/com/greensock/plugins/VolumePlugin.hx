@@ -31,7 +31,7 @@ class VolumePlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _st:SoundTransform;
 
@@ -41,8 +41,8 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
-	if (isNaN(value) || target.hasOwnProperty("volume") || !target.hasOwnProperty("soundTransform")) {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
+	if (is0(value) || target.hasOwnProperty("volume") || !target.hasOwnProperty("soundTransform")) {
 	return false;
 	}
 	_target = target;

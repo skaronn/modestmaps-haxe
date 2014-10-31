@@ -33,9 +33,9 @@ class Positions2DPlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
-private var _positions:Array;
+private var _positions:Array<Dynamic>;
 
 /** @private **/
 public function new() {
@@ -43,7 +43,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	if (!(value is Array)) {
 	return false;
 	}
@@ -59,7 +59,7 @@ override public function setRatio(v:Float):Void {
 	} else if (v >= 1) {
 	v = 0.999999999;
 	}
-	var position:Object = _positions[ int(_positions.length * v) ];
+	var position:Map<String, Int> = _positions[ int(_positions.length * v) ];
 	_target.x = position.x;
 	_target.y = position.y;
 }

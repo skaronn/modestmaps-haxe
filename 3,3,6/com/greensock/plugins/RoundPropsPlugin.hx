@@ -43,7 +43,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_tween = tween;
 	return true;
 }
@@ -52,7 +52,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 public function _onInitAllProps():Bool {
 	var rp:Array = (_tween.vars.roundProps is Array) ? _tween.vars.roundProps : _tween.vars.roundProps.split(","),
 	i:Int = rp.length, 
-	lookup:Object = {},
+	lookup:Map<String, Int> = {},
 	rpt:PropTween = _tween._propLookup.roundProps,
 	prop:String, pt:PropTween, next:PropTween;
 	while (--i > -1) {
@@ -87,7 +87,7 @@ public function _onInitAllProps():Bool {
 }
 
 /** @private **/
-public function _add(target:Object, p:String, s:Float, c:Float):Void {
+public function _add(target:Map<String, Int>, p:String, s:Float, c:Float):Void {
 	_addTween(target, p, s, s + c, p, true);
 	_overwriteProps[_overwriteProps.length] = p;
 }

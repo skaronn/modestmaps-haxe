@@ -16,7 +16,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Sine {
+@:final class Sine {
 
 /** Eases out with slight deceleration. **/
 public static var easeOut:SineOut = new SineOut();

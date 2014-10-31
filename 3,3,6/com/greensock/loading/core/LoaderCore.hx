@@ -17,7 +17,7 @@ import flash.events.ProgressEvent;
 import flash.net.LocalConnection;
 import flash.system.Capabilities;
 import flash.utils.Dictionary;
-import flash.utils.GetTimer;
+import flash.utils.Timer;
 
 /** Dispatched when the loader starts loading. **/
 [Event(name="open", 	type="com.greensock.events.LoaderEvent")]
@@ -54,7 +54,7 @@ private static var _isLocal:Bool;
 /** @private **/
 private static var _globalRootLoader:LoaderMax;
 /** @private **/
-private static var _listenerTypes:Object = {onOpen:"open", 
+private static var _listenerTypes:Map<String, Int> = {onOpen:"open", 
 						  onInit:"init", 
 						  onComplete:"complete", 
 						  onProgress:"progress", 
@@ -74,9 +74,9 @@ private static var _listenerTypes:Object = {onOpen:"open",
 						  onRawLoad:"rawLoad",
 						  onUncaughtError:"uncaughtError"};
 /** @private **/
-private static var _types:Object = {};
+private static var _types:Map<String, Int> = {};
 /** @private **/
-private static var _extensions:Object = {};
+private static var _extensions:Map<String, Int> = {};
 
 /** @private **/
 private var _cachedBytesLoaded:UInt;
@@ -104,7 +104,7 @@ private var _time:UInt;
 private var _content:Dynamic;
 
 /** An object containing optional configuration details, typically passed through a constructor parameter. For example: <code>new SWFLoader("assets/file.swf", {name:"swf1", container:this, autoPlay:true, noCache:true})</code>. See the constructor's documentation for details about what special properties are recognized. **/
-public var vars:Object;
+public var vars:Map<String, Int>;
 /** A name that you use to identify the loader instance. This name can be fed to the <code>getLoader()</code> or <code>getContent()</code> methods or traced at any time. Each loader's name should be unique. If you don't define one, a unique name will be created automatically, like "loader21". **/
 public var name:String;
 /** When <code>autoDispose</code> is <code>true</code>, the loader will be disposed immediately after it completes (it calls the <code>dispose()</code> method internally after dispatching its <code>COMPLETE</code> event). This will remove any listeners that were defined in the vars object (like onComplete, onProgress, onError, onInit). Once a loader is disposed, it can no longer be found with <code>LoaderMax.getLoader()</code> or <code>LoaderMax.getContent()</code> - it is essentially destroyed but its content is <strong>not</strong> unloaded (you must call <code>unload()</code> or <code>dispose(true)</code> to unload its content). The default <code>autoDispose</code> value is <code>false</code>. **/
@@ -115,7 +115,7 @@ public var autoDispose:Bool;
  * 
  * @param vars An object containing optional parameters like <code>estimatedBytes, name, autoDispose, onComplete, onProgress, onError</code>, etc. For example, <code>{estimatedBytes:2400, name:"myImage1", onComplete:completeHandler}</code>.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	this.vars = (vars != null) ? vars : {};
 	if (this.vars.isGSVars) {
 	this.vars = this.vars.vars;
@@ -144,7 +144,7 @@ public function new(vars:Object=null) {
 	}
 	
 	for (var p:String in _listenerTypes) {
-	if (p in this.vars && this.vars[p] is Function) {
+	if (p in this.vars && this.vars[p] is Dynamic) {
 		this.addEventListener(_listenerTypes[p], this.vars[p], false, 0, true);
 	}
 	}
@@ -258,7 +258,7 @@ private function _dump(scrubLevel:Int=0, newStatus:Int=0, suppressEvents:Bool=fa
 		dispatchEvent(new Event("dispose"));
 	}
 	for (var p:String in _listenerTypes) {
-		if (p in this.vars && this.vars[p] is Function) {
+		if (p in this.vars && this.vars[p] is Dynamic) {
 		this.removeEventListener(_listenerTypes[p], this.vars[p]);
 		}
 	}
@@ -325,7 +325,7 @@ public function prioritize(loadNow:Bool=true):Void {
 }
 
 /** @inheritDoc **/
-override public function addEventListener(type:String, listener:Function, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
+override public function addEventListener(type:String, listener:Dynamic, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
 	if (type == LoaderEvent.PROGRESS) {
 	_dispatchProgress = true;
 	} else if (type == LoaderEvent.CHILD_PROGRESS && this is LoaderMax) {
@@ -405,7 +405,7 @@ private function _completeHandler(event:Event=null):Void {
 
 /** @private **/
 private function _errorHandler(event:Event):Void {
-	var target:Object = event.target; //trigger the LoaderEvent's target getter once first in order to ensure that it reports properly - see the notes in LoaderEvent.target for more details.
+	var target:Map<String, Int> = event.target; //trigger the LoaderEvent's target getter once first in order to ensure that it reports properly - see the notes in LoaderEvent.target for more details.
 	target = (event is LoaderEvent && this.hasOwnProperty("getChildren")) ? event.target : this;
 	var text:String = ""; 
 	if (event.hasOwnProperty("error") && Object(event).error is Error) {
@@ -430,7 +430,7 @@ private function _failHandler(event:Event, dispatchError:Bool=true):Void {
 	if (dispatchError) {
 	_errorHandler(event);
 	} else {
-	var target:Object = event.target; //trigger the LoaderEvent's target getter once first in order to ensure that it reports properly - see the notes in LoaderEvent.target for more details.
+	var target:Map<String, Int> = event.target; //trigger the LoaderEvent's target getter once first in order to ensure that it reports properly - see the notes in LoaderEvent.target for more details.
 	}
 	dispatchEvent(new LoaderEvent(LoaderEvent.FAIL, ((event is LoaderEvent && this.hasOwnProperty("getChildren")) ? event.target : this), this.toString() + " > " + (event as Object).text, event));
 	dispatchEvent(new LoaderEvent(LoaderEvent.CANCEL, this));
@@ -439,7 +439,7 @@ private function _failHandler(event:Event, dispatchError:Bool=true):Void {
 /** @private **/
 private function _passThroughEvent(event:Event):Void {
 	var type:String = event.type;
-	var target:Object = this;
+	var target:Map<String, Int> = this;
 	if (this.hasOwnProperty("getChildren")) {
 	if (event is LoaderEvent) {
 		target = event.target;

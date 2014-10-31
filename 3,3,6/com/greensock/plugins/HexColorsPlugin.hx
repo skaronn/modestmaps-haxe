@@ -32,7 +32,7 @@ TweenLite.to(myObject, 2, {hexColors:{myProperty:0xFF0000}});
  * 
  * <p>Or if you just want to tween a color and apply it somewhere on every frame, you could do:</p>
  * <listing version="3.0">
-var myColor:Object = {hex:0xFF0000};
+var myColor:Map<String, Int> = {hex:0xFF0000};
 TweenLite.to(myColor, 2, {hexColors:{hex:0x0000FF}, onUpdate:applyColor});
 function applyColor() {
 mc.graphics.clear();
@@ -51,7 +51,7 @@ class HexColorsPlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _colors:Array;
+private var _colors:Array<Dynamic>;
 
 /** @private **/
 public function new() {
@@ -61,7 +61,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	for (var p:String in value) {
 	_initColor(target, p, uint(value[p]));
 	}
@@ -69,8 +69,8 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 }
 
 /** @private **/
-public function _initColor(target:Object, p:String, end:UInt):Void {
-	var isFunc:Bool = (typeof(target[p]) == "function"),
+public function _initColor(target:Map<String, Int>, p:String, end:UInt):Void {
+	var isFunc:Bool = (Type.typeof(target[p]) == "function"),
 	start:UInt = (!isFunc) ? target[p] : target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]();
 	if (start != end) {
 	var r:UInt = start >> 16,
@@ -82,7 +82,7 @@ public function _initColor(target:Object, p:String, end:UInt):Void {
 }
 
 /** @private **/
-override public function _kill(lookup:Object):Bool {
+override public function _kill(lookup:Map<String, Int>):Bool {
 	var i:Int = _colors.length;
 	while (i--) {
 	if (lookup[_colors[i].p] != null) {
@@ -111,7 +111,7 @@ override public function setRatio(v:Float):Void {
 }
 
 internal class ColorProp {
-public var t:Object;
+public var t:Map<String, Int>;
 public var p:String;
 public var f:Bool;
 public var rs:Int;
@@ -121,7 +121,7 @@ public var gc:Int;
 public var bs:Int;
 public var bc:Int;
 
-public function ColorProp(t:Object, p:String, f:Bool, rs:Int, rc:Int, gs:Int, gc:Int, bs:Int, bc:Int) {
+public function ColorProp(t:Map<String, Int>, p:String, f:Bool, rs:Int, rc:Int, gs:Int, gc:Int, bs:Int, bc:Int) {
 this.t = t;
 this.p = p;
 this.f = f;

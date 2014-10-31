@@ -25,7 +25,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Power4 {
+@:final class Power4 {
 
 /** Eases out with a power of 4 **/
 public static var easeOut:Ease = new Ease(null,null,1,4);

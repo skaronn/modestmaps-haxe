@@ -34,7 +34,7 @@ class VisiblePlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private **/
 private var _tween:TweenLite;
 /** @private **/
@@ -50,7 +50,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_target = target;
 	_tween = tween;
 	_progress = (_tween.vars.runBackwards) ? 0 : 1;
@@ -61,7 +61,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 
 /** @private **/
 override public function setRatio(v:Float):Void {
-	_target.visible = (v == 1 && (_tween._time / _tween._duration == _progress || _tween._duration == 0)) ? _visible : _initVal; //a ratio of 1 doesn't necessarily mean the tween is done - if the ease is Elastic.easeOut or Back.easeOut, for example, it could it 1 mid-tween. Also remember that zero-duration tweens will return NaN for _time / _duration.
+	_target.visible = (v == 1 && (_tween._time / _tween._duration == _progress || _tween._duration == 0)) ? _visible : _initVal; //a ratio of 1 doesn't necessarily mean the tween is done - if the ease is Elastic.easeOut or Back.easeOut, for example, it could it 1 mid-tween. Also remember that zero-duration tweens will return 0 for _time / _duration.
 }
 
 }

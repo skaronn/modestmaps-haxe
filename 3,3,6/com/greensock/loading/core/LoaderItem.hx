@@ -54,7 +54,7 @@ private var _skipAlternateURL:Bool;
  * @param urlOrRequest The url (<code>String</code>) or <code>URLRequest</code> from which the loader should get its content
  * @param vars An object containing optional parameters like <code>estimatedBytes, name, autoDispose, onComplete, onProgress, onError</code>, etc. For example, <code>{estimatedBytes:2400, name:"myImage1", onComplete:completeHandler}</code>.
  */
-public function new(urlOrRequest:Dynamic, vars:Object=null) {
+public function new(urlOrRequest:Dynamic, vars:Map<String, Int>=null) {
 	super(vars);
 	_request = (urlOrRequest is URLRequest) ? urlOrRequest as URLRequest : new URLRequest(urlOrRequest);
 	_url = _request.url;
@@ -90,7 +90,7 @@ private function _setRequestURL(request:URLRequest, url:String, extraParams:Stri
 	var data:URLVariables = new URLVariables( ((request.data is URLVariables) ? request.data.toString() : null) );
 	a = extraParams.split("&");
 	i = a.length;
-	var pair:Array;
+	var pair:Array<Dynamic>;
 	while (--i > -1) {
 		pair = a[i].split("=");
 		data[pair.shift()] = pair.join("=");

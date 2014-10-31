@@ -22,7 +22,7 @@ import flash.net.NetStream;
 import flash.net.URLRequest;
 import flash.net.URLVariables;
 import flash.utils.Timer;
-import flash.utils.GetTimer;
+import flash.utils.Timer;
 
 /** Dispatched when the loader's <code>httpStatus</code> value changes. **/
 [Event(name="httpStatus", 	type="com.greensock.events.LoaderEvent")]
@@ -92,7 +92,7 @@ import flash.utils.GetTimer;
  * 	<li><strong> bgColor : UInt </strong> - When a <code>width</code> and <code>height</code> are defined, a rectangle will be drawn inside the <code>ContentDisplay</code> immediately in order to ease the development process. It is transparent by default, but you may define a <code>bgAlpha</code> if you prefer.</li>
  * 	<li><strong> bgAlpha : Float </strong> - Controls the alpha of the rectangle that is drawn when a <code>width</code> and <code>height</code> are defined.</li>
  * 	<li><strong> volume : Float</strong> - A value between 0 and 1 indicating the volume at which the video should play (default is 1).</li>
- * 	<li><strong> repeat : Int</strong> - Number of times that the video should repeat. To repeat indefinitely, use -1. Default is 0.</li>
+ * 	<li><strong> repeat : Int</strong> - Float of times that the video should repeat. To repeat indefinitely, use -1. Default is 0.</li>
  * 	<li><strong> stageVideo : StageVideo</strong> - By default, the NetStream gets attached to a <code>Video</code> object, but if you want to use StageVideo in Flash, you can define the <code>stageVideo</code> property and VideoLoader will attach its NetStream to that StageVideo instance instead of the regular Video instance (which is the <code>rawContent</code>). Please read Adobe's docs regarding StageVideo to understand the benefits, tradeoffs and limitations.</li>
  * 	<li><strong> checkPolicyFile : Bool</strong> - If <code>true</code>, the VideoLoader will check for a crossdomain.xml file on the remote host (only useful when loading videos from other domains - see Adobe's docs for details about NetStream's <code>checkPolicyFile</code> property). </li>
  * 	<li><strong> estimatedDuration : Float</strong> - Estimated duration of the video in seconds. VideoLoader will only use this value until it receives the necessary metaData from the video in order to accurately determine the video's duration. You do not need to specify an <code>estimatedDuration</code>, but doing so can help make the playProgress and some other values more accurate (until the metaData has loaded). It can also make the <code>progress/bytesLoaded/bytesTotal</code> more accurate when a <code>estimatedDuration</code> is defined, particularly in <code>bufferMode</code>.</li>
@@ -108,14 +108,14 @@ import flash.utils.GetTimer;
  * 	<li><strong> autoDispose : Bool</strong> - When <code>autoDispose</code> is <code>true</code>, the loader will be disposed immediately after it completes (it calls the <code>dispose()</code> method internally after dispatching its <code>COMPLETE</code> event). This will remove any listeners that were defined in the vars object (like onComplete, onProgress, onError, onInit). Once a loader is disposed, it can no longer be found with <code>LoaderMax.getLoader()</code> or <code>LoaderMax.getContent()</code> - it is essentially destroyed but its content is not unloaded (you must call <code>unload()</code> or <code>dispose(true)</code> to unload its content). The default <code>autoDispose</code> value is <code>false</code>.
  * 	
  * 	<p>----EVENT HANDLER SHORTCUTS----</p></li>
- * 	<li><strong> onOpen : Function</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onInit : Function</strong> - A handler function for <code>Event.INIT</code> events which will be called when the video's metaData has been received and the video is placed into the <code>ContentDisplay</code>. The <code>INIT</code> event can be dispatched more than once if the NetStream receives metaData more than once (which occasionally happens, particularly with F4V files - the first time often doesn't include the cuePoints). Make sure your <code>onInit</code> function accepts a single parameter of type <code>Event</code> (flash.events.Event).</li>
- * 	<li><strong> onProgress : Function</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
- * 	<li><strong> onComplete : Function</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onCancel : Function</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onError : Function</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onFail : Function</strong> - A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onIOError : Function</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onOpen : Dynamic</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onInit : Dynamic</strong> - A handler function for <code>Event.INIT</code> events which will be called when the video's metaData has been received and the video is placed into the <code>ContentDisplay</code>. The <code>INIT</code> event can be dispatched more than once if the NetStream receives metaData more than once (which occasionally happens, particularly with F4V files - the first time often doesn't include the cuePoints). Make sure your <code>onInit</code> function accepts a single parameter of type <code>Event</code> (flash.events.Event).</li>
+ * 	<li><strong> onProgress : Dynamic</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
+ * 	<li><strong> onComplete : Dynamic</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onCancel : Dynamic</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onError : Dynamic</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onFail : Dynamic</strong> - A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onIOError : Dynamic</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
  * </ul>
  * 
  * <p><strong>Note:</strong> Using a <code><a href="data/VideoLoaderVars.html">VideoLoaderVars</a></code> instance 
@@ -194,7 +194,7 @@ trace("error occured with " + event.target + ": " + event.text);
  * 
  * @author Jack Doyle, jack@greensock.com
  */	
-import flash.Error;
+import flash.errors.Error;
 
 class VideoLoader extends LoaderItem {
 /** @private **/
@@ -224,7 +224,7 @@ private var _auditNS:NetStream;
 /** @private **/
 private var _video:Video;
 /** @private **/
-private var _stageVideo:Object; //don't type as StageVideo because that would break publishing to FP9
+private var _stageVideo:Map<String, Int>; //don't type as StageVideo because that would break publishing to FP9
 /** @private **/
 private var _sound:SoundTransform;
 /** @private **/
@@ -269,7 +269,7 @@ private var _playStarted:Bool;
 private var _finalFrame:Bool;
 
 /** The metaData that was received from the video (contains information about its width, height, frame rate, etc.). See Adobe's docs for information about a NetStream's onMetaData callback. **/
-public var metaData:Object;
+public var metaData:Map<String, Int>;
 /** If the buffer becomes empty during playback and <code>autoAdjustBuffer</code> is <code>true</code> (the default), it will automatically attempt to adjust the NetStream's <code>bufferTime</code> based on the rate at which the video has been loading, estimating what it needs to be in order to play the rest of the video without emptying the buffer again. This can prevent the annoying problem of video playback start/stopping/starting/stopping on a system tht doesn't have enough bandwidth to adequately buffer the video. You may also set the <code>bufferTime</code> in the constructor's <code>vars</code> parameter to set the initial value. **/
 public var autoAdjustBuffer:Bool;
 
@@ -323,7 +323,7 @@ public var autoAdjustBuffer:Bool;
  * 	<li><strong> bgColor : UInt </strong> - When a <code>width</code> and <code>height</code> are defined, a rectangle will be drawn inside the <code>ContentDisplay</code> immediately in order to ease the development process. It is transparent by default, but you may define a <code>bgAlpha</code> if you prefer.</li>
  * 	<li><strong> bgAlpha : Float </strong> - Controls the alpha of the rectangle that is drawn when a <code>width</code> and <code>height</code> are defined.</li>
  * 	<li><strong> volume : Float</strong> - A value between 0 and 1 indicating the volume at which the video should play (default is 1).</li>
- * 	<li><strong> repeat : Int</strong> - Number of times that the video should repeat. To repeat indefinitely, use -1. Default is 0.</li>
+ * 	<li><strong> repeat : Int</strong> - Float of times that the video should repeat. To repeat indefinitely, use -1. Default is 0.</li>
  * 	<li><strong> stageVideo : StageVideo</strong> - By default, the NetStream gets attached to a <code>Video</code> object, but if you want to use StageVideo in Flash, you can define the <code>stageVideo</code> property and VideoLoader will attach its NetStream to that StageVideo instance instead of the regular Video instance (which is the <code>rawContent</code>). Please read Adobe's docs regarding StageVideo to understand the benefits, tradeoffs and limitations.</li>	
  * 	<li><strong> checkPolicyFile : Bool</strong> - If <code>true</code>, the VideoLoader will check for a crossdomain.xml file on the remote host (only useful when loading videos from other domains - see Adobe's docs for details about NetStream's <code>checkPolicyFile</code> property). </li>
  * 	<li><strong> estimatedDuration : Float</strong> - Estimated duration of the video in seconds. VideoLoader will only use this value until it receives the necessary metaData from the video in order to accurately determine the video's duration. You do not need to specify an <code>estimatedDuration</code>, but doing so can help make the playProgress and some other values more accurate (until the metaData has loaded). It can also make the <code>progress/bytesLoaded/bytesTotal</code> more accurate when a <code>estimatedDuration</code> is defined, particularly in <code>bufferMode</code>.</li>
@@ -339,18 +339,18 @@ public var autoAdjustBuffer:Bool;
  * 	<li><strong> autoDispose : Bool</strong> - When <code>autoDispose</code> is <code>true</code>, the loader will be disposed immediately after it completes (it calls the <code>dispose()</code> method internally after dispatching its <code>COMPLETE</code> event). This will remove any listeners that were defined in the vars object (like onComplete, onProgress, onError, onInit). Once a loader is disposed, it can no longer be found with <code>LoaderMax.getLoader()</code> or <code>LoaderMax.getContent()</code> - it is essentially destroyed but its content is not unloaded (you must call <code>unload()</code> or <code>dispose(true)</code> to unload its content). The default <code>autoDispose</code> value is <code>false</code>.
  * 	
  * 	<p>----EVENT HANDLER SHORTCUTS----</p></li>
- * 	<li><strong> onOpen : Function</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onInit : Function</strong> - A handler function for <code>Event.INIT</code> events which will be called when the video's metaData has been received and the video is placed into the <code>ContentDisplay</code>. The <code>INIT</code> event can be dispatched more than once if the NetStream receives metaData more than once (which occasionally happens, particularly with F4V files - the first time often doesn't include the cuePoints). Make sure your <code>onInit</code> function accepts a single parameter of type <code>Event</code> (flash.events.Event).</li>
- * 	<li><strong> onProgress : Function</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
- * 	<li><strong> onComplete : Function</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onCancel : Function</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onError : Function</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onFail : Function</strong> - A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
- * 	<li><strong> onIOError : Function</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onOpen : Dynamic</strong> - A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onInit : Dynamic</strong> - A handler function for <code>Event.INIT</code> events which will be called when the video's metaData has been received and the video is placed into the <code>ContentDisplay</code>. The <code>INIT</code> event can be dispatched more than once if the NetStream receives metaData more than once (which occasionally happens, particularly with F4V files - the first time often doesn't include the cuePoints). Make sure your <code>onInit</code> function accepts a single parameter of type <code>Event</code> (flash.events.Event).</li>
+ * 	<li><strong> onProgress : Dynamic</strong> - A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.</li>
+ * 	<li><strong> onComplete : Dynamic</strong> - A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onCancel : Dynamic</strong> - A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onError : Dynamic</strong> - A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onFail : Dynamic</strong> - A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
+ * 	<li><strong> onIOError : Dynamic</strong> - A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).</li>
  * </ul>
  * @see com.greensock.loading.data.VideoLoaderVars
  */
-public function new(urlOrRequest:Dynamic, vars:Object=null) {
+public function new(urlOrRequest:Dynamic, vars:Map<String, Int>=null) {
 	super(urlOrRequest, vars);
 	_type = "VideoLoader";
 	_nc = new NetConnection();
@@ -374,12 +374,12 @@ public function new(urlOrRequest:Dynamic, vars:Object=null) {
 	
 	_refreshNetStream();
 	
-	_duration = isNaN(this.vars.estimatedDuration) ? 200 : Float(this.vars.estimatedDuration); //just set it to a high number so that the progress starts out low.
+	_duration = is0(this.vars.estimatedDuration) ? 200 : Float(this.vars.estimatedDuration); //just set it to a high number so that the progress starts out low.
 	_bufferMode = _preferEstimatedBytesInAudit = Boolean(this.vars.bufferMode == true);
 	_videoPaused = _pausePending = Boolean(this.vars.autoPlay == false);
 	this.autoAdjustBuffer = !(this.vars.autoAdjustBuffer == false);
 	
-	this.volume = ("volume" in this.vars) ? Number(this.vars.volume) : 1;
+	this.volume = ("volume" in this.vars) ? Float(this.vars.volume) : 1;
 	
 	if (LoaderMax.contentDisplayClass is Class) {
 	_sprite = new LoaderMax.contentDisplayClass(this);
@@ -421,7 +421,7 @@ private function _refreshNetStream():Void {
 	_ns.addEventListener("ioError", _failHandler, false, 0, true);
 	_ns.addEventListener("asyncError", _failHandler, false, 0, true); 
 	
-	_ns.bufferTime = isNaN(this.vars.bufferTime) ? 5 : Float(this.vars.bufferTime);
+	_ns.bufferTime = is0(this.vars.bufferTime) ? 5 : Float(this.vars.bufferTime);
 	
 	if (_stageVideo != null) {
 	_stageVideo.attachNetStream(_ns);
@@ -470,7 +470,7 @@ override private function _dump(scrubLevel:Int=0, newStatus:Int=0, suppressEvent
 	_sprite.removeEventListener(Event.ENTER_FRAME, _finalFrameFinished);
 	_ns.removeEventListener(Event.RENDER, _renderHandler);
 	_renderTimer.stop();
-	_forceTime = NaN;
+	_forceTime = 0;
 	_prevTime = _prevCueTime = 0;
 	_initted = false;
 	_renderedOnce = false;
@@ -510,7 +510,7 @@ override private function _dump(scrubLevel:Int=0, newStatus:Int=0, suppressEvent
 	_sprite = null;
 	_renderTimer = null;
 	} else {
-	_duration = isNaN(this.vars.estimatedDuration) ? 200 : Float(this.vars.estimatedDuration); //just set it to a high number so that the progress starts out low.
+	_duration = is0(this.vars.estimatedDuration) ? 200 : Float(this.vars.estimatedDuration); //just set it to a high number so that the progress starts out low.
 	_videoPaused = _pausePending = Boolean(this.vars.autoPlay == false);
 	}
 	super._dump(scrubLevel, newStatus, suppressEvents);
@@ -522,7 +522,7 @@ public function setContentDisplay(contentDisplay:Sprite):Void {
 }
 
 /** @inheritDoc **/
-override public function addEventListener(type:String, listener:Function, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
+override public function addEventListener(type:String, listener:Dynamic, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
 	if (type == PLAY_PROGRESS) {
 	_dispatchPlayProgress = true;
 	}
@@ -575,7 +575,7 @@ trace("hit cue point " + event.data.name + ", message: " + event.data.parameters
  * @see #gotoVideoCuePoint()
  * @see #getCuePointTime()
  */
-public function addASCuePoint(time:Float, name:String="", parameters:Object=null):Object {
+public function addASCuePoint(time:Float, name:String="", parameters:Map<String, Int>=null):Map<String, Int> {
 	var prev:CuePoint = _firstCuePoint;
 	if (prev != null && prev.time > time) {
 	prev = null;
@@ -604,7 +604,7 @@ public function addASCuePoint(time:Float, name:String="", parameters:Object=null
  * @return The cue point that was removed (or <code>null</code> if none were found that match the criteria)
  * @see #addASCuePoint()
  */
-public function removeASCuePoint(timeNameOrCuePoint:Dynamic):Object {
+public function removeASCuePoint(timeNameOrCuePoint:Dynamic):Map<String, Int> {
 	var cp:CuePoint = _firstCuePoint;
 	while (cp) {
 	if (cp == timeNameOrCuePoint || cp.time == timeNameOrCuePoint || cp.name == timeNameOrCuePoint) {
@@ -631,7 +631,7 @@ public function removeASCuePoint(timeNameOrCuePoint:Dynamic):Object {
  * as well as cue points that were added with <code>addASCuePoint()</code>).
  * 
  * @param name The name of the cue point
- * @return The cue point's time (NaN if no cue point was found with the specified name)
+ * @return The cue point's time (0 if no cue point was found with the specified name)
  * @see #addASCuePoint()
  * @see #gotoVideoCuePoint()
  * @see #gotoVideoTime()
@@ -641,7 +641,7 @@ public function getCuePointTime(name:String):Float {
 	var i:Int = this.metaData.cuePoints.length;
 	while (--i > -1) { 
 		if (name == this.metaData.cuePoints[i].name) {
-		return Number(this.metaData.cuePoints[i].time);
+		return Float(this.metaData.cuePoints[i].time);
 		}
 	}
 	}
@@ -652,7 +652,7 @@ public function getCuePointTime(name:String):Float {
 	}
 	cp = cp.next;
 	}
-	return NaN;
+	return 0;
 }
 
 /**
@@ -667,7 +667,7 @@ public function getCuePointTime(name:String):Float {
  * @param name The name of the cue point
  * @param forcePlay If <code>true</code>, the video will resume playback immediately after seeking to the new position.
  * @param skipCuePoints If <code>true</code> (the default), any cue points that are positioned between the current videoTime and the destination cue point will be ignored when moving to the new videoTime. In other words, it is like a record player that has its needle picked up, moved, and dropped into a new position rather than dragging it across the record, triggering the various cue points (if any exist there). IMPORTANT: cue points are only triggered when the time advances in the forward direction; they are never triggered when rewinding or restarting. 
- * @return The cue point's time (NaN if the cue point wasn't found)
+ * @return The cue point's time (0 if the cue point wasn't found)
  * @see #gotoVideoTime()
  * @see #addASCuePoint()
  * @see #removeASCuePoint()
@@ -747,8 +747,8 @@ public function repeatCount(value:Int=0):Dynamic {
  * @see #playProgress
  **/
 public function gotoVideoTime(time:Float, forcePlay:Bool=false, skipCuePoints:Bool=true):Float {
-	if (isNaN(time) || _ns == null) {
-	return NaN;
+	if (is0(time) || _ns == null) {
+	return 0;
 	} else if (time > _duration) {
 	time = _duration;
 	}
@@ -861,7 +861,7 @@ private function _forceInit():Void {
 //---- EVENT HANDLERS ------------------------------------------------------------------------------------
 
 /** @private **/
-private function _metaDataHandler(info:Object):Void {
+private function _metaDataHandler(info:Map<String, Int>):Void {
 	if (this.metaData == null || this.metaData.cuePoints == null) { //sometimes videos will trigger the onMetaData multiple times (especially F4V files) and occassionally the last call doesn't contain cue point data!
 	this.metaData = info;
 	}
@@ -876,11 +876,11 @@ private function _metaDataHandler(info:Object):Void {
 	}
 	_duration = info.duration;
 	if ("width" in info) {
-	_video.width = Number(info.width); 
-	_video.height = Number(info.height);
+	_video.width = Float(info.width); 
+	_video.height = Float(info.height);
 	} 
 	if ("framerate" in info) {
-	_renderTimer.delay = int(1000 / Number(info.framerate) + 1); 
+	_renderTimer.delay = int(1000 / Float(info.framerate) + 1); 
 	}
 	if (!_initted) {
 	_forceInit();
@@ -898,7 +898,7 @@ private function _playProgressHandler(event:Event):Void {
 	if (_bufferFull && (_firstCuePoint || _dispatchPlayProgress)) { 
 	var prevTime:Float = _prevTime,
 		prevCueTime:Float = _prevCueTime;
-	_prevTime = _prevCueTime = ((_forceTime || _forceTime == 0) && _ns.time <= _duration) ? _ns.time : this.videoTime; //note: isNaN(_forceTime) is much slower than !(_forceTime || _forceTime == 0)
+	_prevTime = _prevCueTime = ((_forceTime || _forceTime == 0) && _ns.time <= _duration) ? _ns.time : this.videoTime; //note: is0(_forceTime) is much slower than !(_forceTime || _forceTime == 0)
 	var next:CuePoint,
 		cp:CuePoint = _firstCuePoint;
 	while (cp) {
@@ -943,7 +943,7 @@ private function _statusHandler(event:NetStatusEvent):Void {
 	} else if (code == "NetStream.Buffer.Full") {
 	_onBufferFull();
 	} else if (code == "NetStream.Seek.Notify") {
-	if (!_autoDetachNetStream && !isNaN(_forceTime)) {
+	if (!_autoDetachNetStream && !is0(_forceTime)) {
 		_renderHandler(null); //note: do not _ns.pause() here when the NetStream isn't attached to the _video because a bug in Flash will prevent it from working (just when this NetStreamEvent occurs!)
 	}
 	//previously called _playProgressHandler(null) but a bug in NetStream often causes its time property not to report its correct (new) position yet, so we just wait to call _playProgressHandler() until the next frame.
@@ -981,7 +981,7 @@ private function _statusHandler(event:NetStatusEvent):Void {
 private function _finalFrameFinished(event:Event):Void {
 	_sprite.removeEventListener(Event.ENTER_FRAME, _finalFrameFinished);
 	_finalFrame = false;
-	if (!isNaN(_forceTime)) {
+	if (!is0(_forceTime)) {
 	_seek(_forceTime);
 	}
 }
@@ -1019,7 +1019,7 @@ override public function auditSize():Void {
 	super.auditSize();
 	} else if (_auditNS == null) {
 	_auditNS = new NetStream(_nc);
-	_auditNS.bufferTime = isNaN(this.vars.bufferTime) ? 5 : Float(this.vars.bufferTime);
+	_auditNS.bufferTime = is0(this.vars.bufferTime) ? 5 : Float(this.vars.bufferTime);
 	_auditNS.client = {onMetaData:_auditHandler, onCuePoint:_auditHandler};
 	_auditNS.addEventListener(NetStatusEvent.NET_STATUS, _auditHandler, false, 0, true);
 	_auditNS.addEventListener("ioError", _auditHandler, false, 0, true);
@@ -1104,7 +1104,7 @@ override private function _auditStreamHandler(event:Event):Void {
 private function _renderHandler(event:Event):Void {
 	_renderedOnce = true;
 	if (!_videoPaused || _initted) if (!_finalFrame) { //if the video hasn't initted yet and it's paused, keep reporting the _forceTime and let the _renderTimer keep calling until the condition is no longer met. 
-	_forceTime = NaN;
+	_forceTime = 0;
 	_renderTimer.stop();
 	_ns.removeEventListener(Event.RENDER, _renderHandler);
 	}
@@ -1328,11 +1328,11 @@ private function setAutoDetachNetStream(value:Bool):Void {
 }
 
 /** By default, the NetStream gets attached to a <code>Video</code> object, but if you want to use StageVideo in Flash, you can define the <code>stageVideo</code> object and VideoLoader will attach its NetStream to that StageVideo instance instead of the regular Video instance (which is the <code>rawContent</code>). Please read Adobe's docs regarding StageVideo to understand the tradeoffs and limitations. <strong>Note:</strong> the data type is <code>Object</code> instead of <code>StageVideo</code> in order to make VideoLoader compatible with Flash Player 9 and 10. Otherwise, you wouldn't be able to publish to those players because StageVideo was introduced in a later version. **/
-public var stageVideo(getStageVideo, setStageVideo):Object;
- 	private function getStageVideo():Object {
+public var stageVideo(getStageVideo, setStageVideo):Map<String, Int>;
+ 	private function getStageVideo():Map<String, Int> {
 	return _stageVideo;
 }
-private function setStageVideo(value:Object):Void {
+private function setStageVideo(value:Map<String, Int>):Void {
 	if (_stageVideo != value) {
 	_stageVideo = value;
 	if (_stageVideo != null) {
@@ -1353,10 +1353,10 @@ public var next:CuePoint;
 public var prev:CuePoint;
 public var time:Float;
 public var name:String;
-public var parameters:Object;
+public var parameters:Map<String, Int>;
 public var gc:Bool;
 
-public function CuePoint(time:Float, name:String, params:Object, prev:CuePoint) {
+public function CuePoint(time:Float, name:String, params:Map<String, Int>, prev:CuePoint) {
 this.time = time;
 this.name = name;
 this.parameters = params;

@@ -16,7 +16,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class ExpoOut extends Ease {
+@:final class ExpoOut extends Ease {
 
 /** The default ease instance which can be reused many times in various tweens in order to conserve memory and improve performance slightly compared to creating a new instance each time. **/
 public static var ease:ExpoOut = new ExpoOut();

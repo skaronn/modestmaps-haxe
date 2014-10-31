@@ -68,7 +68,7 @@ class RoughEase extends Ease {
 /** The default ease instance which can be reused many times in various tweens in order to conserve memory and improve performance slightly compared to creating a new instance each time. **/
 public static var ease:RoughEase = new RoughEase();
 /** @private **/
-private static var _lookup:Object = {}; //keeps track of all named instances so we can find them in byName().
+private static var _lookup:Map<String, Int> = {}; //keeps track of all named instances so we can find them in byName().
 /** @private **/
 private static var _count:Int = 0;
 
@@ -112,7 +112,7 @@ private var _prev:EasePoint;
  * </ul>
  */
 public function new(vars:Dynamic=null, ...args) {
-	if (typeof(vars) !== "object" || vars == null) {
+	if (Type.typeof(vars) != "object" || vars == null) {
 	vars = {strength:vars, points:args[0], clamp:args[1], template:args[2], taper:args[3], randomize:args[4], name:args[5]};
 	}
 	if (vars.name) {
@@ -126,20 +126,20 @@ public function new(vars:Dynamic=null, ...args) {
 	cnt:Int = 0,
 	points:Int = int(vars.points) || 20,
 	i:Int = points,
-	randomize:Bool = (vars.randomize !== false),
-	clamp:Bool = (vars.clamp === true),
+	randomize:Bool = (vars.randomize != false),
+	clamp:Bool = (vars.clamp == true),
 	template:Ease = (vars.template is Ease) ? vars.template : null,
-	strength:Float = (typeof(vars.strength) === "number") ? vars.strength * 0.4 : 0.4,
-	x:Float, y:Float, bump:Float, invX:Float, obj:Object;	
+	strength:Float = (Type.typeof(vars.strength) == "number") ? vars.strength * 0.4 : 0.4,
+	x:Float, y:Float, bump:Float, invX:Float, obj:Map<String, Int>;	
 	while (--i > -1) {
 	x = randomize ? Math.random() : (1 / points) * i;
 	y = (template != null) ? template.getRatio(x) : x;
-	if (taper === "none") {
+	if (taper == "none") {
 		bump = strength;
-	} else if (taper === "out") {
+	} else if (taper == "out") {
 		invX = 1 - x;
 		bump = invX * invX * strength;
-	} else if (taper === "in") {
+	} else if (taper == "in") {
 		bump = x * x * strength;
 	} else if (x < 0.5) { 	//"both" (start)
 		invX = x * 2;
@@ -173,7 +173,7 @@ public function new(vars:Dynamic=null, ...args) {
 	_first = new EasePoint(obj.x, obj.y, _first);
 	}
 	
-	_first = _prev = new EasePoint(0, 0, (_first.time !== 0) ? _first : _first.next);
+	_first = _prev = new EasePoint(0, 0, (_first.time != 0) ? _first : _first.next);
 }
 
 /**
@@ -234,7 +234,7 @@ override public function getRatio(p:Float):Float {
 
 /** @private [DEPRECATED] Disposes the RoughEase so that it is no longer stored for easy lookups by name with <code>byName()</code>, releasing it for garbage collection. **/
 public function dispose():Void {
-	delete _lookup[_name];
+	untyped __delete__(_lookup[_name];
 }
 
 /** @private [DEPRECATED] name of the RoughEase instance **/
@@ -245,7 +245,7 @@ public var name(getName, setName):String;
 
 /** @private [DEPRECATED] name of the RoughEase instance **/
 private function setName(value:String):Void {
-	delete _lookup[_name];
+	untyped __delete__(_lookup[_name];
 	_name = value;
 	_lookup[_name] = this;
 }
@@ -283,7 +283,7 @@ private function setName(value:String):Void {
  * </ul>
  * @return new RoughEase instance that is configured according to the parameters provided
  */
-public function config(vars:Object=null):RoughEase {
+public function config(vars:Map<String, Int>=null):RoughEase {
 	return new RoughEase(vars);
 }
 

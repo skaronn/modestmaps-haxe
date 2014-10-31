@@ -24,7 +24,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Power0 {
+@:final class Power0 {
 
 /** Eases out with a power of 0 (linear). Power0.easeIn, Power0.easeOut, and Power0.easeInOut are all identical because there is no power - they're all linear but use the common naming convention for ease of use. **/
 public static var easeOut:Ease = new Ease(null,null,1,0);

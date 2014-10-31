@@ -87,7 +87,7 @@ import mx.core.UIComponent;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-import flash.Error;
+import flash.errors.Error;
 
 class FlexBlitMask extends UIComponent {
 /** @private **/
@@ -126,7 +126,7 @@ private var _bd:BitmapData;
 /** @private maximum number of pixels (minus one) that each BitmapData cell in the grid can be **/
 private var _gridSize:Int = 2879;
 /** @private **/
-private var _grid:Array;
+private var _grid:Array<Dynamic>;
 /** @private **/
 private var _bounds:Rectangle;
 /** @private **/
@@ -215,7 +215,7 @@ private function _captureTargetBitmap():Void {
 	}
 	var prevFilters:Array = _target.filters;
 	if (prevFilters.length != 0) {
-	_target.filters = _emptyArray;
+	_target.filters = _emptyArray<Dynamic>;
 	}
 	
 	_grid = [];
@@ -269,7 +269,7 @@ private function _captureTargetBitmap():Void {
 
 /** @private **/
 private function _disposeGrid():Void {
-	var i:Int = _grid.length, j:Int, r:Array;
+	var i:Int = _grid.length, j:Int, r:Array<Dynamic>;
 	while (--i > -1) {
 	r = _grid[i];
 	j = r.length;
@@ -330,7 +330,7 @@ private function _render(xOffset:Float=0, yOffset:Float=0, clear:Bool=true, limi
 		this.filters = _target.filters;
 		this.transform.colorTransform = _transform.colorTransform;
 	} else {
-		this.filters = _emptyArray;
+		this.filters = _emptyArray<Dynamic>;
 		this.transform.colorTransform = _colorTransform;
 	}
 	}
@@ -632,7 +632,7 @@ private function setBitmapMode(value:Bool):Void {
 		}
 		_target.mask = null;
 		} else {
-		this.filters = _emptyArray;
+		this.filters = _emptyArray<Dynamic>;
 		this.transform.colorTransform = _colorTransform;
 		this.blendMode = "normal";
 		this.cacheAsBitmap = false; //if cacheAsBitmap is true on both the _target and the FlexBlitMask instance, the transparent areas of the mask will be...well...transparent which isn't what we want when bitmapMode is false (it could hide visible areas unless update(null, true) is called regularly, like if the target has animated children and bitmapMode is false)

@@ -108,10 +108,10 @@ import flash.utils.Dictionary;
  * serve other purposes:</p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the tween should begin.</li>
  * 	
- * 	<li><strong> ease </strong>:<em> Ease (or Function)</em> -
+ * 	<li><strong> ease </strong>:<em> Ease (or Dynamic)</em> -
  * 		 You can choose from various eases to control the rate of change during 
  * 		 the animation, giving it a specific "feel". For example, <code>ElasticOut.ease</code> 
  * 		 or <code>StrongInOut.ease</code>. For best performance, use one of the GreenSock eases
@@ -121,12 +121,12 @@ import flash.utils.Dictionary;
  * 		 The default is <code>Power1.easeOut</code>. For linear animation, use the GreenSock 
  * 		 <code>Linear.ease</code> ease</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>TweenLite.to(mc, 1, {x:100, onComplete:myFunction, onCompleteParams:[mc, "param2"]});</code>
+ * 		 <code>TweenLite.to(mc, 1, {x:100, onComplete:myDynamic, onCompleteParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onCompleteParams:["{self}", "param2"]</code></li>
  * 	
@@ -154,28 +154,28 @@ import flash.utils.Dictionary;
  * 		 Or to prevent a <code>from()</code> from rendering immediately, set <code>immediateRender</code> 
  * 		 to <code>false</code>. By default, <code>from()</code> tweens set <code>immediateRender</code> to <code>true</code>.</li>
  * 
- *  <li><strong> onStart </strong>:<em> Function</em> -
+ *  <li><strong> onStart </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween begins (when its <code>time</code>
  * 		 changes from 0 to some other value which can happen more than once if the 
  * 		 tween is restarted multiple times).</li>
  * 	
  * 	<li><strong> onStartParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onStart</code> function. For example, 
- * 		 <code>TweenLite.to(mc, 1, {x:100, delay:1, onStart:myFunction, onStartParams:[mc, "param2"]});</code>
+ * 		 <code>TweenLite.to(mc, 1, {x:100, delay:1, onStart:myDynamic, onStartParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onStartParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the tween updates  
  * 		 (on every frame while the tween is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>TweenLite.to(mc, 1, {x:100, onUpdate:myFunction, onUpdateParams:[mc, "param2"]});</code>
+ * 		 <code>TweenLite.to(mc, 1, {x:100, onUpdate:myDynamic, onUpdateParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onUpdateParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onReverseComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onReverseComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween has reached its beginning again from the 
  * 		 reverse direction. For example, if <code>reverse()</code> is called the tween will move
  * 		 back towards its beginning and when its <code>time</code> reaches 0, <code>onReverseComplete</code>
@@ -184,7 +184,7 @@ import flash.utils.Dictionary;
  * 	
  * 	<li><strong> onReverseCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onReverseComplete</code> function. For example, 
- * 		 <code>TweenLite.to(mc, 1, {x:100, onReverseComplete:myFunction, onReverseCompleteParams:[mc, "param2"]});</code>
+ * 		 <code>TweenLite.to(mc, 1, {x:100, onReverseComplete:myDynamic, onReverseCompleteParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onReverseCompleteParams:["{self}", "param2"]</code></li>
  * 
@@ -284,8 +284,8 @@ import flash.utils.Dictionary;
  * 	
  * 	<li> Kill all tweens of a particular object anytime with <code>TweenLite.killTweensOf(myObject);</code></li>
  * 	  
- * 	<li> You can kill all delayedCalls to a particular function using <code>TweenLite.killDelayedCallsTo(myFunction);</code> 
- * 	 or <code>TweenLite.killTweensOf(myFunction);</code></li>
+ * 	<li> You can kill all delayedCalls to a particular function using <code>TweenLite.killDelayedCallsTo(myDynamic);</code> 
+ * 	 or <code>TweenLite.killTweensOf(myDynamic);</code></li>
  * 	  
  * 	<li> Use the <code>TweenLite.from()</code> method to animate things into place. For example, 
  * 	if you have things set up on the stage in the spot where they should end up, and you 
@@ -302,7 +302,7 @@ import flash.utils.Dictionary;
  * 
  * @author Jack Doyle, jack@greensock.com
  */	 
-import flash.Error;
+import flash.errors.Error;
 
 class TweenLite extends Animation {
 
@@ -322,14 +322,14 @@ class TweenLite extends Animation {
 	 * 
 	 * <p><strong>Basic example (AS2, AS3, and JavaScript):</strong></p><listing version="3.0">
 	 //add listener
-	 TweenLite.ticker.addEventListener("tick", myFunction);
+	 TweenLite.ticker.addEventListener("tick", myDynamic);
 	 
-	 function myFunction(event) {
+	 function myDynamic(event) {
 		//executes on every tick after the core engine updates
 	 }
 	 
 	 //to remove the listener later...
-	 TweenLite.ticker.removeEventListener("tick", myFunction);
+	 TweenLite.ticker.removeEventListener("tick", myDynamic);
 	 </listing>
 	 * 
 	 * <p>Due to differences in the core languages (and to maximize efficiency), the advanced syntax is slightly different
@@ -341,7 +341,7 @@ class TweenLite extends Animation {
 	 * <p>Parameters:
 	 * <ol>
 	 * 	<li><strong>type</strong> <em>: String</em> - type of listener, should always be <code>"tick"</code></li>
-	 * 	<li><strong>callback</strong> <em>: Function</em> - the function to call when the event occurs</li>
+	 * 	<li><strong>callback</strong> <em>: Dynamic</em> - the function to call when the event occurs</li>
 	 * 	<li><strong>scope</strong> <em>: Object</em> - binds the scope to a particular object (scope is basically what "<code>this</code>" refers to in your function). This can be very useful in JavaScript and AS2 because scope isn't generally maintained. </li>
 	 * 	<li><strong>useParam</strong> <em>: Bool</em> - if <code>true</code>, an event object will be generated and fed to the callback each time the event occurs. The event is a generic object and has two properties: <code>type</code> (always <code>"tick"</code>) and <code>target</code> which refers to the ticker instance. The default for <code>useParam</code> is <code>false</code> because it improves performance.</li>
 	 * 	<li><strong>priority</strong> <em>: Integer</em> - influences the order in which the listeners are called. Listeners with lower priorities are called after ones with higher priorities.</li>
@@ -350,14 +350,14 @@ class TweenLite extends Animation {
 	 * 
 	 * <p><strong>Advanced example (JavaScript and AS2):</strong></p><listing version="3.0">
 	 //add listener that requests an event object parameter, binds scope to the current scope (this), and sets priority to 1 so that it is called before any other listeners that had a priority lower than 1...
-	 TweenLite.ticker.addEventListener("tick", myFunction, this, true, 1);
+	 TweenLite.ticker.addEventListener("tick", myDynamic, this, true, 1);
 	 
-	 function myFunction(event) {
+	 function myDynamic(event) {
 		//executes on every tick after the core engine updates
 	 }
 	 
 	 //to remove the listener later...
-	 TweenLite.ticker.removeEventListener("tick", myFunction);
+	 TweenLite.ticker.removeEventListener("tick", myDynamic);
 	 </listing>
 	 * 
 	 * <p><strong>AS3</strong></p>
@@ -369,48 +369,47 @@ class TweenLite extends Animation {
 	 import flash.events.Event;
 	 
 	 //add listener with weak reference (standard syntax - notice the 5th parameter is true)
-	 TweenLite.ticker.addEventListener("tick", myFunction, false, 0, true);
+	 TweenLite.ticker.addEventListener("tick", myDynamic, false, 0, true);
 	 
-	 function myFunction(event:Event):Void {
+	 function myDynamic(event:Event):Void {
 		//executes on every tick after the core engine updates
 	 }
 	 
 	 //to remove the listener later...
-	 TweenLite.ticker.removeEventListener("tick", myFunction);
+	 TweenLite.ticker.removeEventListener("tick", myDynamic);
 	</listing>
 	 **/
 	public static var ticker:Shape = Animation.ticker;
 
 	/** @private When plugins are activated, the class is added (named based on the special property) to this object so that we can quickly look it up in the <code>_initProps()</code> method.**/
-	public static var _plugins:Object = {}; 
+	public static var _plugins:Map<String, Int> = {}; 
 
 	/** @private For notifying plugins of significant events like when the tween finishes initializing or when it is disabled/enabled (some plugins need to take actions when those events occur). TweenPlugin sets this (in order to keep file size small, avoiding dependencies on that or other classes) **/
-	public static var _onPluginEvent:Function;
+	public static var _onPluginEvent:Dynamic;
 
 	/** @private Holds references to all our tween instances organized by target for quick lookups (for overwriting). **/
 	private static var _tweenLookup:Dictionary = new Dictionary(false); 
 
 	/** @private Lookup for all of the reserved "special property" keywords (excluding plugins).**/
-	private static var _reservedProps:Object = {ease:1, delay:1, overwrite:1, onComplete:1, onCompleteParams:1, onCompleteScope:1, useFrames:1, runBackwards:1, startAt:1, onUpdate:1, onUpdateParams:1, onUpdateScope:1, onStart:1, onStartParams:1, onStartScope:1, onReverseComplete:1, onReverseCompleteParams:1, onReverseCompleteScope:1, onRepeat:1, onRepeatParams:1, onRepeatScope:1, easeParams:1, yoyo:1, onCompleteListener:1, onUpdateListener:1, onStartListener:1, onReverseCompleteListener:1, onRepeatListener:1, orientToBezier:1, immediateRender:1, repeat:1, repeatDelay:1, data:1, paused:1, reversed:1};
+	private static var _reservedProps:Map<Dynamic, Int> = {ease:1, delay:1, overwrite:1, onComplete:1, onCompleteParams:1, onCompleteScope:1, useFrames:1, runBackwards:1, startAt:1, onUpdate:1, onUpdateParams:1, onUpdateScope:1, onStart:1, onStartParams:1, onStartScope:1, onReverseComplete:1, onReverseCompleteParams:1, onReverseCompleteScope:1, onRepeat:1, onRepeatParams:1, onRepeatScope:1, easeParams:1, yoyo:1, onCompleteListener:1, onUpdateListener:1, onStartListener:1, onReverseCompleteListener:1, onRepeatListener:1, orientToBezier:1, immediateRender:1, repeat:1, repeatDelay:1, data:1, paused:1, reversed:1};
 
 	/** @private An object for associating String overwrite modes with their corresponding integers (faster) **/
-	private static var _overwriteLookup:Object;
-
+	private static var _overwriteLookup:Map<String, Int>;
 
 	/** [READ-ONLY] Target object (or array of objects) whose properties the tween affects. **/
-	public var target:Object; 
+	public var target:Map<String, Int>;
 
 	/** @private The result of feeding the tween's current progress (0-1) into the easing equation - typically between 0 and 1 but not always (like with <code>ElasticOut.ease</code>). **/
 	public var ratio:Float;
 
 	/** @private Lookup object for PropTween objects. For example, if this tween is handling the "x" and "y" properties of the target, the _propLookup object will have an "x" and "y" property, each pointing to the associated PropTween object (for tweens with targets that are arrays, _propTween will be an Array with corresponding objects). This can be very helpful for speeding up overwriting. **/
-	public var _propLookup:Object;
+	public var _propLookup:Map<String, Int>;
 
 	/** @private First PropTween instance in the linked list. **/
 	public var _firstPT:PropTween;
 
 	/** @private Only used for tweens whose target is an array. **/
-	private var _targets:Array;
+	private var _targets:Array<Dynamic>;
 
 	/** @private Ease to use which determines the rate of change during the animation. Examples are <code>ElasticOut.ease</code>, <code>StrongIn.ease</code>, etc. (all in the <code>com.greensock.easing package</code>) **/
 	public var _ease:Ease;
@@ -422,13 +421,13 @@ class TweenLite extends Animation {
 	private var _easePower:Int;
 
 	/** @private The array that stores the tweens of the same target (or targets) for the purpose of speeding overwrites. **/
-	private var _siblings:Array;
+	private var _siblings:Array<Dynamic>;
 
 	/** @private Overwrite mode (0 = none, 1 = all, 2 = auto, 3 = concurrent, 4 = allOnStart, 5 = preexisting) **/
 	private var _overwrite:Int;
 
 	/** @private When properties are overwritten in this tween, the properties get added to this object because sometimes properties are overwritten <strong>BEFORE</strong> the tween inits. **/
-	private var _overwrittenProps:Object;
+	private var _overwrittenProps:Map<String, Int>;
 
 	/** @private If this tween has any TweenPlugins that need to be notified of a change in the "enabled" status, this will be true. (speeds things up in the _enable() setter) **/
 	private var _notifyPluginsOfEnabled:Bool;
@@ -441,9 +440,9 @@ class TweenLite extends Animation {
 	 *  
 	 * @param target Target object (or array of objects) whose properties this tween affects 
 	 * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
-	 * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>new TweenLite(mc, 1, {x:100, y:200, onComplete:myFunction})</code>.
+	 * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>new TweenLite(mc, 1, {x:100, y:200, onComplete:myDynamic})</code>.
 	 */
-	public function new(target:Object, duration:Float, vars:Object) {
+	public function new(target:Dynamic, duration:Float, vars:Map<String, Int>) {
 		super(duration, vars);
 		
 		if (target == null) {
@@ -459,35 +458,36 @@ class TweenLite extends Animation {
 		this.target = target;
 		_ease = defaultEase; //temporary - we'll replace it in _init(). We need to set it here for speed purposes so that on the first render(), it doesn't throw an error. 
 		
-		_overwrite = (!("overwrite" in this.vars)) ? _overwriteLookup[defaultOverwrite] : (typeof(this.vars.overwrite) === "number") ? this.vars.overwrite >> 0 : _overwriteLookup[this.vars.overwrite];
+		_overwrite = (!("overwrite" in this.vars)) ? _overwriteLookup[defaultOverwrite] : Std.is(Type.typeof(this.vars.overwrite), Float) ? this.vars.overwrite >> 0 : _overwriteLookup[this.vars.overwrite];
 		
-		if (Std.is(this.target, Array) && typeof(this.target[0]) === "object") {
-		_targets = this.target.concat();
-		_propLookup = [];
-		_siblings = [];
-		var i:Int = _targets.length;
-		while (--i > -1) {
-			_siblings[i] = _register(_targets[i], this, false);
-			if (_overwrite == 1) if (_siblings[i].length > 1) {
-				_applyOverwrite(_targets[i], this, null, 1, _siblings[i]);
-			}
+		if (Std.is(this.target, Array) && Std.is(Type.typeof(this.target[0]), Dynamic)) {
+			_targets = this.target.concat();
+			_propLookup = [];
+			_siblings = [];
+			var i:Int = _targets.length;
+			while (--i > -1) {
+				_siblings[i] = _register(_targets[i], this, false);
+				if (_overwrite == 1) if (_siblings[i].length > 1) {
+					_applyOverwrite(_targets[i], this, null, 1, _siblings[i]);
+				}
+			}		
 		}
-		
-		} else {
-		_propLookup = {};
-		_siblings = _tweenLookup[target]
-		if (_siblings == null) { //the next few lines accomplish the same thing as _siblings = _register(target, this, false) but faster and only slightly more verbose.
-			_siblings = _tweenLookup[target] = [this];
-		} else {
-			_siblings[_siblings.length] = this;
-			if (_overwrite == 1) {
-			_applyOverwrite(target, this, null, 1, _siblings);
+		else {
+			_propLookup = {};
+			_siblings = _tweenLookup[target];
+			if (_siblings == null) { //the next few lines accomplish the same thing as _siblings = _register(target, this, false) but faster and only slightly more verbose.
+				_siblings = _tweenLookup[target] = [this];
 			}
-		}
+			else {
+				_siblings[_siblings.length] = this;
+				if (_overwrite == 1) {
+					_applyOverwrite(target, this, null, 1, _siblings);
+				}
+			}
 		}
 		
 		if (this.vars.immediateRender || (duration == 0 && _delay == 0 && this.vars.immediateRender != false)) {
-		render(-_delay, false, true);
+			render(-_delay, false, true);
 		}
 	}
 
@@ -497,124 +497,133 @@ class TweenLite extends Animation {
 	 */
 	private function _init():Void {
 		var immediate:Bool = vars.immediateRender,
-		i:Int, initPlugins:Bool, pt:PropTween, p:String, copy:Object;
+		i:Int, initPlugins:Bool, pt:PropTween, p:String, copy:Map<String, Int>;
 		if (vars.startAt) {
-		if (_startAt != null) {
-			_startAt.render(-1, true); //if we've run a startAt previously (when the tween instantiated), we should revert it so that the values re-instantiate correctly particularly for relative tweens. Without this, a TweenLite.fromTo(obj, 1, {x:"+=100"}, {x:"-=100"}), for example, would actually jump to +=200 because the startAt would run twice, doubling the relative change.
-		}
-		vars.startAt.overwrite = 0;
-		vars.startAt.immediateRender = true;
-		_startAt = new TweenLite(target, 0, vars.startAt);
-		if (immediate) {
-			if (_time > 0) {
-			_startAt = null; //tweens that render immediately (like most from() and fromTo() tweens) shouldn't revert when their parent timeline's playhead goes backward past the startTime because the initial render could have happened anytime and it shouldn't be directly correlated to this tween's startTime. Imagine setting up a complex animation where the beginning states of various objects are rendered immediately but the tween doesn't happen for quite some time - if we revert to the starting values as soon as the playhead goes backward past the tween's startTime, it will throw things off visually. Reversion should only happen in TimelineLite/Max instances where immediateRender was false (which is the default in the convenience methods like from()).
-			} else if (_duration !== 0) {
-			return; //we skip initialization here so that overwriting doesn't occur until the tween actually begins. Otherwise, if you create several immediateRender:true tweens of the same target/properties to drop into a TimelineLite or TimelineMax, the last one created would overwrite the first ones because they didn't get placed into the timeline yet before the first render occurs and kicks in overwriting.
+			if (_startAt != null) {
+				_startAt.render(-1, true); //if we've run a startAt previously (when the tween instantiated), we should revert it so that the values re-instantiate correctly particularly for relative tweens. Without this, a TweenLite.fromTo(obj, 1, {x:"+=100"}, {x:"-=100"}), for example, would actually jump to +=200 because the startAt would run twice, doubling the relative change.
+			}
+			vars.startAt.overwrite = 0;
+			vars.startAt.immediateRender = true;
+			_startAt = new TweenLite(target, 0, vars.startAt);
+			if (immediate) {
+				if (_time > 0) {
+					_startAt = null; //tweens that render immediately (like most from() and fromTo() tweens) shouldn't revert when their parent timeline's playhead goes backward past the startTime because the initial render could have happened anytime and it shouldn't be directly correlated to this tween's startTime. Imagine setting up a complex animation where the beginning states of various objects are rendered immediately but the tween doesn't happen for quite some time - if we revert to the starting values as soon as the playhead goes backward past the tween's startTime, it will throw things off visually. Reversion should only happen in TimelineLite/Max instances where immediateRender was false (which is the default in the convenience methods like from()).
+				//} else if (_duration != 0) {
+				} else if (_duration != 0) {
+					return; //we skip initialization here so that overwriting doesn't occur until the tween actually begins. Otherwise, if you create several immediateRender:true tweens of the same target/properties to drop into a TimelineLite or TimelineMax, the last one created would overwrite the first ones because they didn't get placed into the timeline yet before the first render occurs and kicks in overwriting.
+				}
 			}
 		}
-		} else if (vars.runBackwards && _duration !== 0) {
-		//from() tweens must be handled uniquely: their beginning values must be rendered but we don't want overwriting to occur yet (when time is still 0). Wait until the tween actually begins before doing all the routines like overwriting. At that time, we should render at the END of the tween to ensure that things initialize correctly (remember, from() tweens go backwards)
-		if (_startAt != null) {
-			_startAt.render(-1, true);
-			_startAt = null;
-		} else {
-			copy = {};
-			for (p in vars) { //copy props into a new object and skip any reserved props, otherwise onComplete or onUpdate or onStart could fire. We should, however, permit autoCSS to go through.
-			if (!(p in _reservedProps)) {
-				copy[p] = vars[p];
+		//else if (vars.runBackwards && _duration != 0) {
+		else if (vars.runBackwards && _duration != 0) {
+			//from() tweens must be handled uniquely: their beginning values must be rendered but we don't want overwriting to occur yet (when time is still 0). Wait until the tween actually begins before doing all the routines like overwriting. At that time, we should render at the END of the tween to ensure that things initialize correctly (remember, from() tweens go backwards)
+			if (_startAt != null) {
+				_startAt.render(-1, true);
+				_startAt = null;
 			}
+			else {
+				copy = {};
+				for (p in vars) { //copy props into a new object and skip any reserved props, otherwise onComplete or onUpdate or onStart could fire. We should, however, permit autoCSS to go through.
+					if (!(p in _reservedProps)) {
+						copy[p] = vars[p];
+					}
+				}
+				copy.overwrite = 0;
+				copy.data = "isFromStart"; //we tag the tween with as "isFromStart" so that if [inside a plugin] we need to only do something at the very END of a tween, we have a way of identifying this tween as merely the one that's setting the beginning values for a "from()" tween. For example, clearProps in HTML5's CSSPlugin should only get applied at the very END of a tween and without this tag, from(...{height:100, clearProps:"height", delay:1}) would wipe the height at the beginning of the tween and after 1 second, it'd kick back in.
+				_startAt = TweenLite.to(target, 0, copy);
+				if (!immediate) {
+					_startAt.render(-1, true); //for tweens that aren't rendered immediately, we still need to use the _startAt to record the starting values so that we can revert to them if the parent timeline's playhead goes backward beyond the beginning, but we immediately revert the tween back otherwise the parent tween that's currently instantiating wouldn't see the wrong starting values (since they were changed by the _startAt tween) 
+				}
+				//else if (_time == 0) {
+				else if (_time == 0) {
+					return;
+				}
 			}
-			copy.overwrite = 0;
-			copy.data = "isFromStart"; //we tag the tween with as "isFromStart" so that if [inside a plugin] we need to only do something at the very END of a tween, we have a way of identifying this tween as merely the one that's setting the beginning values for a "from()" tween. For example, clearProps in HTML5's CSSPlugin should only get applied at the very END of a tween and without this tag, from(...{height:100, clearProps:"height", delay:1}) would wipe the height at the beginning of the tween and after 1 second, it'd kick back in.
-			_startAt = TweenLite.to(target, 0, copy);
-			if (!immediate) {
-			_startAt.render(-1, true); //for tweens that aren't rendered immediately, we still need to use the _startAt to record the starting values so that we can revert to them if the parent timeline's playhead goes backward beyond the beginning, but we immediately revert the tween back otherwise the parent tween that's currently instantiating wouldn't see the wrong starting values (since they were changed by the _startAt tween) 
-			} else if (_time === 0) {
-			return;
-			}
-		}
 		}
 		
-		if (vars.ease is Ease) {
-		_ease = (vars.easeParams is Array) ? vars.ease.config.apply(vars.ease, vars.easeParams) : vars.ease;
-		} else if (typeof(vars.ease) === "function") {
-		_ease = new Ease(vars.ease, vars.easeParams);
+		if (Std.is(vars.ease, Ease)) {
+			_ease = (Std.is(vars.easeParams, Array)) ? vars.ease.config.apply(vars.ease, vars.easeParams) : vars.ease;
+		} else if (Type.typeof(vars.ease) == "function") {
+			_ease = new Ease(vars.ease, vars.easeParams);
 		} else {
-		_ease = defaultEase;
+			_ease = defaultEase;
 		}
 		_easeType = _ease._type;
 		_easePower = _ease._power;
 		_firstPT = null;
 		
 		if (_targets) {
-		i = _targets.length;
-		while (--i > -1) {
-			if ( _initProps( _targets[i], (_propLookup[i] = {}), _siblings[i], (_overwrittenProps ? _overwrittenProps[i] : null)) ) {
-			initPlugins = true;
+			i = _targets.length;
+			while (--i > -1) {
+				if ( _initProps( _targets[i], (_propLookup[i] = {}), _siblings[i], (_overwrittenProps ? _overwrittenProps[i] : null)) ) {
+				initPlugins = true;
+				}
 			}
 		}
-		} else {
-		initPlugins = _initProps(target, _propLookup, _siblings, _overwrittenProps);
+		else {
+			initPlugins = _initProps(target, _propLookup, _siblings, _overwrittenProps);
 		}
 		
 		if (initPlugins) {
-		_onPluginEvent("_onInitAllProps", this); //reorders the array in order of priority. Uses a static TweenPlugin method in order to minimize file size in TweenLite
+			_onPluginEvent("_onInitAllProps", this); //reorders the array in order of priority. Uses a static TweenPlugin method in order to minimize file size in TweenLite
 		}
-		if (_overwrittenProps) if (_firstPT == null) if (typeof(target) !== "function") { //if all tweening properties have been overwritten, kill the tween. If the target is a function, it's most likely a delayedCall so let it live.
-		_enabled(false, false);
+		//if (_overwrittenProps) if (_firstPT == null) if (Type.typeof(target) != "function") { //if all tweening properties have been overwritten, kill the tween. If the target is a function, it's most likely a delayedCall so let it live.
+		if (_overwrittenProps) if (_firstPT == null) if (Type.typeof(target) != "function") { //if all tweening properties have been overwritten, kill the tween. If the target is a function, it's most likely a delayedCall so let it live.
+			_enabled(false, false);
 		}
 		if (vars.runBackwards) {
-		pt = _firstPT;
-		while (pt) {
-			pt.s += pt.c;
-			pt.c = -pt.c;
-			pt = pt._next;
-		}
+			pt = _firstPT;
+			while (pt) {
+				pt.s += pt.c;
+				pt.c = -pt.c;
+				pt = pt._next;
+			}
 		}
 		_onUpdate = vars.onUpdate;
 		_initted = true;
 	}
 
 	/** @private Loops through the <code>vars</code> properties, captures starting values, triggers overwriting if necessary, etc. **/
-	private function _initProps(target:Object, propLookup:Object, siblings:Array, overwrittenProps:Object):Bool {
-		var vars:Object = this.vars,
-		p:String, i:Int, initPlugins:Bool, plugin:Object, val:Object;
+	private function _initProps(target:Map<String, Int>, propLookup:Map<String, Int>, siblings:Array<Dynamic>, overwrittenProps:Map<String, Int>):Bool {
+		var vars:Map<String, Int> = this.vars,
+		p:String, i:Int, initPlugins:Bool, plugin:Map<String, Int>, val:Map<String, Int>;
 		if (target == null) {
-		return false;
+			return false;
 		}
 		for (p in vars) {
-		val = vars[p];
-		if (p in _reservedProps) {
-			if (val is Array) if (val.join("").indexOf("{self}") !== -1) {
-			vars[p] = _swapSelfInParams(val as Array);
+			val = vars[p];
+			if (p in _reservedProps) {
+				if (Std.is(val, Array)) if (val.join("").indexOf("{self}") != -1) {
+					vars[p] = _swapSelfInParams(Std.is(val, Array));
+				}			
 			}
-			
-		} else if ((p in _plugins) && (plugin = new _plugins[p]())._onInitTween(target, val, this)) {
-			_firstPT = new PropTween(plugin, "setRatio", 0, 1, p, true, _firstPT, plugin._priority);
-			i = plugin._overwriteProps.length;
-			while (--i > -1) {
-			propLookup[plugin._overwriteProps[i]] = _firstPT;
+			else if ((p in _plugins) /* && (plugin = new _plugins[p]())._onInitTween(target, val, this) */) {
+				_firstPT = new PropTween(plugin, "setRatio", 0, 1, p, true, _firstPT, plugin._priority);
+				i = plugin._overwriteProps.length;
+				while (--i > -1) {
+					propLookup[plugin._overwriteProps[i]] = _firstPT;
+				}
+				if (plugin._priority || ("_onInitAllProps" in plugin)) {
+					initPlugins = true;
+				}
+				if (("_onDisable" in plugin) || ("_onEnable" in plugin)) {
+					_notifyPluginsOfEnabled = true;
+				}
+				
 			}
-			if (plugin._priority || ("_onInitAllProps" in plugin)) {
-			initPlugins = true;
+			else {
+				_firstPT = propLookup[p] = new PropTween(target, p, 0, 1, p, false, _firstPT);
+				_firstPT.s = (!_firstPT.f) ? Float(target[p]) : target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]();
+				_firstPT.c = (Std.is(Type.typeof(val), Float)) ? Float(val) - _firstPT.s : (Type.typeof(val) == "string" && val.charAt(1) == "=") ? int(val.charAt(0)+"1") * Float(val.substr(2)) : Float(val) || 0;			
 			}
-			if (("_onDisable" in plugin) || ("_onEnable" in plugin)) {
-			_notifyPluginsOfEnabled = true;
-			}
-			
-		} else {
-			_firstPT = propLookup[p] = new PropTween(target, p, 0, 1, p, false, _firstPT);
-			_firstPT.s = (!_firstPT.f) ? Number(target[p]) : target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]();
-			_firstPT.c = (typeof(val) === "number") ? Number(val) - _firstPT.s : (typeof(val) === "string" && val.charAt(1) === "=") ? int(val.charAt(0)+"1") * Number(val.substr(2)) : Float(val) || 0;			
-		}
 		}
 		
 		if (overwrittenProps) if (_kill(overwrittenProps, target)) { //another tween may have tried to overwrite properties of this tween before init() was called (like if two tweens start at the same time, the one created second will run first)
-		return _initProps(target, propLookup, siblings, overwrittenProps);
+			return _initProps(target, propLookup, siblings, overwrittenProps);
 		}
 		if (_overwrite > 1) if (_firstPT != null) if (siblings.length > 1) if (_applyOverwrite(target, this, propLookup, _overwrite, siblings)) {
-		_kill(propLookup, target);
-		return _initProps(target, propLookup, siblings, overwrittenProps);
+			_kill(propLookup, target);
+			return _initProps(target, propLookup, siblings, overwrittenProps);
 		}
 		return initPlugins;
 	}
@@ -625,215 +634,222 @@ class TweenLite extends Animation {
 	override public function render(time:Float, suppressEvents:Bool=false, force:Bool=false):Void {
 		var isComplete:Bool, callback:String, pt:PropTween, rawPrevTime:Float, prevTime:Float = _time;
 		if (time >= _duration) {
-		_totalTime = _time = _duration;
-		ratio = _ease._calcEnd ? _ease.getRatio(1) : 1;
-		if (!_reversed) {
-			isComplete = true;
-			callback = "onComplete";
-		}
-		if (_duration == 0) { //zero-duration tweens are tricky because we must discern the momentum/direction of time in order to determine whether the starting values should be rendered or the ending values. If the "playhead" of its timeline goes past the zero-duration tween in the forward direction or lands directly on it, the end values should be rendered, but if the timeline's "playhead" moves past it in the backward direction (from a postitive time to a negative time), the starting values must be rendered.
-			rawPrevTime = _rawPrevTime;
-			if (_startTime === _timeline._duration) { //if a zero-duration tween is at the VERY end of a timeline and that timeline renders at its end, it will typically add a tiny bit of cushion to the render time to prevent rounding errors from getting in the way of tweens rendering their VERY end. If we then reverse() that timeline, the zero-duration tween will trigger its onReverseComplete even though technically the playhead didn't pass over it again. It's a very specific edge case we must accommodate.
-			time = 0;
+			_totalTime = _time = _duration;
+			ratio = _ease._calcEnd ? _ease.getRatio(1) : 1;
+			if (!_reversed) {
+				isComplete = true;
+				callback = "onComplete";
 			}
-			if (time === 0 || rawPrevTime < 0 || rawPrevTime === _tinyNum) if (rawPrevTime !== time) {
-			force = true;
-			if (rawPrevTime > 0 && rawPrevTime !== _tinyNum) {
-				callback = "onReverseComplete";
-			}
-			}
-			_rawPrevTime = rawPrevTime = (!suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
-		}
-		
-		} else if (time < 0.0000001) { //to work around occasional floating point math artifacts, round super small values to 0. 
-		_totalTime = _time = 0;
-		ratio = _ease._calcEnd ? _ease.getRatio(0) : 0;
-		if (prevTime !== 0 || (_duration === 0 && _rawPrevTime > 0 && _rawPrevTime !== _tinyNum)) {
-			callback = "onReverseComplete";
-			isComplete = _reversed;
-		}
-		if (time < 0) {
-			_active = false;
 			if (_duration == 0) { //zero-duration tweens are tricky because we must discern the momentum/direction of time in order to determine whether the starting values should be rendered or the ending values. If the "playhead" of its timeline goes past the zero-duration tween in the forward direction or lands directly on it, the end values should be rendered, but if the timeline's "playhead" moves past it in the backward direction (from a postitive time to a negative time), the starting values must be rendered.
-			if (_rawPrevTime >= 0) {
+				rawPrevTime = _rawPrevTime;
+				if (_startTime == _timeline._duration) { //if a zero-duration tween is at the VERY end of a timeline and that timeline renders at its end, it will typically add a tiny bit of cushion to the render time to prevent rounding errors from getting in the way of tweens rendering their VERY end. If we then reverse() that timeline, the zero-duration tween will trigger its onReverseComplete even though technically the playhead didn't pass over it again. It's a very specific edge case we must accommodate.
+					time = 0;
+				}
+				if (time == 0 || rawPrevTime < 0 || rawPrevTime == _tinyNum) if (rawPrevTime != time) {
+					force = true;
+					if (rawPrevTime > 0 && rawPrevTime != _tinyNum) {
+						callback = "onReverseComplete";
+					}
+				}
+				_rawPrevTime = rawPrevTime = (!suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+			}		
+		}
+		else if (time < 0.0000001) { //to work around occasional floating point math artifacts, round super small values to 0. 
+			_totalTime = _time = 0;
+			ratio = _ease._calcEnd ? _ease.getRatio(0) : 0;
+			if (prevTime != 0 || (_duration == 0 && _rawPrevTime > 0 && _rawPrevTime != _tinyNum)) {
+				callback = "onReverseComplete";
+				isComplete = _reversed;
+			}
+			if (time < 0) {
+				_active = false;
+				if (_duration == 0) { //zero-duration tweens are tricky because we must discern the momentum/direction of time in order to determine whether the starting values should be rendered or the ending values. If the "playhead" of its timeline goes past the zero-duration tween in the forward direction or lands directly on it, the end values should be rendered, but if the timeline's "playhead" moves past it in the backward direction (from a postitive time to a negative time), the starting values must be rendered.
+					if (_rawPrevTime >= 0) {
+						force = true;
+					}
+					_rawPrevTime = rawPrevTime = (!suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+				}
+			}
+			else if (!_initted) { //if we render the very beginning (time == 0) of a fromTo(), we must force the render (normal tweens wouldn't need to render at a time of 0 when the prevTime was also 0). This is also mandatory to make sure overwriting kicks in immediately.
 				force = true;
-			}
-			_rawPrevTime = rawPrevTime = (!suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
-			}
-		} else if (!_initted) { //if we render the very beginning (time == 0) of a fromTo(), we must force the render (normal tweens wouldn't need to render at a time of 0 when the prevTime was also 0). This is also mandatory to make sure overwriting kicks in immediately.
-			force = true;
+			}		
 		}
-		
-		} else {
-		_totalTime = _time = time;
-		if (_easeType) {
-			var r:Float = time / _duration;
-			if (_easeType == 1 || (_easeType == 3 && r >= 0.5)) {
-			r = 1 - r;
+		else {
+			_totalTime = _time = time;
+			if (_easeType) {
+				var r:Float = time / _duration;
+				if (_easeType == 1 || (_easeType == 3 && r >= 0.5)) {
+					r = 1 - r;
+				}
+				if (_easeType == 3) {
+					r *= 2;
+				}
+				if (_easePower == 1) {
+					r *= r;
+				} else if (_easePower == 2) {
+					r *= r * r;
+				} else if (_easePower == 3) {
+					r *= r * r * r;
+				} else if (_easePower == 4) {
+					r *= r * r * r * r;
+				}
+				if (_easeType == 1) {
+					ratio = 1 - r;
+				} else if (_easeType == 2) {
+					ratio = r;
+				} else if (time / _duration < 0.5) {
+					ratio = r / 2;
+				} else {
+					ratio = 1 - (r / 2);
+				}			
 			}
-			if (_easeType == 3) {
-			r *= 2;
-			}
-			if (_easePower == 1) {
-			r *= r;
-			} else if (_easePower == 2) {
-			r *= r * r;
-			} else if (_easePower == 3) {
-			r *= r * r * r;
-			} else if (_easePower == 4) {
-			r *= r * r * r * r;
-			}
-			if (_easeType == 1) {
-			ratio = 1 - r;
-			} else if (_easeType == 2) {
-			ratio = r;
-			} else if (time / _duration < 0.5) {
-			ratio = r / 2;
-			} else {
-			ratio = 1 - (r / 2);
-			}
-			
-		} else {
-			ratio = _ease.getRatio(time / _duration);
-		}
-		
+			else {
+				ratio = _ease.getRatio(time / _duration);
+			}		
 		}
 		
 		if (_time == prevTime && !force) {
-		return;
-		} else if (!_initted) {
-		_init();
-		if (!_initted || _gc) { //immediateRender tweens typically won't initialize until the playhead advances (_time is greater than 0) in order to ensure that overwriting occurs properly. Also, if all of the tweening properties have been overwritten (which would cause _gc to be true, as set in _init()), we shouldn't continue otherwise an onStart callback could be called for example. 
 			return;
 		}
-		//_ease is initially set to defaultEase, so now that init() has run, _ease is set properly and we need to recalculate the ratio. Overall this is faster than using conditional logic earlier in the method to avoid having to set ratio twice because we only init() once but renderTime() gets called VERY frequently.
-		if (_time && !isComplete) {
-			ratio = _ease.getRatio(_time / _duration);
-		} else if (isComplete && _ease._calcEnd) {
-			ratio = _ease.getRatio((_time === 0) ? 0 : 1);
-		}
-		}
-		
-		if (!_active) if (!_paused && _time !== prevTime && time >= 0) {
-		_active = true;  //so that if the user renders a tween (as opposed to the timeline rendering it), the timeline is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the tween already finished but the user manually re-renders it as halfway done.
-		}
-		if (prevTime == 0) {
-		if (_startAt != null) {
-			if (time >= 0) {
-			_startAt.render(time, suppressEvents, force);
-			} else if (!callback) {
-			callback = "_dummyGS"; //if no callback is defined, use a dummy value just so that the condition at the end evaluates as true because _startAt should render AFTER the normal render loop when the time is negative. We could handle this in a more intuitive way, of course, but the render loop is the MOST important thing to optimize, so this technique allows us to avoid adding extra conditional logic in a high-frequency area.
+		else if (!_initted) {
+			_init();
+			if (!_initted || _gc) { //immediateRender tweens typically won't initialize until the playhead advances (_time is greater than 0) in order to ensure that overwriting occurs properly. Also, if all of the tweening properties have been overwritten (which would cause _gc to be true, as set in _init()), we shouldn't continue otherwise an onStart callback could be called for example. 
+				return;
+			}
+			//_ease is initially set to defaultEase, so now that init() has run, _ease is set properly and we need to recalculate the ratio. Overall this is faster than using conditional logic earlier in the method to avoid having to set ratio twice because we only init() once but renderTime() gets called VERY frequently.
+			if (_time && !isComplete) {
+				ratio = _ease.getRatio(_time / _duration);
+			} else if (isComplete && _ease._calcEnd) {
+				ratio = _ease.getRatio((_time == 0) ? 0 : 1);
 			}
 		}
-		if (vars.onStart) if (_time != 0 || _duration == 0) if (!suppressEvents) {
-			vars.onStart.apply(null, vars.onStartParams);
+		
+		if (!_active) if (!_paused && _time != prevTime && time >= 0) {
+			_active = true;  //so that if the user renders a tween (as opposed to the timeline rendering it), the timeline is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the tween already finished but the user manually re-renders it as halfway done.
 		}
+		
+		if (prevTime == 0) {
+			if (_startAt != null) {
+				if (time >= 0) {
+					_startAt.render(time, suppressEvents, force);
+				}
+				else if (!callback) {
+					callback = "_dummyGS"; //if no callback is defined, use a dummy value just so that the condition at the end evaluates as true because _startAt should render AFTER the normal render loop when the time is negative. We could handle this in a more intuitive way, of course, but the render loop is the MOST important thing to optimize, so this technique allows us to avoid adding extra conditional logic in a high-frequency area.
+				}
+			}
+			if (vars.onStart) if (_time != 0 || _duration == 0) if (!suppressEvents) {
+				vars.onStart.apply(null, vars.onStartParams);
+			}
 		}
 		
 		pt = _firstPT;
 		while (pt) {
-		if (pt.f) {
-			pt.t[pt.p](pt.c * ratio + pt.s);
-		} else {
-			pt.t[pt.p] = pt.c * ratio + pt.s;
-		}
-		pt = pt._next;
+			if (pt.f) {
+				pt.t[pt.p](pt.c * ratio + pt.s);
+			} else {
+				pt.t[pt.p] = pt.c * ratio + pt.s;
+			}
+			pt = pt._next;
 		}
 		
 		if (_onUpdate != null) {
-		if (time < 0 && _startAt != null && _startTime != 0) { //if the tween is positioned at the VERY beginning (_startTime 0) of its parent timeline, it's illegal for the playhead to go back further, so we should not render the recorded startAt values.
-			_startAt.render(time, suppressEvents, force); //note: for performance reasons, we tuck this conditional logic inside less traveled areas (most tweens don't have an onUpdate). We'd just have it at the end before the onComplete, but the values should be updated before any onUpdate is called, so we ALSO put it here and then if it's not called, we do so later near the onComplete.
-		}
-		if (!suppressEvents) if (_time !== prevTime || isComplete) {
-			_onUpdate.apply(null, vars.onUpdateParams);
-		}
-		}
-		
-		if (callback) if (!_gc) { //check gc because there's a chance that kill() could be called in an onUpdate
-		
-		if (time < 0 && _startAt != null && _onUpdate == null && _startTime != 0) { //if the tween is positioned at the VERY beginning (_startTime 0) of its parent timeline, it's illegal for the playhead to go back further, so we should not render the recorded startAt values.
-			_startAt.render(time, suppressEvents, force);
-		}
-		if (isComplete) {
-			if (_timeline.autoRemoveChildren) {
-			_enabled(false, false);
+			if (time < 0 && _startAt != null && _startTime != 0) { //if the tween is positioned at the VERY beginning (_startTime 0) of its parent timeline, it's illegal for the playhead to go back further, so we should not render the recorded startAt values.
+				_startAt.render(time, suppressEvents, force); //note: for performance reasons, we tuck this conditional logic inside less traveled areas (most tweens don't have an onUpdate). We'd just have it at the end before the onComplete, but the values should be updated before any onUpdate is called, so we ALSO put it here and then if it's not called, we do so later near the onComplete.
 			}
-			_active = false;
+			if (!suppressEvents) if (_time != prevTime || isComplete) {
+				_onUpdate.apply(null, vars.onUpdateParams);
+			}
 		}
-		if (!suppressEvents) if (vars[callback]) {
-			vars[callback].apply(null, vars[callback + "Params"]);
-		}
-		if (_duration === 0 && _rawPrevTime === _tinyNum && rawPrevTime !== _tinyNum) { //the onComplete or onReverseComplete could trigger movement of the playhead and for zero-duration tweens (which must discern direction) that land directly back on their start time, we don't want to fire again on the next render. Think of several addPause()'s in a timeline that forces the playhead to a certain spot, but what if it's already paused and another tween is tweening the "time" of the timeline? Each time it moves [forward] past that spot, it would move back, and since suppressEvents is true, it'd reset _rawPrevTime to _tinyNum so that when it begins again, the callback would fire (so ultimately it could bounce back and forth during that tween). Again, this is a very uncommon scenario, but possible nonetheless.
-			_rawPrevTime = 0;
-		}
+		
+		if (callback != null) if (!_gc) { //check gc because there's a chance that kill() could be called in an onUpdate
+		
+			if (time < 0 && _startAt != null && _onUpdate == null && _startTime != 0) { //if the tween is positioned at the VERY beginning (_startTime 0) of its parent timeline, it's illegal for the playhead to go back further, so we should not render the recorded startAt values.
+				_startAt.render(time, suppressEvents, force);
+			}
+			if (isComplete) {
+				if (_timeline.autoRemoveChildren) {
+					_enabled(false, false);
+				}
+				_active = false;
+			}
+			if (!suppressEvents) if (vars[callback]) {
+				vars[callback].apply(null, vars[callback + "Params"]);
+			}
+			if (_duration == 0 && _rawPrevTime == _tinyNum && rawPrevTime != _tinyNum) { //the onComplete or onReverseComplete could trigger movement of the playhead and for zero-duration tweens (which must discern direction) that land directly back on their start time, we don't want to fire again on the next render. Think of several addPause()'s in a timeline that forces the playhead to a certain spot, but what if it's already paused and another tween is tweening the "time" of the timeline? Each time it moves [forward] past that spot, it would move back, and since suppressEvents is true, it'd reset _rawPrevTime to _tinyNum so that when it begins again, the callback would fire (so ultimately it could bounce back and forth during that tween). Again, this is a very uncommon scenario, but possible nonetheless.
+				_rawPrevTime = 0;
+			}
+			
 		}
 		
 	}
 
 	/** @private Same as <code>kill()</code> except that it returns a Boolean indicating if any significant properties were changed (some plugins like MotionBlurPlugin may perform cleanup tasks that alter alpha, etc.). **/
-	override public function _kill(vars:Object=null, target:Object=null):Bool {
-		if (vars === "all") {
-		vars = null;
+	override public function _kill(vars:Map<String, Int>=null, target:Map<String, Int>=null):Bool {
+		if (vars == "all") {
+			vars = null;
 		}
 		if (vars == null) if (target == null || target == this.target) {
-		return _enabled(false, false);
+			return _enabled(false, false);
 		}
 		target = target || _targets || this.target;
-		var i:Int, overwrittenProps:Object, p:String, pt:PropTween, propLookup:Object, changed:Bool, killProps:Object, record:Bool;
-		if (target is Array && typeof(target[0]) === "object") {
-		i = target.length;
-		while (--i > -1) {
-			if (_kill(vars, target[i])) {
-			changed = true;
-			}
-		}
-		} else {
-		if (_targets) {
-			i = _targets.length;
+		var i:Int, overwrittenProps:Map<String, Int>, p:String, pt:PropTween, propLookup:Map<String, Int>, changed:Bool, killProps:Map<String, Int>, record:Bool;
+		if (Std.is(target, Array) && Std.is(Type.typeof(target[0]), Map)) {
+			i = target.length;
 			while (--i > -1) {
-			if (target === _targets[i]) {
-				propLookup = _propLookup[i] || {};
-				_overwrittenProps = _overwrittenProps || [];
-				overwrittenProps = _overwrittenProps[i] = vars ? _overwrittenProps[i] || {} : "all";
-				break;
-			}
-			}
-		} else if (target !== this.target) {
-			return false;
-		} else {
-			propLookup = _propLookup;
-			overwrittenProps = _overwrittenProps = vars ? _overwrittenProps || {} : "all";
-		}
-		if (propLookup) {
-			killProps = vars || propLookup;
-			record = (vars != overwrittenProps && overwrittenProps != "all" && vars != propLookup && (typeof(vars) != "object" || vars._tempKill != true)); //_tempKill is a super-secret way to delete a particular tweening property but NOT have it remembered as an official overwritten property (like in BezierPlugin)
-			for (p in killProps) {
-			pt = propLookup[p]
-			if (pt != null) {
-				if (pt.pg && pt.t._kill(killProps)) {
-				changed = true; //some plugins need to be notified so they can perform cleanup tasks first
+				if (_kill(vars, target[i])) {
+					changed = true;
 				}
-				if (!pt.pg || pt.t._overwriteProps.length === 0) {
-				if (pt._prev) {
-					pt._prev._next = pt._next;
-				} else if (pt == _firstPT) {
-					_firstPT = pt._next;
-				}
-				if (pt._next) {
-					pt._next._prev = pt._prev;
-				}
-				pt._next = pt._prev = null;
-				}
-				delete propLookup[p];
-			}
-			if (record) { 
-				overwrittenProps[p] = 1;
-			}
-			}
-			if (_firstPT == null && _initted) { //if all tweening properties are killed, kill the tween. Without this line, if there's a tween with multiple targets and then you killTweensOf() each target individually, the tween would technically still remain active and fire its onComplete even though there aren't any more properties tweening. 
-			_enabled(false, false);
 			}
 		}
+		else {
+			if (_targets) {
+				i = _targets.length;
+				while (--i > -1) {
+					if (target == _targets[i]) {
+						propLookup = _propLookup[i] || {};
+						_overwrittenProps = _overwrittenProps || [];
+						overwrittenProps = _overwrittenProps[i] = vars ? _overwrittenProps[i] || {} : "all";
+						break;
+					}
+				}
+			}
+			else if (target != this.target) {
+				return false;
+			}
+			else {
+				propLookup = _propLookup;
+				overwrittenProps = _overwrittenProps = vars ? _overwrittenProps || {} : "all";
+			}
+			if (propLookup) {
+				killProps = vars || propLookup;
+				record = (vars != overwrittenProps && overwrittenProps != "all" && vars != propLookup && (Type.typeof(vars) != "object" || vars._tempKill != true)); //_tempKill is a super-secret way to untyped __delete__(a particular tweening property but NOT have it remembered as an official overwritten property (like in BezierPlugin)
+				for (p in killProps) {
+					pt = propLookup[p];
+					if (pt != null) {
+						if (pt.pg && pt.t._kill(killProps)) {
+							changed = true; //some plugins need to be notified so they can perform cleanup tasks first
+						}
+						if (!pt.pg || pt.t._overwriteProps.length == 0) {
+							if (pt._prev) {
+								pt._prev._next = pt._next;
+							} else if (pt == _firstPT) {
+								_firstPT = pt._next;
+							}
+							if (pt._next) {
+								pt._next._prev = pt._prev;
+							}
+							pt._next = pt._prev = null;
+						}
+						untyped __delete__(propLookup, p);
+					}
+					if (record) { 
+						overwrittenProps[p] = 1;
+					}
+				}
+				if (_firstPT == null && _initted) { //if all tweening properties are killed, kill the tween. Without this line, if there's a tween with multiple targets and then you killTweensOf() each target individually, the tween would technically still remain active and fire its onComplete even though there aren't any more properties tweening. 
+					_enabled(false, false);
+				}
+			}
 		}
 		return changed;
 	}
@@ -841,7 +857,7 @@ class TweenLite extends Animation {
 	/** @inheritDoc **/
 	override public function invalidate():Dynamic {
 		if (_notifyPluginsOfEnabled) {
-		_onPluginEvent("_onDisable", this);
+			_onPluginEvent("_onDisable", this);
 		}
 		_firstPT = null;
 		_overwrittenProps = null;
@@ -909,7 +925,7 @@ class TweenLite extends Animation {
 	 * 
 	 * @param target Target object (or array of objects) whose properties this tween affects. 
 	 * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
-	 * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>TweenLite.to(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+	 * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>TweenLite.to(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
 	 * @return TweenLite instance
 	 * @see com.greensock.TimelineLite#to()
 	 * @see com.greensock.TimelineLite#staggerTo()
@@ -917,7 +933,7 @@ class TweenLite extends Animation {
 	 * @see #from()
 	 * @see #fromTo()
 	 */
-	public static function to(target:Object, duration:Float, vars:Object):TweenLite {
+	public static function to(target:Dynamic, duration:Float, vars:Map<String, Int>):TweenLite {
 		return new TweenLite(target, duration, vars);
 	}
 
@@ -961,7 +977,7 @@ class TweenLite extends Animation {
 	 * 
 	 * @param target Target object (or array of objects) whose properties this tween affects.  
 	 * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
-	 * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myFunction</code>, do this: <code>TweenLite.from(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+	 * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myDynamic</code>, do this: <code>TweenLite.from(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
 	 * @return TweenLite instance
 	 * @see #to()
 	 * @see #fromTo()
@@ -969,7 +985,7 @@ class TweenLite extends Animation {
 	 * @see com.greensock.TimelineLite#staggerFrom()
 	 * @see com.greensock.TweenMax#staggerFrom()
 	 */
-	public static function from(target:Object, duration:Float, vars:Object):TweenLite {
+	public static function from(target:Map<String, Int>, duration:Float, vars:Map<String, Int>):TweenLite {
 		vars = _prepVars(vars, true);
 		vars.runBackwards = true;
 		return new TweenLite(target, duration, vars);
@@ -1013,7 +1029,7 @@ class TweenLite extends Animation {
 	 * @param target Target object (or array of objects) whose properties this tween affects. 
 	 * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
 	 * @param fromVars An object defining the starting value for each property that should be tweened. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200, <code>fromVars</code> would look like this: <code>{x:100, y:200}</code>.
-	 * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 0 to 100 and <code>mc.y</code> from 0 to 200 and then call <code>myFunction</code>, do this: <code>TweenLite.fromTo(mc, 1, {x:0, y:0}, {x:100, y:200, onComplete:myFunction});</code>
+	 * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 0 to 100 and <code>mc.y</code> from 0 to 200 and then call <code>myDynamic</code>, do this: <code>TweenLite.fromTo(mc, 1, {x:0, y:0}, {x:100, y:200, onComplete:myDynamic});</code>
 	 * @return TweenLite instance
 	 * @see #to()
 	 * @see #from()
@@ -1021,7 +1037,7 @@ class TweenLite extends Animation {
 	 * @see com.greensock.TimelineLite#staggerFromTo()
 	 * @see com.greensock.TweenMax#staggerFromTo()
 	 */
-	public static function fromTo(target:Object, duration:Float, fromVars:Object, toVars:Object):TweenLite {
+	public static function fromTo(target:Map<String, Int>, duration:Float, fromVars:Map<String, Int>, toVars:Map<String, Int>):TweenLite {
 		toVars = _prepVars(toVars, true);
 		fromVars = _prepVars(fromVars);
 		toVars.startAt = fromVars;
@@ -1030,12 +1046,12 @@ class TweenLite extends Animation {
 	}
 
 	/** @private Accommodates TweenLiteVars instances for strong data typing and code hinting **/
-	private static function _prepVars(vars:Object, immediateRender:Bool=false):Object {
+	private static function _prepVars(vars:Map<String, Int>, immediateRender:Bool=false):Map<String, Int> {
 		if (vars._isGSVars) {
-		vars = vars.vars;
+			vars = vars.vars;
 		}
 		if (immediateRender && !("immediateRender" in vars)) {
-		vars.immediateRender = true;
+			vars.immediateRender = true;
 		}
 		return vars;
 	}
@@ -1053,23 +1069,23 @@ class TweenLite extends Animation {
 	 * <p><code>TweenLite.delayedCall(delay, callback, params, scope, useFrames)</code> <em>[JavaScript and AS2 only]</em></p>
 	 * 
 	 * <listing version="3.0">
-	//calls myFunction after 1 second and passes 2 parameters:
-	TweenLite.delayedCall(1, myFunction, ["param1", 2]);
+	//calls myDynamic after 1 second and passes 2 parameters:
+	TweenLite.delayedCall(1, myDynamic, ["param1", 2]);
 	 
-	function myFunction(param1, param2) {
+	function myDynamic(param1, param2) {
 	//do stuff
 	}
 	</listing>
 	 * 
 	 * @param delay Delay in seconds (or frames if <code>useFrames</code> is <code>true</code>) before the function should be called
-	 * @param callback Function to call
+	 * @param callback Dynamic to call
 	 * @param params An Array of parameters to pass the function (optional).
 	 * @param useFrames If the delay should be measured in frames instead of seconds, set <code>useFrames</code> to <code>true</code> (default is <code>false</code>)
 	 * @return TweenLite instance
 	 * @see com.greensock.TimelineLite#call()
 	 * @see com.greensock.TimelineMax#addCallback()
 	 */
-	public static function delayedCall(delay:Float, callback:Function, params:Array=null, useFrames:Bool=false):TweenLite {
+	public static function delayedCall(delay:Float, callback:Dynamic, params:Array<Dynamic>=null, useFrames:Bool=false):TweenLite {
 		return new TweenLite(callback, 0, {delay:delay, onComplete:callback, onCompleteParams:params, onReverseComplete:callback, onReverseCompleteParams:params, immediateRender:false, useFrames:useFrames, overwrite:0});
 	}
 
@@ -1092,30 +1108,28 @@ class TweenLite extends Animation {
 	 * @param vars An object defining the value for each property that should be set. For example, to set <code>mc.x</code> to 100 and <code>mc.y</code> to 200, do this: <code>TweenLite.set(mc, {x:100, y:200});</code>
 	 * @return A TweenLite instance (with a duration of 0) which can optionally be inserted into a TimelineLite/Max instance (although it's typically more concise to just use the timeline's <code>set()</code> method).
 	 */
-	public static function set(target:Object, vars:Object):TweenLite {
+	public static function set(target:Map<String, Int>, vars:Map<String, Int>):TweenLite {
 		return new TweenLite(target, 0, vars);
 	}
 
 	/** @private **/
 	private static function _dumpGarbage(event:Event):Void {
-		if ((_rootFrame / 60) >> 0 === _rootFrame / 60) { //faster than !(_rootFrame % 60)
-		var i:Int, a:Array, tgt:Object;
-		for (tgt in _tweenLookup) {
-			a = _tweenLookup[tgt];
-			i = a.length;
-			while (--i > -1) {
-			if (a[i]._gc) {
-				a.splice(i, 1);
+		if ((_rootFrame / 60) >> 0 == _rootFrame / 60) { //faster than !(_rootFrame % 60)
+			var i:Int, a:Array, tgt:Map<String, Int>;
+			for (tgt in _tweenLookup) {
+				a = _tweenLookup[tgt];
+				i = a.length;
+				while (--i > -1) {
+					if (a[i]._gc) {
+						a.splice(i, 1);
+					}
+				}
+				if (a.length == 0) {
+					untyped __delete__(_tweenLookup, tgt);
+				}
 			}
-			}
-			if (a.length === 0) {
-			delete _tweenLookup[tgt];
-			}
-		}
 		}
 	}
-
-
 
 	/**
 	 * Kills all the tweens (or specific tweening properties) of a particular object or delayedCalls 
@@ -1140,8 +1154,8 @@ class TweenLite extends Animation {
 	 * TweenLite.killTweensOf(myObject, false, {alpha:true, x:true});
 	 * </code></p>
 	 * 
-	 * <p>To kill all the delayedCalls that were created like <code>TweenLite.delayedCall(5, myFunction);</code>, 
-	 * you can simply call <code>TweenLite.killTweensOf(myFunction);</code> because delayedCalls 
+	 * <p>To kill all the delayedCalls that were created like <code>TweenLite.delayedCall(5, myDynamic);</code>, 
+	 * you can simply call <code>TweenLite.killTweensOf(myDynamic);</code> because delayedCalls 
 	 * are simply tweens that have their <code>target</code> and <code>onComplete</code> set to 
 	 * the same function (as well as a <code>delay</code> of course).</p>
 	 * 
@@ -1154,29 +1168,29 @@ class TweenLite extends Animation {
 	 * @param onlyActive If <code>true</code>, only tweens that are currently active will be killed (a tween is considered "active" if the virtual playhead is actively moving across the tween and it is not paused, nor are any of its ancestor timelines paused). 
 	 * @param vars To kill only specific properties, use a generic object containing enumerable properties corresponding to the ones that should be killed like <code>{x:true, y:true}</code>. The values assigned to each property of the object don't matter - the sole purpose of the object is for iteration over the named properties (in this case, <code>x</code> and <code>y</code>). If no object (or <code>null</code>) is defined, all matched tweens will be killed in their entirety.
 	 **/
-	public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, vars:Object=null):Void {
-		if (typeof(onlyActive) === "object") {
-		vars = onlyActive; //for backwards compatibility (before "onlyActive" parameter was inserted)
-		onlyActive = false;
+	public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, vars:Map<String, Int>=null):Void {
+		if (Std.is(Type.typeof(onlyActive), Dynamic)) {
+			vars = onlyActive; //for backwards compatibility (before "onlyActive" parameter was inserted)
+			onlyActive = false;
 		}
 		var a:Array = TweenLite.getTweensOf(target, onlyActive),
 		i:Int = a.length;
 		while (--i > -1) {
-		a[i]._kill(vars, target);
+			a[i]._kill(vars, target);
 		}
 	}
 
 	/**
 	 * Immediately kills all of the delayedCalls to a particular function. If, for example, 
-	 * you want to kill all delayedCalls to <code>myFunction</code>, you'd do this:
+	 * you want to kill all delayedCalls to <code>myDynamic</code>, you'd do this:
 	 * 
 	 * <p><code>
-	 * TweenLite.killDelayedCallsTo(myFunction);
+	 * TweenLite.killDelayedCallsTo(myDynamic);
 	 * </code></p>
 	 * 
 	 * <p>Since a delayedCall is just a tween that uses the function/callback as both its <code>target</code>
-	 * and its <code>onComplete</code>, <code>TweenLite.killTweensOf(myFunction)</code> produces exactly the 
-	 * same result as <code>TweenLite.killDelayedCallsTo(myFunction)</code>.</p>
+	 * and its <code>onComplete</code>, <code>TweenLite.killTweensOf(myDynamic)</code> produces exactly the 
+	 * same result as <code>TweenLite.killDelayedCallsTo(myDynamic)</code>.</p>
 	 * 
 	 * <p>This method affects all delayedCalls that were created using <code>TweenLite.delayedCall()</code>
 	 * or <code>TweenMax.delayedCall()</code> or the <code>call()</code> or <code>addCallback()</code> methods
@@ -1185,7 +1199,7 @@ class TweenLite extends Animation {
 	 * 
 	 * @param func The function for which all delayedCalls should be killed/cancelled.
 	 **/
-	public static function killDelayedCallsTo(func:Function):Void {
+	public static function killDelayedCallsTo(func:Dynamic):Void {
 		killTweensOf(func);
 	}
 
@@ -1215,9 +1229,9 @@ class TweenLite extends Animation {
 	 * @param onlyActive If <code>true</code>, only tweens that are currently active will be returned (a tween is considered "active" if the virtual playhead is actively moving across the tween and it is not paused, nor are any of its ancestor timelines paused). 
 	 * @return An array of tweens
 	 **/
-	public static function getTweensOf(target:Dynamic, onlyActive:Bool=false):Array {
-		var i:Int, a:Array, j:Int, t:TweenLite;
-		if (target is Array && typeof(target[0]) != "string" && typeof(target[0]) != "number") {
+	public static function getTweensOf(target:Dynamic, onlyActive:Bool=false):Array<Dynamic> {
+		var i:Int, a:Array<Dynamic>, j:Int, t:TweenLite;
+		if (Std.is(target, Array) && !Std.is(Type.typeof(target[0]), String) && !Std.is(Type.typeof(target[0]), Float)) {
 			i = target.length;
 			a = [];
 			while (--i > -1) {
@@ -1229,7 +1243,7 @@ class TweenLite extends Animation {
 				t = a[i];
 				j = i;
 				while (--j > -1) {
-					if (t === a[j]) {
+					if (t == a[j]) {
 						a.splice(i, 1);
 					}
 				}
@@ -1254,7 +1268,7 @@ class TweenLite extends Animation {
 	 * 2) Returns an array of sibling tweens (tweens of the same target)
 	 * 3) scrubs the siblings array of duplicate instances of the tween (typically only used when re-enabling a tween instance).
 	 **/
-	private static function _register(target:Object, tween:TweenLite=null, scrub:Bool=false):Array {
+	private static function _register(target:Map<String, Int>, tween:TweenLite=null, scrub:Bool=false):Array<Dynamic> {
 		var a:Array = _tweenLookup[target], 
 		i:Int;
 		if (a == null) {
@@ -1265,7 +1279,7 @@ class TweenLite extends Animation {
 			a[i] = tween;
 			if (scrub) {
 				while (--i > -1) {
-					if (a[i] === tween) {
+					if (a[i] == tween) {
 						a.splice(i, 1);
 					}
 				}
@@ -1275,17 +1289,18 @@ class TweenLite extends Animation {
 	}
 
 	/** @private Performs overwriting **/
-	private static function _applyOverwrite(target:Object, tween:TweenLite, props:Object, mode:Int, siblings:Array):Bool {
+	private static function _applyOverwrite(target:Map<String, Int>, tween:TweenLite, props:Map<String, Int>, mode:Int, siblings:Array<Dynamic>):Bool {
 		var i:Int, changed:Bool, curTween:TweenLite;
 		if (mode == 1 || mode >= 4) {
 			var l:Int = siblings.length;
-			for (i = 0; i < l; i++) {
+			for (i in 0 ... l) {
 				curTween = siblings[i];
 				if (curTween != tween) {
 					if (!curTween._gc) if (curTween._enabled(false, false)) {
 						changed = true;
 					}
-				} else if (mode == 5) {
+				}
+				else if (mode == 5) {
 					break;
 				}
 			}
@@ -1296,11 +1311,11 @@ class TweenLite extends Animation {
 		i = siblings.length;
 		while (--i > -1) {
 			curTween = siblings[i];
-			if (curTween === tween || curTween._gc || curTween._paused) {
+			if (curTween == tween || curTween._gc || curTween._paused) {
 				//ignore
 			} else if (curTween._timeline != tween._timeline) {
 				globalStart = globalStart || _checkOverlap(tween, 0, zeroDur);
-				if (_checkOverlap(curTween, globalStart, zeroDur) === 0) {
+				if (_checkOverlap(curTween, globalStart, zeroDur) == 0) {
 					overlaps[oCount++] = curTween;
 				}
 			} else if (curTween._startTime <= startTime) if (curTween._startTime + curTween.totalDuration() / curTween._timeScale > startTime) if (!((zeroDur || !curTween._initted) && startTime - curTween._startTime <= 0.0000000002)) {
@@ -1314,7 +1329,7 @@ class TweenLite extends Animation {
 			if (mode == 2) if (curTween._kill(props, target)) {
 				changed = true;
 			}
-			if (mode !== 2 || (!curTween._firstPT && curTween._initted)) {
+			if (mode != 2 || (!curTween._firstPT && curTween._initted)) {
 				if (curTween._enabled(false, false)) { //if all property tweens have been overwritten, kill the tween.
 				changed = true;
 				}

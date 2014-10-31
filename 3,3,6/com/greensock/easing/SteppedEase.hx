@@ -33,7 +33,7 @@ private var _steps:Int;
 /**
  * Constructor
  * 
- * @param steps Number of steps between the start and the end values. 
+ * @param steps Float of steps between the start and the end values. 
  */
 public function new(steps:Int) {
 	_p1 = 1 / steps;
@@ -49,7 +49,7 @@ public function new(steps:Int) {
  * TweenLite.to(mc, 2, {x:100, ease:SteppedEase.create(5)});<br />
  * </code>
  * 
- * @param steps Number of steps between the start and the end values. 
+ * @param steps Float of steps between the start and the end values. 
  * @return The easing function that can be plugged into a tween
  */
 public static function create(steps:Int):SteppedEase {
@@ -74,14 +74,14 @@ override public function getRatio(p:Float):Float {
 /**
  * Permits customization of the ease (defining a number of steps). 
  * 
- * @param steps Number of steps between the start and the end values. 
+ * @param steps Float of steps between the start and the end values. 
  * @return new SteppedEase instance that is configured according to the parameters provided
  */
 public static function config(steps:Int):SteppedEase {
 	return new SteppedEase(steps);
 }
 
-/** @private Deprecated - Number of steps between the start and the end values. **/
+/** @private Deprecated - Float of steps between the start and the end values. **/
 public var steps(getSteps, null):Int;
  	private function getSteps():Int {
 	return _steps - 1;

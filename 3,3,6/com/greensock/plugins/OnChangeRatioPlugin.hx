@@ -14,7 +14,7 @@ import com.greensock.TweenLite;
  * This is different than most other callback types, like onComplete and onUpdate which don't pass parameters by default
  * unless you use their onCompleteParams and onUpdateParams counterparts. The reason onChangeRatio works this unique way
  * is to minimize file size (adding an onChangeRatioParams would require either another plugin or adding kb to the 
- * main TweenLite class or changing the syntax altogether to onChangeRatio:{func:myFunction, params:[1,2]} which is
+ * main TweenLite class or changing the syntax altogether to onChangeRatio:{func:myDynamic, params:[1,2]} which is
  * even more inconsistent) and because it is such a niche plugin (typically only used with SteppedEase which is quite
  * niche itself). It can be very useful to reuse a single callback method but it must be able to figure out which tween
  * changed its ratio and access its target which is why onChangeRatio passes the tween as the parameter. 
@@ -41,7 +41,7 @@ class OnChangeRatioPlugin extends TweenPlugin {
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 
 /** @private **/
-private var _func:Function;
+private var _func:Dynamic;
 /** @private **/
 private var _tween:TweenLite;
 /** @private **/
@@ -54,11 +54,11 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
-	if (!(value is Function)) {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
+	if (!(value is Dynamic)) {
 	return false;
 	}
-	_func = value as Function;
+	_func = value as Dynamic;
 	_tween = tween;
 	return true;
 }	

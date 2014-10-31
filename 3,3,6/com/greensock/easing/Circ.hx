@@ -16,7 +16,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Circ {
+@:final class Circ {
 
 /** Eases out with an abrupt change in velocity. **/
 public static var easeOut:CircOut = new CircOut();

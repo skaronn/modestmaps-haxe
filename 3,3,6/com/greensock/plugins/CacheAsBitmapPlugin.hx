@@ -53,7 +53,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_target = target as DisplayObject;
 	_tween = tween;
 	_initVal = _target.cacheAsBitmap;

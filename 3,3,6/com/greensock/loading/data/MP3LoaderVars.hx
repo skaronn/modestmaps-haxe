@@ -14,7 +14,7 @@ import flash.media.SoundLoaderContext;
  * <p>There are 2 primary benefits of using a MP3LoaderVars instance to define your MP3Loader variables:</p>
  *  <ol>
  *	<li> In most code editors, code hinting will be activated which helps remind you which special properties are available in MP3Loader</li>
- *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Function is expected).</li>
+ *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Dynamic is expected).</li>
  *  </ol>
  * 
  * <p>The down side, of course, is that the code is more verbose and the MP3LoaderVars class adds slightly more kb to your swf.</p>
@@ -46,13 +46,13 @@ class MP3LoaderVars {
 public static inline var version:Float = 1.2;
 
 /** @private **/
-private var _vars:Object;
+private var _vars:Map<String, Int>;
 
 /**
  * Constructor 
  * @param vars A generic Object containing properties that you'd like to add to this MP3LoaderVars instance.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	_vars = {};
 	if (vars != null) {
 	for (var p:String in vars) {
@@ -64,7 +64,7 @@ public function new(vars:Object=null) {
 /** @private **/
 private function _set(property:String, value:Dynamic):MP3LoaderVars {
 	if (value == null) {
-	delete _vars[property]; //in case it was previously set
+	untyped __delete__(_vars[property]; //in case it was previously set
 	} else {
 	_vars[property] = value;
 	}
@@ -102,42 +102,42 @@ public function name(value:String):MP3LoaderVars {
 }
 
 /** A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onCancel(value:Function):MP3LoaderVars {
+public function onCancel(value:Dynamic):MP3LoaderVars {
 	return _set("onCancel", value);
 }
 
 /** A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onComplete(value:Function):MP3LoaderVars {
+public function onComplete(value:Dynamic):MP3LoaderVars {
 	return _set("onComplete", value);
 }
 
 /** A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR or SECURITY_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onError(value:Function):MP3LoaderVars {
+public function onError(value:Dynamic):MP3LoaderVars {
 	return _set("onError", value);
 }
 
 /** A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onFail(value:Function):MP3LoaderVars {
+public function onFail(value:Dynamic):MP3LoaderVars {
 	return _set("onFail", value);
 }
 
 /** A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can determine the httpStatus code using the LoaderEvent's <code>target.httpStatus</code> (LoaderItems keep track of their <code>httpStatus</code> when possible, although certain environments prevent Flash from getting httpStatus information).**/
-public function onHTTPStatus(value:Function):MP3LoaderVars {
+public function onHTTPStatus(value:Dynamic):MP3LoaderVars {
 	return _set("onHTTPStatus", value);
 }
 
 /** A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onIOError(value:Function):MP3LoaderVars {
+public function onIOError(value:Dynamic):MP3LoaderVars {
 	return _set("onIOError", value);
 }
 
 /** A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).**/
-public function onOpen(value:Function):MP3LoaderVars {
+public function onOpen(value:Dynamic):MP3LoaderVars {
 	return _set("onOpen", value);
 }
 
 /** A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.**/
-public function onProgress(value:Function):MP3LoaderVars {
+public function onProgress(value:Dynamic):MP3LoaderVars {
 	return _set("onProgress", value);
 }
 
@@ -177,7 +177,7 @@ public function autoPlay(value:Bool):MP3LoaderVars {
 	return _set("autoPlay", value);
 }
 
-/** Number of times that the mp3 should repeat. To repeat indefinitely, use -1. Default is 0. **/
+/** Float of times that the mp3 should repeat. To repeat indefinitely, use -1. Default is 0. **/
 public function repeat(value:Int):MP3LoaderVars {
 	return _set("repeat", value);
 }
@@ -201,8 +201,8 @@ public function initThreshold(value:UInt):MP3LoaderVars {
 //---- GETTERS / SETTERS -----------------------------------------------------------------
 
 /** The generic Object populated by all of the method calls in the MP3LoaderVars instance. This is the raw data that gets passed to the loader. **/
-public var vars(getVars, null):Object;
- 	private function getVars():Object {
+public var vars(getVars, null):Map<String, Int>;
+ 	private function getVars():Map<String, Int> {
 	return _vars;
 }
 

@@ -19,7 +19,7 @@ import flash.display.Shape;
 import flash.events.Event;
 import flash.events.EventDispatcher;
 import flash.events.IEventDispatcher;
-import flash.utils.GetTimer;
+import flash.utils.Timer;
 /**
  * TweenMax extends TweenLite, adding many useful (but non-essential) features like repeat(), 
  * repeatDelay(), yoyo(), AS3 event dispatching, updateTo(), pauseAll(), and more. It also activates many extra plugins 
@@ -120,10 +120,10 @@ import flash.utils.GetTimer;
  * serve other purposes:</p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the tween should begin.</li>
  * 	
- * 	<li><strong> ease </strong>:<em> Ease (or Function)</em> -
+ * 	<li><strong> ease </strong>:<em> Ease (or Dynamic)</em> -
  * 		 You can choose from various eases to control the rate of change during 
  * 		 the animation, giving it a specific "feel". For example, <code>ElasticOut.ease</code> 
  * 		 or <code>StrongInOut.ease</code>. For best performance, use one of the GreenSock eases
@@ -133,12 +133,12 @@ import flash.utils.GetTimer;
  * 		 The default is <code>Power1.easeOut</code>. For linear animation, use the GreenSock 
  * 		 <code>Linear.ease</code> ease</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>TweenMax.to(mc, 1, {x:100, onComplete:myFunction, onCompleteParams:[mc, "param2"]});</code>
+ * 		 <code>TweenMax.to(mc, 1, {x:100, onComplete:myDynamic, onCompleteParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onCompleteParams:["{self}", "param2"]</code></li>
  * 	
@@ -166,28 +166,28 @@ import flash.utils.GetTimer;
  * 		 Or to prevent a <code>from()</code> from rendering immediately, set <code>immediateRender</code> 
  * 		 to <code>false</code>. By default, <code>from()</code> tweens set <code>immediateRender</code> to <code>true</code>.</li>
  * 
- *  <li><strong> onStart </strong>:<em> Function</em> -
+ *  <li><strong> onStart </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween begins (when its <code>time</code>
  * 		 changes from 0 to some other value which can happen more than once if the 
  * 		 tween is restarted multiple times).</li>
  * 	
  * 	<li><strong> onStartParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onStart</code> function. For example, 
- * 		 <code>TweenMax.to(mc, 1, {x:100, delay:1, onStart:myFunction, onStartParams:[mc, "param2"]});</code>
+ * 		 <code>TweenMax.to(mc, 1, {x:100, delay:1, onStart:myDynamic, onStartParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onStartParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the tween updates  
  * 		 (on every frame while the tween is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>TweenMax.to(mc, 1, {x:100, onUpdate:myFunction, onUpdateParams:[mc, "param2"]});</code>
+ * 		 <code>TweenMax.to(mc, 1, {x:100, onUpdate:myDynamic, onUpdateParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onUpdateParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onReverseComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onReverseComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween has reached its beginning again from the 
  * 		 reverse direction. For example, if <code>reverse()</code> is called the tween will move
  * 		 back towards its beginning and when its <code>time</code> reaches 0, <code>onReverseComplete</code>
@@ -196,7 +196,7 @@ import flash.utils.GetTimer;
  * 	
  * 	<li><strong> onReverseCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onReverseComplete</code> function. For example, 
- * 		 <code>TweenMax.to(mc, 1, {x:100, onReverseComplete:myFunction, onReverseCompleteParams:[mc, "param2"]});</code>
+ * 		 <code>TweenMax.to(mc, 1, {x:100, onReverseComplete:myDynamic, onReverseCompleteParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onReverseCompleteParams:["{self}", "param2"]</code></li>
  * 
@@ -245,12 +245,12 @@ import flash.utils.GetTimer;
  * 
  * 			</ul></li>
  * 	
- * 	<li><strong> repeat </strong>:<em> Number</em> -
- * 		 Number of times that the tween should repeat after its first iteration. For example, 
+ * 	<li><strong> repeat </strong>:<em> Float</em> -
+ * 		 Float of times that the tween should repeat after its first iteration. For example, 
  * 		 if <code>repeat</code> is 1, the tween will play a total of twice (the initial play
  * 		 plus 1 repeat). To repeat indefinitely, use -1. <code>repeat</code> should always be an integer.</li>
  * 	
- * 	<li><strong> repeatDelay </strong>:<em> Number</em> -
+ * 	<li><strong> repeatDelay </strong>:<em> Float</em> -
  * 		 Amount of time in seconds (or frames for frames-based tweens) between repeats. For example,
  * 		 if <code>repeat</code> is 2 and <code>repeatDelay</code> is 1, the tween will play initially,
  * 		 then wait for 1 second before it repeats, then play again, then wait 1 second again before 
@@ -264,38 +264,38 @@ import flash.utils.GetTimer;
  * 		 start - 1 - 2 - 3 - 1 - 2 - 3 - 1 - 2 - 3 - end. But if <code>yoyo</code> is <code>true</code>, 
  * 		 it will look like: start - 1 - 2 - 3 - 3 - 2 - 1 - 1 - 2 - 3 - end.</li>
  *  
- * 	<li><strong> onRepeat </strong>:<em> Function</em> -
+ * 	<li><strong> onRepeat </strong>:<em> Dynamic</em> -
  * 		 A function that should be called each time the tween repeats</li>
  * 	
  * 	<li><strong> onRepeatParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the onRepeat function. For example, 
- * 		 <code>TweenMax.to(mc, 1, {x:100, onRepeat:myFunction, onRepeatParams:[mc, "param2"]});</code>
+ * 		 <code>TweenMax.to(mc, 1, {x:100, onRepeat:myDynamic, onRepeatParams:[mc, "param2"]});</code>
  * 		 To self-reference the tween instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onRepeatParams:["{self}", "param2"]</code></li>
  * 					
- * 	<li><strong> onStartListener </strong>:<em> Function</em> [AS3 only] -
+ * 	<li><strong> onStartListener </strong>:<em> Dynamic</em> [AS3 only] -
  * 		 A function that should be called (and passed an event parameter) when the tween begins 
  * 		 (when its <code>totalTime</code> changes from 0 to some other value which can happen more 
  * 		 than once if the tween is restarted multiple times). Identical to <code>onStart</code> except
  * 		 that the function will always be passed an event parameter whose <code>target</code> property points
- * 		 to the tween. It's the same as doing <code>myTween.addEventListener("start", myFunction);</code>. 
+ * 		 to the tween. It's the same as doing <code>myTween.addEventListener("start", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onStart</code>.</li>
  * 	
- * 	<li><strong> onUpdateListener </strong>:<em> Function</em> [AS3 only] -
+ * 	<li><strong> onUpdateListener </strong>:<em> Dynamic</em> [AS3 only] -
  * 		 A function that should be called (and passed an event parameter) each time the tween updates 
  * 		 (on every frame while the tween is active). Identical to <code>onUpdate</code> except
  * 		 that the function will always be passed an event parameter whose <code>target</code> property points
- * 		 to the tween. It's the same as doing <code>myTween.addEventListener("update", myFunction);</code>. 
+ * 		 to the tween. It's the same as doing <code>myTween.addEventListener("update", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onUpdate</code>.</li>
  * 	  
- * 	<li><strong> onCompleteListener </strong>:<em> Function</em> [AS3 only] - 
+ * 	<li><strong> onCompleteListener </strong>:<em> Dynamic</em> [AS3 only] - 
  * 		 A function that should be called (and passed an event parameter) each time the tween completes. 
  * 		 Identical to <code>onComplete</code> except that the function will always be passed an event 
  * 		 parameter whose <code>target</code> property points to the tween. It's the same as doing 
- * 		 <code>myTween.addEventListener("complete", myFunction);</code>. 
+ * 		 <code>myTween.addEventListener("complete", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onComplete</code>.</li>
  * 
- *  <li><strong> onReverseCompleteListener </strong>:<em> Function</em> [AS3 only] -
+ *  <li><strong> onReverseCompleteListener </strong>:<em> Dynamic</em> [AS3 only] -
  * 		 A function that should be called (and passed an event parameter) each time the tween has reached 
  * 		 its beginning again from the reverse direction. For example, if <code>reverse()</code> is called 
  * 		 the tween will move back towards its beginning and when its <code>totalTime</code> reaches 0, 
@@ -303,14 +303,14 @@ import flash.utils.GetTimer;
  * 		 in a TimelineLite or TimelineMax instance that gets reversed and plays the tween backwards to 
  * 		 (or past) the beginning. Identical to <code>onReverseComplete</code> except that the function 
  * 		 will always be passed an event parameter whose <code>target</code> property points to the tween. 
- * 		 It's the same as doing <code>myTween.addEventListener("reverseComplete", myFunction);</code>. 
+ * 		 It's the same as doing <code>myTween.addEventListener("reverseComplete", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onReverseComplete</code>.</li>
  * 
- *  <li><strong> onRepeatListener </strong>:<em> Function</em> [AS3 only] -
+ *  <li><strong> onRepeatListener </strong>:<em> Dynamic</em> [AS3 only] -
  * 		 A function that should be called (and passed an event parameter) each time the tween repeats. 
  * 		 Identical to <code>onRepeat</code> except that the function will always be passed an event 
  * 		 parameter whose <code>target</code> property points to the tween. It's the same as doing 
- * 		 <code>myTween.addEventListener("repeat", myFunction);</code>. 
+ * 		 <code>myTween.addEventListener("repeat", myDynamic);</code>. 
  * 		 Unless you need the event parameter, it's better/faster to use <code>onRepeat</code>.</li>
  * 	
  * 	<li><strong> startAt </strong>:<em> Object</em> -
@@ -361,7 +361,7 @@ import flash.utils.GetTimer;
  * <p>The following plugins are automatically activated by TweenMax:</p>
  * 	
  * <ul>
- * 	<li><strong> autoAlpha </strong>:<em> Number</em> - 
+ * 	<li><strong> autoAlpha </strong>:<em> Float</em> - 
  * 		 <code>autoAlpha</code> is identical to tweening <code>alpha</code> except that it also 
  * 		 automatically hides the target when the value hits zero, and shows the target when the
  * 		 value isn't zero. In AS3, this means it toggles the target's <code>visible</code> property.
@@ -373,15 +373,15 @@ import flash.utils.GetTimer;
  * 		 <code>visible</code> property. In AS2, the <code>_visible</code> property is toggled, and in 
  * 		 JS the <code>display</code> style is set to <code>"none"</code> to hide.</li>
  * 	  
- * 	<li><strong> volume </strong>:<em> Number</em> [AS3/AS2 only] - 
+ * 	<li><strong> volume </strong>:<em> Float</em> [AS3/AS2 only] - 
  * 		 Tweens the volume of an object. In AS3, it can handle anything with a <code>soundTransform</code> 
  * 		 property (MovieClip/SoundChannel/NetStream, etc.). In AS2, it is for MovieClips or Sound objects.</li>
  * 	  
- * 	<li><strong> tint </strong>:<em> Number</em> [AS3/AS2 only] - 
+ * 	<li><strong> tint </strong>:<em> Float</em> [AS3/AS2 only] - 
  * 		 Tweens the color (tint) of the target. Use a hex value, for example: 0xFF0000 for red or 0x0000FF 
  * 		 for blue, etc. To remove the tint, use <code>null</code>.</li>
  *  	  
- * 	<li><strong> frame </strong>:<em> Number</em> [AS3/AS2 only] - 
+ * 	<li><strong> frame </strong>:<em> Float</em> [AS3/AS2 only] - 
  * 		 Tweens a MovieClip to a particular frame. To tween to a label, use the FrameLabelPlugin.</li>
  * 	
  * 	<li><strong> bezier </strong>:<em> Array</em> - 
@@ -409,7 +409,7 @@ import flash.utils.GetTimer;
  * 			<li> Position property 1 (typically "x")</li>
  * 			<li> Position property 2 (typically "y")</li>
  * 			<li> Rotational property (typically "rotation")</li>
- * 			<li> Number of degrees to add (optional - makes it easy to orient your target properly)</li>
+ * 			<li> Float of degrees to add (optional - makes it easy to orient your target properly)</li>
  *			</ol>
  * 		 For maximum flexibility, you can pass in any number of arrays inside the container array, one 
  * 		 for each rotational property. This can be convenient when working in 3D because you can rotate
@@ -504,15 +504,15 @@ import flash.utils.GetTimer;
  * 	  
  * 	<li> You can use <code>addEventListener()</code> to add listeners to the tween instance manually 
  * 	instead of using the onCompleteListener, onStartListener, and onUpdateListener special properties. 
- * 	 	Like <code>myTween.addEventListener("complete", myFunction);</code></li>
+ * 	 	Like <code>myTween.addEventListener("complete", myDynamic);</code></li>
  * 	  
  * 	<li> You can change the default ease by setting the <code>TweenLite.defaultEase</code> static property. 
  * 	The default is <code>Power1.easeOut</code>.</li>
  * 	  
  * 	<li> You can kill all tweens of a particular object anytime with <code>TweenMax.killTweensOf(myObject); </code></li>
  * 	  
- * 	<li> You can kill all delayedCalls to a particular function with <code>TweenMax.killDelayedCallsTo(myFunction)</code>
- * 	 or <code>TweenMax.killTweensOf(myFunction);</code></li>
+ * 	<li> You can kill all delayedCalls to a particular function with <code>TweenMax.killDelayedCallsTo(myDynamic)</code>
+ * 	 or <code>TweenMax.killTweensOf(myDynamic);</code></li>
  * 	  
  * 	<li> Use the <code>TweenMax.from()</code> method to animate things into place. For example, 
  * 	if you have things set up on the stage in the spot where they should end up, and you 
@@ -560,7 +560,7 @@ TweenPlugin.activate([
 	]);
 
 /** @private **/
-private static var _listenerLookup:Object = {onCompleteListener:TweenEvent.COMPLETE, onUpdateListener:TweenEvent.UPDATE, onStartListener:TweenEvent.START, onRepeatListener:TweenEvent.REPEAT, onReverseCompleteListener:TweenEvent.REVERSE_COMPLETE};
+private static var _listenerLookup:Map<String, Int> = {onCompleteListener:TweenEvent.COMPLETE, onUpdateListener:TweenEvent.UPDATE, onStartListener:TweenEvent.START, onRepeatListener:TweenEvent.REPEAT, onReverseCompleteListener:TweenEvent.REVERSE_COMPLETE};
 
 /**
  * The object that dispatches a <code>"tick"</code> event each time the engine updates, making it easy for 
@@ -569,14 +569,14 @@ private static var _listenerLookup:Object = {onCompleteListener:TweenEvent.COMPL
  * 
  * <p><strong>Basic example (AS2, AS3, and JavaScript):</strong></p><listing version="3.0">
  //add listener
- TweenMax.ticker.addEventListener("tick", myFunction);
+ TweenMax.ticker.addEventListener("tick", myDynamic);
  
- function myFunction(event) {
+ function myDynamic(event) {
  //executes on every tick after the core engine updates
  }
  
  //to remove the listener later...
- TweenMax.ticker.removeEventListener("tick", myFunction);
+ TweenMax.ticker.removeEventListener("tick", myDynamic);
  </listing>
  * 
  * <p>Due to differences in the core languages (and to maximize efficiency), the advanced syntax is slightly different
@@ -588,7 +588,7 @@ private static var _listenerLookup:Object = {onCompleteListener:TweenEvent.COMPL
  * <p>Parameters:
  * <ol>
  * 	<li><strong>type</strong> <em>: String</em> - type of listener, should always be <code>"tick"</code></li>
- * 	<li><strong>callback</strong> <em>: Function</em> - the function to call when the event occurs</li>
+ * 	<li><strong>callback</strong> <em>: Dynamic</em> - the function to call when the event occurs</li>
  * 	<li><strong>scope</strong> <em>: Object</em> - binds the scope to a particular object (scope is basically what "<code>this</code>" refers to in your function). This can be very useful in JavaScript and AS2 because scope isn't generally maintained. </li>
  * 	<li><strong>useParam</strong> <em>: Bool</em> - if <code>true</code>, an event object will be generated and fed to the callback each time the event occurs. The event is a generic object and has two properties: <code>type</code> (always <code>"tick"</code>) and <code>target</code> which refers to the ticker instance. The default for <code>useParam</code> is <code>false</code> because it improves performance.</li>
  * 	<li><strong>priority</strong> <em>: Integer</em> - influences the order in which the listeners are called. Listeners with lower priorities are called after ones with higher priorities.</li>
@@ -597,14 +597,14 @@ private static var _listenerLookup:Object = {onCompleteListener:TweenEvent.COMPL
  * 
  * <p><strong>Advanced example (JavaScript and AS2):</strong></p><listing version="3.0">
  //add listener that requests an event object parameter, binds scope to the current scope (this), and sets priority to 1 so that it is called before any other listeners that had a priority lower than 1...
- TweenMax.ticker.addEventListener("tick", myFunction, this, true, 1);
+ TweenMax.ticker.addEventListener("tick", myDynamic, this, true, 1);
  
- function myFunction(event) {
+ function myDynamic(event) {
  	//executes on every tick after the core engine updates
  }
  
  //to remove the listener later...
- TweenMax.ticker.removeEventListener("tick", myFunction);
+ TweenMax.ticker.removeEventListener("tick", myDynamic);
  </listing>
  * 
  * <p><strong>AS3</strong></p>
@@ -616,14 +616,14 @@ private static var _listenerLookup:Object = {onCompleteListener:TweenEvent.COMPL
  import flash.events.Event;
  
  //add listener with weak reference (standard syntax - notice the 5th parameter is true)
- TweenMax.ticker.addEventListener("tick", myFunction, false, 0, true);
+ TweenMax.ticker.addEventListener("tick", myDynamic, false, 0, true);
  
- function myFunction(event:Event):Void {
+ function myDynamic(event:Event):Void {
  	//executes on every tick after the core engine updates
  }
  
  //to remove the listener later...
- TweenMax.ticker.removeEventListener("tick", myFunction);
+ TweenMax.ticker.removeEventListener("tick", myDynamic);
  </listing>
  **/
 public static var ticker:Shape = Animation.ticker;
@@ -652,8 +652,8 @@ public static var ticker:Shape = Animation.ticker;
  * TweenMax.killTweensOf(myObject, false, {alpha:true, x:true});
  * </code></p>
  * 
- * <p>To kill all the delayedCalls (like ones created using <code>TweenMax.delayedCall(5, myFunction);</code>), 
- * you can simply call <code>TweenMax.killTweensOf(myFunction);</code> because delayedCalls 
+ * <p>To kill all the delayedCalls (like ones created using <code>TweenMax.delayedCall(5, myDynamic);</code>), 
+ * you can simply call <code>TweenMax.killTweensOf(myDynamic);</code> because delayedCalls 
  * are simply tweens that have their <code>target</code> and <code>onComplete</code> set to 
  * the same function (as well as a <code>delay</code> of course).</p>
  * 
@@ -666,21 +666,21 @@ public static var ticker:Shape = Animation.ticker;
  * @param onlyActive If <code>true</code>, only tweens that are currently active will be killed (a tween is considered "active" if the virtual playhead is actively moving across the tween and it is not paused, nor are any of its ancestor timelines paused). 
  * @param vars To kill only specific properties, use a generic object containing enumerable properties corresponding to the ones that should be killed like <code>{x:true, y:true}</code>. The values assigned to each property of the object don't matter - the sole purpose of the object is for iteration over the named properties (in this case, <code>x</code> and <code>y</code>). If no object (or <code>null</code>) is defined, all matched tweens will be killed in their entirety.
  */
-public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, vars:Object=null):Void {
+public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, vars:Map<String, Int>=null):Void {
 	TweenLite.killTweensOf(target, onlyActive, vars);
 }
 
 /**
  * Immediately kills all of the delayedCalls to a particular function. If, for example, 
- * you want to kill all delayedCalls to <code>myFunction</code>, you'd do this:
+ * you want to kill all delayedCalls to <code>myDynamic</code>, you'd do this:
  * 
  * <p><code>
- * TweenMax.killDelayedCallsTo(myFunction);
+ * TweenMax.killDelayedCallsTo(myDynamic);
  * </code></p>
  * 
  * <p>Since a delayedCall is just a tween that uses the function/callback as both its <code>target</code>
- * and its <code>onComplete</code>, <code>TweenMax.killTweensOf(myFunction)</code> produces exactly the 
- * same result as <code>TweenMax.killDelayedCallsTo(myFunction)</code>.</p>
+ * and its <code>onComplete</code>, <code>TweenMax.killTweensOf(myDynamic)</code> produces exactly the 
+ * same result as <code>TweenMax.killDelayedCallsTo(myDynamic)</code>.</p>
  * 
  * <p>This method affects all delayedCalls that were created using <code>TweenLite.delayedCall()</code>
  * or <code>TweenMax.delayedCall()</code> or the <code>call()</code> or <code>addCallback()</code> methods
@@ -689,7 +689,7 @@ public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, va
  * 
  * @param func The function for which all delayedCalls should be killed/cancelled.
  **/
-public static function killDelayedCallsTo(func:Function):Void {
+public static function killDelayedCallsTo(func:Dynamic):Void {
 	TweenLite.killTweensOf(func);
 }
 
@@ -719,7 +719,7 @@ var a2 = TweenMax.getTweensOf([myObject1, myObject2]); //finds 3 tweens
  * @param onlyActive If <code>true</code>, only tweens that are currently active will be returned (a tween is considered "active" if the virtual playhead is actively moving across the tween and it is not paused, nor are any of its ancestor timelines paused). 
  * @return An array of tweens
  **/
-public static function getTweensOf(target:Dynamic, onlyActive:Bool=false):Array {
+public static function getTweensOf(target:Dynamic, onlyActive:Bool=false):Array<Dynamic> {
 	return TweenLite.getTweensOf(target, onlyActive);
 }
 
@@ -741,9 +741,9 @@ public var _yoyo:Bool;
  *  
  * @param target Target object (or array of objects) whose properties this tween affects 
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>new TweenMax(mc, 1, {x:100, y:200, onComplete:myFunction})</code>.
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>new TweenMax(mc, 1, {x:100, y:200, onComplete:myDynamic})</code>.
  */
-public function new(target:Object, duration:Float, vars:Object) {
+public function new(target:Map<String, Int>, duration:Float, vars:Map<String, Int>) {
 	super(target, duration, vars);
 	_yoyo = (this.vars.yoyo == true);
 	_repeat = int(this.vars.repeat);
@@ -806,7 +806,7 @@ tween.updateTo({x:300, y:0}, false);
  * @param resetDuration If the tween has already started (or finished) and <code>resetDuration</code> is <code>true</code>, the tween will restart. If <code>resetDuration</code> is <code>false</code>, the tween's timing will be honored (no restart) and each tweening property's starting value will be adjusted so that it appears to seamlessly redirect to the new destination value.
  * @return self (makes chaining easier)
  **/
-public function updateTo(vars:Object, resetDuration:Bool=false):Dynamic {
+public function updateTo(vars:Map<String, Int>, resetDuration:Bool=false):Dynamic {
 	var curRatio:Float = ratio;		
 	if (resetDuration) if (_startTime < _timeline._time) {
 	_startTime = _timeline._time;
@@ -863,7 +863,7 @@ public function updateTo(vars:Object, resetDuration:Bool=false):Dynamic {
  * @param force Normally the tween will skip rendering if the time matches the cachedTotalTime (to improve performance), but if force is true, it forces a render. This is primarily used internally for tweens with durations of zero in TimelineLite/Max instances.
  */
 override public function render(time:Float, suppressEvents:Bool=false, force:Bool=false):Void {
-	if (!_initted) if (_duration === 0 && vars.repeat) { //zero duration tweens that render immediately have render() called from TweenLite's constructor, before TweenMax's constructor has finished setting _repeat, _repeatDelay, and _yoyo which are critical in determining totalDuration() so we need to call invalidate() which is a low-kb way to get those set properly.
+	if (!_initted) if (_duration == 0 && vars.repeat) { //zero duration tweens that render immediately have render() called from TweenLite's constructor, before TweenMax's constructor has finished setting _repeat, _repeatDelay, and _yoyo which are critical in determining totalDuration() so we need to call invalidate() which is a low-kb way to get those set properly.
 	invalidate();
 	}
 	var totalDur:Float = (!_dirty) ? _totalDuration : totalDuration(), 
@@ -887,22 +887,22 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	}
 	if (_duration == 0) { //zero-duration tweens are tricky because we must discern the momentum/direction of time in order to determine whether the starting values should be rendered or the ending values. If the "playhead" of its timeline goes past the zero-duration tween in the forward direction or lands directly on it, the end values should be rendered, but if the timeline's "playhead" moves past it in the backward direction (from a postitive time to a negative time), the starting values must be rendered.
 		rawPrevTime = _rawPrevTime;
-		if (_startTime === _timeline._duration) { //if a zero-duration tween is at the VERY end of a timeline and that timeline renders at its end, it will typically add a tiny bit of cushion to the render time to prevent rounding errors from getting in the way of tweens rendering their VERY end. If we then reverse() that timeline, the zero-duration tween will trigger its onReverseComplete even though technically the playhead didn't pass over it again. It's a very specific edge case we must accommodate.
+		if (_startTime == _timeline._duration) { //if a zero-duration tween is at the VERY end of a timeline and that timeline renders at its end, it will typically add a tiny bit of cushion to the render time to prevent rounding errors from getting in the way of tweens rendering their VERY end. If we then reverse() that timeline, the zero-duration tween will trigger its onReverseComplete even though technically the playhead didn't pass over it again. It's a very specific edge case we must accommodate.
 		time = 0;
 		}
-		if (time === 0 || rawPrevTime < 0 || rawPrevTime === _tinyNum) if (rawPrevTime !== time) {
+		if (time == 0 || rawPrevTime < 0 || rawPrevTime == _tinyNum) if (rawPrevTime != time) {
 		force = true;
 		if (rawPrevTime > _tinyNum) {
 			callback = "onReverseComplete";
 		}
 		}
-		_rawPrevTime = rawPrevTime = (!suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+		_rawPrevTime = rawPrevTime = (!suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 	}
 	
 	} else if (time < 0.0000001) { //to work around occasional floating point math artifacts, round super small values to 0. 
 	_totalTime = _time = _cycle = 0;
 	ratio = _ease._calcEnd ? _ease.getRatio(0) : 0;
-	if (prevTotalTime !== 0 || (_duration === 0 && _rawPrevTime > 0 && _rawPrevTime !== _tinyNum)) {
+	if (prevTotalTime != 0 || (_duration == 0 && _rawPrevTime > 0 && _rawPrevTime != _tinyNum)) {
 		callback = "onReverseComplete";
 		isComplete = _reversed;
 	}
@@ -912,7 +912,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 		if (_rawPrevTime >= 0) {
 			force = true;
 		}
-		_rawPrevTime = rawPrevTime = (!suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+		_rawPrevTime = rawPrevTime = (!suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 		}
 	} else if (!_initted) { //if we render the very beginning (time == 0) of a fromTo(), we must force the render (normal tweens wouldn't need to render at a time of 0 when the prevTime was also 0). This is also mandatory to make sure overwriting kicks in immediately.
 		force = true;
@@ -922,7 +922,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	if (_repeat != 0) {
 		var cycleDuration:Float = _duration + _repeatDelay;
 		_cycle = (_totalTime / cycleDuration) >> 0; //originally _totalTime % cycleDuration but floating point errors caused problems, so I normalized it. (4 % 0.8 should be 0 but Flash reports it as 0.79999999!)
-		if (_cycle !== 0) if (_cycle === _totalTime / cycleDuration) {
+		if (_cycle != 0) if (_cycle == _totalTime / cycleDuration) {
 		_cycle--; //otherwise when rendered exactly at the end time, it will act as though it is repeating (at the beginning)
 		}
 		_time = _totalTime - (_cycle * cycleDuration);
@@ -968,8 +968,8 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	}
 	}
 	
-	if (prevTime == _time && !force && _cycle === prevCycle) {
-	if (prevTotalTime !== _totalTime) if (_onUpdate != null) if (!suppressEvents) { //so that onUpdate fires even during the repeatDelay - as long as the totalTime changed, we should trigger onUpdate.
+	if (prevTime == _time && !force && _cycle == prevCycle) {
+	if (prevTotalTime != _totalTime) if (_onUpdate != null) if (!suppressEvents) { //so that onUpdate fires even during the repeatDelay - as long as the totalTime changed, we should trigger onUpdate.
 		_onUpdate.apply(vars.onUpdateScope || this, vars.onUpdateParams);
 	}
 	return;
@@ -982,10 +982,10 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	if (_time && !isComplete) {
 		ratio = _ease.getRatio(_time / _duration);
 	} else if (isComplete && _ease._calcEnd) {
-		ratio = _ease.getRatio((_time === 0) ? 0 : 1);
+		ratio = _ease.getRatio((_time == 0) ? 0 : 1);
 	}
 	}
-	if (!_active) if (!_paused && _time !== prevTime && time >= 0) {
+	if (!_active) if (!_paused && _time != prevTime && time >= 0) {
 	_active = true;  //so that if the user renders a tween (as opposed to the timeline rendering it), the timeline is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the tween already finished but the user manually re-renders it as halfway done.
 	}
 	if (prevTotalTime == 0) {
@@ -1020,7 +1020,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	if (time < 0 && _startAt != null && _startTime != 0) {
 		_startAt.render(time, suppressEvents, force); //note: for performance reasons, we tuck this conditional logic inside less traveled areas (most tweens don't have an onUpdate). We'd just have it at the end before the onComplete, but the values should be updated before any onUpdate is called, so we ALSO put it here and then if it's not called, we do so later near the onComplete.
 	}
-	if (!suppressEvents) if (_totalTime !== prevTotalTime || isComplete) {
+	if (!suppressEvents) if (_totalTime != prevTotalTime || isComplete) {
 		_onUpdate.apply(null, vars.onUpdateParams);
 	}
 	}
@@ -1058,7 +1058,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 		_dispatcher.dispatchEvent(new TweenEvent(((callback == "onComplete") ? TweenEvent.COMPLETE : TweenEvent.REVERSE_COMPLETE)));
 		}
 	}
-	if (_duration === 0 && _rawPrevTime === _tinyNum && rawPrevTime !== _tinyNum) { //the onComplete or onReverseComplete could trigger movement of the playhead and for zero-duration tweens (which must discern direction) that land directly back on their start time, we don't want to fire again on the next render. Think of several addPause()'s in a timeline that forces the playhead to a certain spot, but what if it's already paused and another tween is tweening the "time" of the timeline? Each time it moves [forward] past that spot, it would move back, and since suppressEvents is true, it'd reset _rawPrevTime to _tinyNum so that when it begins again, the callback would fire (so ultimately it could bounce back and forth during that tween). Again, this is a very uncommon scenario, but possible nonetheless.
+	if (_duration == 0 && _rawPrevTime == _tinyNum && rawPrevTime != _tinyNum) { //the onComplete or onReverseComplete could trigger movement of the playhead and for zero-duration tweens (which must discern direction) that land directly back on their start time, we don't want to fire again on the next render. Think of several addPause()'s in a timeline that forces the playhead to a certain spot, but what if it's already paused and another tween is tweening the "time" of the timeline? Each time it moves [forward] past that spot, it would move back, and since suppressEvents is true, it'd reset _rawPrevTime to _tinyNum so that when it begins again, the callback would fire (so ultimately it could bounce back and forth during that tween). Again, this is a very uncommon scenario, but possible nonetheless.
 		_rawPrevTime = 0;
 	}
 	}
@@ -1074,7 +1074,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 private function _initDispatcher():Bool {
 	var found:Bool = false, p:String;
 	for (p in _listenerLookup) {
-	if (p in vars) if (vars[p] is Function) {
+	if (p in vars) if (vars[p] is Dynamic) {
 		if (_dispatcher == null) {
 		_dispatcher = new EventDispatcher(this);
 		}
@@ -1106,7 +1106,7 @@ private function _initDispatcher():Bool {
  * @param useWeakReference Determines whether the reference to the listener is strong or weak. A strong reference (the default) prevents your listener from being garbage-collected. A weak reference does not. 
  * @see #removeEventListener()
  **/
-public function addEventListener(type:String, listener:Function, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
+public function addEventListener(type:String, listener:Dynamic, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
 	if (_dispatcher == null) {
 	_dispatcher = new EventDispatcher(this);
 	}
@@ -1125,7 +1125,7 @@ public function addEventListener(type:String, listener:Function, useCapture:Bool
  * @param listener The listener object to remove. 
  * @param useCapture Specifies whether the listener was registered for the capture phase or the target and bubbling phases. If the listener was registered for both the capture phase and the target and bubbling phases, two calls to removeEventListener() are required to remove both, one call with useCapture() set to true, and another call with useCapture() set to false.
  **/
-public function removeEventListener(type:String, listener:Function, useCapture:Bool = false):Void {
+public function removeEventListener(type:String, listener:Dynamic, useCapture:Bool = false):Void {
 	if (_dispatcher) {
 	_dispatcher.removeEventListener(type, listener, useCapture);
 	}
@@ -1184,7 +1184,7 @@ TweenMax.to([mc1, mc2, mc3], 1, {x:100});
  * 
  * @param target Target object (or array of objects) whose properties this tween affects. 
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>TweenMax.to(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>TweenMax.to(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
  * @return TweenMax instance
  * @see #from()
  * @see #fromTo()
@@ -1192,7 +1192,7 @@ TweenMax.to([mc1, mc2, mc3], 1, {x:100});
  * @see com.greensock.TimelineLite#to()
  * @see com.greensock.TimelineLite#staggerTo()
  */
-public static function to(target:Object, duration:Float, vars:Object):TweenMax {
+public static function to(target:Map<String, Int>, duration:Float, vars:Map<String, Int>):TweenMax {
 	return new TweenMax(target, duration, vars);
 }
 
@@ -1236,7 +1236,7 @@ TweenMax.from([mc1, mc2, mc3], 1.5, {alpha:0});
  * 
  * @param target Target object (or array of objects) whose properties this tween affects.  
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
- * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myFunction</code>, do this: <code>TweenMax.from(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+ * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myDynamic</code>, do this: <code>TweenMax.from(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
  * @return TweenMax instance
  * @see #to()
  * @see #fromTo()
@@ -1244,7 +1244,7 @@ TweenMax.from([mc1, mc2, mc3], 1.5, {alpha:0});
  * @see com.greensock.TimelineLite#from()
  * @see com.greensock.TimelineLite#staggerFrom()
  */
-public static function from(target:Object, duration:Float, vars:Object):TweenMax {
+public static function from(target:Map<String, Int>, duration:Float, vars:Map<String, Int>):TweenMax {
 	vars = _prepVars(vars, true);
 	vars.runBackwards = true;
 	return new TweenMax(target, duration, vars);
@@ -1288,7 +1288,7 @@ TweenMax.fromTo([mc1, mc2, mc3], 1, {x:0}, {x:100});
  * @param target Target object (or array of objects) whose properties this tween affects. 
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
  * @param fromVars An object defining the starting value for each property that should be tweened. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200, <code>fromVars</code> would look like this: <code>{x:100, y:200}</code>.
- * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 0 to 100 and <code>mc.y</code> from 0 to 200 and then call <code>myFunction</code>, do this: <code>TweenMax.fromTo(mc, 1, {x:0, y:0}, {x:100, y:200, onComplete:myFunction});</code>
+ * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 0 to 100 and <code>mc.y</code> from 0 to 200 and then call <code>myDynamic</code>, do this: <code>TweenMax.fromTo(mc, 1, {x:0, y:0}, {x:100, y:200, onComplete:myDynamic});</code>
  * @return TweenMax instance
  * @see #to()
  * @see #from()
@@ -1296,7 +1296,7 @@ TweenMax.fromTo([mc1, mc2, mc3], 1, {x:0}, {x:100});
  * @see com.greensock.TimelineLite#fromTo()
  * @see com.greensock.TimelineLite#staggerFromTo()
  */
-public static function fromTo(target:Object, duration:Float, fromVars:Object, toVars:Object):TweenMax {
+public static function fromTo(target:Map<String, Int>, duration:Float, fromVars:Map<String, Int>, toVars:Map<String, Int>):TweenMax {
 	toVars = _prepVars(toVars, false);
 	fromVars = _prepVars(fromVars, false);
 	toVars.startAt = fromVars;
@@ -1337,7 +1337,7 @@ TweenMax.staggerTo(textFields, 1, {y:"+150", ease:CubicIn.ease}, 0.2);
  * 
  * @param targets An array of target objects whose properties should be affected
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is defined in the <code>vars</code> parameter)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> to 100 and <code>y</code> to 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myFunction</code> when they last one has finished, do this: <code>TweenMax.staggerTo([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, myFunction})</code>.
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> to 100 and <code>y</code> to 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myDynamic</code> when they last one has finished, do this: <code>TweenMax.staggerTo([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, myDynamic})</code>.
  * @param stagger Amount of time in seconds (or frames for frames-based tweens) to stagger the start time of each tween. For example, you might want to have 5 objects move down 100 pixels while fading out, and stagger the start times by 0.2 seconds - you could do: <code>TweenMax.staggerTo([mc1, mc2, mc3, mc4, mc5], 1, {y:"+100", alpha:0}, 0.2)</code>.
  * @param onCompleteAll A function to call as soon as the entire sequence of tweens has completed.
  * @param onCompleteAllParams An array of parameters to pass the <code>onCompleteAll</code> method.
@@ -1346,12 +1346,12 @@ TweenMax.staggerTo(textFields, 1, {y:"+150", ease:CubicIn.ease}, 0.2);
  * @see #staggerFromTo()
  * @see com.greensock.TimelineLite#staggerTo()
  */
-public static function staggerTo(targets:Array, duration:Float, vars:Object, stagger:Float=0, onCompleteAll:Function=null, onCompleteAllParams:Array=null):Array {
+public static function staggerTo(targets:Array, duration:Float, vars:Map<String, Int>, stagger:Float=0, onCompleteAll:Dynamic=null, onCompleteAllParams:Array<Dynamic>=null):Array<Dynamic> {
 	vars = _prepVars(vars, false);
 	var a:Array = [],
 	l:Int = targets.length,
 	delay:Float = vars.delay || 0,
-	copy:Object,
+	copy:Map<String, Int>,
 	i:Int,
 	p:String;
 	for (i = 0; i < l; i++) {
@@ -1414,7 +1414,7 @@ TweenMax.staggerFrom(textFields, 1, {y:"+150"}, 0.2);
  * 
  * @param targets An array of target objects whose properties should be affected
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is defined in the <code>vars</code> parameter)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> to 100 and <code>y</code> to 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myFunction</code> when they last one has finished, do this: <code>TweenMax.staggerTo([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, myFunction})</code>.
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> to 100 and <code>y</code> to 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myDynamic</code> when they last one has finished, do this: <code>TweenMax.staggerTo([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, myDynamic})</code>.
  * @param stagger Amount of time in seconds (or frames for frames-based tweens) to stagger the start time of each tween. For example, you might want to have 5 objects move down 100 pixels while fading out, and stagger the start times by 0.2 seconds - you could do: <code>TweenMax.staggerTo([mc1, mc2, mc3, mc4, mc5], 1, {y:"+100", alpha:0}, 0.2)</code>.
  * @param onCompleteAll A function to call as soon as the entire sequence of tweens has completed
  * @param onCompleteAllParams An array of parameters to pass the <code>onCompleteAll</code> method.
@@ -1423,7 +1423,7 @@ TweenMax.staggerFrom(textFields, 1, {y:"+150"}, 0.2);
  * @see #staggerFromTo()
  * @see com.greensock.TimelineLite#staggerFrom()
  */
-public static function staggerFrom(targets:Array, duration:Float, vars:Object, stagger:Float=0, onCompleteAll:Function=null, onCompleteAllParams:Array=null):Array {
+public static function staggerFrom(targets:Array, duration:Float, vars:Map<String, Int>, stagger:Float=0, onCompleteAll:Dynamic=null, onCompleteAllParams:Array<Dynamic>=null):Array<Dynamic> {
 	vars = _prepVars(vars, true);
 	vars.runBackwards = true;
 	if (vars.immediateRender != false) {
@@ -1475,7 +1475,7 @@ TweenMax.staggerFromTo(textFields, 1, {alpha:1}, {alpha:0}, 0.2);
  * @param targets An array of target objects whose properties should be affected
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is defined in the <code>vars</code> parameter)
  * @param fromVars An object defining the starting value for each property that should be tweened. For example, to tween <code>x</code> from 100 and <code>y</code> from 200, <code>fromVars</code> would look like this: <code>{x:100, y:200}</code>.
- * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> from 0 to 100 and <code>y</code> from 0 to 200, staggering the start times by 0.2 seconds and then call <code>myFunction</code> when they all complete, do this: <code>TweenMax.staggerFromTo([mc1, mc2, mc3], 1, {x:0, y:0}, {x:100, y:200}, 0.2, myFunction});</code>
+ * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> from 0 to 100 and <code>y</code> from 0 to 200, staggering the start times by 0.2 seconds and then call <code>myDynamic</code> when they all complete, do this: <code>TweenMax.staggerFromTo([mc1, mc2, mc3], 1, {x:0, y:0}, {x:100, y:200}, 0.2, myDynamic});</code>
  * @param stagger Amount of time in seconds (or frames if the timeline is frames-based) to stagger the start time of each tween. For example, you might want to have 5 objects move down 100 pixels while fading out, and stagger the start times by 0.2 seconds - you could do: <code>TweenMax.staggerTo([mc1, mc2, mc3, mc4, mc5], 1, {y:"+100", alpha:0}, 0.2)</code>.
  * @param onCompleteAll A function to call as soon as the entire sequence of tweens has completed
  * @param onCompleteAllParams An array of parameters to pass the <code>onCompleteAll</code> method.
@@ -1484,7 +1484,7 @@ TweenMax.staggerFromTo(textFields, 1, {alpha:1}, {alpha:0}, 0.2);
  * @see #staggerFrom()
  * @see com.greensock.TimelineLite#staggerFromTo()
  */
-public static function staggerFromTo(targets:Array, duration:Float, fromVars:Object, toVars:Object, stagger:Float=0, onCompleteAll:Function=null, onCompleteAllParams:Array=null):Array {
+public static function staggerFromTo(targets:Array, duration:Float, fromVars:Map<String, Int>, toVars:Map<String, Int>, stagger:Float=0, onCompleteAll:Dynamic=null, onCompleteAllParams:Array<Dynamic>=null):Array<Dynamic> {
 	toVars = _prepVars(toVars, false);
 	fromVars = _prepVars(fromVars, false);
 	toVars.startAt = fromVars;
@@ -1493,13 +1493,13 @@ public static function staggerFromTo(targets:Array, duration:Float, fromVars:Obj
 }
 
 /** @private [deprecated] - included here as an alias for backward compatibility **/
-public static var allTo:Function = staggerTo;
+public static var allTo:Dynamic = staggerTo;
 
 /** @private [deprecated] - included here as an alias for backward compatibility **/
-public static var allFrom:Function = staggerFrom;
+public static var allFrom:Dynamic = staggerFrom;
 
 /** @private [deprecated] - included here as an alias for backward compatibility **/
-public static var allFromTo:Function = staggerFromTo; 
+public static var allFromTo:Dynamic = staggerFromTo; 
 
 /**
  * Provides a simple way to call a function after a set amount of time (or frames). You can
@@ -1514,21 +1514,21 @@ public static var allFromTo:Function = staggerFromTo;
  * <p><code>TweenMax.delayedCall(delay, callback, params, scope, useFrames)</code> <em>[JavaScript and AS2 only]</em></p>
  * 
  * <listing version="3.0">
-//calls myFunction after 1 second and passes 2 parameters:
-TweenMax.delayedCall(1, myFunction, ["param1", 2]);
+//calls myDynamic after 1 second and passes 2 parameters:
+TweenMax.delayedCall(1, myDynamic, ["param1", 2]);
  
-function myFunction(param1, param2) {
+function myDynamic(param1, param2) {
 //do stuff
 }
 </listing>
  * 
  * @param delay Delay in seconds (or frames if <code>useFrames</code> is <code>true</code>) before the function should be called
- * @param callback Function to call
+ * @param callback Dynamic to call
  * @param params An Array of parameters to pass the function (optional).
  * @param useFrames If the delay should be measured in frames instead of seconds, set <code>useFrames</code> to <code>true</code> (default is <code>false</code>)
  * @return TweenMax instance
  */
-public static function delayedCall(delay:Float, callback:Function, params:Array=null, useFrames:Bool=false):TweenMax {
+public static function delayedCall(delay:Float, callback:Dynamic, params:Array<Dynamic>=null, useFrames:Bool=false):TweenMax {
 	return new TweenMax(callback, 0, {delay:delay, onComplete:callback, onCompleteParams:params, onReverseComplete:callback, onReverseCompleteParams:params, immediateRender:false, useFrames:useFrames, overwrite:0});
 }
 
@@ -1551,7 +1551,7 @@ TweenMax.set([obj1, obj2, obj3], {x:100, y:50, alpha:0});
  * @param vars An object defining the value for each property that should be set. For example, to set <code>mc.x</code> to 100 and <code>mc.y</code> to 200, do this: <code>TweenMax.set(mc, {x:100, y:200});</code>
  * @return A TweenMax instance (with a duration of 0) which can optionally be inserted into a TimelineLite/Max instance (although it's typically more concise to just use the timeline's <code>set()</code> method).
  */
-public static function set(target:Object, vars:Object):TweenMax {
+public static function set(target:Map<String, Int>, vars:Map<String, Int>):TweenMax {
 	return new TweenMax(target, 0, vars);
 }
 
@@ -1562,7 +1562,7 @@ public static function set(target:Object, vars:Object):TweenMax {
  * @param target Target object whose tweens you're checking
  * @return Boolean value indicating whether or not any active tweens were found
  */
-public static function isTweening(target:Object):Bool {
+public static function isTweening(target:Map<String, Int>):Bool {
 	return (TweenLite.getTweensOf(target, true).length > 0);
 }
 
@@ -1577,13 +1577,13 @@ public static function isTweening(target:Object):Bool {
  * @return Array of tweens/timelines
  * @see com.greensock.TimelineLite#exportRoot()
  */
-public static function getAllTweens(includeTimelines:Bool=false):Array {
+public static function getAllTweens(includeTimelines:Bool=false):Array<Dynamic> {
 	var a:Array = _getChildrenOf(_rootTimeline, includeTimelines);
 	return a.concat( _getChildrenOf(_rootFramesTimeline, includeTimelines) );
 }
 
 /** @private **/
-private static function _getChildrenOf(timeline:SimpleTimeline, includeTimelines:Bool):Array {
+private static function _getChildrenOf(timeline:SimpleTimeline, includeTimelines:Bool):Array<Dynamic> {
 	if (timeline == null) {
 	return [];
 	}
@@ -1666,7 +1666,7 @@ public static function killChildTweensOf(parent:DisplayObjectContainer, complete
 }
 
 /** @private **/
-private static function _containsChildOf(parent:DisplayObjectContainer, obj:Object):Bool {
+private static function _containsChildOf(parent:DisplayObjectContainer, obj:Map<String, Int>):Bool {
 	var i:Int, curParent:DisplayObjectContainer;
 	if (obj is Array) {
 	i = obj.length;
@@ -1785,8 +1785,8 @@ myTween.progress( 0.25 ); //sets progress to one quarter finished
  * @see #time()
  * @see #totalTime()
  **/
-override public function progress(value:Float=NaN, suppressEvents:Bool=false):Dynamic {
-	return (!arguments.length) ? _time / duration() : totalTime( duration() * ((_yoyo && (_cycle & 1) !== 0) ? 1 - value : value) + (_cycle * (_duration + _repeatDelay)), suppressEvents);
+override public function progress(value:Float=0, suppressEvents:Bool=false):Dynamic {
+	return (!arguments.length) ? _time / duration() : totalTime( duration() * ((_yoyo && (_cycle & 1) != 0) ? 1 - value : value) + (_cycle * (_duration + _repeatDelay)), suppressEvents);
 }
 
 /** 
@@ -1818,7 +1818,7 @@ myTween.totalProgress( 0.25 ); //sets total progress to one quarter finished
  * @see #time()
  * @see #totalTime()
  **/
-override public function totalProgress(value:Float=NaN, suppressEvents:Bool=false):Dynamic {
+override public function totalProgress(value:Float=0, suppressEvents:Bool=false):Dynamic {
 	return (!arguments.length) ? _totalTime / totalDuration() : totalTime( totalDuration() * value, suppressEvents);
 }
 
@@ -1854,7 +1854,7 @@ myTween.time(2); //sets time, jumping to new value just like seek().
  * @see #pause()
  * @see #totalTime()
  **/
-override public function time(value:Float=NaN, suppressEvents:Bool=false):Dynamic {
+override public function time(value:Float=0, suppressEvents:Bool=false):Dynamic {
 	if (!arguments.length) {
 	return _time;
 	}
@@ -1864,7 +1864,7 @@ override public function time(value:Float=NaN, suppressEvents:Bool=false):Dynami
 	if (value > _duration) {
 	value = _duration;
 	}
-	if (_yoyo && (_cycle & 1) !== 0) {
+	if (_yoyo && (_cycle & 1) != 0) {
 	value = (_duration - value) + (_cycle * (_duration + _repeatDelay));
 	} else if (_repeat != 0) {
 	value += _cycle * (_duration + _repeatDelay);
@@ -1873,7 +1873,7 @@ override public function time(value:Float=NaN, suppressEvents:Bool=false):Dynami
 }
 
 /** @inheritDoc **/
-override public function duration(value:Float=NaN):Dynamic {
+override public function duration(value:Float=0):Dynamic {
 	if (!arguments.length) {
 	return this._duration; //don't set _dirty = false because there could be repeats that haven't been factored into the _totalDuration yet. Otherwise, if you create a repeated TweenMax and then immediately check its duration(), it would cache the value and the totalDuration would not be correct, thus repeats wouldn't take effect.
 	}
@@ -1902,7 +1902,7 @@ myTween.totalDuration(10); //sets the total duration
  * @see #duration()
  * @see #timeScale()
  **/
-override public function totalDuration(value:Float=NaN):Dynamic {
+override public function totalDuration(value:Float=0):Dynamic {
 	if (!arguments.length) {
 	if (_dirty) {
 		//instead of Infinity, we use 999999999999 so that we can accommodate reverses
@@ -1976,7 +1976,7 @@ myTween.repeatDelay(2); //sets repeatDelay to 2
  * @see #repeat()
  * @see #yoyo()
  **/
-public function repeatDelay(value:Float=NaN):Dynamic {
+public function repeatDelay(value:Float=0):Dynamic {
 	if (!arguments.length) {
 	return _repeatDelay;
 	}
@@ -2022,7 +2022,7 @@ public function yoyo(value:Bool=false):Dynamic {
 }
 
 /** @private [deprecated] Multiplier describing the speed of the root timelines where 1 is normal speed, 0.5 is half-speed, 2 is double speed, etc. The lowest globalTimeScale possible is 0.0001. Deprecated in favor of <code>TimelineLite.exportRoot()</code> **/
-public static function globalTimeScale(value:Float=NaN):Float {
+public static function globalTimeScale(value:Float=0):Float {
 	if (!arguments.length) {
 	return (_rootTimeline == null) ? 1 : _rootTimeline._timeScale;
 	}

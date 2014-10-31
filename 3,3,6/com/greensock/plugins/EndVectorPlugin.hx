@@ -10,7 +10,7 @@ import com.greensock.TweenLite;
 
 import __AS3__.vec.Vector; //due to a bug in Flex Builder, this must be included in order to correctly compile a swc
 /**
- * [AS3 only] Tweens numbers in a Vector.&lt;Number&gt;. Remember, Vectors require that you publish to <strong>Flash Player 10</strong> or later.
+ * [AS3 only] Tweens numbers in a Vector.&lt;Float&gt;. Remember, Vectors require that you publish to <strong>Flash Player 10</strong> or later.
  * 
  * <p><b>USAGE:</b></p>
  * <listing version="3.0">
@@ -19,11 +19,11 @@ import com.greensock.plugins.TweenPlugin;
 import com.greensock.plugins.EndVectorPlugin; 
 TweenPlugin.activate([EndVectorPlugin]); //activation is permanent in the SWF, so this line only needs to be run once.
 
-var v:Vector.&lt;Number&gt; = new Vector.&lt;Number&gt;();
+var v:Vector.&lt;Float&gt; = new Vector.&lt;Float&gt;();
 v[0] = 0;
 v[1] = 1;
 v[2] = 2;
-var end:Vector.&lt;Number&gt; = new Vector.&lt;Number&gt;();
+var end:Vector.&lt;Float&gt; = new Vector.&lt;Float&gt;();
 end[0] = 100;
 end[1] = 250;
 end[2] = 500;
@@ -56,7 +56,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	if (!(target is Vector<Float>) || !(value is Vector<Float>)) {
 	return false;
 	}
@@ -75,7 +75,7 @@ public function _init(start:Vector<Float>, end:Vector<Float>):Void {
 	}
 }
 
-override public function _roundProps(lookup:Object, value:Bool=true):Void {
+override public function _roundProps(lookup:Map<String, Int>, value:Bool=true):Void {
 	if ("endVector" in lookup) {
 	_round = value;
 	}

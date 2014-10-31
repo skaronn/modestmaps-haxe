@@ -43,8 +43,8 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
-	if (!(target is MovieClip) || isNaN(value)) {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
+	if (!(target is MovieClip) || is0(value)) {
 	return false;
 	}
 	_target = target as MovieClip;

@@ -15,7 +15,7 @@ import com.greensock.core.PropTween;
  * 
  * <listing version="3.0">
 //obj.rotation starts at 45
-var obj:Object = {rotation:45}; 
+var obj:Map<String, Int> = {rotation:45}; 
  
 //tweens to the 270 position in a clockwise direction
 TweenLite.to(obj, 1, {directionalRotation:"270_cw"}); 
@@ -61,7 +61,7 @@ class DirectionalRotationPlugin extends TweenPlugin {
 /** @private **/
 public static inline var API:Float = 2; //If the API/Framework for plugins changes in the future, this number helps determine compatibility
 /** @private **/
-private var finals:Object;
+private var finals:Map<String, Int>;
 
 /** @private **/
 public function new() {
@@ -70,29 +70,29 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
-	if (typeof(value) !== "object") {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
+	if (Type.typeof(value) != "object") {
 	value = {rotation:value};
 	}
 	finals = {};
-	var cap:Float = (value.useRadians === true) ? Math.PI * 2 : 360,
-	p:String, v:Object, start:Float, end:Float, dif:Float, split:Array, type:String;
+	var cap:Float = (value.useRadians == true) ? Math.PI * 2 : 360,
+	p:String, v:Map<String, Int>, start:Float, end:Float, dif:Float, split:Array, type:String;
 	for (p in value) {
-	if (p !== "useRadians") {
+	if (p != "useRadians") {
 		split = (value[p] + "").split("_");
 		v = split[0];
 		type = split[1];
-		start = parseFloat( (typeof(target[p]) !== "function") ? target[p] : target[ ((p.indexOf("set") || typeof(target["get" + p.substr(3)]) !== "function") ? p : "get" + p.substr(3)) ]() );
-		end = finals[p] = (typeof(v) === "string" && v.charAt(1) === "=") ? start + parseInt(v.charAt(0) + "1", 10) * Number(v.substr(2)) : Float(v) || 0;
+		start = parseFloat( (Type.typeof(target[p]) != "function") ? target[p] : target[ ((p.indexOf("set") || typeof(target["get" + p.substr(3)]) != "function") ? p : "get" + p.substr(3)) ]() );
+		end = finals[p] = (Type.typeof(v) == "string" && v.charAt(1) == "=") ? start + parseInt(v.charAt(0) + "1", 10) * Float(v.substr(2)) : Float(v) || 0;
 		dif = end - start;
-		if (type === "short") {
+		if (type == "short") {
 		dif = dif % cap;
-		if (dif !== dif % (cap / 2)) {
+		if (dif != dif % (cap / 2)) {
 			dif = (dif < 0) ? dif + cap : dif - cap;
 		}
-		} else if (type === "cw" && dif < 0) {
+		} else if (type == "cw" && dif < 0) {
 		dif = ((dif + cap * 9999999999) % cap) - ((dif / cap) | 0) * cap;
-		} else if (type === "ccw" && dif > 0) {
+		} else if (type == "ccw" && dif > 0) {
 		dif = ((dif - cap * 9999999999) % cap) - ((dif / cap) | 0) * cap;
 		}
 		_addTween(target, p, start, start + dif, p);
@@ -105,7 +105,7 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 /** @private **/
 override public function setRatio(v:Float):Void {
 	var pt:PropTween;
-	if (v !== 1) {
+	if (v != 1) {
 	super.setRatio(v);
 	} else {
 	pt = _firstPT;

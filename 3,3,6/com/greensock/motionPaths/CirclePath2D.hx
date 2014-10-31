@@ -119,7 +119,7 @@ override public function update(event:Event=null):Void {
 }
 
 /** @inheritDoc **/
-override public function renderObjectAt(target:Object, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
+override public function renderObjectAt(target:Map<String, Int>, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
 	var angle:Float = progress * Math.PI * 2;
 	var m:Matrix = this.transform.matrix;
 	var px:Float = Math.cos(angle) * _radius;
@@ -191,7 +191,7 @@ public function progressToAngle(progress:Float, useRadians:Bool=false):Float {
  * @param direction The direction in which to travel - options are <code>Direction.CLOCKWISE</code> ("clockwise"), <code>Direction.COUNTER_CLOCKWISE</code> ("counterClockwise"), or <code>Direction.SHORTEST</code> ("shortest").
  * @param extraRevolutions If instead of going directly to the endAngle, you want the target to travel one or more extra revolutions around the path before going to the endAngle, define that number of revolutions here.
  * @param useRadians If you prefer to define the angle in radians instead of degrees, set this to true (it is false by default)
- * @return A String representing the amount of change in the <code>progress</code> value (feel free to cast it as a Number if you want, but it returns a String because TweenLite/Max/Nano recognize Strings as relative values.
+ * @return A String representing the amount of change in the <code>progress</code> value (feel free to cast it as a Float if you want, but it returns a String because TweenLite/Max/Nano recognize Strings as relative values.
  */
 public function followerTween(follower:Dynamic, endAngle:Float, direction:String="clockwise", extraRevolutions:UInt=0, useRadians:Bool=false):String {
 	var revolution:Float = useRadians ? Math.PI * 2 : 360;
@@ -207,7 +207,7 @@ public function followerTween(follower:Dynamic, endAngle:Float, direction:String
  * @param direction The direction in which to travel - options are <code>Direction.CLOCKWISE</code> ("clockwise"), <code>Direction.COUNTER_CLOCKWISE</code> ("counterClockwise"), or <code>Direction.SHORTEST</code> ("shortest").
  * @param extraRevolutions If instead of going directly to the endAngle, you want the target to travel one or more extra revolutions around the path before going to the endAngle, define that number of revolutions here.
  * @param useRadians If you prefer to define the angle in radians instead of degrees, set this to true (it is false by default)
- * @return A Number representing the amount of change in the <code>progress</code> value.
+ * @return A Float representing the amount of change in the <code>progress</code> value.
  */
 public function anglesToProgressChange(startAngle:Float, endAngle:Float, direction:String="clockwise", extraRevolutions:UInt=0, useRadians:Bool=false):Float {
 	var revolution:Float = useRadians ? Math.PI * 2 : 360;

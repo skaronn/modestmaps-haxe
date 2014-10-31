@@ -14,7 +14,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class SineOut extends Ease {
+@:final class SineOut extends Ease {
 
 /** @private **/
 private static inline var _HALF_PI:Float = Math.PI / 2;

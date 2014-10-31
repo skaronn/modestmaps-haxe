@@ -14,54 +14,54 @@ package com.greensock.core;
  * 
  * @author Jack Doyle, jack@greensock.com
  */	
-final class PropTween {
-/** Target object **/
-public var t:Object;
-/** Name of the property that is being tweened on the target (for plugins, this is always "setRatio", but the actual property name of the orignal target is stored in the "n" property of the PropTween instance) **/
-public var p:String;
-/** Starting value  **/
-public var s:Float;
-/** Amount to change (basically, the difference between the starting value and ending value) **/
-public var c:Float;
-/** Indicates whether or not the target's property that is being tweened is a function (true) or not (false). If it's a function, it must be set with t.p(value) rather than t.p = value. **/
-public var f:Bool;
-/** Priority in the rendering queue. The lower the value the later it will be tweened. The default value is 0, but some plugins must be rendered later (or earlier). **/
-public var pr:Int;
-/** Indicates whether or not the target is a TweenPlugin. **/
-public var pg:Bool;
-/** The name associated with the original target property. Typically this is the same as PropTween.p but for TweenPlugin tweens it is often different. For example an autoAlpha tween would create a PropTween of the AutoAlphaPlugin instance and p would be "setRatio", but n would be "autoAlpha". **/
-public var n:String;
-/** If <code>true</code>, the property should be rounded. **/
-public var r:Bool;
-/** Next PropTween in the linked list **/
-public var _next:PropTween;
-/** Previous PropTween in the linked list **/
-public var _prev:PropTween;
+@:final class PropTween {
+	/** Target object **/
+	public var t:Map<String, Int>;
+	/** Name of the property that is being tweened on the target (for plugins, this is always "setRatio", but the actual property name of the orignal target is stored in the "n" property of the PropTween instance) **/
+	public var p:String;
+	/** Starting value  **/
+	public var s:Float;
+	/** Amount to change (basically, the difference between the starting value and ending value) **/
+	public var c:Float;
+	/** Indicates whether or not the target's property that is being tweened is a function (true) or not (false). If it's a function, it must be set with t.p(value) rather than t.p = value. **/
+	public var f:Bool;
+	/** Priority in the rendering queue. The lower the value the later it will be tweened. The default value is 0, but some plugins must be rendered later (or earlier). **/
+	public var pr:Int;
+	/** Indicates whether or not the target is a TweenPlugin. **/
+	public var pg:Bool;
+	/** The name associated with the original target property. Typically this is the same as PropTween.p but for TweenPlugin tweens it is often different. For example an autoAlpha tween would create a PropTween of the AutoAlphaPlugin instance and p would be "setRatio", but n would be "autoAlpha". **/
+	public var n:String;
+	/** If <code>true</code>, the property should be rounded. **/
+	public var r:Bool;
+	/** Next PropTween in the linked list **/
+	public var _next:PropTween;
+	/** Previous PropTween in the linked list **/
+	public var _prev:PropTween;
 
-/**
- * Constructor
- * 
- * @param target Target object
- * @param property Name of the property that is being tweened on the target (for plugins, this is always "setRatio", but the actual property name of the orignal target is stored in the "n" property of the PropTween instance)
- * @param start Starting value
- * @param change Amount to change (basically, the difference between the starting value and ending value)
- * @param name The name associated with the original target property. Typically this is the same as PropTween.p but for TweenPlugin tweens it is often different. For example an autoAlpha tween would create a PropTween of the AutoAlphaPlugin instance and p would be "setRatio", but n would be "autoAlpha".
- * @param isPlugin Indicates whether or not the target is a TweenPlugin.
- * @param nextNode Next PropTween in the linked list
- * @param priority Priority in the rendering queue. The lower the value the later it will be tweened. The default value is 0, but some plugins must be rendered later (or earlier).
- */
-public function new(target:Object, property:String, start:Float, change:Float, name:String, isPlugin:Bool, next:PropTween=null, priority:Int=0) {
-	this.t = target;
-	this.p = property;
-	this.s = start;
-	this.c = change;
-	this.n = name;
-	this.f = (target[property] is Function);
-	this.pg = isPlugin;
-	if (next) {
-	next._prev = this;
-	this._next = next;
+	/**
+	 * Constructor
+	 * 
+	 * @param target Target object
+	 * @param property Name of the property that is being tweened on the target (for plugins, this is always "setRatio", but the actual property name of the orignal target is stored in the "n" property of the PropTween instance)
+	 * @param start Starting value
+	 * @param change Amount to change (basically, the difference between the starting value and ending value)
+	 * @param name The name associated with the original target property. Typically this is the same as PropTween.p but for TweenPlugin tweens it is often different. For example an autoAlpha tween would create a PropTween of the AutoAlphaPlugin instance and p would be "setRatio", but n would be "autoAlpha".
+	 * @param isPlugin Indicates whether or not the target is a TweenPlugin.
+	 * @param nextNode Next PropTween in the linked list
+	 * @param priority Priority in the rendering queue. The lower the value the later it will be tweened. The default value is 0, but some plugins must be rendered later (or earlier).
+	 */
+	public function new(target:Map<String, Int>, property:String, start:Float, change:Float, name:String, isPlugin:Bool, next:PropTween=null, priority:Int=0) {
+		this.t = target;
+		this.p = property;
+		this.s = start;
+		this.c = change;
+		this.n = name;
+		this.f = Std.is(target[property], Dynamic);
+		this.pg = isPlugin;
+		if (next != null) {
+			next._prev = this;
+			this._next = next;
+		}
+		this.pr = priority;
 	}
-	this.pr = priority;
-}
 }

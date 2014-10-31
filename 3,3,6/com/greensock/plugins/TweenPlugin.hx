@@ -104,7 +104,7 @@ public var _propName:String;
  * be different. For example, a bezier tween's propName is "bezier" but it can manage many different properties 
  * like x, y, etc. depending on what's passed in to the tween.
  */
-public var _overwriteProps:Array;
+public var _overwriteProps:Array<Dynamic>;
 
 /** @private Priority level in the render queue **/
 public var _priority:Int = 0;
@@ -135,7 +135,7 @@ public function new(props:String="", priority:Int=0) {
  * @param tween The TweenLite or TweenMax instance using this plugin.
  * @return If the initialization failed, it returns false. Otherwise true. It may fail if, for example, the plugin requires that the target be a DisplayObject or has some other unmet criteria in which case the plugin is skipped and a normal property tween is used inside TweenLite/Max
  */
-public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	return false;
 }
 
@@ -154,9 +154,9 @@ public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool
  * @param round If <code>true</code>, the property should be rounded to the closest integer whenever updated 
  * @return If a PropTween is created (which means a tween was required between the provided start and end values), that PropTween is returned. Otherwise, null is returned. 
  */
-private function _addTween(target:Object, propName:String, start:Float, end:Dynamic, overwriteProp:String=null, round:Bool=false):PropTween {
-	var c:Float = (end == null) ? 0 : (typeof(end) === "number" || end.charAt(1) !== "=") ? Number(end) - start : Int(end.charAt(0) + "1") * Number(end.substr(2));
-	if (c !== 0) {
+private function _addTween(target:Map<String, Int>, propName:String, start:Float, end:Dynamic, overwriteProp:String=null, round:Bool=false):PropTween {
+	var c:Float = (end == null) ? 0 : (Type.typeof(end) == "number" || end.charAt(1) != "=") ? Float(end) - start : Int(end.charAt(0) + "1") * Float(end.substr(2));
+	if (c != 0) {
 	_firstPT = new PropTween(target, propName, start, c, overwriteProp || propName, false, _firstPT);
 	_firstPT.r = round;
 	return _firstPT;
@@ -209,7 +209,7 @@ public function setRatio(v:Float):Void {
  * 
  * @param props A lookup object with property names that should be rounded.
  */
-public function _roundProps(lookup:Object, value:Bool=true):Void {
+public function _roundProps(lookup:Map<String, Int>, value:Bool=true):Void {
 	var pt:PropTween = _firstPT;
 	while (pt) {
 	if ((_propName in lookup) || (pt.n != null && pt.n.split(_propName + "_").join("") in lookup)) { //some properties that are very plugin-specific add a prefix named after the _propName plus an underscore, so we need to ignore that extra stuff here.
@@ -229,7 +229,7 @@ public function _roundProps(lookup:Object, value:Bool=true):Void {
  * 
  * @param lookup An object containing properties that should be overwritten. We don't pass in an Array because looking up properties on the object is usually faster because it gives us random access. So to overwrite the "x" and "y" properties, a {x:true, y:true} object would be passed in. 
  */
-public function _kill(lookup:Object):Bool {
+public function _kill(lookup:Map<String, Int>):Bool {
 	if (_propName in lookup) {
 	_overwriteProps = [];
 	} else {

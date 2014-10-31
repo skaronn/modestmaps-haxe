@@ -14,7 +14,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class ElasticInOut extends Ease {
+@:final class ElasticInOut extends Ease {
 
 /** @private **/
 private static inline var _2PI:Float = Math.PI * 2;

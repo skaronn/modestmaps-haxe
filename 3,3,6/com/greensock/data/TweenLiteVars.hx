@@ -25,21 +25,21 @@ import flash.geom.Point;
  * <p>Note that each method returns the TweenLiteVars object, so you can reduce the lines of code by method chaining (see example below).</p>
  *	
  * <p><strong>Without TweenLiteVars:</strong></p>
- * <p><code>TweenLite.to(mc, 1, {x:300, y:100, tint:0xFF0000, onComplete:myFunction, onCompleteParams:[mc]})</code></p>
+ * <p><code>TweenLite.to(mc, 1, {x:300, y:100, tint:0xFF0000, onComplete:myDynamic, onCompleteParams:[mc]})</code></p>
  * 
  * <p><strong>With TweenLiteVars</strong></p>
- * <p><code>TweenLite.to(mc, 1, new TweenLiteVars().move(300, 100).tint(0xFF0000).onComplete(myFunction, [mc]));</code></p>
+ * <p><code>TweenLite.to(mc, 1, new TweenLiteVars().move(300, 100).tint(0xFF0000).onComplete(myDynamic, [mc]));</code></p>
  *
  * <p>You can use the prop() method to set individual generic properties (like "myCustomProperty" or "rotationY") or you can 
  * pass a generic Object into the constructor to make it a bit more concise, like this:</p>
  * 
- * <p><code>TweenLite.to(mc, 1, new TweenLiteVars({myCustomProperty:300, rotationY:100}).tint(0xFF0000).onComplete(myFunction, [mc]));</code></p>
+ * <p><code>TweenLite.to(mc, 1, new TweenLiteVars({myCustomProperty:300, rotationY:100}).tint(0xFF0000).onComplete(myDynamic, [mc]));</code></p>
  * 
  * <p><strong>NOTES:</strong></p>
  * <ul>
  *	<li> To get the generic vars object that TweenLiteVars builds internally, simply access its "vars" property.
  * 	 In fact, if you want maximum backwards compatibility, you can tack ".vars" onto the end of your chain like this:<code>
- * 	 TweenLite.to(mc, 1, new TweenLiteVars({x:300, y:100}).tint(0xFF0000).onComplete(myFunction, [mc]).vars);</code></li>
+ * 	 TweenLite.to(mc, 1, new TweenLiteVars({x:300, y:100}).tint(0xFF0000).onComplete(myDynamic, [mc]).vars);</code></li>
  *	<li> This class adds about 6kb to your published SWF (not including TweenLite or any plugins).</li>
  *	<li> Using TweenLiteVars is completely optional. If you prefer the shorter generic object synatax, feel
  *	  	 free to use it. The purpose of this utility is simply to enable code hinting and to allow for strict datatyping.</li>
@@ -54,13 +54,13 @@ class TweenLiteVars {
 public static inline var version:Float = 12.0;
 
 /** @private **/
-private var _vars:Object;
+private var _vars:Map<String, Int>;
 
 /**
  * Constructor
  * @param vars A generic Object containing properties that you'd like added (copied) to this TweenLiteVars instance. This is particularly useful for generic properties that don't have a corresponding method for setting the values (although you can use it for properties that do have corresponding methods too). For example, to tween the x and y properties of a DisplayObject, <code>new TweenLiteVars({x:300, y:0})</code>
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	_vars = {};
 	if (vars != null) {
 	for (var p:String in vars) {
@@ -72,7 +72,7 @@ public function new(vars:Object=null) {
 /** @private **/
 private function _set(property:String, value:Dynamic, requirePlugin:Bool=false):TweenLiteVars {
 	if (value == null) {
-	delete _vars[property]; //in case it was previously set
+	untyped __delete__(_vars[property]; //in case it was previously set
 	} else {
 	_vars[property] = value;
 	}
@@ -115,7 +115,7 @@ public function delay(delay:Float):TweenLiteVars {
  * @param ease An ease (i.e. <code>com.greensock.easing.ElasticOut.ease</code>) The default is <code>QuadOut.ease</code>.
  * @param easeParams An Array of extra parameter values to feed the easing equation (beyond the standard 4). This can be useful with easing equations like Elastic that accept extra parameters like the amplitude and period. Most easing equations, however, don't accept extra parameters so you won't need to pass in any easeParams.
  **/
-public function ease(ease:Dynamic, easeParams:Array=null):TweenLiteVars {
+public function ease(ease:Dynamic, easeParams:Array<Dynamic>=null):TweenLiteVars {
 	_set("easeParams", easeParams);
 	return _set("ease", ease);
 }
@@ -139,7 +139,7 @@ public function immediateRender(value:Bool):TweenLiteVars {
  * @param func A function that should be called when the tween has completed. 
  * @param params An Array of parameters to pass the onComplete function
  **/
-public function onComplete(func:Function, params:Array=null):TweenLiteVars {
+public function onComplete(func:Dynamic, params:Array<Dynamic>=null):TweenLiteVars {
 	_set("onCompleteParams", params);
 	return _set("onComplete", func);
 }
@@ -150,7 +150,7 @@ public function onComplete(func:Function, params:Array=null):TweenLiteVars {
  * @param func A function that should be called after the tween has completed and rendered its final state to the stage (waits for the next ENTER_FRAME event is dispatched after the tween finishes).
  * @param params An Array of parameters to pass the onCompleteRender function
  **/
-public function onCompleteRender(func:Function, params:Array=null):TweenLiteVars {
+public function onCompleteRender(func:Dynamic, params:Array<Dynamic>=null):TweenLiteVars {
 	_set("onCompleteRenderParams", params);
 	return _set("onCompleteRender", func, true);
 }
@@ -162,7 +162,7 @@ public function onCompleteRender(func:Function, params:Array=null):TweenLiteVars
  * @param func A function that should be called when the tween begins.
  * @param params An Array of parameters to pass the onStart function.
  **/
-public function onStart(func:Function, params:Array=null):TweenLiteVars {
+public function onStart(func:Dynamic, params:Array<Dynamic>=null):TweenLiteVars {
 	_set("onStartParams", params);
 	return _set("onStart", func);
 }
@@ -173,7 +173,7 @@ public function onStart(func:Function, params:Array=null):TweenLiteVars {
  * @param func A function to call whenever the tweening values are updated. 
  * @param params An Array of parameters to pass the onUpdate function
  **/
-public function onUpdate(func:Function, params:Array=null):TweenLiteVars {
+public function onUpdate(func:Dynamic, params:Array<Dynamic>=null):TweenLiteVars {
 	_set("onUpdateParams", params);
 	return _set("onUpdate", func);
 }
@@ -184,7 +184,7 @@ public function onUpdate(func:Function, params:Array=null):TweenLiteVars {
  * @param func A function that should be called when the tween has reached its starting point again after having been reversed.
  * @param params An Array of parameters to pass the onReverseComplete function
  **/
-public function onReverseComplete(func:Function, params:Array=null):TweenLiteVars {
+public function onReverseComplete(func:Dynamic, params:Array<Dynamic>=null):TweenLiteVars {
 	_set("onReverseCompleteParams", params);
 	return _set("onReverseComplete", func);
 }
@@ -330,7 +330,7 @@ public function autoAlpha(alpha:Float):TweenLiteVars {
  * @return The TweenLiteVars instance
  */
 public function bevelFilter(distance:Float=4, angle:Float=45, highlightColor:UInt=0xFFFFFF, highlightAlpha:Float=0.5, shadowColor:UInt=0x000000, shadowAlpha:Float=0.5, blurX:Float=4, blurY:Float=4, strength:Float=1, quality:Int=2, remove:Bool=false, addFilter:Bool=false, index:Int=-1):TweenLiteVars {
-	var filter:Object = {distance:distance, angle:angle, highlightColor:highlightColor, highlightAlpha:highlightAlpha, shadowColor:shadowColor, shadowAlpha:shadowAlpha, blurX:blurX, blurY:blurY, strength:strength, quality:quality, addFilter:addFilter, remove:remove};
+	var filter:Map<String, Int> = {distance:distance, angle:angle, highlightColor:highlightColor, highlightAlpha:highlightAlpha, shadowColor:shadowColor, shadowAlpha:shadowAlpha, blurX:blurX, blurY:blurY, strength:strength, quality:quality, addFilter:addFilter, remove:remove};
 	if (index > -1) {
 	filter.index = index;
 	}
@@ -387,7 +387,7 @@ public function bezierThrough(values:Array):TweenLiteVars {
  * @return The TweenLiteVars instance
  */
 public function blurFilter(blurX:Float, blurY:Float, quality:Int=2, remove:Bool=false, addFilter:Bool=false, index:Int=-1):TweenLiteVars {
-	var filter:Object = {blurX:blurX, blurY:blurY, quality:quality, addFilter:addFilter, remove:remove};
+	var filter:Map<String, Int> = {blurX:blurX, blurY:blurY, quality:quality, addFilter:addFilter, remove:remove};
 	if (index > -1) {
 	filter.index = index;
 	}
@@ -434,7 +434,7 @@ public function circlePath2D(path:MotionPath, startAngle:Float, endAngle:Float, 
 import flash.display.DisplayObject; 
 import flash.filters.ColorMatrixFilter;
 
-function getColorMatrix(mc:DisplayObject):Array {
+function getColorMatrix(mc:DisplayObject):Array<Dynamic> {
 var f:Array = mc.filters, i:UInt; 
 for (i = 0; i &lt; f.length; i++) { 
 if (f[i] is ColorMatrixFilter) {
@@ -471,7 +471,7 @@ TweenLite.to(mc, 1, new TweenLiteVars().colorMatrixFilter(0xFF0000));
  * @return The TweenLiteVars instance
  */
 public function colorMatrixFilter(colorize:UInt=0xFFFFFF, amount:Float=1, saturation:Float=1, contrast:Float=1, brightness:Float=1, hue:Float=0, threshold:Float=-1, remove:Bool=false, addFilter:Bool=false, index:Int=-1):TweenLiteVars {
-	var filter:Object = {saturation:saturation, contrast:contrast, brightness:brightness, hue:hue, addFilter:addFilter, remove:remove};
+	var filter:Map<String, Int> = {saturation:saturation, contrast:contrast, brightness:brightness, hue:hue, addFilter:addFilter, remove:remove};
 	if (colorize != 0xFFFFFF) {
 	filter.colorize = colorize;
 	filter.amount = amount;
@@ -503,11 +503,11 @@ public function colorMatrixFilter(colorize:UInt=0xFFFFFF, amount:Float=1, satura
  * @param alphaOffset A number from -255 to 255 that is added to the alpha transparency channel value after it has been multiplied by the alphaMultiplier value.
  * @return The TweenLiteVars instance
  */
-public function colorTransform(tint:Float=NaN, tintAmount:Float=NaN, exposure:Float=NaN, brightness:Float=NaN, redMultiplier:Float=NaN, greenMultiplier:Float=NaN, blueMultiplier:Float=NaN, alphaMultiplier:Float=NaN, redOffset:Float=NaN, greenOffset:Float=NaN, blueOffset:Float=NaN, alphaOffset:Float=NaN):TweenLiteVars {
-	var values:Object = {tint:tint, tintAmount:isNaN(tint) ? NaN : tintAmount, exposure:exposure, brightness:brightness, redMultiplier:redMultiplier, greenMultiplier:greenMultiplier, blueMultiplier:blueMultiplier, alphaMultiplier:alphaMultiplier, redOffset:redOffset, greenOffset:greenOffset, blueOffset:blueOffset, alphaOffset:alphaOffset};
+public function colorTransform(tint:Float=0, tintAmount:Float=0, exposure:Float=0, brightness:Float=0, redMultiplier:Float=0, greenMultiplier:Float=0, blueMultiplier:Float=0, alphaMultiplier:Float=0, redOffset:Float=0, greenOffset:Float=0, blueOffset:Float=0, alphaOffset:Float=0):TweenLiteVars {
+	var values:Map<String, Int> = {tint:tint, tintAmount:is0(tint) ? 0 : tintAmount, exposure:exposure, brightness:brightness, redMultiplier:redMultiplier, greenMultiplier:greenMultiplier, blueMultiplier:blueMultiplier, alphaMultiplier:alphaMultiplier, redOffset:redOffset, greenOffset:greenOffset, blueOffset:blueOffset, alphaOffset:alphaOffset};
 	for (var p:String in values) {
-	if (isNaN(values[p])) {
-		delete values[p];
+	if (is0(values[p])) {
+		untyped __delete__(values[p];
 	}
 	}
 	return _set("colorTransform", values, true);
@@ -533,7 +533,7 @@ public function colorTransform(tint:Float=NaN, tintAmount:Float=NaN, exposure:Fl
  * @return The TweenLiteVars instance
  */
 public function dropShadowFilter(distance:Float=4, blurX:Float=4, blurY:Float=4, alpha:Float=1, angle:Float=45, color:UInt=0x000000, strength:Float=2, inner:Bool=false, knockout:Bool=false, hideObject:Bool=false, quality:UInt=2, remove:Bool=false, addFilter:Bool=false, index:Int=-1):TweenLiteVars {
-	var filter:Object = {distance:distance, blurX:blurX, blurY:blurY, alpha:alpha, angle:angle, color:color, strength:strength, inner:inner, knockout:knockout, hideObject:hideObject, quality:quality, addFilter:addFilter, remove:remove};
+	var filter:Map<String, Int> = {distance:distance, blurX:blurX, blurY:blurY, alpha:alpha, angle:angle, color:color, strength:strength, inner:inner, knockout:knockout, hideObject:hideObject, quality:quality, addFilter:addFilter, remove:remove};
 	if (index > -1) {
 	filter.index = index;
 	}
@@ -565,8 +565,8 @@ return this.mouseY;
  * parameter like so:</p>
  * 
  * <listing version="3.0">
-TweenLite.to(mc, 3, new TweenLiteVars().dynamicProps({x:myFunction, y:myFunction}, {x:[mc2, "x"], y:[mc2, "y"]})); 
-function myFunction(object:MovieClip, propName:String):Float {
+TweenLite.to(mc, 3, new TweenLiteVars().dynamicProps({x:myDynamic, y:myDynamic}, {x:[mc2, "x"], y:[mc2, "y"]})); 
+function myDynamic(object:MovieClip, propName:String):Float {
 return object[propName];
 }
 </listing>
@@ -596,7 +596,7 @@ return this.mouseY;
  * @param params An object containing properties that are named corresponding to the properties of the target that should be affected, and the value should be an array of parameters that are passed to the corresponding function, like <code>{x:[mc, "param2"], y:[mc, "param2"]}</code>
  * @return self
  **/
-public function dynamicProps(props:Object, params:Object=null):TweenLiteVars {
+public function dynamicProps(props:Map<String, Int>, params:Map<String, Int>=null):TweenLiteVars {
 	if (params != null) {
 	props.params = params;
 	}
@@ -677,7 +677,7 @@ public function frameLabel(label:String):TweenLiteVars {
  * @return The TweenLiteVars instance
  */
 public function glowFilter(blurX:Float=10, blurY:Float=10, color:UInt=0xFFFFFF, alpha:Float=1, strength:Float=2, inner:Bool=false, knockout:Bool=false, quality:UInt=2, remove:Bool=false, addFilter:Bool=false, index:Int=-1):TweenLiteVars {
-	var filter:Object = {blurX:blurX, blurY:blurY, color:color, alpha:alpha, strength:strength, inner:inner, knockout:knockout, quality:quality, addFilter:addFilter, remove:remove};
+	var filter:Map<String, Int> = {blurX:blurX, blurY:blurY, color:color, alpha:alpha, strength:strength, inner:inner, knockout:knockout, quality:quality, addFilter:addFilter, remove:remove};
 	if (index > -1) {
 	filter.index = index;
 	}
@@ -711,7 +711,7 @@ TweenLite.to(myObject, 2, new TweenLiteVars().hexColors({myHexColor:0xFF0000}));
 </listing>
  * <p>Or if you just want to tween a color and apply it somewhere on every frame, you could do:</p>
  * <listing version="3.0">
-var myColor:Object = {hex:0xFF0000};
+var myColor:Map<String, Int> = {hex:0xFF0000};
 TweenLite.to(myColor, 2, new TweenLiteVars().hexColors({hex:0x0000FF}).onUpdate(applyColor));
 function applyColor():Void {
 mc.graphics.clear();
@@ -722,7 +722,7 @@ mc.graphics.endFill();
 </listing>
  * 
  **/
-public function hexColors(values:Object):TweenLiteVars {
+public function hexColors(values:Map<String, Int>):TweenLiteVars {
 	return _set("hexColors", values, true);
 }
 
@@ -770,7 +770,7 @@ public function motionBlur(strength:Float=1, fastMode:Bool=false, quality:Int=2,
  * 	<li>Position property 1 (typically "x")</li>
  * 	<li>Position property 2 (typically "y")</li>
  * 	<li>Rotational property (typically "rotation")</li>
- * 	<li>Number of degrees to add (optional - makes it easy to orient your MovieClip/Sprite properly)</li>
+ * 	<li>Float of degrees to add (optional - makes it easy to orient your MovieClip/Sprite properly)</li>
  * </ol>
  * 
  * <p>The orientToBezier property should be an Array containing one Array for each set of these values. 
@@ -782,7 +782,7 @@ public function motionBlur(strength:Float=1, fastMode:Bool=false, quality:Int=2,
  * 
  * <p>To use the default value (<code>[["x", "y", "rotation", 0]]</code>), you can simply leave the values parameter as null. </p>
  */
-public function orientToBezier(values:Object=null):TweenLiteVars {
+public function orientToBezier(values:Map<String, Int>=null):TweenLiteVars {
 	return _set("orientToBezier", (values == null) ? true : values, false);
 }
 
@@ -868,12 +868,12 @@ TweenLite.to(mc, 2, new TweenLiteVars().physicsProps({
  * 
  * @see #physics2D()
  **/
-public function physicsProps(values:Object):TweenLiteVars {
+public function physicsProps(values:Map<String, Int>):TweenLiteVars {
 	return _set("physicsProps", values, true);
 }
 
 /** An object with properties that correspond to the quaternion properties of the target object. For example, if your my3DObject has "orientation" and "childOrientation" properties that contain quaternions, and you'd like to tween them both, you'd do: {orientation:myTargetQuaternion1, childOrientation:myTargetQuaternion2}. Quaternions must have the following properties: x, y, z, and w. **/
-public function quaternions(values:Object):TweenLiteVars {
+public function quaternions(values:Map<String, Int>):TweenLiteVars {
 	return _set("quaternions", values, true);
 }
 
@@ -908,7 +908,7 @@ TweenPlugin.activate([ScrollRectPlugin]); //activation is permanent in the SWF, 
 TweenLite.to(mc, 1, new TweenLiteVars().scrollRect({x:50, y:300, width:100, height:100})); 
 </listing>
  **/
-public function scrollRect(props:Object):TweenLiteVars {
+public function scrollRect(props:Map<String, Int>):TweenLiteVars {
 	return _set("scrollRect", props, true);
 }
 
@@ -928,12 +928,12 @@ TweenPlugin.activate([SetSizePlugin]); //activation is permanent in the SWF, so 
 TweenLite.to(myComponent, 1, new TweenLiteVars().setSize(200, 30)); 
 </listing>
  **/
-public function setSize(width:Float=NaN, height:Float=NaN):TweenLiteVars {
-	var values:Object = {};
-	if (!isNaN(width)) {
+public function setSize(width:Float=0, height:Float=0):TweenLiteVars {
+	var values:Map<String, Int> = {};
+	if (!is0(width)) {
 	values.width = width;
 	}
-	if (!isNaN(height)) {
+	if (!is0(height)) {
 	values.height = height;
 	}
 	return _set("setSize", values, true);
@@ -965,8 +965,8 @@ TweenLite.to(mc, 1, new TweenLiteVars().shortRotation({rotation:-170}));
 TweenLite.to(mc, 1, new TweenLiteVars().shortRotation({rotationX:-170, rotationY:35, rotationZ:10})); 
 </listing>
  **/
-public function shortRotation(values:Object):TweenLiteVars {
-	if (typeof(values) == "number") {
+public function shortRotation(values:Map<String, Int>):TweenLiteVars {
+	if (Type.typeof(values) == "number") {
 	values = {rotation:values};
 	}
 	return _set("shortRotation", values, true);
@@ -1063,7 +1063,7 @@ public function stageQuality(stage:Stage, during:String="medium", after:String=n
  * You must have a valid membership to use this class without violating the terms of use. Visit 
  * <a href="http://www.greensock.com/club/">http://www.greensock.com/club/</a> to sign up or get more details.</p>
  **/
-public function throwProps(props:Object):TweenLiteVars {
+public function throwProps(props:Map<String, Int>):TweenLiteVars {
 	return _set("throwProps", props, true);
 }
 
@@ -1109,7 +1109,7 @@ TweenLite.to(mc, 1, new TweenLiteVars().transformAroundCenter({scale:1.5, rotati
 </listing> 
  * @see #transformAroundPoint()
  **/
-public function transformAroundCenter(props:Object):TweenLiteVars {
+public function transformAroundCenter(props:Map<String, Int>):TweenLiteVars {
 	return _set("transformAroundCenter", props, true);
 }
 
@@ -1144,7 +1144,7 @@ TweenLite.to(mc, 1, new TweenLiteVars().transformAroundPoint(new Point(100, 300)
 </listing>
  * @see #transformAroundCenter()
  **/
-public function transformAroundPoint(point:Point, props:Object):TweenLiteVars {
+public function transformAroundPoint(point:Point, props:Map<String, Int>):TweenLiteVars {
 	props.point = point;
 	return _set("transformAroundPoint", props, true);
 }
@@ -1174,7 +1174,7 @@ TweenLite.to(mc, 1, new TweenLiteVars().transformMatrix({x:50, y:300, scaleX:2, 
 TweenLite.to(mc, 1, new TweenLiteVars().transformMatrix({tx:50, ty:300, a:2, d:2})); 
 </listing>
  **/
-public function transformMatrix(properties:Object):TweenLiteVars {
+public function transformMatrix(properties:Map<String, Int>):TweenLiteVars {
 	return _set("transformMatrix", properties, true);
 }
 
@@ -1192,8 +1192,8 @@ public function volume(volume:Float):TweenLiteVars {
 //---- GETTERS / SETTERS -------------------------------------------------------------------------------------------------------------
 
 /** The generic object populated by all of the method calls in the TweenLiteVars instance. This is the raw data that gets passed to the tween. **/
-public var vars(getVars, null):Object;
- 	private function getVars():Object {
+public var vars(getVars, null):Map<String, Int>;
+ 	private function getVars():Map<String, Int> {
 	return _vars;
 }
 

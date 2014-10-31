@@ -25,7 +25,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Cubic {
+@:final class Cubic {
 
 /** Eases out with a power of 2 **/
 public static var easeOut:Ease = new Ease(null,null,1,2);

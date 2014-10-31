@@ -44,7 +44,7 @@ TweenLite.to(follower, 2, {progress:circle.followerTween(follower, 200, Directio
  */	
 class PathFollower {
 /** The target object associated with the PathFollower (like a Sprite, MovieClip, Point, etc.). The object must have x and y properties. **/
-public var target:Object;
+public var target:Map<String, Int>;
 
 /** @private **/
 public var cachedProgress:Float;
@@ -69,7 +69,7 @@ public var rotationOffset:Float;
  * @param autoRotate When <code>autoRotate</code> is <code>true</code>, the follower will automatically be rotated so that it is oriented to the angle of the path that it is following. To offset this value (like to always add 90 degrees for example), use the <code>rotationOffset</code> property.
  * @param rotationOffset When <code>autoRotate</code> is <code>true</code>, this value will always be added to the resulting <code>rotation</code> of the target.
  */
-public function new(target:Object, autoRotate:Bool=false, rotationOffset:Float=0) {
+public function new(target:Map<String, Int>, autoRotate:Bool=false, rotationOffset:Float=0) {
 	this.target = target;
 	this.autoRotate = autoRotate;
 	this.rotationOffset = rotationOffset;

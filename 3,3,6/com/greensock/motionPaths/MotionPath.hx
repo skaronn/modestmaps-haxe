@@ -195,7 +195,7 @@ public function removeAllFollowers():Void {
  * @param autoRotate When <code>autoRotate</code> is <code>true</code>, the target will automatically be rotated so that it is oriented to the angle of the path. To offset this value (like to always add 90 degrees for example), use the <code>rotationOffset</code> property.
  * @param rotationOffset When <code>autoRotate</code> is <code>true</code>, this value will always be added to the resulting <code>rotation</code> of the target. For example, to always add 90 degrees to the autoRotation, <code>rotationOffset</code> would be 90.
  */
-public function distribute(targets:Array=null, min:Float=0, max:Float=1, autoRotate:Bool=false, rotationOffset:Float=0):Void {
+public function distribute(targets:Array<Dynamic>=null, min:Float=0, max:Float=1, autoRotate:Bool=false, rotationOffset:Float=0):Void {
 	if (targets == null) {
 	targets = this.followers;
 	}
@@ -230,7 +230,7 @@ private function _normalize(num:Float):Float {
  * @param target The target whose PathFollower instance you want returned.
  * @return PathFollower instance
  */
-public function getFollower(target:Object):PathFollower {
+public function getFollower(target:Map<String, Int>):PathFollower {
 	if (target is PathFollower) {
 	return target as PathFollower;
 	}
@@ -271,7 +271,7 @@ public function update(event:Event=null):Void {
  * @param autoRotate When <code>autoRotate</code> is <code>true</code>, the target will automatically be rotated so that it is oriented to the angle of the path. To offset this value (like to always add 90 degrees for example), use the <code>rotationOffset</code> property.
  * @param rotationOffset When <code>autoRotate</code> is <code>true</code>, this value will always be added to the resulting <code>rotation</code> of the target.
  */
-public function renderObjectAt(target:Object, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
+public function renderObjectAt(target:Map<String, Int>, progress:Float, autoRotate:Bool=false, rotationOffset:Float=0):Void {
 	
 }
 
@@ -506,8 +506,8 @@ private function setProgress(value:Float):Void {
 }
 
 /** Returns an array of all PathFollower instances associated with this path **/
-public var followers(getFollowers, setFollowers):Array;
- 	private function getFollowers():Array {
+public var followers(getFollowers, setFollowers):Array<Dynamic>;
+ 	private function getFollowers():Array<Dynamic> {
 	var a:Array = [];
 	var cnt:UInt = 0;
 	var f:PathFollower = _rootFollower;
@@ -519,8 +519,8 @@ public var followers(getFollowers, setFollowers):Array;
 }
 
 /** Returns an array of all target instances associated with the PathFollowers of this path **/
-public var targets(getTargets, setTargets):Array;
- 	private function getTargets():Array {
+public var targets(getTargets, setTargets):Array<Dynamic>;
+ 	private function getTargets():Array<Dynamic> {
 	var a:Array = [];
 	var cnt:UInt = 0;
 	var f:PathFollower = _rootFollower;

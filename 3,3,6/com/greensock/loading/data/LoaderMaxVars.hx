@@ -13,7 +13,7 @@ import flash.display.DisplayObject;
  * <p>There are 2 primary benefits of using a LoaderMaxVars instance to define your LoaderMax variables:</p>
  *  <ol>
  *	<li> In most code editors, code hinting will be activated which helps remind you which special properties are available in LoaderMax</li>
- *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Function is expected).</li>
+ *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Dynamic is expected).</li>
  *  </ol>
  * 
  * <p>The down side, of course, is that the code is more verbose and the LoaderMaxVars class adds slightly more kb to your swf.</p>
@@ -45,13 +45,13 @@ class LoaderMaxVars {
 public static inline var version:Float = 1.1;
 
 /** @private **/
-private var _vars:Object;
+private var _vars:Map<String, Int>;
 
 /**
  * Constructor 
  * @param vars A generic Object containing properties that you'd like to add to this LoaderMaxVars instance.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	_vars = {};
 	if (vars != null) {
 	for (var p:String in vars) {
@@ -63,7 +63,7 @@ public function new(vars:Object=null) {
 /** @private **/
 private function _set(property:String, value:Dynamic):LoaderMaxVars {
 	if (value == null) {
-	delete _vars[property]; //in case it was previously set
+	untyped __delete__(_vars[property]; //in case it was previously set
 	} else {
 	_vars[property] = value;
 	}
@@ -106,42 +106,42 @@ public function name(value:String):LoaderMaxVars {
 }
 
 /** A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onCancel(value:Function):LoaderMaxVars {
+public function onCancel(value:Dynamic):LoaderMaxVars {
 	return _set("onCancel", value);
 }
 
 /** A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onComplete(value:Function):LoaderMaxVars {
+public function onComplete(value:Dynamic):LoaderMaxVars {
 	return _set("onComplete", value);
 }
 
 /** A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR or SECURITY_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onError(value:Function):LoaderMaxVars {
+public function onError(value:Dynamic):LoaderMaxVars {
 	return _set("onError", value);
 }
 
 /** A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onFail(value:Function):LoaderMaxVars {
+public function onFail(value:Dynamic):LoaderMaxVars {
 	return _set("onFail", value);
 }
 
 /** A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can determine the httpStatus code using the LoaderEvent's <code>target.httpStatus</code> (LoaderItems keep track of their <code>httpStatus</code> when possible, although certain environments prevent Flash from getting httpStatus information).**/
-public function onHTTPStatus(value:Function):LoaderMaxVars {
+public function onHTTPStatus(value:Dynamic):LoaderMaxVars {
 	return _set("onHTTPStatus", value);
 }
 
 /** A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onIOError(value:Function):LoaderMaxVars {
+public function onIOError(value:Dynamic):LoaderMaxVars {
 	return _set("onIOError", value);
 }
 
 /** A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).**/
-public function onOpen(value:Function):LoaderMaxVars {
+public function onOpen(value:Dynamic):LoaderMaxVars {
 	return _set("onOpen", value);
 }
 
 /** A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.**/
-public function onProgress(value:Function):LoaderMaxVars {
+public function onProgress(value:Dynamic):LoaderMaxVars {
 	return _set("onProgress", value);
 }
 
@@ -179,32 +179,32 @@ public function loaders(value:Array):LoaderMaxVars {
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_OPEN</code> events which are dispatched each time one of the loader's children (or any descendant) begins loading. Make sure your onChildOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildOpen(value:Function):LoaderMaxVars {
+public function onChildOpen(value:Dynamic):LoaderMaxVars {
 	return _set("onChildOpen", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_PROGRESS</code> events which are dispatched each time one of the loader's children (or any descendant) dispatches a <code>PROGRESS</code> event. To listen for changes in the LoaderMax's overall progress, use the <code>onProgress</code> special property instead. You can use the LoaderEvent's <code>target.progress</code> to get the child loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>. The LoaderEvent's <code>currentTarget</code> refers to the LoaderMax, so you can check its overall progress with the LoaderEvent's <code>currentTarget.progress</code>. Make sure your onChildProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildProgress(value:Function):LoaderMaxVars {
+public function onChildProgress(value:Dynamic):LoaderMaxVars {
 	return _set("onChildProgress", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_COMPLETE</code> events which are dispatched each time one of the loader's children (or any descendant) finishes loading successfully. Make sure your onChildComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildComplete(value:Function):LoaderMaxVars {
+public function onChildComplete(value:Dynamic):LoaderMaxVars {
 	return _set("onChildComplete", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_CANCEL</code> events which are dispatched each time loading is aborted on one of the loader's children (or any descendant) due to either an error or because another loader was prioritized in the queue or because <code>cancel()</code> was manually called on the child loader. Make sure your onChildCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildCancel(value:Function):LoaderMaxVars {
+public function onChildCancel(value:Dynamic):LoaderMaxVars {
 	return _set("onChildCancel", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_FAIL</code> events which are dispatched each time one of the loader's children (or any descendant) fails (and its <code>status</code> chances to <code>LoaderStatus.FAILED</code>). Make sure your onChildFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildFail(value:Function):LoaderMaxVars {
+public function onChildFail(value:Dynamic):LoaderMaxVars {
 	return _set("onChildFail", value);
 }
 
 /** A handler function for <code>LoaderEvent.SCRIPT_ACCESS_DENIED</code> events which are dispatched when one of the LoaderMax's children (or any descendant) is loaded from another domain and no crossdomain.xml is in place to grant full script access for things like smoothing or BitmapData manipulation. Make sure your function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).**/
-public function onScriptAccessDenied(value:Function):LoaderMaxVars {
+public function onScriptAccessDenied(value:Dynamic):LoaderMaxVars {
 	return _set("onScriptAccessDenied", value);
 }
 
@@ -212,8 +212,8 @@ public function onScriptAccessDenied(value:Function):LoaderMaxVars {
 //---- GETTERS / SETTERS -----------------------------------------------------------------
 
 /** The generic Object populated by all of the method calls in the LoaderMaxVars instance. This is the raw data that gets passed to the loader. **/
-public var vars(getVars, null):Object;
- 	private function getVars():Object {
+public var vars(getVars, null):Map<String, Int>;
+ 	private function getVars():Map<String, Int> {
 	return _vars;
 }
 

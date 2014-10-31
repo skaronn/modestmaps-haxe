@@ -19,7 +19,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Back {
+@:final class Back {
 
 /** Eases out with an overshoot. **/
 public static var easeOut:BackOut = new BackOut();

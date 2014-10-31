@@ -81,7 +81,7 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 	  
  * 	<li> Add <code>onComplete, onStart, onUpdate,</code> and/or <code>onReverseComplete</code> 
  * 		callbacks using the constructor's <code>vars</code> object like
- * 		<code>var tl = new TimelineLite({onComplete:myFunction});</code></li>
+ * 		<code>var tl = new TimelineLite({onComplete:myDynamic});</code></li>
  * 
  * 	<li> Kill the tweens of a particular object inside the timeline with <code>kill(null, target)</code> 
  * 		or get the tweens of an object with <code>getTweensOf()</code> or get all the tweens/timelines 
@@ -107,10 +107,10 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 
  * <p><strong>SPECIAL PROPERTIES:</strong></p>
  * <p>You can optionally use the constructor's <code>vars</code> parameter to define any of
- * the special properties below (syntax example: <code>new TimelineLite({onComplete:myFunction, delay:2});</code></p>
+ * the special properties below (syntax example: <code>new TimelineLite({onComplete:myDynamic, delay:2});</code></p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the timeline should begin.</li>
  * 
  *  <li><strong> paused </strong>:<em> Boolean</em> -
@@ -119,12 +119,12 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		 then populate it later (after one or more frames elapse), it is typically best to set 
  * 		 <code>paused:true</code> and then <code>play()</code> after you populate it.</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>new TimelineLite({onComplete:myFunction, onCompleteParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineLite({onComplete:myDynamic, onCompleteParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onCompleteParams:["{self}", "param2"]</code></li>
  * 	
@@ -160,7 +160,7 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		initially placed into the timeline through the <code>tweens</code> special property of 
  * 		the <code>vars</code> object.</li>
  * 					
- * 	<li><strong> stagger </strong>:<em> Number</em> -
+ * 	<li><strong> stagger </strong>:<em> Float</em> -
  * 		 Only used in conjunction with the <code>tweens</code> special property when multiple 
  * 		 tweens are	to be added immediately. It staggers the tweens by a set amount of time 
  * 		 in seconds (or in frames if <code>useFrames</code> is true). For example, if the 
@@ -170,28 +170,28 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 		 there would be 0.5 seconds added between each tween. This value simply gets 
  * 		 passed to the <code>add()</code> method. Default is 0.</li>
  * 
- *  <li><strong> onStart </strong>:<em> Function</em> -
+ *  <li><strong> onStart </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline begins (when its <code>time</code>
  * 		 changes from 0 to some other value which can happen more than once if the 
  * 		 timeline is restarted multiple times).</li>
  * 	
  * 	<li><strong> onStartParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onStart</code> function. For example, 
- * 		 <code>new TimelineLite({onStart:myFunction, onStartParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineLite({onStart:myDynamic, onStartParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onStartParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the timeline updates  
  * 		 (on every frame while the timeline is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>new TimelineLite({onUpdate:myFunction, onUpdateParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineLite({onUpdate:myDynamic, onUpdateParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onUpdateParams:["{self}", "param2"]</code></li>
  * 	
- * 	<li><strong> onReverseComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onReverseComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has reached its beginning again from the 
  * 		 reverse direction. For example, if <code>reverse()</code> is called, the timeline will move
  * 		 back towards its beginning and when its <code>time</code> reaches 0, <code>onReverseComplete</code>
@@ -200,7 +200,7 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 	
  * 	<li><strong> onReverseCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onReverseComplete</code> function. For example, 
- * 		 <code>new TimelineLite({onReverseComplete:myFunction, onReverseCompleteParams:["param1", "param2"]});</code>
+ * 		 <code>new TimelineLite({onReverseComplete:myDynamic, onReverseCompleteParams:["param1", "param2"]});</code>
  * 		 To self-reference the timeline instance itself in one of the parameters, use <code>"{self}"</code>,
  * 		 like: <code>onReverseCompleteParams:["{self}", "param2"]</code></li>
  * 
@@ -240,8 +240,8 @@ tl.to(mc, 1, {x:100}).to(mc, 1, {y:50}).to(mc, 1, {alpha:0});
  * 	</ul>
  * 
  * <strong>Sample code:</strong><listing version="3.0">
-//create the timeline with an onComplete callback that calls myFunction() when the timeline completes
-var tl = new TimelineLite({onComplete:myFunction});
+//create the timeline with an onComplete callback that calls myDynamic() when the timeline completes
+var tl = new TimelineLite({onComplete:myDynamic});
 
 //add a tween
 tl.add( new TweenLite(mc, 1, {x:200, y:100}) );
@@ -307,17 +307,17 @@ class TimelineLite extends SimpleTimeline {
 public static inline var version:String = "12.1.5";
 
 /** @private **/
-private var _labels:Object;
+private var _labels:Map<String, Int>;
 
 /**
  * Constructor.
  * 
  * <p><strong>SPECIAL PROPERTIES</strong></p>
  * <p>The following special properties may be passed in via the constructor's vars parameter, like
- * <code>new TimelineLite({paused:true, onComplete:myFunction})</code></p>
+ * <code>new TimelineLite({paused:true, onComplete:myDynamic})</code></p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the timeline should begin.</li>
  * 
  *  <li><strong> paused </strong>:<em> Boolean</em> -
@@ -326,12 +326,12 @@ private var _labels:Object;
  * 		 then populate it later (after one or more frames elapse), it is typically best to set 
  * 		 <code>paused:true</code> and then <code>play()</code> after you populate it.</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>new TimelineLite({onComplete:myFunction, onCompleteParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineLite({onComplete:myDynamic, onCompleteParams:["param1", "param2"]});</code></li>
  * 	
  * 	<li><strong> useFrames </strong>:<em> Boolean</em> -
  * 		 If <code>useFrames</code> is <code>true</code>, the timelines's timing will be 
@@ -365,7 +365,7 @@ private var _labels:Object;
  * 		initially placed into the timeline through the <code>tweens</code> special property of 
  * 		the <code>vars</code> object.</li>
  * 					
- * 	<li><strong> stagger </strong>:<em> Number</em> -
+ * 	<li><strong> stagger </strong>:<em> Float</em> -
  * 		 Only used in conjunction with the <code>tweens</code> special property when multiple 
  * 		 tweens are	to be inserted immediately. It staggers the tweens by a set amount of time 
  * 		 in seconds (or in frames if <code>useFrames</code> is true). For example, if the 
@@ -375,24 +375,24 @@ private var _labels:Object;
  * 		 there would be 0.5 seconds added between each tween. This value simply gets 
  * 		 passed to the <code>add()</code> method. Default is 0.</li>
  * 
- *  <li><strong> onStart </strong>:<em> Function</em> -
+ *  <li><strong> onStart </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline begins (when its <code>time</code>
  * 		 changes from 0 to some other value which can happen more than once if the 
  * 		 timeline is restarted multiple times).</li>
  * 	
  * 	<li><strong> onStartParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onStart</code> function. For example, 
- * 		 <code>new TimelineLite({onStart:myFunction, onStartParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineLite({onStart:myDynamic, onStartParams:["param1", "param2"]});</code></li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the timeline updates  
  * 		 (on every frame while the timeline is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>new TimelineLite({onUpdate:myFunction, onUpdateParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineLite({onUpdate:myDynamic, onUpdateParams:["param1", "param2"]});</code></li>
  * 	
- * 	<li><strong> onReverseComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onReverseComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the timeline has reached its beginning again from the 
  * 		 reverse direction. For example, if <code>reverse()</code> is called, the timeline will move
  * 		 back towards its beginning and when its <code>time</code> reaches 0, <code>onReverseComplete</code>
@@ -401,7 +401,7 @@ private var _labels:Object;
  * 	
  * 	<li><strong> onReverseCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onReverseComplete</code> function. For example, 
- * 		 <code>new TimelineLite({onReverseComplete:myFunction, onReverseCompleteParams:["param1", "param2"]});</code></li>
+ * 		 <code>new TimelineLite({onReverseComplete:myDynamic, onReverseCompleteParams:["param1", "param2"]});</code></li>
  * 
  * <li><strong> autoRemoveChildren </strong>:<em> Boolean</em> -
  * 		If <code>autoRemoveChildren</code> is set to <code>true</code>, as soon as child 
@@ -440,17 +440,17 @@ private var _labels:Object;
  * 
  * @param vars optionally pass in special properties like <code>onComplete, onCompleteParams, onUpdate, onUpdateParams, onStart, onStartParams, tweens, align, stagger, delay, useFrames,</code> and/or <code>autoRemoveChildren</code>.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	super(vars);
 	_labels = {};
 	autoRemoveChildren = (this.vars.autoRemoveChildren == true);
 	smoothChildTiming = (this.vars.smoothChildTiming == true);
 	_sortChildren = true;
 	_onUpdate = this.vars.onUpdate;
-	var val:Object, p:String;
+	var val:Map<String, Int>, p:String;
 	for (p in this.vars) {
 	val = this.vars[p];
-	if (val is Array) if (val.join("").indexOf("{self}") !== -1) {
+	if (val is Array) if (val.join("").indexOf("{self}") != -1) {
 		this.vars[p] = _swapSelfInParams(val as Array);
 	}
 	}
@@ -477,14 +477,14 @@ myTimeline.to(mc, 1, {x:100, alpha:0.5});
  * sequences very quickly:</p>
  * 
  * <listing version="3.0">
-//create a timeline that calls myFunction() when it completes
-var tl:TimelineLite = new TimelineLite({onComplete:myFunction});
+//create a timeline that calls myDynamic() when it completes
+var tl:TimelineLite = new TimelineLite({onComplete:myDynamic});
 
 //now we'll use chaining, but break each step onto a different line for readability...
 tl.to(mc, 1, {x:100})	//tween mc.x to 100
   .to(mc, 1, {y:50}, "-=0.25")	//then tween mc.y to 50, starting the tween 0.25 seconds before the previous one ends
   .set(mc, {alpha:0})	//then set mc.alpha to 0.5 immediately
-  .call(otherFunction)	//then call otherFunction()
+  .call(otherDynamic)	//then call otherDynamic()
   .staggerTo([mc1, mc2, mc3], 1.5, {rotation:45}, 0.25); //finally tween the rotation of mc1, mc2, and mc3 to 45 and stagger the start times by 0.25 seconds
 </listing>
  * <p>If you don't want to append the tween and would rather have precise control
@@ -514,7 +514,7 @@ tl.to(mc, 1, {x:100}, "myLabel+=2");  //places it 2 seconds after "myLabel"
  * 
  * @param target Target object (or array of objects) whose properties the tween affects 
  * @param duration Duration in seconds (or frames if the timeline is frames-based)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>myTimeline.to(mc, 1, {x:100, y:200, onComplete:myFunction})</code>.
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>myTimeline.to(mc, 1, {x:100, y:200, onComplete:myDynamic})</code>.
  * @param position Controls the placement of the tween in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the tween 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the tween inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the tween 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the tween there which can be quite convenient.
  * @return self (makes chaining easier)
  * @see #from()
@@ -522,7 +522,7 @@ tl.to(mc, 1, {x:100}, "myLabel+=2");  //places it 2 seconds after "myLabel"
  * @see #add()
  * @see #remove()
  */
-public function to(target:Object, duration:Float, vars:Object, position:Dynamic="+=0"):Dynamic {
+public function to(target:Map<String, Int>, duration:Float, vars:Map<String, Int>, position:Dynamic="+=0"):Dynamic {
 	return duration ? add( new TweenLite(target, duration, vars), position) : this.set(target, vars, position);
 }
 
@@ -541,14 +541,14 @@ myTimeline.from(mc, 1, {x:100, alpha:0.5});
  * sequences very quickly:</p>
  * 
  * <listing version="3.0">
-//create a timeline that calls myFunction() when it completes
-var tl:TimelineLite = new TimelineLite({onComplete:myFunction});
+//create a timeline that calls myDynamic() when it completes
+var tl:TimelineLite = new TimelineLite({onComplete:myDynamic});
 
 //now we'll use chaining, but break each step onto a different line for readability...
 tl.from(mc, 1, {x:-100})	//tween mc.x from -100
   .to(mc, 1, {y:50})	//then tween mc.y to 50
   .set(mc, {alpha:0})	//then set mc.alpha to 0.5 immediately
-  .call(otherFunction)	//then call otherFunction()
+  .call(otherDynamic)	//then call otherDynamic()
   .staggerTo([mc1, mc2, mc3], 1.5, {rotation:45}, 0.25); //finally tween the rotation of mc1, mc2, and mc3 to 45 and stagger the start times by 0.25 seconds
 </listing>
  * <p>If you don't want to append the tween and would rather have precise control
@@ -584,7 +584,7 @@ tl.from(mc, 1, {x:100}, "myLabel+=2");  //places it 2 seconds after "myLabel"
  * 
  * @param target Target object (or array of objects) whose properties the tween affects 
  * @param duration Duration in seconds (or frames if the timeline is frames-based)
- * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myFunction</code>, do this: <code>myTimeline.from(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+ * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myDynamic</code>, do this: <code>myTimeline.from(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
  * @param position Controls the placement of the tween in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the tween 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the tween inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the tween 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the tween there which can be quite convenient.
  * @return self (makes chaining easier)
  * @see #to()
@@ -592,7 +592,7 @@ tl.from(mc, 1, {x:100}, "myLabel+=2");  //places it 2 seconds after "myLabel"
  * @see #add()
  * @see #remove()
  */
-public function from(target:Object, duration:Float, vars:Object, position:Dynamic="+=0"):Dynamic {
+public function from(target:Map<String, Int>, duration:Float, vars:Map<String, Int>, position:Dynamic="+=0"):Dynamic {
 	return add( TweenLite.from(target, duration, vars), position);
 }
 
@@ -611,14 +611,14 @@ myTimeline.fromTo(mc, 1, {x:0, alpha:1}, {x:100, alpha:0.5});
  * sequences very quickly:</p>
  * 
  * <listing version="3.0">
-//create a timeline that calls myFunction() when it completes
-var tl:TimelineLite = new TimelineLite({onComplete:myFunction});
+//create a timeline that calls myDynamic() when it completes
+var tl:TimelineLite = new TimelineLite({onComplete:myDynamic});
 
 //now we'll use chaining, but break each step onto a different line for readability...
 tl.fromTo(mc, 1, {x:0}, {x:-100})	//tween mc.x from 0 to -100
   .to(mc, 1, {y:50}, "-=0.25")	//then tween mc.y to 50, starting it 0.25 seconds before the previous tween ends
   .set(mc, {alpha:0})		//then set mc.alpha to 0.5 immediately
-  .call(otherFunction)		//then call otherFunction()
+  .call(otherDynamic)		//then call otherDynamic()
   .staggerTo([mc1, mc2, mc3], 1.5, {rotation:45}, 0.25); //finally tween the rotation of mc1, mc2, and mc3 to 45 and stagger the start times by 0.25 seconds
 </listing>
  * <p>If you don't want to append the tween and would rather have precise control
@@ -656,7 +656,7 @@ tl.fromTo(mc, 1, {x:0}, {x:100}, "myLabel+=2");  //places it 2 seconds after "my
  * @param target Target object (or array of objects) whose properties the tween affects
  * @param duration Duration in seconds (or frames if the timeline is frames-based)
  * @param fromVars An object defining the starting value for each property that should be tweened. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200, <code>fromVars</code> would look like this: <code>{x:100, y:200}</code>.
- * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 0 to 100 and <code>mc.y</code> from 0 to 200 and then call <code>myFunction</code>, do this: <code>myTimeline.fromTo(mc, 1, {x:0, y:0}, {x:100, y:200, onComplete:myFunction});</code>
+ * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 0 to 100 and <code>mc.y</code> from 0 to 200 and then call <code>myDynamic</code>, do this: <code>myTimeline.fromTo(mc, 1, {x:0, y:0}, {x:100, y:200, onComplete:myDynamic});</code>
  * @param position Controls the placement of the tween in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the tween 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the tween inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the tween 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the tween there which can be quite convenient.
  * @return self (makes chaining easier)
  * @see #to()
@@ -664,7 +664,7 @@ tl.fromTo(mc, 1, {x:0}, {x:100}, "myLabel+=2");  //places it 2 seconds after "my
  * @see #add()
  * @see #remove()
  */
-public function fromTo(target:Object, duration:Float, fromVars:Object, toVars:Object, position:Dynamic="+=0"):Dynamic {
+public function fromTo(target:Map<String, Int>, duration:Float, fromVars:Map<String, Int>, toVars:Map<String, Int>, position:Dynamic="+=0"):Dynamic {
 	return duration ? add(TweenLite.fromTo(target, duration, fromVars, toVars), position) : this.set(target, toVars, position);
 }
 
@@ -716,7 +716,7 @@ tl.staggerTo(myArray, 1, {x:100}, 0.25, "myLabel+=2");  //places 2 seconds after
  * 
  * @param targets An array of target objects whose properties should be affected
  * @param duration Duration in seconds (or frames if the timeline is frames-based)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> to 100 and <code>y</code> to 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myFunction</code> when they last one has finished, do this: <code>myTimeline.staggerTo([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, 0, null, myFunction})</code>.
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> to 100 and <code>y</code> to 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myDynamic</code> when they last one has finished, do this: <code>myTimeline.staggerTo([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, 0, null, myDynamic})</code>.
  * @param stagger Amount of time in seconds (or frames if the timeline is frames-based) to stagger the start time of each tween. For example, you might want to have 5 objects move down 100 pixels while fading out, and stagger the start times by 0.2 seconds - you could do: <code>myTimeline.staggerTo([mc1, mc2, mc3, mc4, mc5], 1, {y:"+=100", alpha:0}, 0.2)</code>.
  * @param position Controls the placement of the first tween in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the tween 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the tween inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the tween 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the tween there which can be quite convenient.
  * @param onCompleteAll A function to call as soon as the entire sequence of tweens has completed
@@ -725,7 +725,7 @@ tl.staggerTo(myArray, 1, {x:100}, 0.25, "myLabel+=2");  //places 2 seconds after
  * @see #staggerFrom()
  * @see #staggerFromTo()
  */
-public function staggerTo(targets:Array, duration:Float, vars:Object, stagger:Float, position:Dynamic="+=0", onCompleteAll:Function=null, onCompleteAllParams:Array=null):Dynamic {
+public function staggerTo(targets:Array, duration:Float, vars:Map<String, Int>, stagger:Float, position:Dynamic="+=0", onCompleteAll:Dynamic=null, onCompleteAllParams:Array<Dynamic>=null):Dynamic {
 	var tl:TimelineLite = new TimelineLite({onComplete:onCompleteAll, onCompleteParams:onCompleteAllParams, smoothChildTiming:this.smoothChildTiming});
 	for (var i:Int = 0; i < targets.length; i++) {
 	if (vars.startAt != null) {
@@ -791,7 +791,7 @@ tl.staggerFrom(myArray, 1, {x:100}, 0.25, "myLabel+=2");  //places 2 seconds aft
  * 
  * @param targets An array of target objects whose properties should be affected
  * @param duration Duration in seconds (or frames if the timeline is frames-based)
- * @param vars An object defining the beginning value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> from 100 and <code>y</code> from 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myFunction</code> when they last one has finished, do this: <code>myTimeline.staggerFrom([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, 0, null, myFunction})</code>.
+ * @param vars An object defining the beginning value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> from 100 and <code>y</code> from 200 for mc1, mc2, and mc3, staggering their start time by 0.25 seconds and then call <code>myDynamic</code> when they last one has finished, do this: <code>myTimeline.staggerFrom([mc1, mc2, mc3], 1, {x:100, y:200}, 0.25, 0, null, myDynamic})</code>.
  * @param stagger Amount of time in seconds (or frames if the timeline is frames-based) to stagger the start time of each tween. For example, you might want to have 5 objects move down 100 pixels while fading out, and stagger the start times by 0.2 seconds - you could do: <code>myTimeline.staggerTo([mc1, mc2, mc3, mc4, mc5], 1, {y:"+=100", alpha:0}, 0.2)</code>.
  * @param position Controls the placement of the first tween in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the tween 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the tween inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the tween 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the tween there which can be quite convenient.
  * @param onCompleteAll A function to call as soon as the entire sequence of tweens has completed
@@ -800,7 +800,7 @@ tl.staggerFrom(myArray, 1, {x:100}, 0.25, "myLabel+=2");  //places 2 seconds aft
  * @see #staggerTo()
  * @see #staggerFromTo()
  */
-public function staggerFrom(targets:Array, duration:Float, vars:Object, stagger:Float=0, position:Dynamic="+=0", onCompleteAll:Function=null, onCompleteAllParams:Array=null):Dynamic {
+public function staggerFrom(targets:Array, duration:Float, vars:Map<String, Int>, stagger:Float=0, position:Dynamic="+=0", onCompleteAll:Dynamic=null, onCompleteAllParams:Array<Dynamic>=null):Dynamic {
 	vars = _prepVars(vars);
 	if (!("immediateRender" in vars)) {
 	vars.immediateRender = true;
@@ -858,7 +858,7 @@ tl.staggerFromTo(myArray, 1, {x:0}, {x:100}, 0.25, "myLabel+=2");  //places 2 se
  * @param targets An array of target objects whose properties should be affected
  * @param duration Duration in seconds (or frames if the timeline is frames-based)
  * @param fromVars An object defining the starting value for each property that should be tweened. For example, to tween <code>x</code> from 100 and <code>y</code> from 200, <code>fromVars</code> would look like this: <code>{x:100, y:200}</code>.
- * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> from 0 to 100 and <code>y</code> from 0 to 200, staggering the start times by 0.2 seconds and then call <code>myFunction</code> when they all complete, do this: <code>myTimeline.staggerFromTo([mc1, mc2, mc3], 1, {x:0, y:0}, {x:100, y:200}, 0.2, 0, null, myFunction});</code>
+ * @param toVars An object defining the end value for each property that should be tweened as well as any special properties like <code>ease</code>. For example, to tween <code>x</code> from 0 to 100 and <code>y</code> from 0 to 200, staggering the start times by 0.2 seconds and then call <code>myDynamic</code> when they all complete, do this: <code>myTimeline.staggerFromTo([mc1, mc2, mc3], 1, {x:0, y:0}, {x:100, y:200}, 0.2, 0, null, myDynamic});</code>
  * @param stagger Amount of time in seconds (or frames if the timeline is frames-based) to stagger the start time of each tween. For example, you might want to have 5 objects move down 100 pixels while fading out, and stagger the start times by 0.2 seconds - you could do: <code>myTimeline.staggerTo([mc1, mc2, mc3, mc4, mc5], 1, {y:"+=100", alpha:0}, 0.2)</code>.
  * @param position Controls the placement of the first tween in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the tween 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the tween inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the tween 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the tween there which can be quite convenient.
  * @param onCompleteAll A function to call as soon as the entire sequence of tweens has completed
@@ -867,7 +867,7 @@ tl.staggerFromTo(myArray, 1, {x:0}, {x:100}, 0.25, "myLabel+=2");  //places 2 se
  * @see #staggerTo()
  * @see #staggerFrom()
  */
-public function staggerFromTo(targets:Array, duration:Float, fromVars:Object, toVars:Object, stagger:Float=0, position:Dynamic="+=0", onCompleteAll:Function=null, onCompleteAllParams:Array=null):Dynamic {
+public function staggerFromTo(targets:Array, duration:Float, fromVars:Map<String, Int>, toVars:Map<String, Int>, stagger:Float=0, position:Dynamic="+=0", onCompleteAll:Dynamic=null, onCompleteAllParams:Array<Dynamic>=null):Dynamic {
 	toVars = _prepVars(toVars);
 	fromVars = _prepVars(fromVars);
 	toVars.startAt = fromVars;
@@ -882,16 +882,16 @@ public function staggerFromTo(targets:Array, duration:Float, fromVars:Object, to
  * words, the following two lines produce identical results:
  * 
  * <listing version="3.0">
-myTimeline.add( TweenLite.delayedCall(0, myFunction, ["param1", "param2"]) );
-myTimeline.call(myFunction, ["param1", "param2"]);
+myTimeline.add( TweenLite.delayedCall(0, myDynamic, ["param1", "param2"]) );
+myTimeline.call(myDynamic, ["param1", "param2"]);
 </listing>
  * <p>This is different than using the <code>onComplete</code> special property
  * on the TimelineLite itself because once you append the callback, it stays in 
  * place whereas an <code>onComplete</code> is always called at the very end of 
  * the timeline. For example, if a timeline is populated with a 1-second tween and 
- * then you <code>call(myFunction)</code>, it is placed at the 1-second spot. Then 
+ * then you <code>call(myDynamic)</code>, it is placed at the 1-second spot. Then 
  * if you append another 1-second tween, the timeline's duration will now be 2 seconds 
- * but the myFunction callback will still be called at the 1-second spot. An 
+ * but the myDynamic callback will still be called at the 1-second spot. An 
  * <code>onComplete</code> would be called at the end (2 seconds).</p>
  * 
  * <p>Keep in mind that you can chain these calls together and use other convenience 
@@ -899,14 +899,14 @@ myTimeline.call(myFunction, ["param1", "param2"]);
  * sequences very quickly:</p>
  * 
  * <listing version="3.0">
-//create a timeline that calls myFunction() when it completes
-var tl:TimelineLite = new TimelineLite({onComplete:myFunction});
+//create a timeline that calls myDynamic() when it completes
+var tl:TimelineLite = new TimelineLite({onComplete:myDynamic});
 
 //now we'll use chaining, but break each step onto a different line for readability...
 tl.to(mc, 1, {x:100})	//tween mc.x to 100
   .call(myCallback)	//then call myCallback()
   .set(mc, {alpha:0})	//then set mc.alpha to 0.5 immediately
-  .call(otherFunction, ["param1", "param2"])	//then call otherFunction("param1", "param2")
+  .call(otherDynamic, ["param1", "param2"])	//then call otherDynamic("param1", "param2")
   .staggerTo([mc1, mc2, mc3], 1.5, {rotation:45}, 0.25); //finally tween the rotation of mc1, mc2, and mc3 to 45 and stagger the start times by 0.25 seconds
 </listing>
  * 
@@ -935,14 +935,14 @@ tl.call(func, ["param1"], "myLabel+=2");  //places it 2 seconds after "myLabel"
  * it can be useful to define the scope specifically. Therefore, in the JavaScript and AS2 
  * versions the 3rd parameter is <code>scope</code>, but that parameter is omitted in the AS3 version.</p>
  * 
- * @param callback Function to call
+ * @param callback Dynamic to call
  * @param params An Array of parameters to pass the function.
  * @param position Controls the placement of the callback in the timeline (by default, it's the end of the timeline, like "+=0"). Use a number to indicate an absolute time in terms of seconds (or frames for frames-based timelines), or you can use a string with a "+=" or "-=" prefix to offset the insertion point relative to the END of the timeline. For example, <code>"+=2"</code> would place the callback 2 seconds after the end, leaving a 2-second gap. <code>"-=2"</code> would create a 2-second overlap. You may also use a label like <code>"myLabel"</code> to have the callback inserted exactly at the label or combine a label and a relative offset like <code>"myLabel+=2"</code> to insert the callback 2 seconds after "myLabel" or <code>"myLabel-=3"</code> to insert it 3 seconds before "myLabel". If you define a label that doesn't exist yet, it will <strong>automatically be added to the end of the timeline</strong> before inserting the callback there which can be quite convenient.
  * @return self (makes chaining easier)
  * @see #add()
  * @see #remove()
  */
-public function call(callback:Function, params:Array=null, position:Dynamic="+=0"):Dynamic {
+public function call(callback:Dynamic, params:Array<Dynamic>=null, position:Dynamic="+=0"):Dynamic {
 	return add( TweenLite.delayedCall(0, callback, params), position);
 }
 
@@ -962,14 +962,14 @@ myTimeline.set(mc, {x:100, alpha:0.5});
  * sequences very quickly:</p>
  * 
  * <listing version="3.0">
-//create a timeline that calls myFunction() when it completes
-var tl:TimelineLite = new TimelineLite({onComplete:myFunction});
+//create a timeline that calls myDynamic() when it completes
+var tl:TimelineLite = new TimelineLite({onComplete:myDynamic});
 
 //now we'll use chaining, but break each step onto a different line for readability...
 tl.to(mc, 1, {x:100})	//tween mc.x to 100
   .set(mc, {alpha:0})	//then set mc.alpha to 0.5 immediately
   .to(mc, 1, {y:50})	//then tween mc.y to 50
-  .call(otherFunction)	//then call otherFunction()
+  .call(otherDynamic)	//then call otherDynamic()
   .staggerTo([mc1, mc2, mc3], 1.5, {rotation:45}, 0.25); //finally tween the rotation of mc1, mc2, and mc3 to 45 and stagger the start times by 0.25 seconds
 </listing>
  * <p>The 3rd parameter is the <code>position</code> which controls the placement of the
@@ -1000,11 +1000,11 @@ tl.set(mc, {x:100}, "myLabel+=2");  //places it 2 seconds after "myLabel"
  * @see #add()
  * @see #remove()
  */
-public function set(target:Object, vars:Object, position:Dynamic="+=0"):Dynamic {
+public function set(target:Map<String, Int>, vars:Map<String, Int>, position:Dynamic="+=0"):Dynamic {
 	position = _parseTimeOrLabel(position, 0, true);
 	vars = _prepVars(vars);
 	if (vars.immediateRender == null) {
-	vars.immediateRender = (position === _time && !_paused);
+	vars.immediateRender = (position == _time && !_paused);
 	}
 	return add( new TweenLite(target, 0, vars), position);
 }
@@ -1030,11 +1030,11 @@ timeline.addPause(2);
 //insert a pause at "yourLabel"
 timeline.addPause("yourLabel");
  
-//insert a pause 3 seconds after "yourLabel" and when that pause occurs, call yourFunction
-timeline.addPause("yourLabel+=3", yourFunction);
+//insert a pause 3 seconds after "yourLabel" and when that pause occurs, call yourDynamic
+timeline.addPause("yourLabel+=3", yourDynamic);
  
-//insert a pause at exactly 4 seconds and then call yourFunction and pass it 2 parameters, "param1" and "param2"
-timeline.addPause(4, yourFunction, ["param1", "param2"]);
+//insert a pause at exactly 4 seconds and then call yourDynamic and pass it 2 parameters, "param1" and "param2"
+timeline.addPause(4, yourDynamic, ["param1", "param2"]);
 </listing>
  * 
  * <p>The special callback is just a zero-duration tween that utilizes an onComplete, so technically 
@@ -1046,12 +1046,12 @@ timeline.addPause(4, yourFunction, ["param1", "param2"]);
  * @return self (makes chaining easier)
  * @see #call()
  */
-public function addPause(position:Dynamic="+=0", callback:Function=null, params:Array=null):Dynamic {
+public function addPause(position:Dynamic="+=0", callback:Dynamic=null, params:Array<Dynamic>=null):Dynamic {
 	return call(_pauseCallback, ["{self}", callback, params], position);
 }
 
 /** @private **/
-private function _pauseCallback(tween:TweenLite, callback:Function=null, params:Array=null):Void {
+private function _pauseCallback(tween:TweenLite, callback:Dynamic=null, params:Array<Dynamic>=null):Void {
 	pause(tween._startTime);
 	if (callback != null) {
 	callback.apply(null, params);
@@ -1059,13 +1059,13 @@ private function _pauseCallback(tween:TweenLite, callback:Function=null, params:
 }
 
 /** @private **/
-private static function _prepVars(vars:Object):Object { //to accommodate TweenLiteVars and TweenMaxVars instances for strong data typing and code hinting
+private static function _prepVars(vars:Map<String, Int>):Map<String, Int> { //to accommodate TweenLiteVars and TweenMaxVars instances for strong data typing and code hinting
 	return (vars._isGSVars) ? vars.vars : vars;
 }
 
 /** @private **/
-private static function _copy(vars:Object):Object {
-	var copy:Object = {}, p:String;
+private static function _copy(vars:Map<String, Int>):Map<String, Int> {
+	var copy:Map<String, Int> = {}, p:String;
 	for (p in vars) {
 	copy[p] = vars[p];
 	}
@@ -1110,7 +1110,7 @@ TweenLite.fromTo(myWindow, 1, {scaleX:0, scaleY:0}, {scaleX:1, scaleY:1});
  * @param omitDelayedCalls If <code>true</code> (the default), delayed calls will be left on the root rather than wrapped into the new TimelineLite. That way, if you <code>pause()</code> or alter the <code>timeScale</code>, or <code>reverse()</code>, they won't be affected. However, in some situations it might be very useful to have them included.
  * @return A new TimelineLite instance containing the root tweens/timelines
  */
-public static function exportRoot(vars:Object=null, omitDelayedCalls:Bool=true):TimelineLite {
+public static function exportRoot(vars:Map<String, Int>=null, omitDelayedCalls:Bool=true):TimelineLite {
 	vars = vars || {};
 	if (!("smoothChildTiming" in vars)) {
 	vars.smoothChildTiming = true;
@@ -1147,7 +1147,7 @@ public static function exportRoot(vars:Object=null, omitDelayedCalls:Bool=true):
  myAnimation.insert(TweenLite.to(mc, 2, {x:100}), 1);
  
  //insert a callback at 1.5 seconds
- myAnimation.insert(myFunction, 1.5);
+ myAnimation.insert(myDynamic, 1.5);
  
  //insert a label at 3 seconds
  myAnimation.insert("myLabel", 3);
@@ -1210,13 +1210,13 @@ tl.add([tween1, tween2, tween3], "+=2", "sequence", 0.5);
  * @return self (makes chaining easier)
  */
 override public function add(value:Dynamic, position:Dynamic="+=0", align:String="normal", stagger:Float=0):Dynamic {
-	if (typeof(position) !== "number") {
+	if (Type.typeof(position) != "number") {
 	position = _parseTimeOrLabel(position, 0, true, value);
 	}
 	if (!(value is Animation)) {
 	if (value is Array) {
 		var i:Int, 
-		curTime:Float = Number(position), 
+		curTime:Float = Float(position), 
 		l:Float = value.length, 
 		child:Dynamic;
 		for (i = 0; i < l; i++) {
@@ -1225,19 +1225,19 @@ override public function add(value:Dynamic, position:Dynamic="+=0", align:String
 			child = new TimelineLite({tweens:child});
 		}
 		add(child, curTime);
-		if (typeof(child) === "string" || typeof(child) === "function") {
+		if (Type.typeof(child) == "string" || typeof(child) == "function") {
 			//do nothing
-		} else if (align === "sequence") {
+		} else if (align == "sequence") {
 			curTime = child._startTime + (child.totalDuration() / child._timeScale);
-		} else if (align === "start") {
+		} else if (align == "start") {
 			child._startTime -= child.delay();
 		}
 		curTime += stagger;
 		}
 		return _uncache(true);
-	} else if (typeof(value) === "string") {
+	} else if (Type.typeof(value) == "string") {
 		return addLabel(String(value), position);
-	} else if (typeof(value) === "function") {
+	} else if (Type.typeof(value) == "function") {
 		value = TweenLite.delayedCall(0, value);
 	} else {
 		trace("Cannot add " + value + " into the TimelineLite/Max: it is not a tween, timeline, function, or string.");
@@ -1248,7 +1248,7 @@ override public function add(value:Dynamic, position:Dynamic="+=0", align:String
 	super.add(value, position);
 	
 	//if the timeline has already ended but the inserted tween/timeline extends the duration, we should enable this timeline again so that it renders properly. We should also align the playhead with the parent timeline's when appropriate.
-	if (_gc || _time === _duration) if (!_paused) if (_duration < duration()) {
+	if (_gc || _time == _duration) if (!_paused) if (_duration < duration()) {
 	//in case any of the anscestors had completed but should now be enabled...
 	var tl:SimpleTimeline = this,
 		beforeRawTime:Bool = (tl.rawTime() > value._startTime); //if the tween is placed on the timeline so that it starts BEFORE the current rawTime, we should align the playhead (move the timeline). This is because sometimes users will create a timeline, let it finish, and much later append a tween and expect it to run instead of jumping to its end state. While technically one could argue that it should jump to its end state, that's not what users intuitively expect.
@@ -1281,7 +1281,7 @@ public function remove(value:Dynamic):Dynamic {
 		remove(value[i]);
 	}
 	return this;
-	} else if (typeof(value) == "string") {
+	} else if (Type.typeof(value) == "string") {
 	return removeLabel(String(value));
 	}
 	return kill(null, value);
@@ -1327,7 +1327,7 @@ myTimeline.append(TweenLite.to(mc, 1, {x:100}));
 myTimeline.to(mc, 1, {x:50}).to(mc, 1, {y:100}).to(mc2, 1, {alpha:0});
  
 //append a callback
-myTimeline.append(myFunction);
+myTimeline.append(myDynamic);
 
 //append a label
 myTimeline.append("myLabel");
@@ -1414,7 +1414,7 @@ public function addLabel(label:String, position:Dynamic="+=0"):Dynamic {
  * @return Time associated with the label that was removed
  */
 public function removeLabel(label:String):Dynamic {
-	delete _labels[label];
+	untyped __delete__(_labels[label];
 	return this;
 }
 
@@ -1425,41 +1425,41 @@ public function removeLabel(label:String):Dynamic {
  * @return Time associated with the label (or -1 if there is no such label)
  */
 public function getLabelTime(label:String):Float {
-	return (label in _labels) ? Number(_labels[label]) : -1;
+	return (label in _labels) ? Float(_labels[label]) : -1;
 }
 
 /** @private **/
-private function _parseTimeOrLabel(timeOrLabel:Dynamic, offsetOrLabel:Dynamic=0, appendIfAbsent:Bool=false, ignore:Object=null):Float {
+private function _parseTimeOrLabel(timeOrLabel:Dynamic, offsetOrLabel:Dynamic=0, appendIfAbsent:Bool=false, ignore:Map<String, Int>=null):Float {
 	var i:Int;
 	//if we're about to add a tween/timeline (or an array of them) that's already a child of this timeline, we should remove it first so that it doesn't contaminate the duration().
-	if (ignore is Animation && ignore.timeline === this) {
+	if (ignore is Animation && ignore.timeline == this) {
 	remove(ignore);
 	} else if (ignore is Array) {
 	i = ignore.length;
 	while (--i > -1) {
-		if (ignore[i] is Animation && ignore[i].timeline === this) {
+		if (ignore[i] is Animation && ignore[i].timeline == this) {
 		remove(ignore[i]);
 		}
 	}
 	}
-	if (typeof(offsetOrLabel) === "string") {
-	return _parseTimeOrLabel(offsetOrLabel, (appendIfAbsent && typeof(timeOrLabel) === "number" && !(offsetOrLabel in _labels)) ? timeOrLabel - duration() : 0, appendIfAbsent);
+	if (Type.typeof(offsetOrLabel) == "string") {
+	return _parseTimeOrLabel(offsetOrLabel, (appendIfAbsent && typeof(timeOrLabel) == "number" && !(offsetOrLabel in _labels)) ? timeOrLabel - duration() : 0, appendIfAbsent);
 	}
 	offsetOrLabel = offsetOrLabel || 0;
-	if (typeof(timeOrLabel) === "string" && (isNaN(timeOrLabel) || (timeOrLabel in _labels))) { //if the string is a number like "1", check to see if there's a label with that name, otherwise interpret it as a number (absolute value).
+	if (Type.typeof(timeOrLabel) == "string" && (is0(timeOrLabel) || (timeOrLabel in _labels))) { //if the string is a number like "1", check to see if there's a label with that name, otherwise interpret it as a number (absolute value).
 	i = timeOrLabel.indexOf("=");
-	if (i === -1) {
+	if (i == -1) {
 		if (!(timeOrLabel in _labels)) {
 		return appendIfAbsent ? (_labels[timeOrLabel] = duration() + offsetOrLabel) : offsetOrLabel;
 		}
 		return _labels[timeOrLabel] + offsetOrLabel;
 	}
-	offsetOrLabel = parseInt(timeOrLabel.charAt(i-1) + "1", 10) * Number(timeOrLabel.substr(i+1));
+	offsetOrLabel = parseInt(timeOrLabel.charAt(i-1) + "1", 10) * Float(timeOrLabel.substr(i+1));
 	timeOrLabel = (i > 1) ? _parseTimeOrLabel(timeOrLabel.substr(0, i-1), 0, appendIfAbsent) : duration();
 	} else if (timeOrLabel == null) {
 	timeOrLabel = duration();
 	}
-	return Number(timeOrLabel) + offsetOrLabel;
+	return Float(timeOrLabel) + offsetOrLabel;
 }
 
 /**
@@ -1494,7 +1494,7 @@ myAnimation.seek("myLabel");
  * @see #pause()
  */
 override public function seek(position:Dynamic, suppressEvents:Bool=true):Dynamic {
-	return totalTime((typeof(position) === "number") ? Number(position) : _parseTimeOrLabel(position), suppressEvents);
+	return totalTime((Type.typeof(position) == "number") ? Float(position) : _parseTimeOrLabel(position), suppressEvents);
 }
 
 /** [deprecated] Pauses the timeline (used for consistency with Flash's MovieClip.stop() functionality, but essentially accomplishes the same thing as <code>pause()</code> without the parameter) @return self (makes chaining easier) **/
@@ -1549,19 +1549,19 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	if (!_reversed) if (!_hasPausedChild()) {
 		isComplete = true;
 		callback = "onComplete";
-		if (_duration === 0) if (time === 0 || _rawPrevTime < 0 || _rawPrevTime === _tinyNum) if (_rawPrevTime !== time && _first != null) {
+		if (_duration == 0) if (time == 0 || _rawPrevTime < 0 || _rawPrevTime == _tinyNum) if (_rawPrevTime != time && _first != null) {
 		internalForce = true;
 		if (_rawPrevTime > _tinyNum) {
 			callback = "onReverseComplete";
 		}
 		}
 	}
-	_rawPrevTime = (_duration !== 0 || !suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+	_rawPrevTime = (_duration != 0 || !suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 	time = totalDur + 0.0001; //to avoid occasional floating point rounding errors in Flash - sometimes child tweens/timelines were not being fully completed (their progress might be 0.999999999999998 instead of 1 because when Flash performed _time - tween._startTime, floating point errors would return a value that was SLIGHTLY off)
 	
 	} else if (time < 0.0000001) { //to work around occasional floating point math artifacts, round super small values to 0. 
 	_totalTime = _time = 0;
-	if (prevTime !== 0 || (_duration === 0 && _rawPrevTime !== _tinyNum && (_rawPrevTime > 0 || (time < 0 && _rawPrevTime >= 0)))) {
+	if (prevTime != 0 || (_duration == 0 && _rawPrevTime != _tinyNum && (_rawPrevTime > 0 || (time < 0 && _rawPrevTime >= 0)))) {
 		callback = "onReverseComplete";
 		isComplete = _reversed;
 	}
@@ -1572,7 +1572,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 		}
 		_rawPrevTime = time;
 	} else {
-		_rawPrevTime = (_duration || !suppressEvents || time !== 0 || _rawPrevTime === time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
+		_rawPrevTime = (_duration || !suppressEvents || time != 0 || _rawPrevTime == time) ? time : _tinyNum; //when the playhead arrives at EXACTLY time 0 (right on top) of a zero-duration timeline or tween, we need to discern if events are suppressed so that when the playhead moves again (next time), it'll trigger the callback. If events are NOT suppressed, obviously the callback would be triggered in this render. Basically, the callback should fire either when the playhead ARRIVES or LEAVES this exact spot, not both. Imagine doing a timeline.seek(0) and there's a callback that sits at 0. Since events are suppressed on that seek() by default, nothing will fire, but when the playhead moves off of that position, the callback should fire. This behavior is what people intuitively expect. We set the _rawPrevTime to be a precise tiny number to indicate this scenario rather than using another property/variable which would increase memory usage. This technique is less readable, but more efficient.
 		time = 0; //to avoid occasional floating point rounding errors (could cause problems especially with zero-duration tweens at the very beginning of the timeline)
 		if (!_initted) {
 		internalForce = true;
@@ -1588,7 +1588,7 @@ override public function render(time:Float, suppressEvents:Bool=false, force:Boo
 	} else if (!_initted) {
 	_initted = true;
 	}
-	if (!_active) if (!_paused && _time !== prevTime && time > 0) {
+	if (!_active) if (!_paused && _time != prevTime && time > 0) {
 	_active = true;  //so that if the user renders the timeline (as opposed to the parent timeline rendering it), it is forced to re-render and align it with the proper time/frame on the next rendering cycle. Maybe the timeline already finished but the user manually re-renders it as halfway done, for example.
 	}
 	if (prevTime == 0) if (vars.onStart) if (_time != 0) if (!suppressEvents) {
@@ -1676,7 +1676,7 @@ public function _hasPausedChild():Bool {
  * @param ignoreBeforeTime All children with start times that are less than this value will be ignored.
  * @return an Array containing the child tweens/timelines.
  */
-public function getChildren(nested:Bool=true, tweens:Bool=true, timelines:Bool=true, ignoreBeforeTime:Float=-9999999999):Array {
+public function getChildren(nested:Bool=true, tweens:Bool=true, timelines:Bool=true, ignoreBeforeTime:Float=-9999999999):Array<Dynamic> {
 	var a:Array = [], 
 	tween:Animation = _first, 
 	cnt:Int = 0;
@@ -1708,7 +1708,7 @@ public function getChildren(nested:Bool=true, tweens:Bool=true, timelines:Bool=t
  * @param nested Determines whether or not tweens that are inside nested timelines should be returned. If you only want the "top level" tweens/timelines, set this to false.
  * @return an Array of TweenLite and/or TweenMax instances
  */
-public function getTweensOf(target:Object, nested:Bool=true):Array {
+public function getTweensOf(target:Map<String, Int>, nested:Bool=true):Array<Dynamic> {
 	var disabled:Bool = this._gc,
 	a:Array = [],
 	cnt:Int = 0,
@@ -1719,7 +1719,7 @@ public function getTweensOf(target:Object, nested:Bool=true):Array {
 	tweens = TweenLite.getTweensOf(target);
 	i = tweens.length;
 	while (--i > -1) {
-	if (tweens[i].timeline === this || (nested && _contains(tweens[i]))) {
+	if (tweens[i].timeline == this || (nested && _contains(tweens[i]))) {
 		a[cnt++] = tweens[i];
 	}
 	}
@@ -1746,7 +1746,7 @@ private function _contains(tween:Animation):Bool {
  * This can be useful when you want to prepend children or splice them into a certain spot, moving existing 
  * ones back to make room for the new ones.
  * 
- * @param amount Number of seconds (or frames for frames-based timelines) to move each child.
+ * @param amount Float of seconds (or frames for frames-based timelines) to move each child.
  * @param adjustLabels If <code>true</code>, the timing of all labels will be adjusted as well.
  * @param ignoreBeforeTime All children that begin at or after the <code>startAtTime</code> will be affected by the shift (the default is 0, causing all children to be affected). This provides an easy way to splice children into a certain spot on the timeline, pushing only the children after that point back to make room.
  * @return self (makes chaining easier)
@@ -1771,7 +1771,7 @@ public function shiftChildren(amount:Float, adjustLabels:Bool=false, ignoreBefor
 }
 
 /** @private **/
-override public function _kill(vars:Object=null, target:Object=null):Bool {
+override public function _kill(vars:Map<String, Int>=null, target:Map<String, Int>=null):Bool {
 	if (vars == null) if (target == null) {
 	return _enabled(false, false);
 	}
@@ -1867,14 +1867,14 @@ override public function _enabled(enabled:Bool, ignoreTimeline:Bool=false):Bool 
  * @see #totalDuration()
  * @see #timeScale()
  **/
-override public function duration(value:Float=NaN):Dynamic {
+override public function duration(value:Float=0):Dynamic {
 	if (!arguments.length) {
 	if (_dirty) {
 		totalDuration(); //just triggers recalculation
 	}
 	return _duration;
 	}
-	if (duration() !== 0) if (value !== 0) {
+	if (duration() != 0) if (value != 0) {
 	timeScale(_duration / value);
 	}
 	return this;
@@ -1909,7 +1909,7 @@ myAnimation.totalDuration( 20 ); //adjusts the timeScale so that myAnimation fit
  * @see #timeScale()
  * @see #duration()
  **/
-override public function totalDuration(value:Float=NaN):Dynamic {
+override public function totalDuration(value:Float=0):Dynamic {
 	if (!arguments.length) {
 	if (_dirty) {
 		var max:Float = 0,

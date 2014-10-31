@@ -50,22 +50,22 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
-	if (typeof(value) == "number") {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
+	if (Type.typeof(value) == "number") {
 	return false;
 	}
 	var useRadians:Bool = Boolean(value.useRadians == true), start:Float; 
 	for (var p:String in value) {
 	if (p != "useRadians") {
-		start = (target[p] is Function) ? target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]() : target[p];
-		_initRotation(target, p, start, (typeof(value[p]) == "number") ? Number(value[p]) : start + Number(value[p].split("=").join("")), useRadians);
+		start = (target[p] is Dynamic) ? target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]() : target[p];
+		_initRotation(target, p, start, (Type.typeof(value[p]) == "number") ? Float(value[p]) : start + Float(value[p].split("=").join("")), useRadians);
 	}
 	}
 	return true;
 }
 
 /** @private **/
-public function _initRotation(target:Object, p:String, start:Float, end:Float, useRadians:Bool=false):Void {
+public function _initRotation(target:Map<String, Int>, p:String, start:Float, end:Float, useRadians:Bool=false):Void {
 	var cap:Float = useRadians ? Math.PI * 2 : 360,
 	dif:Float = (end - start) % cap;
 	if (dif != dif % (cap / 2)) {

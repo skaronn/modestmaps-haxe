@@ -47,7 +47,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	if (!(value.stage is Stage)) {
 	trace("You must define a 'stage' property for the stageQuality object in your tween.");
 	return false;

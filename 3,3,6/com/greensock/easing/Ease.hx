@@ -51,63 +51,67 @@ TweenLite.to(mc, 5, {x:600, ease:new Ease(myEase)});
  * @author Jack Doyle, jack@greensock.com
  **/
 class Ease {
-/** @private **/
-private static var _baseParams:Array = [0, 0, 1, 1];
-/** @private **/
-private var _func:Function;
-/** @private **/
-private var _params:Array;
-/** @private **/
-private var _p1:Float;
-/** @private **/
-private var _p2:Float;
-/** @private **/
-private var _p3:Float;
-/** @private integer indicating the type of ease where 1 is easeOut, 2 is easeIn, 3 is easeInOut, and 0 is none of these. **/
-public var _type:Int;
-/** @private power of the ease where Linear is 0, Quad is 1, Cubic is 2, Quart is 3, Quint (and Strong) is 4, etc. **/
-public var _power:Int;
-/** @private if true, TweenLite/Max will call setRatio() at the end and beginning of the tween instead of assuming it's 1/0. This is only useful in very rare situations like in a SlowMo ease that uses endcapMode=true which will have a 0 ratio at the end of the tween. **/
-public var _calcEnd:Bool;
+	/** @private **/
+	private static var _baseParams:Array<Dynamic> = [0, 0, 1, 1];
+	/** @private **/
+	private var _func:Dynamic;
+	/** @private **/
+	private var _params:Array<Dynamic>;
+	/** @private **/
+	private var _p1:Float;
+	/** @private **/
+	private var _p2:Float;
+	/** @private **/
+	private var _p3:Float;
+	/** @private integer indicating the type of ease where 1 is easeOut, 2 is easeIn, 3 is easeInOut, and 0 is none of these. **/
+	public var _type:Int;
+	/** @private power of the ease where Linear is 0, Quad is 1, Cubic is 2, Quart is 3, Quint (and Strong) is 4, etc. **/
+	public var _power:Int;
+	/** @private if true, TweenLite/Max will call setRatio() at the end and beginning of the tween instead of assuming it's 1/0. This is only useful in very rare situations like in a SlowMo ease that uses endcapMode=true which will have a 0 ratio at the end of the tween. **/
+	public var _calcEnd:Bool;
 
-/**
- * Constructor
- * 
- * @param func Function (if any) that should be proxied. This is completely optional and is in fact rarely used except when you have your own custom ease function that follows the standard ease parameter pattern like time, start, change, duration.
- * @param extraParams If any extra parameters beyond the standard 4 (time, start, change, duration) need to be fed to the <code>func</code> function, define them as an array here. For example, the old Elastic.easeOut accepts 2 extra parameters in its standard equation (although the newer GreenSock version uses the more modern <code>config()</code> method for configuring the ease and doesn't require any extraPrams here)
- * @param type Integer indicating the type of ease where 1 is easeOut, 2 is easeIn, 3 is easeInOut, and 0 is none of these. 
- * @param power Power of the ease where Linear is 0, Quad is 1, Cubic is 2, Quart is 3, Quint (and Strong) is 4, etc.
- */
-public function new(func:Function=null, extraParams:Array=null, type:Float=0, power:Float=0) {
-	_func = func;
-	_params = (extraParams) ? _baseParams.concat(extraParams) : _baseParams;
-	_type = type;
-	_power = power;
-}
+	/**
+	* Constructor
+	* 
+	* @param func Dynamic (if any) that should be proxied. This is completely optional and is in fact rarely used except when you have your own custom ease function that follows the standard ease parameter pattern like time, start, change, duration.
+	* @param extraParams If any extra parameters beyond the standard 4 (time, start, change, duration) need to be fed to the <code>func</code> function, define them as an array here. For example, the old Elastic.easeOut accepts 2 extra parameters in its standard equation (although the newer GreenSock version uses the more modern <code>config()</code> method for configuring the ease and doesn't require any extraPrams here)
+	* @param type Integer indicating the type of ease where 1 is easeOut, 2 is easeIn, 3 is easeInOut, and 0 is none of these. 
+	* @param power Power of the ease where Linear is 0, Quad is 1, Cubic is 2, Quart is 3, Quint (and Strong) is 4, etc.
+	*/
+	public function new(func:Dynamic=null, extraParams:Array<Dynamic>=null, type:Float=0, power:Float=0) {
+		_func = func;
+		_params = (extraParams) ? _baseParams.concat(extraParams) : _baseParams;
+		_type = type;
+		_power = power;
+	}
 
-/**
- * Translates the tween's progress ratio into the corresponding ease ratio. This is the heart of the Ease, where it does all its work.
- * 
- * @param p progress ratio (a value between 0 and 1 indicating the progress of the tween/ease)
- * @return translated number
- */
-public function getRatio(p:Float):Float {
-	if (_func != null) {
-	_params[0] = p;
-	return _func.apply(null, _params);
-	} else {
-	var r:Float = (_type == 1) ? 1 - p : (_type == 2) ? p : (p < 0.5) ? p * 2 : (1 - p) * 2;
-	if (_power == 1) {
-		r *= r;
-	} else if (_power == 2) {
-		r *= r * r;
-	} else if (_power == 3) {
-		r *= r * r * r;
-	} else if (_power == 4) {
-		r *= r * r * r * r;
+	/**
+	* Translates the tween's progress ratio into the corresponding ease ratio. This is the heart of the Ease, where it does all its work.
+	* 
+	* @param p progress ratio (a value between 0 and 1 indicating the progress of the tween/ease)
+	* @return translated number
+	*/
+	public function getRatio(p:Float):Float {
+		if (_func != null) {
+			_params[0] = p;
+			return _func.apply(null, _params);
+		}
+		else {
+			var r:Float = (_type == 1) ? 1 - p : (_type == 2) ? p : (p < 0.5) ? p * 2 : (1 - p) * 2;
+			if (_power == 1) {
+				r *= r;
+			}
+			else if (_power == 2) {
+				r *= r * r;
+			}
+			else if (_power == 3) {
+				r *= r * r * r;
+			}
+			else if (_power == 4) {
+				r *= r * r * r * r;
+			}
+			return (_type == 1) ? 1 - r : (_type == 2) ? r : (p < 0.5) ? r / 2 : 1 - (r / 2);
+		}
 	}
-	return (_type == 1) ? 1 - r : (_type == 2) ? r : (p < 0.5) ? r / 2 : 1 - (r / 2);
-	}
-}
 
 }

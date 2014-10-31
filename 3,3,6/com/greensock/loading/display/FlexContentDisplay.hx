@@ -46,11 +46,11 @@ import mx.core.UIComponent;
  * 
  * @author Jack Doyle, jack@greensock.com
  */	
-import flash.Error;
+import flash.errors.Error;
 
 class FlexContentDisplay extends UIComponent {
 /** @private **/
-private static var _transformProps:Object = {x:1, y:1, z:1, rotationX:1, rotationY:1, rotationZ:1, scaleX:1, scaleY:1, rotation:1, alpha:1, visible:true, blendMode:"normal", centerRegistration:false, crop:false, scaleMode:"stretch", hAlign:"center", vAlign:"center"};
+private static var _transformProps:Map<String, Int> = {x:1, y:1, z:1, rotationX:1, rotationY:1, rotationZ:1, scaleX:1, scaleY:1, rotation:1, alpha:1, visible:true, blendMode:"normal", centerRegistration:false, crop:false, scaleMode:"stretch", hAlign:"center", vAlign:"center"};
 /** @private **/
 private var _loader:LoaderItem;
 /** @private **/
@@ -139,7 +139,7 @@ private function _update():Void {
 	}
 	var mc:DisplayObject = _rawContent;
 	var m:Matrix = mc.transform.matrix;
-	var nativeBounds:Object, contentWidth:Float, contentHeight:Float;
+	var nativeBounds:Map<String, Int>, contentWidth:Float, contentHeight:Float;
 	if (mc is Video) {//Video objects don't accurately report getBounds() - they act like their native dimension is always 160x320.
 	nativeBounds = _nativeRect;
 	contentWidth = mc.width;
@@ -468,13 +468,13 @@ private function setLoader(value:LoaderItem):Void {
 	for (var p:String in _transformProps) {
 	if (p in _loader.vars) {
 		type = typeof(_transformProps[p]);
-		this[p] = (type == "number") ? Number(_loader.vars[p]) : (type == "string") ? String(_loader.vars[p]) : Bool(_loader.vars[p]);
+		this[p] = (type == "number") ? Float(_loader.vars[p]) : (type == "string") ? String(_loader.vars[p]) : Bool(_loader.vars[p]);
 	}
 	}
 	_bgColor = uint(_loader.vars.bgColor);
-	_bgAlpha = ("bgAlpha" in _loader.vars) ? Number(_loader.vars.bgAlpha) : ("bgColor" in _loader.vars) ? 1 : 0;
-	_fitWidth = ("fitWidth" in _loader.vars) ? Number(_loader.vars.fitWidth) : Float(_loader.vars.width);
-	_fitHeight = ("fitHeight" in _loader.vars) ? Number(_loader.vars.fitHeight) : Float(_loader.vars.height);
+	_bgAlpha = ("bgAlpha" in _loader.vars) ? Float(_loader.vars.bgAlpha) : ("bgColor" in _loader.vars) ? 1 : 0;
+	_fitWidth = ("fitWidth" in _loader.vars) ? Float(_loader.vars.fitWidth) : Float(_loader.vars.width);
+	_fitHeight = ("fitHeight" in _loader.vars) ? Float(_loader.vars.fitHeight) : Float(_loader.vars.height);
 	_update();
 	if (_loader.vars.container is DisplayObjectContainer) {
 	if (_loader.vars.container.hasOwnProperty("addElement")) {

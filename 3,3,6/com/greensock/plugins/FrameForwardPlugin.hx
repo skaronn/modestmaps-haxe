@@ -42,7 +42,7 @@ private var _change:Int;
 /** @private **/
 private var _max:UInt;
 /** @private **/
-private var _target:Object;
+private var _target:Map<String, Int>;
 /** @private Allows FrameBackwardPlugin to extend this class and only use an extremely small amount of kb (because the functionality is combined here) **/
 private var _backward:Bool;
 
@@ -52,11 +52,11 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_target = target;
 	_start = _target.currentFrame;
 	_max = _target.totalFrames;
-	_change = (typeof(value) === "number") ? Number(value) - _start : (typeof(value) === "string" && value.charAt(1) === "=") ? int(value.charAt(0) + "1") * Number(value.substr(2)) : Float(value) || 0;
+	_change = (Type.typeof(value) == "number") ? Float(value) - _start : (Type.typeof(value) == "string" && value.charAt(1) == "=") ? int(value.charAt(0) + "1") * Float(value.substr(2)) : Float(value) || 0;
 	if (!_backward && _change < 0) {
 	_change = ((_change + (_max * 99999)) % _max) + ((_change / _max) | 0) * _max;
 	} else if (_backward && _change > 0) {

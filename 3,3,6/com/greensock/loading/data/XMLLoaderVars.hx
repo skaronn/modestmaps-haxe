@@ -13,7 +13,7 @@ import flash.display.DisplayObject;
  * <p>There are 2 primary benefits of using a XMLLoaderVars instance to define your XMLLoader variables:</p>
  *  <ol>
  *	<li> In most code editors, code hinting will be activated which helps remind you which special properties are available in XMLLoader</li>
- *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Function is expected).</li>
+ *	<li> It enables strict data typing for improved debugging (ensuring, for example, that you don't define a Boolean value for <code>onComplete</code> where a Dynamic is expected).</li>
  *  </ol>
  * 
  * <p>The down side, of course, is that the code is more verbose and the XMLLoaderVars class adds slightly more kb to your swf.</p>
@@ -45,13 +45,13 @@ class XMLLoaderVars {
 public static inline var version:Float = 1.22;
 
 /** @private **/
-private var _vars:Object;
+private var _vars:Map<String, Int>;
 
 /**
  * Constructor 
  * @param vars A generic Object containing properties that you'd like to add to this XMLLoaderVars instance.
  */
-public function new(vars:Object=null) {
+public function new(vars:Map<String, Int>=null) {
 	_vars = {};
 	if (vars != null) {
 	for (var p:String in vars) {
@@ -63,7 +63,7 @@ public function new(vars:Object=null) {
 /** @private **/
 private function _set(property:String, value:Dynamic):XMLLoaderVars {
 	if (value == null) {
-	delete _vars[property]; //in case it was previously set
+	untyped __delete__(_vars[property]; //in case it was previously set
 	} else {
 	_vars[property] = value;
 	}
@@ -101,42 +101,42 @@ public function name(value:String):XMLLoaderVars {
 }
 
 /** A handler function for <code>LoaderEvent.CANCEL</code> events which are dispatched when loading is aborted due to either a failure or because another loader was prioritized or <code>cancel()</code> was manually called. Make sure your onCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onCancel(value:Function):XMLLoaderVars {
+public function onCancel(value:Dynamic):XMLLoaderVars {
 	return _set("onCancel", value);
 }
 
 /** A handler function for <code>LoaderEvent.COMPLETE</code> events which are dispatched when the loader has finished loading successfully. Make sure your onComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onComplete(value:Function):XMLLoaderVars {
+public function onComplete(value:Dynamic):XMLLoaderVars {
 	return _set("onComplete", value);
 }
 
 /** A handler function for <code>LoaderEvent.ERROR</code> events which are dispatched whenever the loader experiences an error (typically an IO_ERROR or SECURITY_ERROR). An error doesn't necessarily mean the loader failed, however - to listen for when a loader fails, use the <code>onFail</code> special property. Make sure your onError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onError(value:Function):XMLLoaderVars {
+public function onError(value:Dynamic):XMLLoaderVars {
 	return _set("onError", value);
 }
 
 /** A handler function for <code>LoaderEvent.FAIL</code> events which are dispatched whenever the loader fails and its <code>status</code> changes to <code>LoaderStatus.FAILED</code>. Make sure your onFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onFail(value:Function):XMLLoaderVars {
+public function onFail(value:Dynamic):XMLLoaderVars {
 	return _set("onFail", value);
 }
 
 /** A handler function for <code>LoaderEvent.HTTP_STATUS</code> events. Make sure your onHTTPStatus function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can determine the httpStatus code using the LoaderEvent's <code>target.httpStatus</code> (LoaderItems keep track of their <code>httpStatus</code> when possible, although certain environments prevent Flash from getting httpStatus information).**/
-public function onHTTPStatus(value:Function):XMLLoaderVars {
+public function onHTTPStatus(value:Dynamic):XMLLoaderVars {
 	return _set("onHTTPStatus", value);
 }
 
 /** A handler function for <code>LoaderEvent.IO_ERROR</code> events which will also call the onError handler, so you can use that as more of a catch-all whereas <code>onIOError</code> is specifically for LoaderEvent.IO_ERROR events. Make sure your onIOError function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onIOError(value:Function):XMLLoaderVars {
+public function onIOError(value:Dynamic):XMLLoaderVars {
 	return _set("onIOError", value);
 }
 
 /** A handler function for <code>LoaderEvent.OPEN</code> events which are dispatched when the loader begins loading. Make sure your onOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>).**/
-public function onOpen(value:Function):XMLLoaderVars {
+public function onOpen(value:Dynamic):XMLLoaderVars {
 	return _set("onOpen", value);
 }
 
 /** A handler function for <code>LoaderEvent.PROGRESS</code> events which are dispatched whenever the <code>bytesLoaded</code> changes. Make sure your onProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). You can use the LoaderEvent's <code>target.progress</code> to get the loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>.**/
-public function onProgress(value:Function):XMLLoaderVars {
+public function onProgress(value:Dynamic):XMLLoaderVars {
 	return _set("onProgress", value);
 }
 
@@ -182,37 +182,37 @@ public function maxConnections(value:UInt):XMLLoaderVars {
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_OPEN</code> events which are dispatched each time any nested LoaderMax-related loaders that were defined in the XML begins loading. Make sure your onChildOpen function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildOpen(value:Function):XMLLoaderVars {
+public function onChildOpen(value:Dynamic):XMLLoaderVars {
 	return _set("onChildOpen", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_PROGRESS</code> events which are dispatched each time any nested LoaderMax-related loaders that were defined in the XML dispatches a <code>PROGRESS</code> event. To listen for changes in the XMLLoader's overall progress, use the <code>onProgress</code> special property instead. You can use the LoaderEvent's <code>target.progress</code> to get the child loader's progress value or use its <code>target.bytesLoaded</code> and <code>target.bytesTotal</code>. The LoaderEvent's <code>currentTarget</code> refers to the XMLLoader, so you can check its overall progress with the LoaderEvent's <code>currentTarget.progress</code>. Make sure your onChildProgress function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildProgress(value:Function):XMLLoaderVars {
+public function onChildProgress(value:Dynamic):XMLLoaderVars {
 	return _set("onChildProgress", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_COMPLETE</code> events which are dispatched each time any nested LoaderMax-related loaders that were defined in the XML finishes loading successfully. Make sure your onChildComplete function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildComplete(value:Function):XMLLoaderVars {
+public function onChildComplete(value:Dynamic):XMLLoaderVars {
 	return _set("onChildComplete", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_CANCEL</code> events which are dispatched each time loading is aborted on any nested LoaderMax-related loaders that were defined in the XML due to either an error or because another loader was prioritized in the queue or because <code>cancel()</code> was manually called on the child loader. Make sure your onChildCancel function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildCancel(value:Function):XMLLoaderVars {
+public function onChildCancel(value:Dynamic):XMLLoaderVars {
 	return _set("onChildCancel", value);
 }
 
 /** A handler function for <code>LoaderEvent.CHILD_FAIL</code> events which are dispatched each time any nested LoaderMax-related loaders that were defined in the XML fails (and its <code>status</code> chances to <code>LoaderStatus.FAILED</code>). Make sure your onChildFail function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>). **/
-public function onChildFail(value:Function):XMLLoaderVars {
+public function onChildFail(value:Dynamic):XMLLoaderVars {
 	return _set("onChildFail", value);
 }
 
 /** A handler function for <code>LoaderEvent.INIT</code> events which are dispatched when the XML finishes loading and its contents are parsed (creating any dynamic XML-driven loader instances necessary). If any dynamic loaders are created and have a <code>load="true"</code> attribute, they will begin loading at this point and the XMLLoader's <code>COMPLETE</code> will not be dispatched until the loaders have completed as well. **/
-public function onInit(value:Function):XMLLoaderVars {
+public function onInit(value:Dynamic):XMLLoaderVars {
 	return _set("onInit", value);
 }
 
 /** A handler function for <code>XMLLoader.RAW_LOAD</code> events which are dispatched when the loader finishes loading the XML but has <b>NOT</b> parsed the XML yet. This can be useful in rare situations when you want to alter the XML before it is parsed by XMLLoader (for identifying LoaderMax-related nodes like <code>&lt;ImageLoader&gt;</code>, etc.). Make sure your onRawLoad function accepts a single parameter of type <code>LoaderEvent</code> (<code>com.greensock.events.LoaderEvent</code>) **/
-public function onRawLoad(value:Function):XMLLoaderVars {
+public function onRawLoad(value:Dynamic):XMLLoaderVars {
 	return _set("onRawLoad", value);
 }
 
@@ -235,8 +235,8 @@ public function skipFailed(value:Bool):XMLLoaderVars {
 //---- GETTERS / SETTERS -----------------------------------------------------------------
 
 /** The generic Object populated by all of the method calls in the XMLLoaderVars instance. This is the raw data that gets passed to the loader. **/
-public var vars(getVars, null):Object;
- 	private function getVars():Object {
+public var vars(getVars, null):Map<String, Int>;
+ 	private function getVars():Map<String, Int> {
 	return _vars;
 }
 

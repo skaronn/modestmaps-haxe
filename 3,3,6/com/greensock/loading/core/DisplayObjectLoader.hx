@@ -33,7 +33,7 @@ import flash.system.SecurityDomain;
  * 
  * @author Jack Doyle, jack@greensock.com
  */	
-import flash.Error;
+import flash.errors.Error;
 
 class DisplayObjectLoader extends LoaderItem {
 /** By default, LoaderMax will automatically attempt to force garbage collection when a SWFLoader or ImageLoader is unloaded or cancelled but if you prefer to skip this measure, set defaultAutoForceGC to <code>false</code>. If garbage collection isn't forced, sometimes Flash doesn't completely unload swfs/images properly, particularly if there is audio embedded in the root timeline. **/
@@ -61,7 +61,7 @@ private var _fallbackAudit:Loader;
  * @param urlOrRequest The url (<code>String</code>) or <code>URLRequest</code> from which the loader should get its content
  * @param vars An object containing optional parameters like <code>estimatedBytes, name, autoDispose, onComplete, onProgress, onError</code>, etc. For example, <code>{estimatedBytes:2400, name:"myImage1", onComplete:completeHandler}</code>.
  */
-public function new(urlOrRequest:Dynamic, vars:Object=null) {
+public function new(urlOrRequest:Dynamic, vars:Map<String, Int>=null) {
 	super(urlOrRequest, vars);
 	_refreshLoader(false);
 	if (LoaderMax.contentDisplayClass is Class) {

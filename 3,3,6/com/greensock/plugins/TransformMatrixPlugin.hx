@@ -78,7 +78,7 @@ public function new() {
 }
 
 /** @private **/
-override public function _onInitTween(target:Object, value:Dynamic, tween:TweenLite):Bool {
+override public function _onInitTween(target:Map<String, Int>, value:Dynamic, tween:TweenLite):Bool {
 	_transform = target.transform as Transform;
 	_matrix = _transform.matrix;
 	var matrix:Matrix = _matrix.clone();
@@ -90,14 +90,14 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	_dStart = matrix.d;
 	
 	if ("x" in value) {
-	_txChange = (typeof(value.x) == "number") ? value.x - _txStart : Float(value.x.split("=").join(""));
+	_txChange = (Type.typeof(value.x) == "number") ? value.x - _txStart : Float(value.x.split("=").join(""));
 	} else if ("tx" in value) {
 	_txChange = value.tx - _txStart;
 	} else {
 	_txChange = 0;
 	}
 	if ("y" in value) {
-	_tyChange = (typeof(value.y) == "number") ? value.y - _tyStart : Float(value.y.split("=").join(""));
+	_tyChange = (Type.typeof(value.y) == "number") ? value.y - _tyStart : Float(value.y.split("=").join(""));
 	} else if ("ty" in value) {
 	_tyChange = value.ty - _tyStart;
 	} else {
@@ -137,13 +137,13 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 		}
 		finalAngle += dif;
 	} else if ("rotation" in value) {
-		finalAngle = (typeof(value.rotation) == "number") ? value.rotation * _DEG2RAD : Float(value.rotation.split("=").join("")) * _DEG2RAD + angle;
+		finalAngle = (Type.typeof(value.rotation) == "number") ? value.rotation * _DEG2RAD : Float(value.rotation.split("=").join("")) * _DEG2RAD + angle;
 	}
 	
-	var finalSkewX:Float = ("skewX" in value) ? (typeof(value.skewX) == "number") ? Number(value.skewX) * _DEG2RAD : Float(value.skewX.split("=").join("")) * _DEG2RAD + skewX : 0;
+	var finalSkewX:Float = ("skewX" in value) ? (Type.typeof(value.skewX) == "number") ? Float(value.skewX) * _DEG2RAD : Float(value.skewX.split("=").join("")) * _DEG2RAD + skewX : 0;
 	
 	if ("skewY" in value) { //skewY is just a combination of rotation and skewX
-		var skewY:Float = (typeof(value.skewY) == "number") ? value.skewY * _DEG2RAD : Float(value.skewY.split("=").join("")) * _DEG2RAD - skewX;
+		var skewY:Float = (Type.typeof(value.skewY) == "number") ? value.skewY * _DEG2RAD : Float(value.skewY.split("=").join("")) * _DEG2RAD - skewX;
 		finalAngle += skewY + skewX;
 		finalSkewX -= skewY;
 	}
@@ -158,22 +158,22 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	}
 	
 	if ("scale" in value) {
-		ratioX = Number(value.scale) / scaleX;
-		ratioY = Number(value.scale) / scaleY;
-		if (typeof(value.scale) != "number") { //relative value
+		ratioX = Float(value.scale) / scaleX;
+		ratioY = Float(value.scale) / scaleY;
+		if (Type.typeof(value.scale) != "number") { //relative value
 		ratioX += 1;
 		ratioY += 1;
 		}
 	} else {
 		if ("scaleX" in value) {
-		ratioX = Number(value.scaleX) / scaleX;
-		if (typeof(value.scaleX) != "number") { //relative value
+		ratioX = Float(value.scaleX) / scaleX;
+		if (Type.typeof(value.scaleX) != "number") { //relative value
 			ratioX += 1;
 		}
 		}
 		if ("scaleY" in value) {
-		ratioY = Number(value.scaleY) / scaleY;
-		if (typeof(value.scaleY) != "number") { //relative value
+		ratioY = Float(value.scaleY) / scaleY;
+		if (Type.typeof(value.scaleY) != "number") { //relative value
 			ratioY += 1;
 		}
 		}
@@ -185,21 +185,21 @@ override public function _onInitTween(target:Object, value:Dynamic, tween:TweenL
 	}
 	
 	if ("skewX2" in value) {
-		if (typeof(value.skewX2) == "number") {
+		if (Type.typeof(value.skewX2) == "number") {
 		matrix.c = Math.tan(0 - (value.skewX2 * _DEG2RAD));
 		} else {
-		matrix.c += Math.tan(0 - (Number(value.skewX2) * _DEG2RAD));
+		matrix.c += Math.tan(0 - (Float(value.skewX2) * _DEG2RAD));
 		}
 	}
 	if ("skewY2" in value) {
-		if (typeof(value.skewY2) == "number") {
+		if (Type.typeof(value.skewY2) == "number") {
 		matrix.b = Math.tan(value.skewY2 * _DEG2RAD);
 		} else {
-		matrix.b += Math.tan(Number(value.skewY2) * _DEG2RAD);
+		matrix.b += Math.tan(Float(value.skewY2) * _DEG2RAD);
 		}
 	}
 	
-	if (ratioX || ratioX == 0) { //faster than isNaN()
+	if (ratioX || ratioX == 0) { //faster than is0()
 		matrix.a *= ratioX;
 		matrix.b *= ratioX;
 	}

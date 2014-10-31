@@ -8,7 +8,7 @@ package com.greensock;
 
 import flash.display.Shape;
 import flash.events.Event;
-import flash.utils.GetTimer;
+import flash.utils.Timer;
 /**
  * [AS3/AS2 only] TweenNano is a super-lightweight (2k in AS3 and 2.6k in AS2) version of <a href="http://www.greensock.com/tweenlite/">TweenLite</a> 
  * and is only recommended for situations where you absolutely cannot afford the extra 4.7k that the normal 
@@ -92,10 +92,10 @@ import flash.utils.GetTimer;
  * serve other purposes:</p>
  * 
  * <ul>
- * 	<li><strong> delay </strong>:<em> Number</em> -
+ * 	<li><strong> delay </strong>:<em> Float</em> -
  * 		 Amount of delay in seconds (or frames for frames-based tweens) before the tween should begin.</li>
  * 	
- * 	<li><strong> ease </strong>:<em> Ease (or Function)</em> -
+ * 	<li><strong> ease </strong>:<em> Ease (or Dynamic)</em> -
  * 		 You can choose from various eases to control the rate of change during 
  * 		 the animation, giving it a specific "feel". For example, <code>ElasticOut.ease</code> 
  * 		 or <code>StrongInOut.ease</code>. TweenNano works with not only the easing equations
@@ -104,12 +104,12 @@ import flash.utils.GetTimer;
  * 		 <code>fl.motion.easing</code> eases. The default is <code>QuadOut.ease</code>. 
  * 		 For linear animation, use the GreenSock <code>Linear.ease</code> ease.</li>
  * 	
- * 	<li><strong> onComplete </strong>:<em> Function</em> -
+ * 	<li><strong> onComplete </strong>:<em> Dynamic</em> -
  * 		 A function that should be called when the tween has completed</li>
  * 	
  * 	<li><strong> onCompleteParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onComplete</code> function. For example,
- * 		 <code>TweenNano.to(mc, 1, {x:100, onComplete:myFunction, onCompleteParams:[mc, "param2"]});</code></li>
+ * 		 <code>TweenNano.to(mc, 1, {x:100, onComplete:myDynamic, onCompleteParams:[mc, "param2"]});</code></li>
  * 	
  * 	<li><strong> useFrames </strong>:<em> Boolean</em> -
  * 		 If <code>useFrames</code> is <code>true</code>, the tweens's timing will be 
@@ -123,13 +123,13 @@ import flash.utils.GetTimer;
  * 		 Or to prevent a <code>from()</code> from rendering immediately, set <code>immediateRender</code> 
  * 		 to <code>false</code>.</li>
  * 	
- * 	<li><strong> onUpdate </strong>:<em> Function</em> -
+ * 	<li><strong> onUpdate </strong>:<em> Dynamic</em> -
  * 		 A function that should be called every time the tween updates  
  * 		 (on every frame while the tween is active)</li>
  * 	
  * 	<li><strong> onUpdateParams </strong>:<em> Array</em> -
  * 		 An Array of parameters to pass the <code>onUpdate</code> function. For example,
- * 		 <code>TweenNano.to(mc, 1, {x:100, onUpdate:myFunction, onUpdateParams:[mc, "param2"]});</code></li>
+ * 		 <code>TweenNano.to(mc, 1, {x:100, onUpdate:myDynamic, onUpdateParams:[mc, "param2"]});</code></li>
  * 	
  * 	<li><strong> overwrite </strong>:<em> String</em> -
  * 		 Controls how (and if) other tweens of the same target are overwritten. 
@@ -151,7 +151,7 @@ import flash.utils.GetTimer;
  * 	
  * 	<li> Kill all tweens of a particular object anytime with <code>TweenNano.killTweensOf(myObject);</code></li>
  * 	  
- * 	<li> You can kill all delayedCalls to a particular function using <code>TweenNano.killTweensOf(myFunction);</code></li>
+ * 	<li> You can kill all delayedCalls to a particular function using <code>TweenNano.killTweensOf(myDynamic);</code></li>
  * 	  
  * 	<li> Use the <code>TweenNano.from()</code> method to animate things into place. For example, 
  * 	if you have things set up on the stage in the spot where they should end up, and you 
@@ -181,14 +181,14 @@ private static var _frame:UInt;
  * 
  * <p><strong>Basic example (AS2, AS3, and Javascript):</strong></p><listing version="3.0">
 //add listener
-TweenNano.ticker.addEventListener("tick", myFunction);
+TweenNano.ticker.addEventListener("tick", myDynamic);
  
-function myFunction(event) {
+function myDynamic(event) {
  	//executes on every tick after the core engine updates
 }
  
 //to remove the listener later...
-TweenNano.ticker.removeEventListener("tick", myFunction);
+TweenNano.ticker.removeEventListener("tick", myDynamic);
 </listing>
  * 
  * <p>Due to differences in the core languages (and to maximize efficiency), the advanced syntax is slightly different
@@ -200,7 +200,7 @@ TweenNano.ticker.removeEventListener("tick", myFunction);
  * <p>Parameters:
  * <ol>
  * 	<li><strong>type</strong> <em>: String</em> - type of listener, should always be <code>"tick"</code></li>
- * 	<li><strong>callback</strong> <em>: Function</em> - the function to call when the event occurs</li>
+ * 	<li><strong>callback</strong> <em>: Dynamic</em> - the function to call when the event occurs</li>
  * 	<li><strong>scope</strong> <em>: Object</em> - binds the scope to a particular object (scope is basically what "<code>this</code>" refers to in your function). This can be very useful in Javascript and AS2 because scope isn't generally maintained. </li>
  * 	<li><strong>useParam</strong> <em>: Bool</em> - if <code>true</code>, an event object will be generated and fed to the callback each time the event occurs. The event is a generic object and has two properties: <code>type</code> (always <code>"tick"</code>) and <code>target</code> which refers to the ticker instance. The default for <code>useParam</code> is <code>false</code> because it improves performance.</li>
  * 	<li><strong>priority</strong> <em>: Integer</em> - influences the order in which the listeners are called. Listeners with lower priorities are called after ones with higher priorities.</li>
@@ -209,14 +209,14 @@ TweenNano.ticker.removeEventListener("tick", myFunction);
  * 
  * <p><strong>Advanced example (Javascript and AS2):</strong></p><listing version="3.0">
 //add listener that requests an event object parameter, binds scope to the current scope (this), and sets priority to 1 so that it is called before any other listeners that had a priority lower than 1...
-TweenNano.ticker.addEventListener("tick", myFunction, this, true, 1);
+TweenNano.ticker.addEventListener("tick", myDynamic, this, true, 1);
  
-function myFunction(event) {
+function myDynamic(event) {
 //executes on every tick after the core engine updates
 }
  
 //to remove the listener later...
-TweenNano.ticker.removeEventListener("tick", myFunction);
+TweenNano.ticker.removeEventListener("tick", myDynamic);
 </listing>
  * 
  * <p><strong>AS3</strong></p>
@@ -228,24 +228,24 @@ TweenNano.ticker.removeEventListener("tick", myFunction);
 import flash.events.Event;
  
 //add listener with weak reference (standard syntax - notice the 5th parameter is true)
-TweenNano.ticker.addEventListener("tick", myFunction, false, 0, true);
+TweenNano.ticker.addEventListener("tick", myDynamic, false, 0, true);
  
-function myFunction(event:Event):Void {
+function myDynamic(event:Event):Void {
 //executes on every tick after the core engine updates
 }
  
 //to remove the listener later...
-TweenNano.ticker.removeEventListener("tick", myFunction);
+TweenNano.ticker.removeEventListener("tick", myDynamic);
 </listing>
  **/
 public static var ticker:Shape = new Shape(); 
 
 /** Provides An easy way to change the default easing equation. Choose from any of the GreenSock eases in the <code>com.greensock.easing</code> package or any standard easing function like the ones in Adobe's <code>fl.motion.easing</code> package. @default QuadOut.ease **/
-public static var defaultEase:Object =  function (t:Float, b:Float, c:Float, d:Float):Float {
+public static var defaultEase:Map<String, Int> =  function (t:Float, b:Float, c:Float, d:Float):Float {
 						return -1 * (t /= d) * (t - 2);
 					}
 /** @private **/
-private static var _reservedProps:Object;
+private static var _reservedProps:Map<String, Int>;
 /** @private **/
 private static var _tickEvent:Event = new Event("tick");
 /** @private **/
@@ -256,11 +256,11 @@ private static var _last:TweenNano;
 /** @private Duration of the tween in seconds (or in frames if "useFrames" is true). **/
 public var _duration:Float; 
 /** Stores variables (things like "alpha", "y" or whatever we're tweening, as well as special properties like "onComplete"). **/
-public var vars:Object; 
+public var vars:Map<String, Int>; 
 /** @private Start time in seconds (or frames for frames-based tweens) **/
 public var _startTime:Float;
 /** Target object whose properties this tween affects. This can be ANY object or even an array. **/
-public var target:Object;
+public var target:Map<String, Int>;
 /** @private Flagged for garbage collection **/
 public var _gc:Bool;
 /** @private Indicates that frames should be used instead of seconds for timing purposes. So if useFrames is true and the tween's duration is 10, it would mean that the tween should take 10 frames to complete, not 10 seconds. **/
@@ -269,29 +269,29 @@ public var _useFrames:Bool;
 public var ratio:Float = 0;
 
 /** @private Easing method to use which determines how the values animate over time. Examples are Elastic.easeOut and Strong.easeIn. Many are found in the fl.motion.easing package or com.greensock.easing. **/
-private var _ease:Function;
+private var _ease:Dynamic;
 /** @private **/
-private var _rawEase:Object;
+private var _rawEase:Map<String, Int>;
 /** @private Indicates whether or not init() has been called (where all the tween property start/end value information is recorded) **/
 private var _initted:Bool;
 
 /** @private **/
-private var _firstPT:Object;
+private var _firstPT:Map<String, Int>;
 /** @private **/
 public var _next:TweenNano;
 /** @private **/
 public var _prev:TweenNano;
 /** @private **/
-public var _targets:Array;
+public var _targets:Array<Dynamic>;
 
 /**
  * Constructor
  *  
  * @param target Target object (or array of objects) whose properties this tween affects 
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>new TweenNano(mc, 1, {x:100, y:200, onComplete:myFunction})</code>.
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>new TweenNano(mc, 1, {x:100, y:200, onComplete:myDynamic})</code>.
  */
-public function new(target:Object, duration:Float, vars:Object) {
+public function new(target:Map<String, Int>, duration:Float, vars:Map<String, Int>) {
 	if (!_reservedProps) {
 	_reservedProps = {ease:1, delay:1, useFrames:1, overwrite:1, onComplete:1, onCompleteParams:1, runBackwards:1, immediateRender:1, onUpdate:1, onUpdateParams:1, startAt:1};
 	_time = getTimer() / 1000;
@@ -301,11 +301,11 @@ public function new(target:Object, duration:Float, vars:Object) {
 	this.vars = vars;
 	_duration = duration;
 	this.target = target;
-	if (target is Array && typeof(target[0]) === "object") {
+	if (target is Array && typeof(target[0]) == "object") {
 	_targets = target.concat();
 	}
 	_rawEase = this.vars.ease || defaultEase;
-	_ease = (typeof(_rawEase) == "function") ? _rawEase as Function : _rawEase.getRatio;
+	_ease = (Type.typeof(_rawEase) == "function") ? _rawEase as Dynamic : _rawEase.getRatio;
 	_useFrames = Boolean(vars.useFrames == true);
 	_startTime = (_useFrames ? _frame : _time) + (this.vars.delay || 0);
 	
@@ -332,7 +332,7 @@ public function _init():Void {
 	vars.startAt.immediateRender = true;
 	TweenNano.to(target, 0, vars.startAt);
 	}
-	var i:Int, pt:Object;
+	var i:Int, pt:Map<String, Int>;
 	if (_targets != null) {
 	i = _targets.length;
 	while (--i > -1) {
@@ -357,9 +357,9 @@ private function _initProps(target:Dynamic):Void {
 	if (target != null) {
 	for (var p:String in vars) {
 		if (!(p in _reservedProps)) {
-		_firstPT = {_next:_firstPT, t:target, p:p, f:(typeof(target[p]) === "function")};
-		_firstPT.s = (!_firstPT.f) ? Number(target[p]) : target[ ((p.indexOf("set") || typeof(target["get" + p.substr(3)]) !== "function") ? p : "get" + p.substr(3)) ]();
-		_firstPT.c = (typeof(vars[p]) === "number") ? Number(vars[p]) - _firstPT.s : (typeof(vars[p]) === "string" && vars[p].charAt(1) === "=") ? int(vars[p].charAt(0)+"1") * Number(vars[p].substr(2)) : Float(vars[p]) || 0;
+		_firstPT = {_next:_firstPT, t:target, p:p, f:(Type.typeof(target[p]) == "function")};
+		_firstPT.s = (!_firstPT.f) ? Float(target[p]) : target[ ((p.indexOf("set") || typeof(target["get" + p.substr(3)]) != "function") ? p : "get" + p.substr(3)) ]();
+		_firstPT.c = (Type.typeof(vars[p]) == "number") ? Float(vars[p]) - _firstPT.s : (Type.typeof(vars[p]) == "string" && vars[p].charAt(1) == "=") ? int(vars[p].charAt(0)+"1") * Float(vars[p].substr(2)) : Float(vars[p]) || 0;
 		if (_firstPT._next) {
 			_firstPT._next._prev = _firstPT;
 		}
@@ -390,7 +390,7 @@ public function _render(time:Float):Void {
 	} else {
 	this.ratio = (_ease == _rawEase) ? _ease(time, 0, 1, _duration) : _ease.call(_rawEase, time / _duration);
 	}
-	var pt:Object = _firstPT;
+	var pt:Map<String, Int> = _firstPT;
 	while (pt) {
 	if (pt.f) {
 		pt.t[pt.p](pt.c * ratio + pt.s);
@@ -430,9 +430,9 @@ public function _render(time:Float):Void {
  * @param target [optional] To kill only aspects of the animation related to a particular target (or targets), reference it here. It can be an array or a single object. For example, to kill only parts having to do with <code>myObject</code>, do <code>kill(myObject)</code> or to kill only parts having to do with <code>myObject1</code> and <code>myObject2</code>, do <code>kill([myObject1, myObject2])</code>. If no target is defined, <strong>ALL</strong> targets will be affected. 
  **/
 public function kill(target:Dynamic=null):Void {
-	var i:Int, pt:Object = _firstPT;
+	var i:Int, pt:Map<String, Int> = _firstPT;
 	target = target || _targets || this.target;
-	if (target is Array && typeof(target[0]) === "object") {
+	if (target is Array && typeof(target[0]) == "object") {
 	i = target.length;
 	while (--i > -1) {
 		kill(target[i]);
@@ -510,12 +510,12 @@ TweenNano.to([mc1, mc2, mc3], 1, {x:100});
  * 
  * @param target Target object (or array of objects) whose properties this tween affects. 
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
- * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myFunction</code>, do this: <code>TweenNano.to(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+ * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>TweenNano.to(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
  * @return TweenNano instance
  * @see com.greensock.TimelineLite#to()
  * @see #from()
  */
-public static function to(target:Object, duration:Float, vars:Object):TweenNano {
+public static function to(target:Map<String, Int>, duration:Float, vars:Map<String, Int>):TweenNano {
 	return new TweenNano(target, duration, vars);
 }
 
@@ -556,13 +556,13 @@ TweenNano.from([mc1, mc2, mc3], 1.5, {alpha:0});
  * 
  * @param target Target object (or array of objects) whose properties this tween affects.  
  * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
- * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myFunction</code>, do this: <code>TweenNano.from(mc, 1, {x:100, y:200, onComplete:myFunction});</code>
+ * @param vars An object defining the starting value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> from 100 and <code>mc.y</code> from 200 and then call <code>myDynamic</code>, do this: <code>TweenNano.from(mc, 1, {x:100, y:200, onComplete:myDynamic});</code>
  * @return TweenNano instance
  * @see #to()
  * @see com.greensock.TimelineLite#from()
  * @see com.greensock.TimelineLite#staggerFrom()
  */
-public static function from(target:Object, duration:Float, vars:Object):TweenNano {
+public static function from(target:Map<String, Int>, duration:Float, vars:Map<String, Int>):TweenNano {
 	vars.runBackwards = true;
 	if (!("immediateRender" in vars)) {
 	vars.immediateRender = true;
@@ -583,22 +583,22 @@ public static function from(target:Object, duration:Float, vars:Object):TweenNan
  * <p><code>TweenNano.delayedCall(delay, callback, params, scope, useFrames)</code> <em>[Javascript and AS2 only]</em></p>
  * 
  * <listing version="3.0">
-//calls myFunction after 1 second and passes 2 parameters:
-TweenNano.delayedCall(1, myFunction, ["param1", 2]);
+//calls myDynamic after 1 second and passes 2 parameters:
+TweenNano.delayedCall(1, myDynamic, ["param1", 2]);
  
-function myFunction(param1, param2) {
+function myDynamic(param1, param2) {
 //do stuff
 }
 </listing>
  * 
  * @param delay Delay in seconds (or frames if <code>useFrames</code> is <code>true</code>) before the function should be called
- * @param callback Function to call
+ * @param callback Dynamic to call
  * @param params An Array of parameters to pass the function (optional).
  * @param useFrames If the delay should be measured in frames instead of seconds, set <code>useFrames</code> to <code>true</code> (default is <code>false</code>)
  * @return TweenNano instance
  * @see com.greensock.TimelineLite#call()
  */
-public static function delayedCall(delay:Float, callback:Function, params:Array=null, useFrames:Bool=false):TweenNano {
+public static function delayedCall(delay:Float, callback:Dynamic, params:Array<Dynamic>=null, useFrames:Bool=false):TweenNano {
 	return new TweenNano(callback, 0, {delay:delay, onComplete:callback, onCompleteParams:params, useFrames:useFrames});
 }
 
@@ -633,8 +633,8 @@ public static function _updateRoot(e:Event=null):Void {
  * TweenNano.killTweensOf(myObject);
  * </code></p>
  * 
- * <p>To kill all the delayedCalls that were created like <code>TweenNano.delayedCall(5, myFunction);</code>, 
- * you can simply call <code>TweenNano.killTweensOf(myFunction);</code> because delayedCalls 
+ * <p>To kill all the delayedCalls that were created like <code>TweenNano.delayedCall(5, myDynamic);</code>, 
+ * you can simply call <code>TweenNano.killTweensOf(myDynamic);</code> because delayedCalls 
  * are simply tweens that have their <code>target</code> and <code>onComplete</code> set to 
  * the same function (as well as a <code>delay</code> of course).</p>
  * 
@@ -645,7 +645,7 @@ public static function _updateRoot(e:Event=null):Void {
  * 
  * @param target Object whose tweens should be killed immediately
  **/
- public static function killTweensOf(target:Object):Void {
+ public static function killTweensOf(target:Map<String, Int>):Void {
 	var t:TweenNano = _first,
 	next:TweenNano;
 	while (t) {

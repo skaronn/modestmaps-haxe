@@ -25,7 +25,7 @@ package com.greensock.easing;
  * 
  * @author Jack Doyle, jack@greensock.com
  **/
-final class Quart {
+@:final class Quart {
 
 /** Eases out with a power of 3. **/
 public static var easeOut:Ease = new Ease(null,null,1,3);

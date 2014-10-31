@@ -72,7 +72,7 @@ var area:AutoFitArea = AutoFitArea.createAround(myImage);
  * 
  * @author Jack Doyle, jack@greensock.com
  */	 
-import flash.Error;
+import flash.errors.Error;
 
 class AutoFitArea extends Shape {
 /** @private **/
@@ -131,7 +131,7 @@ public function new(parent:DisplayObjectContainer, x:Float=0, y:Float=0, width:F
  * 
  * @param target The target DisplayObject whose position and dimensions the AutoFitArea should match initially.
  * @param vars An object used for defining various optional parameters (see below for list) - this is more readable and concise than defining 11 or more normal arguments. 
- * 		   For example, <code>createAround(mc, {scaleMode:"proportionalOutside", crop:true});</code> instead of <code>createAround(mc, "proportionalOutside", "center", "center", true, 0, 99999999, 0, 99999999, false, NaN, false);</code>.
+ * 		   For example, <code>createAround(mc, {scaleMode:"proportionalOutside", crop:true});</code> instead of <code>createAround(mc, "proportionalOutside", "center", "center", true, 0, 99999999, 0, 99999999, false, 0, false);</code>.
  * 		   The following optional parameters are recognized:
  * 		<ul>
  * 			<li><b>scaleMode : String</b> - Determines how the target should be scaled to fit the area. Use the ScaleMode class constants: <code>STRETCH, PROPORTIONAL_INSIDE, PROPORTIONAL_OUTSIDE, NONE, WIDTH_ONLY,</code> or <code>HEIGHT_ONLY</code></li>
@@ -150,7 +150,7 @@ public function new(parent:DisplayObjectContainer, x:Float=0, y:Float=0, width:F
  * 		</ul>
  * @return An AutoFitArea instance
  */
-public static function createAround(target:DisplayObject, vars:Object=null, ...args):AutoFitArea {
+public static function createAround(target:DisplayObject, vars:Map<String, Int>=null, ...args):AutoFitArea {
 	if (vars == null || typeof(vars) == "string") {
 	//sensed old method - parse the params for backwards compatibility
 	vars = {scaleMode:vars || "proportionalInside",
@@ -158,13 +158,13 @@ public static function createAround(target:DisplayObject, vars:Object=null, ...a
 		vAlign:args[1] || "center",
 		crop:Bool(args[2]),
 		minWidth:args[3] || 0,
-		maxWidth:(isNaN(args[4]) ? 999999999 : args[4]),
+		maxWidth:(is0(args[4]) ? 999999999 : args[4]),
 		minHeight:args[5] || 0,
-		maxHeight:(isNaN(args[6]) ? 999999999 : args[6]),
+		maxHeight:(is0(args[6]) ? 999999999 : args[6]),
 		calculateVisible:Bool(args[8])};
 	}
 	var boundsTarget:DisplayObject = (vars.customBoundsTarget is DisplayObject) ? vars.customBoundsTarget : target;
-	var previewColor:UInt = isNaN(args[7]) ? (("previewColor" in vars) ? uint(vars.previewColor) : 0xFF0000) : args[7];
+	var previewColor:UInt = is0(args[7]) ? (("previewColor" in vars) ? uint(vars.previewColor) : 0xFF0000) : args[7];
 	var bounds:Rectangle = (vars.calculateVisible == true) ? getVisibleBounds(boundsTarget, target.parent) : boundsTarget.getBounds(target.parent);
 	var afa:AutoFitArea = new AutoFitArea(target.parent, bounds.x, bounds.y, bounds.width, bounds.height, previewColor);
 	afa.attach(target, vars);
@@ -179,7 +179,7 @@ public static function createAround(target:DisplayObject, vars:Object=null, ...a
  * 
  * @param target The DisplayObject to attach and scale/stretch to fit within the area.
  * @param vars An object used for defining various optional parameters (see below for list) - this is more readable and concise than defining 11 or more normal arguments. 
- * 		   For example, <code>attach(mc, {scaleMode:"proportionalOutside", crop:true});</code> instead of <code>attach(mc, "proportionalOutside", "center", "center", true, 0, 99999999, 0, 99999999, false, NaN, false);</code>.
+ * 		   For example, <code>attach(mc, {scaleMode:"proportionalOutside", crop:true});</code> instead of <code>attach(mc, "proportionalOutside", "center", "center", true, 0, 99999999, 0, 99999999, false, 0, false);</code>.
  * 		   The following optional parameters are recognized:
  * 		<ul>
  * 			<li><b>scaleMode : String</b> - Determines how the target should be scaled to fit the area. Use the ScaleMode class constants: <code>STRETCH, PROPORTIONAL_INSIDE, PROPORTIONAL_OUTSIDE, NONE, WIDTH_ONLY,</code> or <code>HEIGHT_ONLY</code></li>
@@ -196,7 +196,7 @@ public static function createAround(target:DisplayObject, vars:Object=null, ...a
  * 			<li><b>customAspectRatio : Float</b> - Normally if you set the <code>scaleMode</code> to <code>PROPORTIONAL_INSIDE</code> or <code>PROPORTIONAL_OUTSIDE</code>, its native (unscaled) dimensions will be used to determine the proportions (aspect ratio), but if you prefer to define a custom width-to-height ratio, use <code>customAspectRatio</code>. For example, if an item is 100 pixels wide and 50 pixels tall at its native size, the aspect ratio would be 100/50 or 2. If, however, you want it to be square (a 1-to-1 ratio), the <code>customAspectRatio</code> would be 1. </li>
  * 		</ul>
  */
-public function attach(target:DisplayObject, vars:Object=null, ...args):Void { 
+public function attach(target:DisplayObject, vars:Map<String, Int>=null, ...args):Void { 
 	if (target.parent != _parent) {
 	throw new Error("The parent of the DisplayObject " + target.name + " added to AutoFitArea " + this.name + " doesn't share the same parent.");
 	}
@@ -207,9 +207,9 @@ public function attach(target:DisplayObject, vars:Object=null, ...args):Void {
 		vAlign:args[1] || "center",
 		crop:Bool(args[2]),
 		minWidth:args[3] || 0,
-		maxWidth:(isNaN(args[4]) ? 999999999 : args[4]),
+		maxWidth:(is0(args[4]) ? 999999999 : args[4]),
 		minHeight:args[5] || 0,
-		maxHeight:(isNaN(args[6]) ? 999999999 : args[6]),
+		maxHeight:(is0(args[6]) ? 999999999 : args[6]),
 		calculateVisible:Bool(args[7]),
 		customAspectRatio:Float(args[8]),
 		roundPosition:Bool(args[9])};
@@ -271,7 +271,7 @@ public function release(target:DisplayObject):Bool {
  * 
  * @return An array of all attached objects
  */
-public function getAttachedObjects():Array {
+public function getAttachedObjects():Array<Dynamic> {
 	var a:Array = [];
 	var cnt:UInt = 0;
 	var item:AutoFitItem = _rootItem;
@@ -523,7 +523,7 @@ public function disableTweenMode():Void {
  * @param priority Priority level
  * @param useWeakReference Use weak references
  */
-override public function addEventListener(type:String, listener:Function, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
+override public function addEventListener(type:String, listener:Dynamic, useCapture:Bool=false, priority:Int=0, useWeakReference:Bool=false):Void {
 	_hasListener = true;
 	super.addEventListener(type, listener, useCapture, priority, useWeakReference);
 }
@@ -707,7 +707,7 @@ public var bounds:Rectangle;
 public var hasDrawNow:Bool;
 
 /** @private **/
-public function AutoFitItem(target:DisplayObject, vars:Object, next:AutoFitItem) {
+public function AutoFitItem(target:DisplayObject, vars:Map<String, Int>, next:AutoFitItem) {
 this.target = target;
 if (vars == null) {
 	vars = {};
@@ -715,10 +715,10 @@ if (vars == null) {
 this.scaleMode = 	vars.scaleMode || "proportionalInside";
 this.hAlign = 	vars.hAlign || "center";
 this.vAlign = 	vars.vAlign || "center";
-this.minWidth = 	Number(vars.minWidth) || 0;
-this.maxWidth = 	isNaN(vars.maxWidth) ? 999999999 : Float(vars.maxWidth);
-this.minHeight = 	Number(vars.minHeight) || 0;
-this.maxHeight = 	isNaN(vars.maxHeight) ? 999999999 : Float(vars.maxHeight);
+this.minWidth = 	Float(vars.minWidth) || 0;
+this.maxWidth = 	is0(vars.maxWidth) ? 999999999 : Float(vars.maxWidth);
+this.minHeight = 	Float(vars.minHeight) || 0;
+this.maxHeight = 	is0(vars.maxHeight) ? 999999999 : Float(vars.maxHeight);
 this.roundPosition = Boolean(vars.roundPosition);
 this.boundsTarget = (vars.customBoundsTarget is DisplayObject) ? vars.customBoundsTarget : this.target;
 this.matrix = target.transform.matrix;
@@ -727,7 +727,7 @@ this.hasDrawNow = this.target.hasOwnProperty("drawNow");
 if (this.hasDrawNow) {
 	Object(this.target).drawNow(); //just to make sure we're starting with the correct values if it's a component.
 }
-if (!isNaN(vars.customAspectRatio)) {
+if (!is0(vars.customAspectRatio)) {
 	this.aspectRatio = vars.customAspectRatio;
 	this.hasCustomRatio = true;
 }
