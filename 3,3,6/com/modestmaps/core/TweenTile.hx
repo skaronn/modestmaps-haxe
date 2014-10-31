@@ -30,7 +30,7 @@ class TweenTile extends Tile
 	override public function show():Void 
 	{
 		if (alpha < 1) {
-			TweenLite.to(this, FADE_TIME, { alpha: 1 });
+			TweenLite.to(this, FADE_TIME, [ alpha => 1 ]);
 		}
 	}	
 

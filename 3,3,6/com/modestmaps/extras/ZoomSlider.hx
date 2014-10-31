@@ -13,7 +13,7 @@ import flash.filters.DropShadowFilter;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-import gs.TweenLite;	
+import com.greensock.TweenLite;
 
 /** This is an example of a slider that modifies the zoom level of the given map.
  * 
@@ -82,7 +82,7 @@ class ZoomSlider extends Sprite
 	{
 		var p:Point = globalToLocal(new Point(event.stageX, event.stageY));
 		thumb.y = p.y;
-		TweenLite.to(map.grid, 0.25, { zoomLevel: Math.round(map.grid.minZoom + (map.grid.maxZoom - map.grid.minZoom) * (1 - proportion)) }); 
+		//TweenLite.to(map.grid, 0.25, { zoomLevel: Math.round(map.grid.minZoom + (map.grid.maxZoom - map.grid.minZoom) * (1 - proportion)) }); 
 	}
 
 	private function onThumbMouse(event:Event):Void
@@ -100,7 +100,8 @@ class ZoomSlider extends Sprite
 		else if (event.type == MouseEvent.MOUSE_UP || event.type == Event.MOUSE_LEAVE) {
 			thumb.stopDrag();
 			dragging = false;
-			TweenLite.to(map.grid, 0.1, { zoomLevel: Math.round(map.grid.zoomLevel) });
+			//TweenLite.to(map.grid, 0.1, { zoomLevel: Math.round(map.grid.zoomLevel) });
+			//TweenLite.to(map.grid, 0.1, [ zoomLevel => Math.round(map.grid.zoomLevel) ] );
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onThumbMouse);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onThumbMouse);
 			stage.removeEventListener(Event.MOUSE_LEAVE, onThumbMouse);

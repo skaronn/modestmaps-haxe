@@ -80,9 +80,9 @@ class Ease {
 	*/
 	public function new(func:Dynamic=null, extraParams:Array<Dynamic>=null, type:Float=0, power:Float=0) {
 		_func = func;
-		_params = (extraParams) ? _baseParams.concat(extraParams) : _baseParams;
-		_type = type;
-		_power = power;
+		_params = (extraParams != null) ? _baseParams.concat(extraParams) : _baseParams;
+		_type = Std.int(type);
+		_power = Std.int(power);
 	}
 
 	/**

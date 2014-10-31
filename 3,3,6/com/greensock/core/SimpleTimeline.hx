@@ -74,7 +74,8 @@ class SimpleTimeline extends Animation {
 	 * @return this timeline instance (useful for chaining like <code>myTimeline.insert(...).insert(...)</code>)
 	 */
 	public function insert(child:Dynamic, position:Dynamic=0):Dynamic {
-		return add(child, position || 0);
+		//return add(child, position || 0);
+		return add(child, position);
 	}
 
 	/**
@@ -90,7 +91,8 @@ class SimpleTimeline extends Animation {
 		 * @return this timeline instance (useful for chaining like <code>myTimeline.add(...).add(...)</code>)
 	 */
 	public function add(child:Dynamic, position:Dynamic="+=0", align:String="normal", stagger:Float=0):Dynamic {
-		child._startTime = Float(position || 0) + child._delay;
+		//child._startTime = Number(position || 0) + child._delay;
+		child._startTime = cast(position, Float) + child._delay;
 		if (child._paused) if (this != child._timeline) { //we only adjust the _pauseTime if it wasn't in this timeline already. Remember, sometimes a tween will be inserted again into the same timeline when its startTime is changed so that the tweens in the TimelineLite/Max are re-ordered properly in the linked list (so everything renders in the proper order). 
 			child._pauseTime = child._startTime + ((rawTime() - child._startTime) / child._timeScale);
 		}
@@ -111,17 +113,17 @@ class SimpleTimeline extends Animation {
 		}
 		if (prevTween != null) {
 			child._next = prevTween._next;
-			prevTween._next = Animation(child);
+			prevTween._next = cast(child, Animation);
 		}
 		else {
 			child._next = _first;
-			_first = Animation(child);
+			_first = cast(child, Animation);
 		}
 		if (child._next != null) {
 			child._next._prev = child;
 		}
 		else {
-			_last = Animation(child);
+			_last = cast(child, Animation);
 		}
 		child._prev = prevTween;
 		
@@ -164,7 +166,7 @@ class SimpleTimeline extends Animation {
 	override public function render(time:Float, suppressEvents:Bool=false, force:Bool=false):Void {
 		var tween:Animation = _first, next:Animation;
 		_totalTime = _time = _rawPrevTime = time;
-		while (tween) {
+		while (tween != null) {
 			next = tween._next; //record it here because the value could change after rendering...
 			if (tween._active || (time >= tween._startTime && !tween._paused)) {
 				if (!tween._reversed) {

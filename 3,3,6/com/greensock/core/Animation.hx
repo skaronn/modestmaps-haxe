@@ -169,7 +169,7 @@ class Animation {
 	public var _prev:Animation;
 
 	/** The <code>vars</code> object passed into the constructor which stores configuration variables like onComplete, onUpdate, etc. as well as tweening properties like opacity, x, y or whatever. **/
-	public var vars:Dynamic;
+	public var vars:Map<Dynamic, Dynamic>;
 	/** [Read-only] Parent timeline. Every animation is placed onto a timeline (the root timeline by default) and can only have one parent. An instance cannot exist in multiple timelines at once. **/
 	public var timeline:SimpleTimeline;
 	/** A place to store any data you want (initially populated with <code>vars.data</code> if it exists). **/
@@ -182,15 +182,22 @@ class Animation {
 	 * @param vars configuration variables (for example, <code>{x:100, y:0, opacity:0.5, onComplete:myDynamic}</code>)
 	 */
 	public function new(duration:Float=0, vars:Dynamic=null) {
-		this.vars = vars || {};
-		if (this.vars._isGSVars) {
-			this.vars = this.vars.vars;
+		//this.vars = vars || {};
+		this.vars = vars != null ? vars : new Map<Dynamic, Dynamic>();
+		//if (this.vars._isGSVars) {
+		if (this.vars.get("_isGSVars")) {
+			//this.vars = this.vars.vars;
+			this.vars = this.vars.get("vars");
 		}
-		_duration = _totalDuration = duration || 0;
-		_delay = cast(this.vars.delay, Float) || 0;
+		//_duration = _totalDuration = duration || 0;
+		_totalDuration = duration;
+		_duration = _totalDuration > 0 ? _totalDuration : 0;
+		//_delay = this.vars.delay || 0;
+		_delay = cast(this.vars.get("delay"), Float) > 0 ? cast(this.vars.get("delay"), Float) : 0;
 		_timeScale = 1;
 		_totalTime = _time = 0;
-		data = this.vars.data;
+		//data = this.vars.data;
+		data = this.vars.get("data");
 		_rawPrevTime = -1;
 		
 		if (_rootTimeline == null) {
@@ -198,7 +205,7 @@ class Animation {
 				_rootFrame = 0;
 				_rootFramesTimeline = new SimpleTimeline();
 				_rootTimeline = new SimpleTimeline();
-				_rootTimeline._startTime = getTimer() / 1000;
+				_rootTimeline._startTime = flash.Lib.getTimer() / 1000;
 				_rootFramesTimeline._startTime = 0;
 				_rootTimeline._active = _rootFramesTimeline._active = true;
 				ticker.addEventListener("enterFrame", _updateRoot, false, 0, true);
@@ -208,15 +215,17 @@ class Animation {
 			}
 		}
 		
-		var tl:SimpleTimeline = (this.vars.useFrames) ? _rootFramesTimeline : _rootTimeline;
+		//var tl:SimpleTimeline = (this.vars.useFrames) ? _rootFramesTimeline : _rootTimeline;
+		var tl:SimpleTimeline = (this.vars.get("useFrames")) ? _rootFramesTimeline : _rootTimeline;
 		tl.add(this, tl._time);
 		
-		_reversed = (this.vars.reversed == true);
-		if (this.vars.paused) {
+		//_reversed = (this.vars.reversed == true);
+		_reversed = (this.vars.get("reversed") == true);
+		//if (this.vars.paused) {
+		if (this.vars.get("paused")) {
 			paused(true);
 		}
 	}
-
 
 	/**
 	 * Begins playing forward, optionally from a specific time (by default playback begins from
@@ -569,7 +578,7 @@ class Animation {
 	/** @private This method gets called on every frame and is responsible for rendering/updating the root timelines. If you want to unhook the engine from its ticker, you could do <code>Animation.ticker.removeEventListener("enterFrame", _updateRoot)</code> and then call it yourself whenever you want to update. **/
 	public static function _updateRoot(event:Event=null):Void {
 		_rootFrame++;
-		_rootTimeline.render((getTimer() / 1000 - _rootTimeline._startTime) * _rootTimeline._timeScale, false, false);
+		_rootTimeline.render((flash.Lib.getTimer() / 1000 - _rootTimeline._startTime) * _rootTimeline._timeScale, false, false);
 		_rootFramesTimeline.render((_rootFrame - _rootFramesTimeline._startTime) * _rootFramesTimeline._timeScale, false, false);
 		ticker.dispatchEvent(_tickEvent);
 	}
@@ -577,7 +586,8 @@ class Animation {
 	/** @private **/
 	private function _swapSelfInParams(params:Array<Dynamic>):Array<Dynamic> {
 		var i:Int = params.length,
-		copy:Array = params.concat();
+		//copy:Array<Dynamic> = params.concat();
+		copy:Array<Dynamic> = params;
 		while (--i > -1) {
 			if (params[i] == "{self}") {
 				copy[i] = this;
@@ -638,12 +648,12 @@ class Animation {
 	 * @param params An array of parameters to pass the callback. Use <code>"{self}"</code> to refer to the animation instance itself. Example: <code>["param1","{self}"]</code>
 	 * @return Omitting the all but the first parameter returns the current value (getter), whereas defining more than the first parameter sets the callback (setter) and returns the instance itself for easier chaining.
 	 */
-	public function eventCallback(type:String, callback:Dynamic=null, params:Array<Dynamic>=null):Dynamic {
+	public function eventCallback(type:String, callback:Dynamic=null, params:Array<Dynamic>=null, arguments:Array<Dynamic>=null):Dynamic {
 		if (type == null) {
 			return null;
 		}
-		else if (type.substr(0,2) == "on") {
-			if (arguments.length == 1) {
+		else if (type.substr(0, 2) == "on") {
+			if (arguments != null && arguments.length == 1) {
 				return vars[type];
 			}
 			if (callback == null) {
@@ -682,8 +692,8 @@ class Animation {
 	 * @param value Omitting the parameter returns the current value (getter), whereas defining the parameter sets the value (setter) and returns the instance itself for easier chaining.
 	 * @return Omitting the parameter returns the current value (getter), whereas defining the parameter sets the value (setter) and returns the instance itself for easier chaining.
 	 **/
-	public function delay(value:Float=0):Dynamic {
-		if (!arguments.length) {
+	public function delay(value:Float=0, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _delay;
 		}
 		if (_timeline.smoothChildTiming) {
@@ -713,8 +723,8 @@ class Animation {
 	 * @see #totalDuration()
 	 * @see #timeScale()
 	 **/
-	public function duration(value:Float=0):Dynamic {
-		if (!arguments.length) {
+	public function duration(value:Float=0, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			_dirty = false;
 			return _duration;
 		}
@@ -746,9 +756,9 @@ class Animation {
 	 * @see #duration()
 	 * @see #timeScale()
 	 **/
-	public function totalDuration(value:Float=0):Dynamic {
+	public function totalDuration(value:Float=0, arguments:Array<Dynamic>=null):Dynamic {
 		_dirty = false;
-		return (!arguments.length) ? _totalDuration : duration(value);
+		return (arguments == null) ? _totalDuration : duration(value);
 	}
 
 	/**
@@ -779,8 +789,8 @@ class Animation {
 	 * @see #pause()
 	 * @see #totalTime()
 	 **/
-	public function time(value:Float=0, suppressEvents:Bool=false):Dynamic {
-		if (!arguments.length) {
+	public function time(value:Float=0, suppressEvents:Bool=false, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _time;
 		}
 		if (_dirty) {
@@ -828,8 +838,8 @@ class Animation {
 	 * @see #reverse()
 	 * @see #pause()
 	 **/
-	public function totalTime(time:Float=0, suppressEvents:Bool=false, uncapped:Bool=false):Dynamic {
-		if (!arguments.length) {
+	public function totalTime(time:Float=0, suppressEvents:Bool=false, uncapped:Bool=false, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _totalTime;
 		}
 		if (_timeline != null) {
@@ -897,8 +907,8 @@ class Animation {
 	 * @see #totalTime()
 	 * @see #totalProgress()
 	 **/
-	public function progress(value:Float=0, suppressEvents:Bool=false):Dynamic {
-		return (!arguments.length) ? _time / duration() : totalTime(duration() * value, suppressEvents);
+	public function progress(value:Float=0, suppressEvents:Bool=false, arguments:Array<Dynamic>=null):Dynamic {
+		return (arguments != null) ? _time / duration() : totalTime(duration() * value, suppressEvents);
 	}
 
 	/** 
@@ -930,8 +940,8 @@ class Animation {
 	 * @see #time()
 	 * @see #totalTime()
 	 **/
-	public function totalProgress(value:Float=0, suppressEvents:Bool=false):Dynamic {
-		return (!arguments.length) ? _time / duration() : totalTime(duration() * value, suppressEvents);
+	public function totalProgress(value:Float=0, suppressEvents:Bool=false, arguments:Array<Dynamic>=null):Dynamic {
+		return (arguments != null) ? _time / duration() : totalTime(duration() * value, suppressEvents);
 	}
 
 	/** 
@@ -956,8 +966,8 @@ class Animation {
 	 * @param value Omitting the parameter returns the current value (getter), whereas defining the parameter sets the value (setter) and returns the instance itself for easier chaining.
 	 * @return Omitting the parameter returns the current value (getter), whereas defining the parameter sets the value (setter) and returns the instance itself for easier chaining.
 	 **/
-	public function startTime(value:Float=0):Dynamic {
-		if (!arguments.length) {
+	public function startTime(value:Float=0, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _startTime;
 		}
 		if (value != _startTime) {
@@ -990,13 +1000,15 @@ class Animation {
 	 * 
 	 * @see #duration()
 	 **/
-	public function timeScale(value:Float=0):Dynamic {
-		if (!arguments.length) {
+	public function timeScale(value:Float=0, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _timeScale;
 		}
-		value = value || 0.000001; //can't allow zero because it'll throw the math off
+		//value = value || 0.000001; //can't allow zero because it'll throw the math off
+		value = value > 0 ? value : 0.000001;
 		if (_timeline != null && _timeline.smoothChildTiming) {
-			var t:Float = (_pauseTime || _pauseTime == 0) ? _pauseTime : _timeline._totalTime;
+			//var t:Float = (_pauseTime || _pauseTime == 0) ? _pauseTime : _timeline._totalTime;
+			var t:Float = (_pauseTime == 0) ? _pauseTime : _timeline._totalTime;
 			_startTime = t - ((t - _startTime) * _timeScale / value);
 		}
 		_timeScale = value;
@@ -1026,13 +1038,13 @@ class Animation {
 	 * @see #reverse()
 	 * @see #play()
 	 **/
-	public function reversed(value:Bool=false):Dynamic {
-		if (!arguments.length) {
+	public function reversed(value:Bool=false, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _reversed;
 		}
 		if (value != _reversed) {
 			_reversed = value;
-			totalTime(((_timeline && !_timeline.smoothChildTiming) ? totalDuration() - _totalTime : _totalTime), true);
+			totalTime(((_timeline != null && !_timeline.smoothChildTiming) ? totalDuration() - _totalTime : _totalTime), true);
 		}
 		return this;
 	}
@@ -1070,8 +1082,8 @@ class Animation {
 	 * @see #resume()
 	 * @see #play()
 	 **/
-	public function paused(value:Bool=false):Dynamic {
-		if (!arguments.length) {
+	public function paused(value:Bool=false, arguments:Array<Dynamic>=null):Dynamic {
+		if (arguments != null) {
 			return _paused;
 		}
 		if (value != _paused) if (_timeline != null) {

@@ -16,7 +16,7 @@ package com.greensock.core;
  */	
 @:final class PropTween {
 	/** Target object **/
-	public var t:Map<String, Int>;
+	public var t:Map<Dynamic, Dynamic>;
 	/** Name of the property that is being tweened on the target (for plugins, this is always "setRatio", but the actual property name of the orignal target is stored in the "n" property of the PropTween instance) **/
 	public var p:String;
 	/** Starting value  **/
@@ -50,7 +50,7 @@ package com.greensock.core;
 	 * @param nextNode Next PropTween in the linked list
 	 * @param priority Priority in the rendering queue. The lower the value the later it will be tweened. The default value is 0, but some plugins must be rendered later (or earlier).
 	 */
-	public function new(target:Map<String, Int>, property:String, start:Float, change:Float, name:String, isPlugin:Bool, next:PropTween=null, priority:Int=0) {
+	public function new(target:Map<Dynamic, Dynamic>, property:String, start:Float, change:Float, name:String, isPlugin:Bool, next:PropTween=null, priority:Int=0) {
 		this.t = target;
 		this.p = property;
 		this.s = start;
