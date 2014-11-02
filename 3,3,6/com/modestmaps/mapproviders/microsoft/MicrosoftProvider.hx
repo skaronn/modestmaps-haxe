@@ -88,7 +88,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 			zoomString += BinaryUtil.convertToDecimal(rowBinaryString.charAt( i ) + colBinaryString.charAt( i ));
 			//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - zoomString - 1 : " + zoomString);
 		}
-		//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - zoomString - 2 : " + zoomString);
+		flash.Lib.trace("MicrosoftProvider.hx - getZoomString - zoomString - 2 : " + zoomString);
 		return zoomString; 
 	}
 

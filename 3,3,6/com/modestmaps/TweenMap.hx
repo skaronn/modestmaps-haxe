@@ -54,7 +54,7 @@ class TweenMap extends Map
 	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
 		super(width, height, draggable, provider, rest);
-		grid.setTileClass("com.modestmaps.core.TweenTile"/*TweenTile*/);
+		grid.setTileClass(TweenTile);
 	}
 
 	/** 
@@ -65,7 +65,7 @@ class TweenMap extends Map
 		if (!grid.panning && !grid.zooming)
 		{
 			grid.prepareForPanning();
-			//TweenLite.to(grid, panDuration, { tx: grid.tx+px, ty: grid.ty+py, onComplete: grid.donePanning, ease: panEase });
+			TweenLite.to(grid, panDuration, { tx: grid.tx+px, ty: grid.ty+py, onComplete: grid.donePanning, ease: panEase });
 		}
 	}	  
 		
@@ -88,7 +88,7 @@ class TweenMap extends Map
 
 		grid.enforceBoundsOnMatrix(m);
 		
-		//TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
+		TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
 	}
 
 	/** 
@@ -203,12 +203,12 @@ class TweenMap extends Map
 			var centerPoint:Point = new Point(mapWidth / 2, mapHeight / 2);
 			var pan:Point = centerPoint.subtract(p);
 
-			// grid.prepareForPanning();
-			//TweenLite.to(grid, panDuration, {ty: grid.ty + pan.y,
-							 //tx: grid.tx + pan.x,
-							 //ease: panEase,
-							 //onStart: grid.prepareForPanning,
-							 //onComplete: grid.donePanning});
+			grid.prepareForPanning();
+			TweenLite.to(grid, panDuration, {ty: grid.ty + pan.y,
+							 tx: grid.tx + pan.x,
+							 ease: panEase,
+							 onStart: grid.prepareForPanning,
+							 onComplete: grid.donePanning});
 		}
 		else{
 			setCenter(location);
@@ -224,12 +224,12 @@ class TweenMap extends Map
 	public function tweenTo(location:Location, duration:Float, easing:Dynamic=null):Void
 	{
 		var pan:Point = new Point(mapWidth/2, mapHeight/2).subtract(locationPoint(location,grid));
-		// grid.prepareForPanning();
-		//TweenLite.to(grid, duration, { ty: grid.ty + pan.y,
-					   //tx: grid.tx + pan.x,
-					   //ease: easing,
-					   //onStart: grid.prepareForPanning,
-					   //onComplete: grid.donePanning });
+		 grid.prepareForPanning();
+		TweenLite.to(grid, duration, { ty: grid.ty + pan.y,
+					   tx: grid.tx + pan.x,
+					   ease: easing,
+					   onStart: grid.prepareForPanning,
+					   onComplete: grid.donePanning });
 	}
 
 	/**
@@ -244,10 +244,10 @@ class TweenMap extends Map
 			var target:Float = (dir < 0) ? Math.floor(grid.zoomLevel + dir) : Math.ceil(grid.zoomLevel + dir);
 			target = Math.max(grid.minZoom, Math.min(grid.maxZoom, target));
 
-			//TweenLite.to(grid, zoomDuration, { zoomLevel: target,
-							   //onStart: grid.prepareForZooming,
-							   //onComplete: grid.doneZooming,
-							   //ease: zoomEase });
+			TweenLite.to(grid, zoomDuration, { zoomLevel: target,
+							   onStart: grid.prepareForZooming,
+							   onComplete: grid.doneZooming,
+							   ease: zoomEase });
 		}
 	}
 

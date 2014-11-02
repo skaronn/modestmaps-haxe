@@ -9,6 +9,7 @@ package com.greensock.core;
 import flash.display.Shape;
 import flash.events.Event;
 import flash.utils.Timer;
+import haxe.ds.ObjectMap;
 /**
  * Base class for all TweenLite, TweenMax, TimelineLite, and TimelineMax classes, providing
  * core methods/properties/functionality, but there is no reason to create an instance of this 
@@ -122,11 +123,13 @@ class Animation {
 	/** @private root timeline on which all frames-based tweens/timelines are initially placed (<code>_rootTimeline</code> is for time-based tweens/timelines). A frames-based animation is one that has <code>useFrames:true</code> defined in the constructor's <code>vars</code> parameter or it is placed into a parent timeline that is frames-based (the parent timeline always defines the timing mode). **/
 	public static var _rootFramesTimeline:SimpleTimeline;
 	/** @private Each time the root timelines are updated, <code>_rootFrame</code> is incremented in order to keep track of how many frames have been rendered. **/
-	private static var _rootFrame:Float = -1;
+	public static var _rootFrame:Float = -1;	
+	//public var rootFrame(get, null) : Float;
+	//private function get_rootFrame():Float { return _rootFrame ; };	
 	/** @private We reuse this event instance for better memory management rather than recreating a new instance on every frame. **/
 	private static var _tickEvent:Event = new Event("tick");
 	/** @private **/
-	private static var _tinyNum:Float = 0.0000000001;
+	/*private static*/ var _tinyNum:Float = 0.0000000001;
 
 	/** @private The <code>onUpdate</code> callback (if one is defined). Checking an instance property is faster than looking it up in the vars object on every render. This is purely a speed optimization **/
 	private var _onUpdate:Dynamic;
@@ -169,7 +172,7 @@ class Animation {
 	public var _prev:Animation;
 
 	/** The <code>vars</code> object passed into the constructor which stores configuration variables like onComplete, onUpdate, etc. as well as tweening properties like opacity, x, y or whatever. **/
-	public var vars:Map<Dynamic, Dynamic>;
+	public var vars:ObjectMap<Dynamic, Dynamic>;
 	/** [Read-only] Parent timeline. Every animation is placed onto a timeline (the root timeline by default) and can only have one parent. An instance cannot exist in multiple timelines at once. **/
 	public var timeline:SimpleTimeline;
 	/** A place to store any data you want (initially populated with <code>vars.data</code> if it exists). **/
@@ -183,7 +186,7 @@ class Animation {
 	 */
 	public function new(duration:Float=0, vars:Dynamic=null) {
 		//this.vars = vars || {};
-		this.vars = vars != null ? vars : new Map<Dynamic, Dynamic>();
+		this.vars = vars != null ? vars : null /*new Map<Dynamic, Dynamic>()*/;
 		//if (this.vars._isGSVars) {
 		if (this.vars.get("_isGSVars")) {
 			//this.vars = this.vars.vars;
@@ -654,14 +657,14 @@ class Animation {
 		}
 		else if (type.substr(0, 2) == "on") {
 			if (arguments != null && arguments.length == 1) {
-				return vars[type];
+				return vars.get(type);
 			}
 			if (callback == null) {
-				untyped __delete__(vars, type);
+				vars.remove(type);
 			}
 			else {
-				vars[type] = callback;
-				vars[type + "Params"] = (Std.is(params, Array) && params.join("").indexOf("{self}") != -1) ? _swapSelfInParams(params) : params;
+				vars.set(type, callback);
+				vars.set(type + "Params", (Std.is(params, Array) && params.join("").indexOf("{self}") != -1) ? _swapSelfInParams(params) : params);
 			}
 			if (type == "onUpdate") {
 				_onUpdate = callback;

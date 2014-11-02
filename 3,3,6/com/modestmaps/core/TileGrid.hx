@@ -250,7 +250,7 @@ class TileGrid extends Sprite
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:String/*Class<Dynamic>*/):Void
+	public function setTileClass(tileClass:Class<Dynamic>):Void
 	{
 		// first get rid of everything, which passes tiles back to the pool
 		clearEverything();

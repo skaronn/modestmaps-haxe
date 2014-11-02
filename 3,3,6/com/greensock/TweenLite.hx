@@ -15,6 +15,8 @@ import flash.display.Shape;
 import flash.events.Event;
 import flash.utils.Dictionary;
 
+import haxe.ds.ObjectMap;
+
 /**
  * TweenLite is an extremely fast, lightweight, and flexible animation tool that serves as the foundation of 
  * the GreenSock Animation Platform (GSAP), available in AS2, AS3, and JavaScript. A TweenLite instance handles 
@@ -382,30 +384,28 @@ class TweenLite extends Animation {
 	public static var ticker:Shape = Animation.ticker;
 
 	/** @private When plugins are activated, the class is added (named based on the special property) to this object so that we can quickly look it up in the <code>_initProps()</code> method.**/
-	public static var _plugins:Map<Dynamic, Dynamic> = new Map<Dynamic, Dynamic>(); 
+	public static var _plugins:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>(); 
 
 	/** @private For notifying plugins of significant events like when the tween finishes initializing or when it is disabled/enabled (some plugins need to take actions when those events occur). TweenPlugin sets this (in order to keep file size small, avoiding dependencies on that or other classes) **/
 	public static var _onPluginEvent:Dynamic;
 
 	/** @private Holds references to all our tween instances organized by target for quick lookups (for overwriting). **/
-	//private static var _tweenLookup:Dictionary = new Dictionary(false); 
-	private static var _tweenLookup:Map<Dynamic, Dynamic> = new Map<Dynamic, Dynamic>();  
+	private static var _tweenLookup:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>();  
 
 	/** @private Lookup for all of the reserved "special property" keywords (excluding plugins).**/
-	//private static var _reservedProps:Map<Dynamic, Int> = {ease:1, delay:1, overwrite:1, onComplete:1, onCompleteParams:1, onCompleteScope:1, useFrames:1, runBackwards:1, startAt:1, onUpdate:1, onUpdateParams:1, onUpdateScope:1, onStart:1, onStartParams:1, onStartScope:1, onReverseComplete:1, onReverseCompleteParams:1, onReverseCompleteScope:1, onRepeat:1, onRepeatParams:1, onRepeatScope:1, easeParams:1, yoyo:1, onCompleteListener:1, onUpdateListener:1, onStartListener:1, onReverseCompleteListener:1, onRepeatListener:1, orientToBezier:1, immediateRender:1, repeat:1, repeatDelay:1, data:1, paused:1, reversed:1};
-	private static var _reservedProps:Map<Dynamic, Dynamic> = [ "ease" => 1, "delay" => 1, "overwrite" => 1, "onComplete" => 1, "onCompleteParams" => 1, "onCompleteScope" => 1, "useFrames" => 1, "runBackwards" => 1, "startAt" => 1, "onUpdate" => 1, "onUpdateParams" => 1, "onUpdateScope" => 1, "onStart" => 1, "onStartParams" => 1, "onStartScope" => 1, "onReverseComplete" => 1, "onReverseCompleteParams" => 1, "onReverseCompleteScope" => 1, "onRepeat" => 1, "onRepeatParams" => 1, "onRepeatScope" => 1, "easeParams" => 1, "yoyo" => 1, "onCompleteListener" => 1, "onUpdateListener" => 1, "onStartListener" => 1, "onReverseCompleteListener" => 1, "onRepeatListener" => 1, "orientToBezier" => 1, "immediateRender" => 1, "repeat" => 1, "repeatDelay" => 1, "data" => 1, "paused" => 1, "reversed" => 1];
-
+	private static var _reservedProps:Dynamic = {ease:1, delay:1, overwrite:1, onComplete:1, onCompleteParams:1, onCompleteScope:1, useFrames:1, runBackwards:1, startAt:1, onUpdate:1, onUpdateParams:1, onUpdateScope:1, onStart:1, onStartParams:1, onStartScope:1, onReverseComplete:1, onReverseCompleteParams:1, onReverseCompleteScope:1, onRepeat:1, onRepeatParams:1, onRepeatScope:1, easeParams:1, yoyo:1, onCompleteListener:1, onUpdateListener:1, onStartListener:1, onReverseCompleteListener:1, onRepeatListener:1, orientToBezier:1, immediateRender:1, repeat:1, repeatDelay:1, data:1, paused:1, reversed:1};	
+	
 	/** @private An object for associating String overwrite modes with their corresponding integers (faster) **/
-	private static var _overwriteLookup:Map<Dynamic, Dynamic>;
+	private static var _overwriteLookup:Dynamic;
 
 	/** [READ-ONLY] Target object (or array of objects) whose properties the tween affects. **/
-	public var target:Map<Dynamic, Dynamic>;
+	public var target:Dynamic;
 
 	/** @private The result of feeding the tween's current progress (0-1) into the easing equation - typically between 0 and 1 but not always (like with <code>ElasticOut.ease</code>). **/
 	public var ratio:Float;
 
 	/** @private Lookup object for PropTween objects. For example, if this tween is handling the "x" and "y" properties of the target, the _propLookup object will have an "x" and "y" property, each pointing to the associated PropTween object (for tweens with targets that are arrays, _propTween will be an Array with corresponding objects). This can be very helpful for speeding up overwriting. **/
-	public var _propLookup:Map<Dynamic, Dynamic>;
+	public var _propLookup:ObjectMap<Dynamic, Dynamic>;
 
 	/** @private First PropTween instance in the linked list. **/
 	public var _firstPT:PropTween;
@@ -429,7 +429,7 @@ class TweenLite extends Animation {
 	private var _overwrite:Int;
 
 	/** @private When properties are overwritten in this tween, the properties get added to this object because sometimes properties are overwritten <strong>BEFORE</strong> the tween inits. **/
-	private var _overwrittenProps:Map<Dynamic, Dynamic>;
+	private var _overwrittenProps:ObjectMap<Dynamic, Dynamic>;
 
 	/** @private If this tween has any TweenPlugins that need to be notified of a change in the "enabled" status, this will be true. (speeds things up in the _enable() setter) **/
 	private var _notifyPluginsOfEnabled:Bool;
@@ -444,7 +444,7 @@ class TweenLite extends Animation {
 	 * @param duration Duration in seconds (or frames if <code>useFrames:true</code> is set in the <code>vars</code> parameter)
 	 * @param vars An object defining the end value for each property that should be tweened as well as any special properties like <code>onComplete</code>, <code>ease</code>, etc. For example, to tween <code>mc.x</code> to 100 and <code>mc.y</code> to 200 and then call <code>myDynamic</code>, do this: <code>new TweenLite(mc, 1, {x:100, y:200, onComplete:myDynamic})</code>.
 	 */
-	public function new(target:Map<Dynamic, Dynamic>, duration:Float, vars:Map<Dynamic, Dynamic>) {
+	public function new(target:ObjectMap<Dynamic, Dynamic>, duration:Float, vars:ObjectMap<Dynamic, Dynamic>) {
 		super(duration, vars);
 		
 		if (target == null) {
@@ -452,8 +452,7 @@ class TweenLite extends Animation {
 		}
 		
 		if (_overwriteLookup != null) {
-			//_overwriteLookup = {none:0, all:1, auto:2, concurrent:3, allOnStart:4, preexisting:5, "true":1, "false":0};
-			_overwriteLookup = ["none" => 0, "all" => 1, "auto" => 2, "concurrent" => 3, "allOnStart" => 4, "preexisting" => 5, "true" => 1, "false" => 0];
+			_overwriteLookup = {none:0, all:1, auto:2, concurrent:3, allOnStart:4, preexisting:5, "true":1, "false":0};
 			ticker.addEventListener("enterFrame", _dumpGarbage, false, -1, true);
 		}
 		
@@ -461,11 +460,11 @@ class TweenLite extends Animation {
 		this.target = target;
 		_ease = defaultEase; //temporary - we'll replace it in _init(). We need to set it here for speed purposes so that on the first render(), it doesn't throw an error. 
 		
-		_overwrite = (Reflect.field(this.vars, "overwrite") != null) ? _overwriteLookup[defaultOverwrite] : Std.is(Type.typeof(this.vars.get("overwrite")), Float) ? this.vars.get("overwrite") >> 0 : _overwriteLookup.get(this.vars.get("overwrite"));
+		_overwrite = (Reflect.field(this.vars, "overwrite") != null) ? _overwriteLookup.defaultOverwrite : Std.is(Type.typeof(this.vars.get("overwrite")), Float) ? this.vars.get("overwrite") >> 0 : _overwriteLookup.get(this.vars.get("overwrite"));
 		
 		if (Std.is(this.target, Array) && Std.is(Type.typeof(this.target[0]), Dynamic)) {
 			_targets = this.target.concat();
-			_propLookup = new Map<Dynamic, Dynamic>();
+			_propLookup = new ObjectMap<Dynamic, Dynamic>();
 			_siblings = [];
 			var i:Int = _targets.length;
 			while (--i > -1) {
@@ -476,10 +475,12 @@ class TweenLite extends Animation {
 			}		
 		}
 		else {
-			_propLookup = new Map<Dynamic, Dynamic>();
-			_siblings = _tweenLookup[target];
+			_propLookup = new ObjectMap<Dynamic, Dynamic>();
+			_siblings = _tweenLookup.get(target);
 			if (_siblings == null) { //the next few lines accomplish the same thing as _siblings = _register(target, this, false) but faster and only slightly more verbose.
-				_siblings = _tweenLookup[target] = [this];
+				//_siblings = _tweenLookup[target] = [this];
+				_tweenLookup.set(target, this);
+				_siblings = _tweenLookup.get(target);
 			}
 			else {
 				_siblings[_siblings.length] = this;
@@ -502,7 +503,7 @@ class TweenLite extends Animation {
 	private function _init():Void {
 		//var immediate:Bool = vars.immediateRender,
 		var immediate:Bool = vars.get("immediateRender"),
-		i:Int, initPlugins:Bool, pt:PropTween, p:String, copy:Dynamic;
+		i:Int, initPlugins:Bool = false, pt:PropTween, p:String, copy:Dynamic;
 		//if (vars.startAt) {
 		if (vars.get("startAt")) {
 			if (_startAt != null) {
@@ -532,9 +533,8 @@ class TweenLite extends Animation {
 			else {
 				copy = {};
 				for (p in vars) { //copy props into a new object and skip any reserved props, otherwise onComplete or onUpdate or onStart could fire. We should, however, permit autoCSS to go through.
-					//if (!(p in _reservedProps)) {
 					if (!_reservedProps.exists(p)) {
-						copy[p] = vars[p];
+						copy.set(p, vars.get(p));
 					}
 				}
 				copy.overwrite = 0;
@@ -552,7 +552,7 @@ class TweenLite extends Animation {
 		//if (vars.ease is Ease) {
 		if (Std.is(vars.get("ease"), Ease)) {
 			//_ease = (vars.easeParams is Array) ? vars.ease.config.apply(vars.ease, vars.easeParams) : vars.ease;
-			_ease = null /*(Std.is(vars.get("easeParams"), Array)) ? Reflect.callMethod(vars.get("ease").config, [ "easeParams" ]) : vars.get("ease")*/;
+			_ease = (Std.is(vars.get("easeParams"), Array)) ? Reflect.callMethod(vars.get("ease").config, vars.get("easeParams"), null ) : cast(vars.get("ease"), Ease);
 		//} else if (typeof(vars.ease) === "function") {
 		} else if (Std.is(Type.typeof(vars.get("ease")), Dynamic)) {
 			//_ease = new Ease(vars.ease, vars.easeParams);
@@ -567,7 +567,8 @@ class TweenLite extends Animation {
 		if (_targets != null) {
 			i = _targets.length;
 			while (--i > -1) {
-				if ( _initProps( _targets[i], (_propLookup[i] = {}), _siblings[i], (_overwrittenProps != null ? _overwrittenProps[i] : null)) ) {
+				//if ( _initProps( _targets[i], (_propLookup[i] = {}), _siblings[i], (_overwrittenProps ? _overwrittenProps[i] : null)) ) {
+				if ( _initProps( _targets[i], (_propLookup.get(i) = {}), _siblings[i], (_overwrittenProps != null ? _overwrittenProps.get(i) : null)) ) {
 					initPlugins = true;
 				}
 			}
@@ -598,60 +599,67 @@ class TweenLite extends Animation {
 	}
 
 	/** @private Loops through the <code>vars</code> properties, captures starting values, triggers overwriting if necessary, etc. **/
-	private function _initProps(target:Map<Dynamic, Dynamic>, propLookup:Map<Dynamic, Dynamic>, siblings:Array<Dynamic>, overwrittenProps:Map<Dynamic, Dynamic>):Bool {
-		var vars:Map<Dynamic, Dynamic> = this.vars,
-		p:String, i:Int, initPlugins:Bool, plugin:Map<Dynamic, Dynamic>, val:Map<Dynamic, Dynamic>;
+	private function _initProps(target:ObjectMap<Dynamic, Dynamic>, propLookup:ObjectMap<Dynamic, Dynamic>, siblings:Array<Dynamic>, overwrittenProps:ObjectMap<Dynamic, Dynamic>):Bool {
+		var vars:ObjectMap<Dynamic, Dynamic> = this.vars,
+		p:String, i:Int, initPlugins:Bool = false, val:Dynamic, plugin:ObjectMap<Dynamic, Dynamic> = null;
+		
 		if (target == null) {
 			return false;
 		}
+		
 		for (p in vars) {
-			val = vars[p];
+			val = vars.get(p);
 			//if (p in _reservedProps) {
-			if (_reservedProps.exists(p)){
-				if (Std.is(val, Array) if (val.join("").indexOf("{self}") != -1) {
-					vars[p] = _swapSelfInParams(cast(val, Array<Dynamic>));
+			if (_reservedProps.exists(p)) {
+				//if (val is Array) if (val.join("").indexOf("{self}") !== -1) {
+				if (Std.is(val, Array)) if (cast(val, Array<Dynamic>).join("").indexOf("{self}") != -1) {
+					//vars[p] = _swapSelfInParams(val as Array);
+					vars.set(p, _swapSelfInParams(cast(val, Array<Dynamic>)));
 				}			
 			}
 			//else if ((p in _plugins) && (plugin = new _plugins[p]())._onInitTween(target, val, this)) {
-			else if ((_plugins.exists(p)) /*&& (plugin = new _plugins[p]())._onInitTween(target, val, this)*/) {
+			else if ( (_plugins.exists(p)) && (_plugins.get(p))._onInitTween(target, val, this) ) {
 				//_firstPT = new PropTween(plugin, "setRatio", 0, 1, p, true, _firstPT, plugin._priority);
 				_firstPT = new PropTween(plugin, "setRatio", 0, 1, p, true, _firstPT, plugin.get("_priority"));
-				i = plugin._overwriteProps.length;
+				i = plugin.get("_overwriteProps").length;
 				while (--i > -1) {
 					//propLookup[plugin._overwriteProps[i]] = _firstPT;
-					propLookup[plugin.get("_overwriteProps")[i]] = _firstPT;
+					propLookup.set(plugin.get("_overwriteProps")[i], _firstPT);
 				}
 				//if (plugin._priority || ("_onInitAllProps" in plugin)) {
 				if (plugin.get("_priority") || Reflect.field(plugin, "_onInitAllProps")) {
 					initPlugins = true;
 				}
 				//if (("_onDisable" in plugin) || ("_onEnable" in plugin)) {
-				if ( Reflect.field(plugin, "_onDisable") || Reflect.field(plugin, "_onEnable")) {
+				if ( Reflect.field(plugin, "_onDisable") || Reflect.field(plugin, "_onEnable") ) {
 					_notifyPluginsOfEnabled = true;
 				}				
 			}
 			else {
-				_firstPT = propLookup[p] = new PropTween(target, p, 0, 1, p, false, _firstPT);
-				_firstPT.s = (!_firstPT.f) ? cast(target[p], Float) : target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]();
-				_firstPT.c = (Std.is(Type.typeof(val), Float)) ? cast(val, Float) - _firstPT.s : (Std.is(Type.typeof(val), String) && val.charAt(1) == "=") ? Int(val.charAt(0)+"1") * cast(val.substr(2), Float) : cast(val, Float) || 0;			
+				_propLookup.set(p, new PropTween(target, p, 0, 1, p, false, _firstPT));
+				_firstPT = propLookup.get(p);
+				//_firstPT.s = (!_firstPT.f) ? Number(target[p]) : target[ ((p.indexOf("set") || !("get" + p.substr(3) in target)) ? p : "get" + p.substr(3)) ]();
+				_firstPT.s = (!_firstPT.f) ? cast(target.get(p), Float) : cast(target.get(0 /*( (cast(p, String).indexOf("set") || !( target.exists("get" + cast(p, String).substr(3))) ) ? p : "get" + cast(p, String).substr(3) ) */ ), Float);
+				//_firstPT.c = (typeof(val) === "number") ? Number(val) - _firstPT.s : (typeof(val) === "string" && val.charAt(1) === "=") ? int(val.charAt(0)+"1") * Number(val.substr(2)) : Number(val) || 0;					
+				_firstPT.c = (Std.is(Type.typeof(val), Float)) ? cast(val, Float) - _firstPT.s : (Std.is(Type.typeof(val), String) && cast(val, String).charAt(1) == "=") ? cast(cast(val, String).charAt(0)+"1", Int) * cast(cast(val, String).substr(2), Float) : cast(val, Float);		
 			}
 		}
 		
 		if (overwrittenProps != null) if (_kill(overwrittenProps, target)) { //another tween may have tried to overwrite properties of this tween before init() was called (like if two tweens start at the same time, the one created second will run first)
 			return _initProps(target, propLookup, siblings, overwrittenProps);
 		}
+		
 		if (_overwrite > 1) if (_firstPT != null) if (siblings.length > 1) if (_applyOverwrite(target, this, propLookup, _overwrite, siblings)) {
 			_kill(propLookup, target);
 			return _initProps(target, propLookup, siblings, overwrittenProps);
 		}
+		
 		return initPlugins;
 	}
 
-
-
 	/** @private (see Animation.render() for notes) **/
 	override public function render(time:Float, suppressEvents:Bool=false, force:Bool=false):Void {
-		var isComplete:Bool, callback:String, pt:PropTween, rawPrevTime:Float, prevTime:Float = _time;
+		var isComplete:Bool = false, callback:String = null, pt:PropTween, rawPrevTime:Float = 0, prevTime:Float = _time;
 		if (time >= _duration) {
 			_totalTime = _time = _duration;
 			ratio = _ease._calcEnd ? _ease.getRatio(1) : 1;
@@ -752,7 +760,7 @@ class TweenLite extends Animation {
 				if (time >= 0) {
 					_startAt.render(time, suppressEvents, force);
 				}
-				else if (callback == null) {
+				else if (callback != null) {
 					callback = "_dummyGS"; //if no callback is defined, use a dummy value just so that the condition at the end evaluates as true because _startAt should render AFTER the normal render loop when the time is negative. We could handle this in a more intuitive way, of course, but the render loop is the MOST important thing to optimize, so this technique allows us to avoid adding extra conditional logic in a high-frequency area.
 				}
 			}
@@ -766,9 +774,9 @@ class TweenLite extends Animation {
 		
 		while (pt != null) {
 			if (pt.f) {
-				pt.t[pt.p](pt.c * ratio + pt.s);
+				pt.t.get(pt.p)(pt.c * ratio + pt.s);
 			} else {
-				pt.t[pt.p] = pt.c * ratio + pt.s;
+				pt.t.set(pt.p, pt.c * ratio + pt.s);
 			}
 			pt = pt._next;
 		}
@@ -793,8 +801,8 @@ class TweenLite extends Animation {
 				}
 				_active = false;
 			}
-			if (!suppressEvents) if (vars[callback]) {
-				vars[callback].apply(null, vars[callback + "Params"]);
+			if (!suppressEvents) if (vars.get(callback)) {
+				vars.get(callback).apply(null, vars.get(callback + "Params"));
 			}
 			if (_duration == 0 && _rawPrevTime == _tinyNum && rawPrevTime != _tinyNum) { //the onComplete or onReverseComplete could trigger movement of the playhead and for zero-duration tweens (which must discern direction) that land directly back on their start time, we don't want to fire again on the next render. Think of several addPause()'s in a timeline that forces the playhead to a certain spot, but what if it's already paused and another tween is tweening the "time" of the timeline? Each time it moves [forward] past that spot, it would move back, and since suppressEvents is true, it'd reset _rawPrevTime to _tinyNum so that when it begins again, the callback would fire (so ultimately it could bounce back and forth during that tween). Again, this is a very uncommon scenario, but possible nonetheless.
 				_rawPrevTime = 0;
@@ -805,7 +813,7 @@ class TweenLite extends Animation {
 	}
 
 	/** @private Same as <code>kill()</code> except that it returns a Boolean indicating if any significant properties were changed (some plugins like MotionBlurPlugin may perform cleanup tasks that alter alpha, etc.). **/
-	override public function _kill(vars:Dynamic=null, target:Map<Dynamic, Dynamic>=null):Bool {
+	override public function _kill(vars:Dynamic=null, target:Dynamic=null):Bool {
 		if (vars == "all") {
 			vars = null;
 		}
@@ -814,7 +822,7 @@ class TweenLite extends Animation {
 		}
 		//target = target || _targets || this.target;
 		target = (_targets != null) ? _targets : this.target;
-		var i:Int, overwrittenProps:Dynamic, p:String, pt:PropTween, propLookup:Map<Dynamic, Dynamic>, changed:Bool, killProps:Map<Dynamic, Dynamic>, record:Bool;
+		var i:Int, overwrittenProps:Dynamic=null, p:String=null, pt:PropTween=null, propLookup:ObjectMap<Dynamic, Dynamic>=null, changed:Bool=false, killProps:ObjectMap<Dynamic, Dynamic>=null, record:Bool=false;
 		if (Std.is(target, Array) && Std.is(Type.typeof(target[0]), Map)) {
 			i = target.length;
 			while (--i > -1) {
@@ -829,11 +837,11 @@ class TweenLite extends Animation {
 				while (--i > -1) {
 					if (target == _targets[i]) {
 						//propLookup = _propLookup[i] || {};
-						propLookup = _propLookup[i] != null ? _propLookup[i] : new Map<Dynamic, Dynamic>();
+						propLookup = _propLookup.get(i) != null ? _propLookup.get(i) : new ObjectMap<Dynamic, Dynamic>();
 						//_overwrittenProps = _overwrittenProps || [];
-						_overwrittenProps = _overwrittenProps != null ? _overwrittenProps : new Map<Dynamic, Dynamic>();
+						_overwrittenProps = _overwrittenProps != null ? _overwrittenProps : new ObjectMap<Dynamic, Dynamic>();
 						//overwrittenProps = _overwrittenProps[i] = vars ? _overwrittenProps[i] || {} : "all";
-						overwrittenProps = _overwrittenProps[i] = vars ? (_overwrittenProps[i] != null ? _overwrittenProps[i] : new Map<Dynamic, Dynamic>()) : "all";
+						overwrittenProps = _overwrittenProps.get(i) = vars ? ( _overwrittenProps.get(i) != null ? _overwrittenProps.get(i) : new ObjectMap<Dynamic, Dynamic>() ) : "all";
 						break;
 					}
 				}
@@ -844,21 +852,21 @@ class TweenLite extends Animation {
 			else {
 				propLookup = _propLookup;
 				//overwrittenProps = _overwrittenProps = vars ? _overwrittenProps || {} : "all";
-				overwrittenProps = _overwrittenProps = vars ? (_overwrittenProps != null ? _overwrittenProps : new Map<Dynamic, Dynamic>()) : "all";
+				overwrittenProps = _overwrittenProps = vars ? ( _overwrittenProps != null ? _overwrittenProps : null /*new ObjectMap<Dynamic, Dynamic>()*/ ) : null /*new ObjectMap<Dynamic, Dynamic>()*/ /*"all"*/;
 			}
 			if (propLookup != null) {
 				//killProps = vars || propLookup;
 				killProps = vars != null ? vars : propLookup;
 				record = (vars != overwrittenProps && overwrittenProps != "all" && vars != propLookup && (!Std.is(Type.typeof(vars), Dynamic) || vars._tempKill != true)); //_tempKill is a super-secret way to untyped __delete__(a particular tweening property but NOT have it remembered as an official overwritten property (like in BezierPlugin)
 				for (p in killProps) {
-					pt = propLookup[p];
+					pt = propLookup.get(p);
 					if (pt != null) {
 						//if (pt.pg && pt.t._kill(killProps)) {
-						if (pt.pg && pt.t._kill(killProps)) {
+						if (pt.pg && pt.t.get(_kill)(killProps)) {
 							changed = true; //some plugins need to be notified so they can perform cleanup tasks first
 						}
 						//if (!pt.pg || pt.t._overwriteProps.length == 0) {
-						if (!pt.pg || pt.t._overwriteProps.length == 0) {
+						if (!pt.pg || pt.t.get("_overwriteProps").length == 0) {
 							if (pt._prev != null) {
 								pt._prev._next = pt._next;
 							} else if (pt == _firstPT) {
@@ -894,7 +902,7 @@ class TweenLite extends Animation {
 		_startAt = null;
 		_initted = _active = _notifyPluginsOfEnabled = false;
 		//_propLookup = (_targets) ? {} : [];
-		_propLookup = (_targets != null) ? new Map<Dynamic, Dynamic>() : new Map<Dynamic, Dynamic>();
+		_propLookup = (_targets != null) ? null : null;
 		return this;
 	}
 
@@ -961,7 +969,7 @@ class TweenLite extends Animation {
 	 * @see #from()
 	 * @see #fromTo()
 	 */
-	public static function to(target:Dynamic, duration:Float, vars:Map<Dynamic, Dynamic>):TweenLite {
+	public static function to(target:Dynamic, duration:Float, vars:Dynamic):TweenLite {
 		return new TweenLite(target, duration, vars);
 	}
 
@@ -1013,7 +1021,7 @@ class TweenLite extends Animation {
 	 * @see com.greensock.TimelineLite#staggerFrom()
 	 * @see com.greensock.TweenMax#staggerFrom()
 	 */
-	public static function from(target:Map<String, Int>, duration:Float, vars:Dynamic):TweenLite {
+	public static function from(target:ObjectMap<Dynamic, Dynamic>, duration:Float, vars:Dynamic):TweenLite {
 		vars = _prepVars(vars, true);
 		vars.runBackwards = true;
 		return new TweenLite(target, duration, vars);
@@ -1065,7 +1073,7 @@ class TweenLite extends Animation {
 	 * @see com.greensock.TimelineLite#staggerFromTo()
 	 * @see com.greensock.TweenMax#staggerFromTo()
 	 */
-	public static function fromTo(target:Map<Dynamic, Dynamic>, duration:Float, fromVars:Dynamic, toVars:Dynamic):TweenLite {
+	public static function fromTo(target:ObjectMap<Dynamic, Dynamic>, duration:Float, fromVars:Dynamic, toVars:Dynamic):TweenLite {
 		toVars = _prepVars(toVars, true);
 		fromVars = _prepVars(fromVars);
 		toVars.startAt = fromVars;
@@ -1116,7 +1124,7 @@ class TweenLite extends Animation {
 	 */
 	public static function delayedCall(delay:Float, callback:Dynamic, params:Array<Dynamic>=null, useFrames:Bool=false):TweenLite {
 		//return new TweenLite(callback, 0, {delay:delay, onComplete:callback, onCompleteParams:params, onReverseComplete:callback, onReverseCompleteParams:params, immediateRender:false, useFrames:useFrames, overwrite:0});
-		return new TweenLite(callback, 0, ["delay" => "delay" , "onComplete" => "callback" , "onCompleteParams" => "params" , "onReverseComplete" => "callback" , "onReverseCompleteParams" => "params" , "immediateRender" => "false" , "useFrames" => "useFrames" , "overwrite" => 0]);
+		return new TweenLite(callback, 0, ["delay" => "delay" , "onComplete" => "callback" , "onCompleteParams" => "params" , "onReverseComplete" => "callback" , "onReverseCompleteParams" => "params" , "immediateRender" => "false" , "useFrames" => "useFrames" , "overwrite" => "0"]);
 	}
 
 	/**
@@ -1138,16 +1146,17 @@ class TweenLite extends Animation {
 	 * @param vars An object defining the value for each property that should be set. For example, to set <code>mc.x</code> to 100 and <code>mc.y</code> to 200, do this: <code>TweenLite.set(mc, {x:100, y:200});</code>
 	 * @return A TweenLite instance (with a duration of 0) which can optionally be inserted into a TimelineLite/Max instance (although it's typically more concise to just use the timeline's <code>set()</code> method).
 	 */
-	public static function set(target:Map<String, Int>, vars:Map<String, Int>):TweenLite {
+	public static function set(target:ObjectMap<Dynamic, Dynamic>, vars:ObjectMap<Dynamic, Dynamic>):TweenLite {
 		return new TweenLite(target, 0, vars);
 	}
 
 	/** @private **/
 	private static function _dumpGarbage(event:Event):Void {
-		if ((_rootFrame / 60) >> 0 == _rootFrame / 60) { //faster than !(_rootFrame % 60)
-			var i:Int, a:Array<Dynamic>, tgt:Map<String, Int>;
+		//if ((_rootFrame / 60) >> 0 == _rootFrame / 60) { //faster than !(_rootFrame % 60)
+		if (Std.int(Animation._rootFrame / 60) >> 0 == Animation._rootFrame / 60) { //faster than !(_rootFrame % 60)
+			var i:Int, a:Array<Dynamic>, tgt:ObjectMap<Dynamic, Dynamic>;
 			for (tgt in _tweenLookup) {
-				a = _tweenLookup[tgt];
+				a = _tweenLookup.get(tgt);
 				i = a.length;
 				while (--i > -1) {
 					if (a[i]._gc) {
@@ -1198,7 +1207,7 @@ class TweenLite extends Animation {
 	 * @param onlyActive If <code>true</code>, only tweens that are currently active will be killed (a tween is considered "active" if the virtual playhead is actively moving across the tween and it is not paused, nor are any of its ancestor timelines paused). 
 	 * @param vars To kill only specific properties, use a generic object containing enumerable properties corresponding to the ones that should be killed like <code>{x:true, y:true}</code>. The values assigned to each property of the object don't matter - the sole purpose of the object is for iteration over the named properties (in this case, <code>x</code> and <code>y</code>). If no object (or <code>null</code>) is defined, all matched tweens will be killed in their entirety.
 	 **/
-	public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, vars:Map<String, Int>=null):Void {
+	public static function killTweensOf(target:Dynamic, onlyActive:Dynamic=false, vars:ObjectMap<Dynamic, Dynamic>=null):Void {
 		if (Std.is(Type.typeof(onlyActive), Dynamic)) {
 			vars = onlyActive; //for backwards compatibility (before "onlyActive" parameter was inserted)
 			onlyActive = false;
@@ -1260,7 +1269,7 @@ class TweenLite extends Animation {
 	 * @return An array of tweens
 	 **/
 	public static function getTweensOf(target:Dynamic, onlyActive:Bool=false):Array<Dynamic> {
-		var i:Int, a:Array<Dynamic>, j:Int, t:TweenLite;
+		var i:Int, a:Array<Dynamic>=null, j:Int, t:TweenLite;
 		if (Std.is(target, Array) && !Std.is(Type.typeof(target[0]), String) && !Std.is(Type.typeof(target[0]), Float)) {
 			i = target.length;
 			a = [];
@@ -1285,7 +1294,7 @@ class TweenLite extends Animation {
 			i = a.length;
 			while (--i > -1) {
 				if (a[i]._gc || (onlyActive && !a[i].isActive())) {
-				a.splice(i, 1);
+					a.splice(i, 1);
 				}
 			}
 		}
@@ -1299,11 +1308,11 @@ class TweenLite extends Animation {
 	 * 2) Returns an array of sibling tweens (tweens of the same target)
 	 * 3) scrubs the siblings array of duplicate instances of the tween (typically only used when re-enabling a tween instance).
 	 **/
-	private static function _register(target:Map<Dynamic, Dynamic>, tween:TweenLite=null, scrub:Bool=false):Array<Dynamic> {
-		var a:Array<Dynamic> = _tweenLookup[target], 
+	private static function _register(target:ObjectMap<Dynamic, Dynamic>, tween:TweenLite=null, scrub:Bool=false):Array<Dynamic> {
+		var a:Array<Dynamic> = _tweenLookup.get(target), 
 		i:Int;
 		if (a == null) {
-			a = _tweenLookup[target] = [];
+			a = _tweenLookup.get(target) = [];
 		}
 		if (tween != null) {
 			i = a.length;
@@ -1320,8 +1329,8 @@ class TweenLite extends Animation {
 	}
 
 	/** @private Performs overwriting **/
-	private static function _applyOverwrite(target:Map<Dynamic, Dynamic>, tween:TweenLite, props:Map<Dynamic, Dynamic>, mode:Int, siblings:Array<Dynamic>):Bool {
-		var i:Int, changed:Bool, curTween:TweenLite;
+	private static function _applyOverwrite(target:ObjectMap<Dynamic, Dynamic>, tween:TweenLite, props:ObjectMap<Dynamic, Dynamic>, mode:Int, siblings:Array<Dynamic>):Bool {
+		var i:Int, changed:Bool=false, curTween:TweenLite;
 		if (mode == 1 || mode >= 4) {
 			var l:Int = siblings.length;
 			for (i in 0 ... l) {
@@ -1338,7 +1347,7 @@ class TweenLite extends Animation {
 			return changed;
 		}
 		//NOTE: Add 0.0000000001 to overcome floating point errors that can cause the startTime to be VERY slightly off (when a tween's time() is set for example)
-		var startTime:Float = tween._startTime + 0.0000000001, overlaps:Array<Dynamic> = [], oCount:Int = 0, zeroDur:Bool = (tween._duration == 0), globalStart:Float;
+		var startTime:Float = tween._startTime + 0.0000000001, overlaps:Array<Dynamic> = [], oCount:Int = 0, zeroDur:Bool = (tween._duration == 0), globalStart:Float=0;
 		i = siblings.length;
 		while (--i > -1) {
 			curTween = siblings[i];
@@ -1346,7 +1355,7 @@ class TweenLite extends Animation {
 				//ignore
 			} else if (curTween._timeline != tween._timeline) {
 				//globalStart = globalStart || _checkOverlap(tween, 0, zeroDur);
-				globalStart = globalStart != null ? globalStart : _checkOverlap(tween, 0, zeroDur);
+				globalStart = _checkOverlap(tween, 0, zeroDur);
 				if (_checkOverlap(curTween, globalStart, zeroDur) == 0) {
 					overlaps[oCount++] = curTween;
 				}

@@ -87,7 +87,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 
 		// TODO: pass all these into the constructor so they can be shared, swapped out or overridden
 		this.tileQueue = new TileQueue();
-		this.tilePool = new TilePool("com.modestmaps.core.Tile"/*Tile*/);
+		this.tilePool = new TilePool(Tile);
 		this.tileCache = new TileCache(tilePool);
 		queueTimer = new Timer(200);
 
@@ -103,7 +103,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:String/*Class<Dynamic>*/):Void
+	public function setTileClass(tileClass:Class<Dynamic>):Void
 	{
 		// assign the new class, which creates a new pool array
 		tilePool.setTileClass(tileClass);
@@ -188,7 +188,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			var loader:Loader = cast(openRequests[i], Loader);
 			if (loader.name == tile.name) {
 				loaderTiles.set(loader, null);
-				//untyped __delete__(loaderTiles, loader);
 				loaderTiles.remove(loader);
 			}
 		}
@@ -197,7 +196,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			tilePool.returnTile(tile);
 		}
 		
-		//untyped __delete__(layersNeeded, tile.name);
 		layersNeeded.remove(tile.name);
 	}
 
@@ -217,7 +215,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		{
 			var tile:Tile = cast(loaderTiles.get(loader), Tile);
 			loaderTiles.set(loader, null);
-			//untyped __delete__(loaderTiles, loader);
 			loaderTiles.remove(loader);
 			if (!tileCache.containsKey(tile.name)) {
 				tilePool.returnTile(tile);
@@ -243,7 +240,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			for (key in layersNeeded)
 			{
 				trace("TilePainter.hx - reset - layersNeeded.get("+key+") : " + layersNeeded.get(key));
-				//untyped __delete__(layersNeeded, key);
 				layersNeeded.remove(key);
 			}
 		}		
@@ -380,7 +376,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				loaderCache.get(loader.contentLoaderInfo.url) = content;
 				cachedUrls.push(loader.contentLoaderInfo.url);
 				if (cachedUrls.length > maxLoaderCacheSize) {
-					//untyped __delete__(loaderCache, cachedUrls.shift());
 					loaderCache.remove(cachedUrls.shift());
 				}
 			}
@@ -418,7 +413,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		}
 		
 		loaderTiles.set(loader, null);
-		//untyped __delete__(loaderTiles, loader);
 		loaderTiles.remove(loader);
 	}
 
@@ -435,7 +429,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			if (loader.contentLoaderInfo == loaderInfo)
 			{
 				openRequests.splice(i,1);
-				//untyped __delete__(layersNeeded, loader.name);
 				layersNeeded.remove(loader.name);
 				var tile:Tile = cast(loaderTiles.get(loader), Tile);
 				if (tile != null)
@@ -443,7 +436,6 @@ class TilePainter extends EventDispatcher implements ITilePainter
 					tile.paintError(provider.tileWidth(), provider.tileHeight());
 					tileGrid.tilePainted(tile);
 					loaderTiles.set(loader, null);
-					//untyped __delete__(loaderTiles, loader);
 					loaderTiles.remove(loader);
 				}		
 			}
