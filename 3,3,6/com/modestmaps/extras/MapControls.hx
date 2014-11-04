@@ -10,12 +10,12 @@ import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import flash.events.FullScreenEvent;
-import flash.events.KeyboardEvent;
+import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
-import flash.filters.DropShadowFilter;
-import flash.geom.ColorTransform;
+import openfl.filters.DropShadowFilter;
+import openfl.geom.ColorTransform;
 import openfl.text.TextField;
-import flash.ui.Keyboard;	
+import openfl.ui.Keyboard;	
 
 /** 
  * this is a bit of a silly class really,
@@ -143,6 +143,7 @@ class MapControls extends Sprite
 	public function new(map:Map, keyboard:Bool=true, fullScreen:Bool=false, buttonPositions:Dynamic=null, buttonClass:Class<Dynamic>=null)
 	{
 		super();
+		/*
 		if (buttonClass != null) buttonClass = Button;
 		
 		leftButton = new Button(Button.LEFT);
@@ -182,6 +183,7 @@ class MapControls extends Sprite
 		}
 
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		*/
 	}
 
 	public function setButtonTransforms(overTransform:ColorTransform, outTransform:ColorTransform):Void
@@ -195,7 +197,7 @@ class MapControls extends Sprite
 
 	private function onAddedToStage(event:Event):Void
 	{
-		if (keyboard) { 
+		/*if (keyboard) { 
 			map.addEventListener(KeyboardEvent.KEY_UP, onKeyboardEvent);
 			map.addEventListener(KeyboardEvent.KEY_DOWN, onKeyboardEvent);
 		}
@@ -209,18 +211,18 @@ class MapControls extends Sprite
 		map.addEventListener( MapEvent.RESIZED, onMapResize );  
 		map.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDownClick);
 		
-		onMapResize(null);
+		onMapResize(null);*/
 	}
 
 	private function onMouseDownClick(event:MouseEvent):Void
 	{
-		map.focusRect = false;
-		stage.focus = map;
+		/*map.focusRect = false;
+		stage.focus = map;*/
 	}
 
 	private function onKeyboardEvent(event:KeyboardEvent):Void
 	{
-		if (stage != null || Std.is(stage.focus, TextField)) return;
+		/*if (stage != null || Std.is(stage.focus, TextField)) return;
 
 		var buttonKeys:ObjectMap<Dynamic, Dynamic> = [
 			'+' => inButton,		
@@ -253,28 +255,28 @@ class MapControls extends Sprite
 				buttonKeys.get(event.keyCode).onMouseOut();
 				actions[buttons.indexOf(buttonKeys.get(event.keyCode))].call();
 			}
-		}
+		}*/
 		//event.stopImmediatePropagation();
 	}
 
 	private function onMapResize(event:Event):Void
 	{
-		var w:Float = map.getWidth();
+		/*var w:Float = map.getWidth();
 		var h:Float = map.getHeight();
 		
-		//for (child in positions)
-		//{
-			//var position:Dynamic = positions[child];
-			//for (reference in position)
-			//{
-				//if (reference == 'align') continue;
-				//positionFunctions[reference](this[child], position[reference], position['align']);
-			//}
-		//}
+		for (child in positions)
+		{
+			var position:Dynamic = positions[child];
+			for (reference in position)
+			{
+				if (reference == 'align') continue;
+				positionFunctions[reference](this[child], position[reference], position['align']);
+			}
+		}*/
 	}
 
 	public function onFullScreenEvent(event:Event):Void
 	{
-		onMapResize(event);
+		//onMapResize(event);
 	}
 }
