@@ -13,7 +13,8 @@ import flash.filters.DropShadowFilter;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-import com.greensock.TweenLite;
+//import com.greensock.TweenLite;
+import gs.TweenLite;
 
 /** This is an example of a slider that modifies the zoom level of the given map.
  * 
@@ -100,8 +101,8 @@ class ZoomSlider extends Sprite
 		else if (event.type == MouseEvent.MOUSE_UP || event.type == Event.MOUSE_LEAVE) {
 			thumb.stopDrag();
 			dragging = false;
-			//TweenLite.to(map.grid, 0.1, { zoomLevel: Math.round(map.grid.zoomLevel) });
-			//TweenLite.to(map.grid, 0.1, [ zoomLevel => Math.round(map.grid.zoomLevel) ] );
+			TweenLite.to(map.grid, 0.1, { zoomLevel : Math.round(map.grid.zoomLevel) } );
+			TweenLite.to(map.grid, 0.1, { zoomLevel : Math.round(map.grid.zoomLevel) } );
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onThumbMouse);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onThumbMouse);
 			stage.removeEventListener(Event.MOUSE_LEAVE, onThumbMouse);

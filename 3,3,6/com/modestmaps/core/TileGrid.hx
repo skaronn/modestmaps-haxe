@@ -895,7 +895,7 @@ class TileGrid extends Sprite
 		if (_invertedMatrix == null)
 		{
 			_invertedMatrix = worldMatrix.clone();
-			flash.Lib.trace("TileGrid - get_invertedMatrix - _invertedMatrix : " + _invertedMatrix);
+			flash.Lib.trace("TileGrid.hx - get_invertedMatrix - _invertedMatrix : " + _invertedMatrix);
 			_invertedMatrix.invert();
 			_invertedMatrix.scale(scale/_tileWidth, scale/_tileHeight);
 		}
@@ -995,7 +995,7 @@ class TileGrid extends Sprite
 	{
 		if (_centerCoordinate == null)
 		{
-			var c:Point = _invertedMatrix.transformPoint(new Point(mapWidth/2, mapHeight/2));
+			var c:Point = invertedMatrix.transformPoint(new Point(mapWidth/2, mapHeight/2));
 			_centerCoordinate = new Coordinate(c.y, c.x, zoomLevel);
 		} 
 		return _centerCoordinate; 		
@@ -1027,7 +1027,7 @@ class TileGrid extends Sprite
 			point = this.globalToLocal(point);
 		}
 		
-		var p:Point = _invertedMatrix.transformPoint(point);
+		var p:Point = invertedMatrix.transformPoint(point);
 		return new Coordinate(p.y, p.x, zoomLevel);
 	}
 

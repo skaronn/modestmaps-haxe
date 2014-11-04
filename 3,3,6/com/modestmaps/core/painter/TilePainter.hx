@@ -97,12 +97,13 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		queueTimer.start();
 	}
 
-	/** The classes themselves serve as factories!
-	 * 
-	 * @param tileClass e.g. Tile, TweenTile, etc.
-	 * 
-	 * @see http://norvig.com/design-patterns/img013.gif  
-	 */ 
+	/** 
+	* The classes themselves serve as factories!
+	* 
+	* @param tileClass e.g. Tile, TweenTile, etc.
+	* 
+	* @see http://norvig.com/design-patterns/img013.gif  
+	*/ 
 	public function setTileClass(tileClass:Class<Dynamic>):Void
 	{
 		// assign the new class, which creates a new pool array
@@ -110,9 +111,9 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	}
 
 	/**
-	 * 
-	 * @param	provider
-	 */
+	* 
+	* @param	provider
+	*/
 	public function setMapProvider(provider:IMapProvider):Void
 	{
 		this.provider = provider;
@@ -233,13 +234,13 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		
 		openRequests = [];
 				
-		flash.Lib.trace("TilePainter.hx - reset - layersNeeded : " + layersNeeded);
+		//flash.Lib.trace("TilePainter.hx - reset - layersNeeded : " + layersNeeded);
 		
 		if (layersNeeded != null)
 		{
 			for (key in layersNeeded)
 			{
-				trace("TilePainter.hx - reset - layersNeeded.get("+key+") : " + layersNeeded.get(key));
+				//trace("TilePainter.hx - reset - layersNeeded.get("+key+") : " + layersNeeded.get(key));
 				layersNeeded.remove(key);
 			}
 		}		
@@ -259,9 +260,9 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	{
 		// TODO: add urls to Tile?
 		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - tile : " + tile);
-		flash.Lib.trace("TilePainter.hx - loadNextURLForTile - layersNeeded.get("+tile.name+") : "+ layersNeeded.get(tile.name));
+		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - layersNeeded.get("+tile.name+") : "+ layersNeeded.get(tile.name));
 		var urls:Array<Dynamic> = cast(layersNeeded.get(tile.name), Array<Dynamic>);
-		flash.Lib.trace("TilePainter.hx - loadNextURLForTile - urls : "+ urls);
+		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - urls : "+ urls);
 		if (urls != null && urls.length > 0)
 		{
 			var url:Dynamic = urls.shift();
@@ -273,7 +274,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				loadNextURLForTile(tile);
 			}
 			else {
-				flash.Lib.trace("TilePainter.hx - loadNextURLForTile - requesting : "+ url);
+				//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - requesting : "+ url);
 				var tileLoader:Loader = new Loader();
 				//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - loaderTiles : "+ loaderTiles);
 				loaderTiles.set(tileLoader, tile);

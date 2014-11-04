@@ -5,7 +5,8 @@
 
 package com.modestmaps.core;
 
-import com.greensock.TweenLite;
+//import com.greensock.TweenLite;
+import gs.TweenLite;
 
 class TweenTile extends Tile
 {
@@ -28,7 +29,8 @@ class TweenTile extends Tile
 	override public function show():Void 
 	{
 		if (alpha < 1) {
-			TweenLite.to(this, FADE_TIME, null /*[ { alpha => 1 ; } ]*/ );
+			//flash.Lib.trace("TweenLite.hx - override public function show - alpha: " + alpha);
+			TweenLite.to(this, FADE_TIME, { alpha : 1 } );
 		}
 	}	
 

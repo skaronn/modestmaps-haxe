@@ -19,7 +19,8 @@ import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 
-import com.greensock.TweenLite;
+//import com.greensock.TweenLite;
+import gs.TweenLite;
 
 class TweenMap extends Map
 {

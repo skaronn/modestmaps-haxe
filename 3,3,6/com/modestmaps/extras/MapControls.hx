@@ -186,11 +186,11 @@ class MapControls extends Sprite
 
 	public function setButtonTransforms(overTransform:ColorTransform, outTransform:ColorTransform):Void
 	{		
-		for (button in buttons) {
+		/*for (button in buttons) {
 			button.overTransform = overTransform;
 			button.outTransform = outTransform;	
 			button.transform.colorTransform = outTransform;
-		}
+		}*/
 	}
 
 	private function onAddedToStage(event:Event):Void
