@@ -5,11 +5,10 @@ package com.modestmaps.core;
 
 import com.modestmaps.geo.Location;
 import de.polygonal.ds.Map;
+import flash.Lib;
 import openfl.utils.Object;
-
 import openfl.geom.Rectangle;
 
-//class MapExtent 
 class MapExtent
 {
 	// TODO: OK for rectangular projections, but we need a better way for other projections
@@ -189,13 +188,13 @@ class MapExtent
 	* @param	locations
 	* @return
 	*/
-	public static function fromLocations(locations:Array<Dynamic>):MapExtent
+	public static function fromLocations(locations:Array<Object>):MapExtent
 	{
 		if (locations==null || locations.length == 0) return new MapExtent();
 		
 		var extent:MapExtent = null;
 		var location:Location = null;
-		
+		var len : Int = 0;
 		for (location in locations)
 		{
 			if (extent == null)
@@ -209,7 +208,10 @@ class MapExtent
 					extent.enclose(location);
 				}
 			}
+			len++;
 		}
+		
+		flash.Lib.trace("MapExtent.hx - fromLocations - len : " + len);
 		
 		if (extent!=null) {
 			extent = new MapExtent();
@@ -234,10 +236,10 @@ class MapExtent
 	* @param	locationProp
 	* @return
 	*/
-	public static function fromLocationProperties(objects:Map<String, Dynamic>, locationProp:String="location"):MapExtent
+	public static function fromLocationProperties(objects:Map<String, Object>, locationProp:String="location"):MapExtent
 	{
 		var fromLocationProp : Location = cast(objects.get(locationProp), Location);
-		var locations : Array<Dynamic> = [fromLocationProp];
+		var locations : Array<Object> = [fromLocationProp];
 		return fromLocations(locations);
 		//return fromLocations(objects.map(function(obj:Dynamic, ...rest):Location { return obj[locationProp] as Location })); } ));
 	}

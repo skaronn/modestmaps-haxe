@@ -5,7 +5,6 @@ import com.modestmaps.events.MapEvent;
 import com.modestmaps.extras.ui.Button;
 import com.modestmaps.extras.ui.FullScreenButton;
 import haxe.ds.ObjectMap;
-
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -15,7 +14,8 @@ import openfl.events.MouseEvent;
 import openfl.filters.DropShadowFilter;
 import openfl.geom.ColorTransform;
 import openfl.text.TextField;
-import openfl.ui.Keyboard;	
+import openfl.ui.Keyboard;
+import openfl.utils.Object;
 
 /** 
  * this is a bit of a silly class really,
@@ -44,8 +44,8 @@ class MapControls extends Sprite
 	private var keyboard:Bool;
 	private var fullScreen:Bool;
 
-	private var buttons:Array<Dynamic>;
-	private var actions:Array<Dynamic>;
+	private var buttons:Array<Object>;
+	private var actions:Array<Object>;
 
 	// you can change these if you want,
 	// each button is positioned by it's top-left point
@@ -55,7 +55,7 @@ class MapControls extends Sprite
 	// if you use %, be aware the default alignment is left-top
 	// but that you'll probably want top-center for horizontal %
 	// and center-left for vertical %
-	public static var GROUPED:Dynamic = {
+	public static var GROUPED:Object = {
 		leftButton: { left: '15px', bottom: '15px' },
 		rightButton: { left: '65px', bottom: '15px' },
 		upButton: { left: '40px', bottom: '40px' },
@@ -65,7 +65,7 @@ class MapControls extends Sprite
 		fullScreenButton: { left: '125px', bottom: '15px' }
 	};
 
-	public static var SIDES:Dynamic = {
+	public static var SIDES:Object = {
 		leftButton: { left: '15px', top: '50%', align: 'center-left' },
 		rightButton: { right: '15px', bottom: '50%', align: 'center-left' },
 		upButton: { left: '50%', top: '15px', align: 'top-center' },
@@ -75,9 +75,9 @@ class MapControls extends Sprite
 		fullScreenButton: { left: '15px', bottom: '15px' }
 	};
 
-	private var positions:Dynamic = GROUPED;
+	private var positions:Object = GROUPED;
 
-	private var hAlignFunctions:Dynamic = {
+	private var hAlignFunctions:Object = {
 		center: function(child:DisplayObject):Float {
 			return child.width / 2;
 		},		
@@ -89,7 +89,7 @@ class MapControls extends Sprite
 		}
 	};
 
-	private var vAlignFunctions:Dynamic = {
+	private var vAlignFunctions:Object = {
 		center: function(child:DisplayObject):Float {
 			return child.height / 2;
 		},		
@@ -101,7 +101,7 @@ class MapControls extends Sprite
 		}
 	}
 
-	private var positionFunctions:Dynamic = {
+	private var positionFunctions:Object = {
 		left: function(child:DisplayObject, s:String, a:String):Void{
 			if (s.lastIndexOf("%") >= 0) {
 				//child.x = map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0;
@@ -140,10 +140,9 @@ class MapControls extends Sprite
 		}
 	};
 
-	public function new(map:Map, keyboard:Bool=true, fullScreen:Bool=false, buttonPositions:Dynamic=null, buttonClass:Class<Dynamic>=null)
+	public function new(map:Map, keyboard:Bool=true, fullScreen:Bool=false, buttonPositions:Object=null, buttonClass:Class<Object>=null)
 	{
 		super();
-		/*
 		if (buttonClass != null) buttonClass = Button;
 		
 		leftButton = new Button(Button.LEFT);
@@ -183,21 +182,20 @@ class MapControls extends Sprite
 		}
 
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-		*/
 	}
 
 	public function setButtonTransforms(overTransform:ColorTransform, outTransform:ColorTransform):Void
 	{		
-		/*for (button in buttons) {
+		for (button in buttons) {
 			button.overTransform = overTransform;
 			button.outTransform = outTransform;	
 			button.transform.colorTransform = outTransform;
-		}*/
+		}
 	}
 
 	private function onAddedToStage(event:Event):Void
 	{
-		/*if (keyboard) { 
+		if (keyboard) { 
 			map.addEventListener(KeyboardEvent.KEY_UP, onKeyboardEvent);
 			map.addEventListener(KeyboardEvent.KEY_DOWN, onKeyboardEvent);
 		}
@@ -211,20 +209,20 @@ class MapControls extends Sprite
 		map.addEventListener( MapEvent.RESIZED, onMapResize );  
 		map.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDownClick);
 		
-		onMapResize(null);*/
+		onMapResize(null);
 	}
 
 	private function onMouseDownClick(event:MouseEvent):Void
 	{
-		/*map.focusRect = false;
-		stage.focus = map;*/
+		map.focusRect = false;
+		stage.focus = map;
 	}
 
 	private function onKeyboardEvent(event:KeyboardEvent):Void
 	{
-		/*if (stage != null || Std.is(stage.focus, TextField)) return;
+		if (stage != null || Std.is(stage.focus, TextField)) return;
 
-		var buttonKeys:ObjectMap<Dynamic, Dynamic> = [
+		var buttonKeys:ObjectMap<Object, Object> = [
 			'+' => inButton,		
 			'=' => inButton,		
 			'-' => outButton,		
@@ -255,7 +253,7 @@ class MapControls extends Sprite
 				buttonKeys.get(event.keyCode).onMouseOut();
 				actions[buttons.indexOf(buttonKeys.get(event.keyCode))].call();
 			}
-		}*/
+		}
 		//event.stopImmediatePropagation();
 	}
 
@@ -266,7 +264,7 @@ class MapControls extends Sprite
 		
 		for (child in positions)
 		{
-			var position:Dynamic = positions[child];
+			var position:Object = positions[child];
 			for (reference in position)
 			{
 				if (reference == 'align') continue;
@@ -277,6 +275,6 @@ class MapControls extends Sprite
 
 	public function onFullScreenEvent(event:Event):Void
 	{
-		//onMapResize(event);
+		onMapResize(event);
 	}
 }

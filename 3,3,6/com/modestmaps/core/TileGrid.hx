@@ -5,6 +5,7 @@ import com.modestmaps.core.painter.ITilePainterOverride;
 import com.modestmaps.core.painter.TilePainter;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
+import flash.Lib;
 import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
@@ -470,11 +471,17 @@ class TileGrid extends Sprite
 
 		// loop over currently visible tiles
 		//for (var col:Int = minCol; col <= maxCol; col++)
-		for (col in minCol...maxCol)
+		//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - minCol : " + minCol);
+		//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - maxCol : " + maxCol);
+		//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - minRow : " + minRow);
+		//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - maxRow : " + maxRow);
+		for (col in minCol...maxCol+1)
 		{
+			//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - maxRow : " + maxRow);
 			//for (var row:Int = minRow; row <= maxRow; row++)
-			for (row in minRow...maxRow)
-			{			
+			for (row in minRow...maxRow+1)
+			{
+				//flash.Lib.trace("TileGrid.hx - repopulateVisibleTiles - row : " + row);
 				// create a string key for this tile
 				var key:String = tileKey(col, row, cast(_currentTileZoom, Int));
 				

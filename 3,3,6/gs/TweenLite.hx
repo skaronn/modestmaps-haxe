@@ -182,20 +182,18 @@ class TweenLite {
 
 	private function traceObject(o:Object):Void {		
 		var len:Int = 0;
-		var object : ObjectMap<Object, Object> = o;
-		for (key in object.keys()) {
-			//trace (key + " = " + object.get(key));
-			len++;
+		if(Std.is(o, ObjectMap)){
+			var object : ObjectMap<Object, Object> = o;
+			flash.Lib.trace("\n");
+			for (key in object.keys()) {
+				trace (key + " => " + object.get(key));
+				len++;
+			}
+			flash.Lib.trace("\n");
+			flash.Lib.trace("TweenLite.hx - traceObject - length  : " +len);
+		}else {
+			flash.Lib.trace("TweenLite.hx - traceObject - object => " +o);
 		}
-		/*
-		flash.Lib.trace("\n");
-		var fields : Array<String> = Reflect.fields(object);
-		for(val in fields){
-			flash.Lib.trace("		[" + Type.typeof(val) + "]	==> 	" + val );
-		}
-		flash.Lib.trace("\n");
-		*/
-		flash.Lib.trace(Type.typeof(object) + " : " +len);
 	}
 	
 	public function new(target:Object, duration:Float, vars:Object) {		
@@ -205,18 +203,17 @@ class TweenLite {
 		//flash.Lib.trace("TweenLite.hx - new - vars.overwrite : " + vars.overwrite);
 		if ((vars.overwrite != false && target != null) || _all.get(target) == null)
 		{ 
-			//flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
+			flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
 			_all.remove(target);
-			_all.set(target, new ObjectMap<Object, Object>());
+			var t :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
+			t.set(this, target);
+			_all.set(target, t);
 		}
 		
 		//flash.Lib.trace("TweenLite.hx - new - this : " + this);
+		//_all.set(target, new ObjectMap<Object, Object>());
 		
-		var targeter = new Array<Object>();
-		targeter[0] = target;
-		_all.set(targeter[0], this);
-		
-		traceObject(_all);
+		//traceObject(_all);
 		
 		//flash.Lib.trace("TweenLite.hx - new - _all.get(target.get(this)) : " + _all.get(target));
 		this.vars = vars;
@@ -439,19 +436,19 @@ class TweenLite {
 		//flash.Lib.trace("TweenLite.hx - executeAll - t :" + t);
 		var p:Object, tw:Object;
 		for (p in _all.keys()) {
-			//flash.Lib.trace("TweenLite.hx - executeAll - p :" + p);
-			//flash.Lib.trace("TweenLite.hx - executeAll - _all.get(p) : " + _all.get(p));
-			/*var fields : ObjectMap<Object, Object> = cast(_all.get(p), ObjectMap<Object, Object>);
+			flash.Lib.trace("TweenLite.hx - executeAll - p :" + p);
+			flash.Lib.trace("TweenLite.hx - executeAll - _all.get(p) : " + _all.get(p));
+			var fields : ObjectMap<Object, Object> = cast(_all.get(p), ObjectMap<Object, Object>);
 			flash.Lib.trace("TweenLite.hx - executeAll - fields : " + fields.keys());
 			for (tw in fields.keys()) {
 				flash.Lib.trace("TweenLite.hx - executeAll - tw " + tw);
-				if (a[cast(p, Int)][cast(tw, Int)] != null && a[cast(p, Int)][cast(tw, Int)].active) {
+				/*if (a[cast(p, Int)][cast(tw, Int)] != null && a[cast(p, Int)][cast(tw, Int)].active) {
 					a[cast(p, Int)][cast(tw, Int)].render(t);
 					if (a[cast(p, Int)] == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
 						break;
 					}
-				}
-			}	*/		
+				}*/
+			}			
 		}
 	}
 

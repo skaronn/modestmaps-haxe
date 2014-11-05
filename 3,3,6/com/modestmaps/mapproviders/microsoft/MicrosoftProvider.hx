@@ -8,6 +8,7 @@ import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.util.BinaryUtil;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
+import openfl.utils.Object;
 
 /**
  * @author tom
@@ -97,7 +98,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		return "MICROSOFT_"+type;
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	public function getTileUrls(coord:Coordinate):Array<Object>
 	{
 		if (coord.row < 0 || coord.row >= Math.pow(2, coord.zoom)) {
 			return null;

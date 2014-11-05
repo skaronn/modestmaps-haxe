@@ -2,8 +2,8 @@ package com.modestmaps.extras.ui;
 
 
 import openfl.display.Sprite;
-	import openfl.events.MouseEvent;
-	import flash.geom.ColorTransform;
+import openfl.events.MouseEvent;
+import openfl.geom.ColorTransform;
 
 class Button extends Sprite
 {
@@ -20,8 +20,8 @@ class Button extends Sprite
 	public function new(type:String=null, radius:Float=9, bgColor:UInt=0xFFFFFF, fgColor:UInt=0x000000, beveled:Bool=true)
 	{
 		super();
-		if (overTransform != null) overTransform = new ColorTransform(1, 1, 1);
-		if (outTransform != null) outTransform = new ColorTransform(1, .9, .6);
+		if (overTransform == null) overTransform = new ColorTransform(1, 1, 1);
+		if (outTransform == null) outTransform = new ColorTransform(1, .9, .6);
 		
 		useHandCursor = true;
 		buttonMode = true;
@@ -46,7 +46,7 @@ class Button extends Sprite
 			graphics.beginFill(bgColor);
 			graphics.drawRoundRect(0, 0, 20, 20, radius, radius);
 		}
-		
+
 		switch(type) {
 
 		// draw arrows...
@@ -97,7 +97,7 @@ class Button extends Sprite
 		   
 		}
 		
-		transform.colorTransform = outTransform;	
+		transform.colorTransform = outTransform;
 	}
 
 	public function onMouseOver(event:MouseEvent=null):Void
