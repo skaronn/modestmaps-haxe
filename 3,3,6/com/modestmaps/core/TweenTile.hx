@@ -9,7 +9,14 @@ package com.modestmaps.core;
 import gs.TweenLite;
 
 class TweenTile extends Tile
-{
+{			
+	public function dumpFields():String
+	{
+		var concatDumpFields : String = "{"+this+"[alpha:" + this.alpha +"]}";
+		//trace("TweenTile.as - dumpFields : " +concatDumpFields);
+		return concatDumpFields;
+	}
+	
 	public static var FADE_TIME:Float = 0.25;
 		
 	public function new(col:Int, row:Int, zoom:Int)

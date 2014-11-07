@@ -167,7 +167,7 @@ class TweenLite {
 	private static var _all:ObjectMap<Object, Object> = new ObjectMap<Object, Object>(); //Holds references to all our tween targets.
 	private var _sound:SoundTransform; //We only use this in cases where the user wants to change the volume of a MovieClip (they pass in a "volume" property in the v)
 	private var _endTarget:Object; //End target. It's almost always the same as this.target except for volume and color tweens. It helps us to see what object or MovieClip the tween really pertains to (so that we can killTweensOf() properly and hijack auto-overwritten ones)
-	private var _active:Bool; //If true, this tween is active.
+	private var _active:Bool = false; //If true, this tween is active.
 	private var _color:ColorTransform;
 	private var _endColor:ColorTransform; 
 
@@ -186,7 +186,7 @@ class TweenLite {
 			var object : ObjectMap<Object, Object> = o;
 			flash.Lib.trace("\n");
 			for (key in object.keys()) {
-				trace (key + " => " + object.get(key));
+				trace (key.dumpFields() + " => " + object.get(key));
 				len++;
 			}
 			flash.Lib.trace("\n");
@@ -196,26 +196,32 @@ class TweenLite {
 		}
 	}
 	
+	public static function dumpFields(tw:TweenLite):Void {
+		//flash.Lib.trace("TweenLite.hx - dump - class fields : [ _all : " + _all +"][ _listening : " + _listening +"][ _sprite : " + _sprite +"][ _timer : " + _timer +"][ killDelayedCallsTo : " + killDelayedCallsTo +"]");
+		var concatFieldsDump : String = "[_active:" + tw._active +"][initTime:" + tw.initTime +"][startTime:" + tw.startTime +"]";
+		//var concatFieldsDump : String = "[ _active : " + tw._active +"][ _color : " + tw._color +"][ _endTarget : " + tw._endTarget +"][ _sound : " + tw._sound +"][ delay : " + tw.delay +"][ duration : " + tw.duration +"][ extraTweens : " + tw.extraTweens +"][ initTime : " + tw.initTime +"][ startTime : " + tw.startTime +"][ target : " + tw.target +"][ tweens : " + tw.tweens +"][ vars : " + tw.vars +"]";
+		flash.Lib.trace("TweenLite.hx - dump - object fields : " +concatFieldsDump);
+	}
+		
 	public function new(target:Object, duration:Float, vars:Object) {		
 		if (target == null) return;
-		//flash.Lib.trace("TweenLite.hx - new - target : " + target);
+		flash.Lib.trace("TweenLite.hx - new - target : " + target);
 		//flash.Lib.trace("TweenLite.hx - new - vars : " + vars);
 		//flash.Lib.trace("TweenLite.hx - new - vars.overwrite : " + vars.overwrite);
 		if ((vars.overwrite != false && target != null) || _all.get(target) == null)
 		{ 
-			flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
+			//flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
 			_all.remove(target);
-			var t :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
-			t.set(this, target);
-			_all.set(target, t);
+			_all.set(target, new ObjectMap<Object, Object>());
 		}
-		
-		//flash.Lib.trace("TweenLite.hx - new - this : " + this);
-		//_all.set(target, new ObjectMap<Object, Object>());
+		/*flash.Lib.trace("TweenLite.hx - new - _all.get(target.get(this)) : " + _all.get(target));
+		var t :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
+		t.set(this, _all.get(target));
+		_all.set(this, t);
+		flash.Lib.trace("TweenLite.hx - new - this : " + this);*/
 		
 		//traceObject(_all);
-		
-		//flash.Lib.trace("TweenLite.hx - new - _all.get(target.get(this)) : " + _all.get(target));
+			
 		this.vars = vars;
 		this.duration = duration;
 		this.delay = (vars.delay != null ? cast(vars.delay, Float) :  0);
@@ -243,11 +249,10 @@ class TweenLite {
 		if (this.vars.mcColor != null) {
 			this.vars.tint = this.vars.mcColor;
 		}
-		
-		if(this.vars.autoAlpha != null){
-			//flash.Lib.trace("TweenLite.hx - new - this.vars.autoAlpha: " + this.vars.autoAlpha);
-			var autoAlpha : Float = cast(this.vars.autoAlpha, Float);
-			
+		flash.Lib.trace("TweenLite.hx - new - this.vars.alpha: " + this.vars.alpha);
+		flash.Lib.trace("TweenLite.hx - new - this.vars.autoAlpha: " + this.vars.autoAlpha);
+		if(this.vars.autoAlpha != null){			
+			var autoAlpha : Float = cast(this.vars.autoAlpha, Float);			
 			if (!Math.isNaN(autoAlpha))
 			{
 				this.vars.alpha = autoAlpha;
@@ -413,15 +418,18 @@ class TweenLite {
 		}
 		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
 		var tp:Object;
+		
 		//for (p in this.tweens) {
-		var fields = Reflect.fields(this.tweens);
+		var fields = Reflect.fields(this.tweens);		
 		for (p in fields) {
 			tp = this.tweens[cast(p, Int)];
 			tp.o[cast(p, Int)] = tp.s + (factor * tp.c);
 		}
+		
 		if (this.vars.onUpdate != null) {
 			this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
 		}
+		
 		if (time == this.duration) { //Check to see if we're done
 			complete(true);
 		}
@@ -436,18 +444,26 @@ class TweenLite {
 		//flash.Lib.trace("TweenLite.hx - executeAll - t :" + t);
 		var p:Object, tw:Object;
 		for (p in _all.keys()) {
-			flash.Lib.trace("TweenLite.hx - executeAll - p :" + p);
-			flash.Lib.trace("TweenLite.hx - executeAll - _all.get(p) : " + _all.get(p));
+			//flash.Lib.trace("TweenLite.hx - executeAll - p :" + p);
+			//flash.Lib.trace("TweenLite.hx - executeAll - _all.get(p) : " + _all.get(p));
 			var fields : ObjectMap<Object, Object> = cast(_all.get(p), ObjectMap<Object, Object>);
-			flash.Lib.trace("TweenLite.hx - executeAll - fields : " + fields.keys());
+			//flash.Lib.trace("TweenLite.hx - executeAll - fields : " + fields.keys());
 			for (tw in fields.keys()) {
-				flash.Lib.trace("TweenLite.hx - executeAll - tw " + tw);
-				/*if (a[cast(p, Int)][cast(tw, Int)] != null && a[cast(p, Int)][cast(tw, Int)].active) {
-					a[cast(p, Int)][cast(tw, Int)].render(t);
-					if (a[cast(p, Int)] == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
+				//var tweenLite : Object = cast(_all.get(p), ObjectMap<Object, Object>).get(tw)[0];
+				//flash.Lib.trace("TweenLite.hx - executeAll - tweenLite " + tweenLite);
+				//if (a[cast(p, Int)][cast(tw, Int)] != null && a[cast(p, Int)][cast(tw, Int)].active) {
+				// Dirty debug fix
+				tw._active = true;
+				if (tw != null && tw._active) {
+					//dumpFields(tw);
+					//com.modestmaps.core.DebugField.dumpFields(tw);
+					//a[cast(p, Int)][cast(tw, Int)].render(t);
+					//tw.render(t);
+					//if (a[cast(p, Int)] == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
+					if (_all.get(p) == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
 						break;
 					}
-				}*/
+				}
 			}			
 		}
 	}
@@ -522,16 +538,18 @@ class TweenLite {
 
 	//---- GETTERS / SETTERS -----------------------------------------------------------------------
 
-	public var active(get, null):Bool;
+	public var active(get, set):Bool;
 	
 	private function get_active():Bool
-	{		
+	{
+		//flash.Lib.trace("TweenLite.hx - get_active() - (flash.Lib.getTimer() - this.initTime) / 1000 > this.delay : " + (flash.Lib.getTimer() - this.initTime));
 		if (_active)
 		{
 			return true;
 		}
 		else if ((flash.Lib.getTimer() - this.initTime) / 1000 > this.delay) {
-			_active = true;		
+			active = true;
+			//flash.Lib.trace("TweenLite.hx - get_active() - _active : " + _active);
 			this.startTime = cast(this.initTime + (this.delay * 1000), UInt);
 			
 			if (this.vars.runBackwards != true) {
@@ -554,13 +572,19 @@ class TweenLite {
 		}
 	}
 	
+	private function set_active(active:Bool):Bool
+	{
+		this._active = active;
+		return this._active;
+	}
+	
 	public var endTarget(get, set):Object;
 	
 	private function get_endTarget():Object {
 		return _endTarget;
 	}
 	
-	public function set_endTarget(t:Object) : Object
+	private function set_endTarget(t:Object) : Object
 	{
 		if (this.duration == 0.001 && this.delay <= 0)
 		{//Otherwise subtweens (like for color or volume) that have a duration of 0 will stick around for 1 frame and get rendered in the executeAll() loop which means they'll render incorrectly
@@ -584,7 +608,7 @@ class TweenLite {
 		return _sound.volume;
 	}
 	
-	public function set_volumeProxy(n:Float):Float { //Used as a proxy of sorts to control the volume of the target MovieClip.
+	private function set_volumeProxy(n:Float):Float { //Used as a proxy of sorts to control the volume of the target MovieClip.
 		_sound.volume = n;
 		this.target.soundTransform = _sound;
 		return this.target.soundTransform;
@@ -596,7 +620,7 @@ class TweenLite {
 		return 0;
 	}
 	
-	public function set_colorProxy(n:Float):Float { 
+	private function set_colorProxy(n:Float):Float { 
 		var r:Float = 1 - n;
 		this.target.transform.colorTransform = new ColorTransform(_color.redMultiplier * r + _endColor.redMultiplier * n,
 									  _color.greenMultiplier * r + _endColor.greenMultiplier * n,
@@ -609,14 +633,14 @@ class TweenLite {
 		return r;
 	}
 	
-	/* If you want to be able to set or get the progress of a Tween, uncomment these getters/setters. 0 = beginning, 0.5 = halfway through, and 1 = complete
+	// If you want to be able to set or get the progress of a Tween, uncomment these getters/setters. 0 = beginning, 0.5 = halfway through, and 1 = complete
 	public var progress(get, set):Float;
 	
 	private function get_progress():Float {
 		return cast(((flash.Lib.getTimer() - this.startTime) / 1000) / this.duration, Float);
 	}
 	
-	public function set_progress(n:Float):Float {
+	private function set_progress(n:Float):Float {
 		var tmr:Int = flash.Lib.getTimer();
 		var t:Float = tmr - ((this.duration * n) * 1000);
 		this.initTime = cast(t - (this.delay * 1000), UInt);
@@ -625,5 +649,5 @@ class TweenLite {
 		render(tmr);
 		return n;
 	}
-	*/
+
 }

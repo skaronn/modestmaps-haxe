@@ -1,6 +1,7 @@
 package com.modestmaps.core.painter;
 
 import com.modestmaps.core.Tile;
+import flash.Lib;
 
 /** 
  *  This post http://lab.polygonal.de/2008/06/18/using-object-pools/
@@ -17,30 +18,30 @@ class TilePool
 	private static inline var MAX_NEW_TILES:Int = 256;
 
 	private var pool:Array<Dynamic> = [];
-	private var tileClassName:Class<Dynamic>;
+	private var tileClass:Class<Dynamic>;
 
 	public function new(tileClass:Class<Dynamic>)
 	{
-		this.tileClassName = tileClass;
+		this.tileClass = tileClass;
 	}
 
 	public function setTileClass(tileClass:Class<Dynamic>):Void
 	{
-		this.tileClassName = tileClass;
+		this.tileClass = tileClass;
+		flash.Lib.trace("TilePool.hx - setTileClass - this.tileClass " + this.tileClass);
 		pool = [];
 	}
 
 	public function getTile(column:Int, row:Int, zoom:Int):Tile
 	{
-		if (pool.length < MIN_POOL_SIZE)
-		{
-			while (pool.length < MAX_NEW_TILES)
-			{
-				pool.push(Type.createInstance(tileClassName, [0, 0, 0]));
+		if (pool.length < MIN_POOL_SIZE){
+			while (pool.length < MAX_NEW_TILES){
+				pool.push(Type.createInstance(tileClass, [0, 0, 0]));
 			}
 		}			
 		var tile:Tile = cast(pool.pop(), Tile);
 		tile.init(column, row, zoom);
+		//flash.Lib.trace("TilePool.hx - setTileClass - tile " + tile);
 		return tile;
 	}
 

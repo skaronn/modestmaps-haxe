@@ -10,6 +10,7 @@ import openfl.system.System;
 import com.modestmaps.core.painter.TilePainter;
 import com.modestmaps.core.painter.ITilePainter;	
 import de.polygonal.core.fmt.NumberFormat;
+import openfl.utils.Object;
 
 class DebugField extends TextField
 {
@@ -63,8 +64,24 @@ class DebugField extends TextField
 			+ "\nrequests: " + tilePainter.getRequestCount()
 			+ "\nfinished (cached) tiles: " + tilePainter.getCacheSize()
 			+ "\ncachedLoaders: " + tilePainter.getLoaderCacheCount()
-			+ "\nmemory: " + NumberFormat.toFixed((System.totalMemory/1048576),1) + "MB"; 
+			+ "\nmemory: " + NumberFormat.toFixed((System.totalMemory / 1048576), 1) + "MB"; 
 		width = textWidth+8;
 		height = textHeight+4;
 	}
+	
+	public static function dumpFields(tw:Object):Void {
+		//flash.Lib.trace("DebugField.hx - dump - instanceFields : "+Type.getInstanceFields(Type.getClass(tw)));
+		//flash.Lib.trace("DebugField.hx - dump - classFields : "+Type.getClassFields(Type.getClass(tw)));
+		//flash.Lib.trace("DebugField.hx - dump - fields : "+Reflect.fields(tw));
+		var concatFieldsDump : String = Type.getClassName(Type.getClass(tw)) + " => ";
+		var fields : Array<Object> = Type.getInstanceFields(Type.getClass(tw));
+		for (key in fields) {
+			var field : Object = fields[key];
+			if(!Reflect.isFunction(field)){
+				concatFieldsDump += "[" + key +" : " + Reflect.getProperty(tw, key) + "]";
+			}
+		}
+		flash.Lib.trace("TweenLite.hx - dump : " +concatFieldsDump);
+	}
+	
 }
