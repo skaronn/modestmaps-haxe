@@ -164,7 +164,7 @@ class TweenLite {
 	private static var _sprite:Sprite = new Sprite(); //A reference to the sprite that we use to drive all our ENTER_FRAME events.
 	private static var _listening:Bool; //If true, the ENTER_FRAME is being listened for (there are tweens that are in the queue)
 	private static var _timer:Timer = new Timer(2000);
-	private static var _all:ObjectMap<Object, Object> = new ObjectMap<Object, Object>(); //Holds references to all our tween targets.
+	public static var _all:ObjectMap<Object, Object> = new ObjectMap<Object, Object>(); //Holds references to all our tween targets.
 	private var _sound:SoundTransform; //We only use this in cases where the user wants to change the volume of a MovieClip (they pass in a "volume" property in the v)
 	private var _endTarget:Object; //End target. It's almost always the same as this.target except for volume and color tweens. It helps us to see what object or MovieClip the tween really pertains to (so that we can killTweensOf() properly and hijack auto-overwritten ones)
 	private var _active:Bool = false; //If true, this tween is active.
@@ -172,56 +172,74 @@ class TweenLite {
 	private var _endColor:ColorTransform; 
 
 	public var duration:Float; //Duration (in seconds)
-	public var vars:Object/*ObjectMap<Object, Object>*/; //Variables (holds things like _alpha or _y or whatever we're tweening)
+	public var vars:Object; //Variables (holds things like _alpha or _y or whatever we're tweening)
 	public var delay:Float; //Delay (in seconds)
 	public var startTime:UInt; //Start time
 	public var initTime:UInt; //Time of initialization. Remember, we can build in delays so this property tells us when the frame action was born, not when it actually started doing anything.
-	public var tweens:Object/*ObjectMap<Object, Object>*/; //Contains parsed data for each property that's being tweened (each has to have a target, property, start, a change, and an ease).
-	public var extraTweens:Object/*ObjectMap<Object, Object>*/; //If we run into a property that's supposed to be tweening but the target has no such property, those tweens get dumped in here.
-	public var target:Object/*ObjectMap<Object, Object>*/; //Target object (often a MovieClip)
-
-	private function traceObject(o:Object):Void {		
+	public var tweens:Object; //Contains parsed data for each property that's being tweened (each has to have a target, property, start, a change, and an ease).
+	public var extraTweens:Object; //If we run into a property that's supposed to be tweening but the target has no such property, those tweens get dumped in here.
+	public var target:Object; //Target object (often a MovieClip)
+	
+	private static function traceLog(o:Object):Void {		
 		var len:Int = 0;
 		if(Std.is(o, ObjectMap)){
 			var object : ObjectMap<Object, Object> = o;
 			flash.Lib.trace("\n");
 			for (key in object.keys()) {
-				trace (key.dumpFields() + " => " + object.get(key));
-				len++;
+				//trace (key.dumpFields() + " => " + object.get(key));
+				var fields : ObjectMap<Object, Object> = object.get(key);
+				var dictionaryValues : String = "";
+				var nblen:Int = 0;
+				for (value in fields.keys()){
+					//trace("value => "+value.dumpFields());
+					dictionaryValues += value.dumpFields();
+					nblen++;
+				}
+				flash.Lib.trace("TweenLite.hx - traceObject - dictionary - length : " +nblen);
+				if(dictionaryValues != ""){
+					//trace(key.dumpFields() + " => " +"{" +  object.get(key) + ":" + dictionaryValues + "}");
+					len++;
+				}								
 			}
 			flash.Lib.trace("\n");
 			flash.Lib.trace("TweenLite.hx - traceObject - length  : " +len);
-		}else {
+		}
+		else {
 			flash.Lib.trace("TweenLite.hx - traceObject - object => " +o);
 		}
 	}
 	
-	public static function dumpFields(tw:TweenLite):Void {
-		//flash.Lib.trace("TweenLite.hx - dump - class fields : [ _all : " + _all +"][ _listening : " + _listening +"][ _sprite : " + _sprite +"][ _timer : " + _timer +"][ killDelayedCallsTo : " + killDelayedCallsTo +"]");
-		var concatFieldsDump : String = "[_active:" + tw._active +"][initTime:" + tw.initTime +"][startTime:" + tw.startTime +"]";
-		//var concatFieldsDump : String = "[ _active : " + tw._active +"][ _color : " + tw._color +"][ _endTarget : " + tw._endTarget +"][ _sound : " + tw._sound +"][ delay : " + tw.delay +"][ duration : " + tw.duration +"][ extraTweens : " + tw.extraTweens +"][ initTime : " + tw.initTime +"][ startTime : " + tw.startTime +"][ target : " + tw.target +"][ tweens : " + tw.tweens +"][ vars : " + tw.vars +"]";
-		flash.Lib.trace("TweenLite.hx - dump - object fields : " +concatFieldsDump);
+	private static function dumpDictionaryFields(dictionary:ObjectMap<Object, Object>):String{
+		var dictionaryValues : String = "";
+		for (value in dictionary) {
+			//flash.Lib.trace(value+ " ----> "+dumpDictionaryFields(value));
+			dictionaryValues += value.toString();
+		}
+		return dictionaryValues;
+	}
+	
+	public function dumpFields():String{
+		return "[_active : " + this._active +"][_color : " + this._color +"][_endTarget : " + this._endTarget +"][_sound : " + this._sound +"][delay : " + this.delay +"][duration : " + this.duration +"][extraTweens : " + this.extraTweens +"][initTime : " + this.initTime +"][startTime : " + this.startTime +"][target : " + this.target +"][tweens : " + this.tweens +"][vars : " + this.vars +"]";
 	}
 		
 	public function new(target:Object, duration:Float, vars:Object) {		
 		if (target == null) return;
-		flash.Lib.trace("TweenLite.hx - new - target : " + target);
+		//flash.Lib.trace("TweenLite.hx - new - target : " + target);
 		//flash.Lib.trace("TweenLite.hx - new - vars : " + vars);
 		//flash.Lib.trace("TweenLite.hx - new - vars.overwrite : " + vars.overwrite);
+		var dictionary :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
 		if ((vars.overwrite != false && target != null) || _all.get(target) == null)
 		{ 
 			//flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
 			_all.remove(target);
-			_all.set(target, new ObjectMap<Object, Object>());
+			_all.set(target, dictionary);
 		}
-		/*flash.Lib.trace("TweenLite.hx - new - _all.get(target.get(this)) : " + _all.get(target));
-		var t :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
-		t.set(this, _all.get(target));
-		_all.set(this, t);
-		flash.Lib.trace("TweenLite.hx - new - this : " + this);*/
+		//flash.Lib.trace("TweenLite.hx - new - _all.get(target.get(this)) : " + _all.get(target));
+		//var t :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
+		//t.set(this, _all.get(target));
+		//_all.set(this, t);
+		_all.set(this, dictionary);
 		
-		//traceObject(_all);
-			
 		this.vars = vars;
 		this.duration = duration;
 		this.delay = (vars.delay != null ? cast(vars.delay, Float) :  0);
@@ -249,8 +267,8 @@ class TweenLite {
 		if (this.vars.mcColor != null) {
 			this.vars.tint = this.vars.mcColor;
 		}
-		flash.Lib.trace("TweenLite.hx - new - this.vars.alpha: " + this.vars.alpha);
-		flash.Lib.trace("TweenLite.hx - new - this.vars.autoAlpha: " + this.vars.autoAlpha);
+		//flash.Lib.trace("TweenLite.hx - new - this.vars.alpha: " + this.vars.alpha);
+		//flash.Lib.trace("TweenLite.hx - new - this.vars.autoAlpha: " + this.vars.autoAlpha);
 		if(this.vars.autoAlpha != null){			
 			var autoAlpha : Float = cast(this.vars.autoAlpha, Float);			
 			if (!Math.isNaN(autoAlpha))
@@ -265,26 +283,32 @@ class TweenLite {
 		
 		if (this.vars.runBackwards == true)
 		{
+			flash.Lib.trace("TweenLite.hx - new - this.vars.runBackwards: " + this.vars.runBackwards);
 			initTweenVals();
 		}
 		
-		_active = false;
+		active = false;
 		
-		if (duration == 0 && this.delay == 0)
-		{
+		if (duration == 0 && this.delay == 0) {
 			complete(true);
-		}
-		else if (!_listening)
-		{
+		} else if (!_listening) {
 			_sprite.addEventListener(Event.ENTER_FRAME, executeAll);
 			_timer.addEventListener("timer", killGarbage);
 			_timer.start();
 			_listening = true;
 		}
+		
+		flash.Lib.trace("TweenLite.hx -------------------------------------------------------");
+		flash.Lib.trace("TweenLite.hx - new - this : " + this.dumpFields());
+		flash.Lib.trace("TweenLite.hx - new - _all : " + dumpDictionaryFields(_all));
+		flash.Lib.trace("TweenLite.hx - new - _all.get(target) : " + _all.get(target));
+		//flash.Lib.trace("TweenLite.as - new - [$target][this] : " + [$target][this]);
+		//flash.Lib.trace("TweenLite.as - new - _all[$target][this] : " + _all[$target][this]);		
+		//traceObject(_all);		
 	}
 
-	public function initTweenVals():Void
-	{
+	public function initTweenVals():Void{
+		flash.Lib.trace("TweenLite.hx - initTweenVals - this.tweens : "+this.tweens);
 		var ndl:Float = this.delay - ((flash.Lib.getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
 		var p:String, valChange:Float; //For looping (for p in this.vars)
 		if (Std.is(this.target, Array))
@@ -453,10 +477,8 @@ class TweenLite {
 				//flash.Lib.trace("TweenLite.hx - executeAll - tweenLite " + tweenLite);
 				//if (a[cast(p, Int)][cast(tw, Int)] != null && a[cast(p, Int)][cast(tw, Int)].active) {
 				// Dirty debug fix
-				tw._active = true;
-				if (tw != null && tw._active) {
+				if (tw != null && tw.active) {
 					//dumpFields(tw);
-					//com.modestmaps.core.DebugField.dumpFields(tw);
 					//a[cast(p, Int)][cast(tw, Int)].render(t);
 					//tw.render(t);
 					//if (a[cast(p, Int)] == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
@@ -542,14 +564,13 @@ class TweenLite {
 	
 	private function get_active():Bool
 	{
-		//flash.Lib.trace("TweenLite.hx - get_active() - (flash.Lib.getTimer() - this.initTime) / 1000 > this.delay : " + (flash.Lib.getTimer() - this.initTime));
+		flash.Lib.trace("TweenLite.hx - endTarget - _active : "+_active);
 		if (_active)
 		{
 			return true;
 		}
 		else if ((flash.Lib.getTimer() - this.initTime) / 1000 > this.delay) {
 			active = true;
-			//flash.Lib.trace("TweenLite.hx - get_active() - _active : " + _active);
 			this.startTime = cast(this.initTime + (this.delay * 1000), UInt);
 			
 			if (this.vars.runBackwards != true) {
