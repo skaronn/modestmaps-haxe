@@ -75,6 +75,8 @@ import gs.TweenLite;
 import haxe.ds.ObjectMap;
 import haxe.ds.ObjectMap;
 import haxe.ds.ObjectMap;
+import haxe.Timer;
+import haxe.Timer;
 TweenLite.to(clip_mc, 1.5, {alpha:0.5, x:120, volume:0});
 
 If you want to get more advanced and tween the clip_mc MovieClip over 5 seconds, changing the alpha to 0.5, 
@@ -181,31 +183,36 @@ class TweenLite {
 	public var target:Object; //Target object (often a MovieClip)
 	
 	private static function traceLog(o:Object):Void {		
-		var len:Int = 0;
+		var len:UInt = 0;
 		if(Std.is(o, ObjectMap)){
 			var object : ObjectMap<Object, Object> = o;
 			flash.Lib.trace("\n");
 			for (key in object.keys()) {
+				var dictionaryValues : String = "";
+				var dictionaryLength : UInt = 0;
+				//trace (key + " ======> " + object.get(key));
 				//trace (key.dumpFields() + " => " + object.get(key));
 				var fields : ObjectMap<Object, Object> = object.get(key);
-				var dictionaryValues : String = "";
-				var nblen:Int = 0;
-				for (value in fields.keys()){
-					//trace("value => "+value.dumpFields());
-					dictionaryValues += value.dumpFields();
-					nblen++;
+				for (value in fields.keys()) {
+					trace(value);
+					dictionaryValues += Type.typeof(value);
+					//dictionaryValues += value.dumpFields();
+					dictionaryLength++;
 				}
-				flash.Lib.trace("TweenLite.hx - traceObject - dictionary - length : " +nblen);
-				if(dictionaryValues != ""){
-					//trace(key.dumpFields() + " => " +"{" +  object.get(key) + ":" + dictionaryValues + "}");
-					len++;
-				}								
+				
+				//trace("traceLog - " + key + " ======> " + object.get(key) + "{" + dictionaryValues + "}[" + dictionaryLength + "]");
+				trace("traceLog - " + key + " ======> " + object.get(key) + "{" + dictionaryValues + "}[" + dictionaryLength + "]");
+				//flash.Lib.trace("TweenLite.hx - traceLog - dictionary length : " +dictionaryLength);
+				/*if(dictionaryValues != ""){
+					trace(key.dumpFields() + " => " +"{" +  object.get(key) + ":" + dictionaryValues + "}");					
+				}*/
+				len++;
 			}
 			flash.Lib.trace("\n");
-			flash.Lib.trace("TweenLite.hx - traceObject - length  : " +len);
+			flash.Lib.trace("TweenLite.hx - traceLog - nb elements : " +len);
 		}
 		else {
-			flash.Lib.trace("TweenLite.hx - traceObject - object => " +o);
+			flash.Lib.trace("TweenLite.hx - traceLog - object => " +o);
 		}
 	}
 	
@@ -219,7 +226,7 @@ class TweenLite {
 	}
 	
 	public function dumpFields():String{
-		return "[_active : " + this._active +"][_color : " + this._color +"][_endTarget : " + this._endTarget +"][_sound : " + this._sound +"][delay : " + this.delay +"][duration : " + this.duration +"][extraTweens : " + this.extraTweens +"][initTime : " + this.initTime +"][startTime : " + this.startTime +"][target : " + this.target +"][tweens : " + this.tweens +"][vars : " + this.vars +"]";
+		return "[_active : " + this._active +"][_color : " + this._color +"][_endTarget : " + this._endTarget.dumpFields() +"][_sound : " + this._sound +"][delay : " + this.delay +"][duration : " + this.duration +"][extraTweens : " + this.extraTweens +"][initTime : " + this.initTime +"][startTime : " + this.startTime +"][target : " + this.target +"][tweens : " + this.tweens +"][vars : " + this.vars +"]";
 	}
 		
 	public function new(target:Object, duration:Float, vars:Object) {		
@@ -227,23 +234,21 @@ class TweenLite {
 		//flash.Lib.trace("TweenLite.hx - new - target : " + target);
 		//flash.Lib.trace("TweenLite.hx - new - vars : " + vars);
 		//flash.Lib.trace("TweenLite.hx - new - vars.overwrite : " + vars.overwrite);
-		var dictionary :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
+		var dictionary : ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
 		if ((vars.overwrite != false && target != null) || _all.get(target) == null)
 		{ 
 			//flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
 			_all.remove(target);
-			_all.set(target, dictionary);
+			_all.set(target, /*new ObjectMap<Object, Object>()*/dictionary);
 		}
+		dictionary.set(this, target);
+		//_all.set(_all.get(this), this);
 		//flash.Lib.trace("TweenLite.hx - new - _all.get(target.get(this)) : " + _all.get(target));
-		//var t :  ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
-		//t.set(this, _all.get(target));
-		//_all.set(this, t);
-		_all.set(this, dictionary);
 		
 		this.vars = vars;
 		this.duration = duration;
 		this.delay = (vars.delay != null ? cast(vars.delay, Float) :  0);
-		
+		//flash.Lib.trace("TweenLite.hx - new - duration: " + duration);
 		if (duration == 0) {
 			this.duration = 0.001; //Easing equations don't work when the duration is zero.
 			if (this.delay == 0) {
@@ -252,6 +257,7 @@ class TweenLite {
 		}
 		
 		this.target = _endTarget = target;
+		//flash.Lib.trace("TweenLite.hx - new - this.target: " + this.target);
 		
 		if (!Reflect.isFunction(this.vars.ease))
 		{
@@ -292,19 +298,20 @@ class TweenLite {
 		if (duration == 0 && this.delay == 0) {
 			complete(true);
 		} else if (!_listening) {
+			trace("TweenLite.hx - new - _listening : "+_listening);
 			_sprite.addEventListener(Event.ENTER_FRAME, executeAll);
 			_timer.addEventListener("timer", killGarbage);
 			_timer.start();
 			_listening = true;
 		}
 		
-		flash.Lib.trace("TweenLite.hx -------------------------------------------------------");
-		flash.Lib.trace("TweenLite.hx - new - this : " + this.dumpFields());
-		flash.Lib.trace("TweenLite.hx - new - _all : " + dumpDictionaryFields(_all));
-		flash.Lib.trace("TweenLite.hx - new - _all.get(target) : " + _all.get(target));
+		//flash.Lib.trace("TweenLite.hx -------------------------------------------------------");
+		//flash.Lib.trace("TweenLite.hx - this : " + this.dumpFields());
+		//flash.Lib.trace("TweenLite.hx - new - _all : " + dumpDictionaryFields(_all));
+		//flash.Lib.trace("TweenLite.hx - new - _all.get(target) : " + _all.get(target));
 		//flash.Lib.trace("TweenLite.as - new - [$target][this] : " + [$target][this]);
 		//flash.Lib.trace("TweenLite.as - new - _all[$target][this] : " + _all[$target][this]);		
-		//traceObject(_all);		
+		//traceLog(_all);		
 	}
 
 	public function initTweenVals():Void{
@@ -460,32 +467,29 @@ class TweenLite {
 	}
 
 	public static function executeAll(e:Event):Void {
-		//flash.Lib.trace("TweenLite.hx - executeAll - _all : " + _all);
 		//flash.Lib.trace("TweenLite.hx - executeAll - e : " + e);
+		//flash.Lib.trace("TweenLite.hx - executeAll - _all : " + _all);
 		var a:Object = _all;
 		//flash.Lib.trace("TweenLite.hx - executeAll - a : " + a);
 		var t:UInt = flash.Lib.getTimer();
 		//flash.Lib.trace("TweenLite.hx - executeAll - t :" + t);
 		var p:Object, tw:Object;
 		for (p in _all.keys()) {
-			//flash.Lib.trace("TweenLite.hx - executeAll - p :" + p);
+			//flash.Lib.trace("TweenLite.hx - executeAll - p : " + p.dumpFields());
 			//flash.Lib.trace("TweenLite.hx - executeAll - _all.get(p) : " + _all.get(p));
 			var fields : ObjectMap<Object, Object> = cast(_all.get(p), ObjectMap<Object, Object>);
 			//flash.Lib.trace("TweenLite.hx - executeAll - fields : " + fields.keys());
 			for (tw in fields.keys()) {
-				//var tweenLite : Object = cast(_all.get(p), ObjectMap<Object, Object>).get(tw)[0];
-				//flash.Lib.trace("TweenLite.hx - executeAll - tweenLite " + tweenLite);
-				//if (a[cast(p, Int)][cast(tw, Int)] != null && a[cast(p, Int)][cast(tw, Int)].active) {
-				// Dirty debug fix
+				//trace("TweenLite.hx - executeAll - tw " + tw.dumpFields());
+				trace("TweenLite.as - executeAll - tw : "+ Type.typeof(tw) + " => " +  tw.dumpFields());
+				//trace("TweenLite.hx - executeAll - fields.get(tw) " + fields.get(tw).dumpFields());
+				/*tw.active = true;
 				if (tw != null && tw.active) {
-					//dumpFields(tw);
-					//a[cast(p, Int)][cast(tw, Int)].render(t);
-					//tw.render(t);
-					//if (a[cast(p, Int)] == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
+					tw.render(t);
 					if (_all.get(p) == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
 						break;
 					}
-				}
+				}*/
 			}			
 		}
 	}
