@@ -6,6 +6,7 @@
 package com.modestmaps.core;
 
 //import com.greensock.TweenLite;
+import flash.Lib;
 import gs.TweenLite;
 
 class TweenTile extends Tile
@@ -30,13 +31,13 @@ class TweenTile extends Tile
 		// it seems there's a harmless bug where hide might get called after show
 		// if there's a tween running it will correct it though :)
 		//TweenLite.killTweensOf(this);
-		this.alpha = 0;
+		this.alpha = 0.0;
 	}
 
 	override public function show():Void 
 	{
 		if (alpha < 1) {
-			//flash.Lib.trace("TweenLite.hx - override public function show - alpha: " + alpha);
+			//flash.Lib.trace("TweenLite.hx - override public function show - alpha: " + alpha);			
 			TweenLite.to(this, FADE_TIME, { alpha : 1 } );
 		}
 	}	
@@ -44,7 +45,7 @@ class TweenTile extends Tile
 	override public function showNow():Void 
 	{
 		TweenLite.killTweensOf(this);
-		this.alpha = 1;
+		this.alpha = 1.0;
 	}	
 
 	override public function destroy():Void 

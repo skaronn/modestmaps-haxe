@@ -70,6 +70,8 @@ EXAMPLES:
 As a simple example, you could tween the alpha to 50% (0.5) and move the x position of a MovieClip named "clip_mc" 
 to 120 and fade the volume to 0 over the course of 1.5 seconds like so:
 
+import flash.Lib;
+import flash.Lib;
 import flash.utils.Object;
 import gs.TweenLite;
 import haxe.ds.ObjectMap;
@@ -159,6 +161,7 @@ import openfl.media.SoundTransform;
 import openfl.geom.ColorTransform;
 import haxe.ds.ObjectMap;
 import openfl.utils.*;
+import openfl.errors.*;
 
 class TweenLite {
 	public static var version:Float = 5.87;
@@ -363,16 +366,20 @@ class TweenLite {
 				}
 				else {
 					if (this.target.hasOwnProperty(p)) {
-						if (Std.is(Type.typeof(this.vars.get(p)), Float)) {
-							valChange = this.vars.get(p) - this.target.get(p);
+						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + this.vars);
+						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + p);
+						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Reflect.field(this.vars, p));
+						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Std.is(Reflect.field(this.vars, p), Float));
+						if (Std.is(Reflect.field(this.vars, p), Float)) {
+							valChange = cast(Reflect.field(this.vars, p), Float) -  cast(Reflect.field(this.target, p), Float);
 						}
 						else {
-							valChange = cast(this.vars.get(p), Float);
+							valChange = cast(Reflect.field(this.vars, p), Float);
 						}
-						this.tweens[cast(p, Int)] = {o:this.target, s:this.target.get(p), c:valChange}; //o: object, p:property, s:starting value, c:change in value, e: easing function
+						Reflect.setField(this.tweens, p, {o:this.target, s:Reflect.field(this.target, p), c:valChange}); //o: object, p:property, s:starting value, c:change in value, e: easing function
 					}
 					else {
-						this.extraTweens[cast(p, Int)] = {o:this.target, s:0, c:0, v:this.vars.get(p)}; //classes that extend this one (like TweenFilterLite) may need it (like for blurX, blurY, and other filter properties)
+						this.extraTweens[cast(p, Int)] = {o:this.target, s:0, c:0, v:Reflect.field(this.vars, p)}; //classes that extend this one (like TweenFilterLite) may need it (like for blurX, blurY, and other filter properties)
 					}
 				}
 			}
@@ -419,8 +426,13 @@ class TweenLite {
 	}
 
 	public static function removeTween(t:TweenLite = null):Void {
+		/*flash.Lib.trace("removeTween - _all : "+_all);
+		flash.Lib.trace("removeTween - t : "+t.dumpFields());
+		flash.Lib.trace("removeTween - t.endTarget : " + t.endTarget.dumpFields());
+		flash.Lib.trace("removeTween - _all[$t.endTarget][$t] : "+_all.get(t.endTarget) != null);*/
 		if (t != null && _all.get(t.endTarget) != null) {
-			untyped __delete__(_all, _all[t.endTarget][t]);
+			//untyped __delete__(_all, _all[t.endTarget][t]);
+			_all.remove(t.endTarget);
 		}
 	}
 
@@ -450,11 +462,10 @@ class TweenLite {
 		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
 		var tp:Object;
 		
-		//for (p in this.tweens) {
 		var fields = Reflect.fields(this.tweens);		
 		for (p in fields) {
-			tp = this.tweens[cast(p, Int)];
-			tp.o[cast(p, Int)] = tp.s + (factor * tp.c);
+			tp = Reflect.field(this.tweens, p);
+			Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
 		}
 		
 		if (this.vars.onUpdate != null) {
@@ -479,17 +490,16 @@ class TweenLite {
 			//flash.Lib.trace("TweenLite.hx - executeAll - _all.get(p) : " + _all.get(p));
 			var fields : ObjectMap<Object, Object> = cast(_all.get(p), ObjectMap<Object, Object>);
 			//flash.Lib.trace("TweenLite.hx - executeAll - fields : " + fields.keys());
-			for (tw in fields.keys()) {
+			for (tweenLite in fields.keys()) {
 				//trace("TweenLite.hx - executeAll - tw " + tw.dumpFields());
-				trace("TweenLite.as - executeAll - tw : "+ Type.typeof(tw) + " => " +  tw.dumpFields());
-				//trace("TweenLite.hx - executeAll - fields.get(tw) " + fields.get(tw).dumpFields());
-				/*tw.active = true;
-				if (tw != null && tw.active) {
+				//trace("TweenLite.as - executeAll - tw : " + Type.typeof(tw) + " => " +  tw.dumpFields());
+				var tw : TweenLite = cast(tweenLite, TweenLite);
+				if (tweenLite != null && tw.active) {
 					tw.render(t);
 					if (_all.get(p) == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
 						break;
 					}
-				}*/
+				}
 			}			
 		}
 	}
@@ -568,7 +578,9 @@ class TweenLite {
 	
 	private function get_active():Bool
 	{
-		flash.Lib.trace("TweenLite.hx - endTarget - _active : "+_active);
+		//flash.Lib.trace("TweenLite.hx - get_active - _active : " + _active);
+		var er:Error = new Error("BREAK"); //creating but not throwing the error
+		//flash.Lib.trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 		if (_active)
 		{
 			return true;
@@ -599,8 +611,7 @@ class TweenLite {
 	
 	private function set_active(active:Bool):Bool
 	{
-		this._active = active;
-		return this._active;
+		return _active = active;
 	}
 	
 	public var endTarget(get, set):Object;
