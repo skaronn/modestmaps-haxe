@@ -111,6 +111,7 @@ class AbstractMapProvider
 	*/
 	public function coordinateLocation(coordinate:Coordinate):Location
 	{
+		//flash.Lib.trace("AbstractMapProvider.hx - coordinateLocation - __projection.coordinateLocation(coordinate) : "+__projection.coordinateLocation(coordinate));
 		return __projection.coordinateLocation(coordinate);
 	}
 	

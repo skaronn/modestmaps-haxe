@@ -114,13 +114,13 @@ class Map extends Sprite
 
 		// if rest was passed in from super constructor in a subclass,
 		// it will be an array...
-		if (rest!=null && rest.length > 0 && Std.is (rest[0], Array)){
+		if (rest != null && rest.length > 0 && Std.is (rest[0], Array)){
 			rest = rest[0];
 		}
 		// (doing that is OK because none of the arguments we're expecting are Arrays)
 		
 		// look at ... rest arguments for MapExtent or Location/zoom
-		if (rest!=null && rest.length > 0 && Std.is(rest[0], MapExtent)){
+		if (rest != null && rest.length > 0 && Std.is(rest[0], MapExtent)){
 			setExtent(cast(rest[0], MapExtent));
 		}
 		else if (rest != null && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
@@ -129,24 +129,31 @@ class Map extends Sprite
 		else {
 			// use the whole world as a default
 			var extent:MapExtent = new MapExtent(85, -85, 180, -180);
-		
-			// but adjust to fit the mapprovider's outer limits if there are any: 
+			
+			// but adjust to fit the mapprovider's outer limits if there are any:
+			flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[0] : "+mapProvider.outerLimits()[0]);
+			flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[1] : "+mapProvider.outerLimits()[1]);
 			var l1:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[0]);
 			var l2:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[1]);
-
+			flash.Lib.trace("Map.hx - new - l1.lat : "+l1.lat);
+			flash.Lib.trace("Map.hx - new - l1.lon : "+l1.lon);
+			flash.Lib.trace("Map.hx - new - l2.lat : "+l2.lat);
+			flash.Lib.trace("Map.hx - new - l2.lon : "+l2.lon);
+			
 			if (!Math.isNaN(l1.lat) && Math.abs(l1.lat) != Math.NEGATIVE_INFINITY) {
-				extent.north = l1.lat;
+				//extent.north = l1.lat;
 			}		
 			if (!Math.isNaN(l2.lat) && Math.abs(l2.lat) != Math.NEGATIVE_INFINITY) {
-				extent.south = l2.lat;
+				//extent.south = l2.lat;
 			}		
 			if (!Math.isNaN(l1.lon) && Math.abs(l1.lon) != Math.NEGATIVE_INFINITY) {
-				extent.west = l1.lon;
+				//extent.west = l1.lon;
 			}		
 			if (!Math.isNaN(l2.lon) && Math.abs(l2.lon) != Math.NEGATIVE_INFINITY) {
-				extent.east = l2.lon;
+				//extent.east = l2.lon;
 			}
-
+			
+			flash.Lib.trace("Map.hx - new - extent : "+extent);
 			setExtent(extent);
 		}
 		
@@ -170,6 +177,8 @@ class Map extends Sprite
 		//trace('applying extent', extent);
 		onExtentChanging();
 		// tell grid what the rock is cooking
+		flash.Lib.trace("Map.hx - locationsCoordinate - extent.northWest : "+ extent.northWest);
+		flash.Lib.trace("Map.hx - locationsCoordinate - extent.southEast : "+ extent.southEast);
 		grid.resetTiles(locationsCoordinate( [ extent.northWest, extent.southEast ] ));
 		onExtentChanged();
 	}
@@ -226,6 +235,9 @@ class Map extends Sprite
 	{
 		if (fitWidth == 0) fitWidth = mapWidth;
 		if (fitHeight == 0) fitHeight = mapHeight;
+		flash.Lib.trace("Map.hx - locationsCoordinate - locations : "+ locations);
+		var er:Error = new Error("BREAK"); //creating but not throwing the error
+		flash.Lib.trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 		
 		var TL:Coordinate = mapProvider.locationCoordinate(locations[0].normalize());
 		var BR:Coordinate = TL.copy();

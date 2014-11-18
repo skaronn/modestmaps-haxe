@@ -318,7 +318,7 @@ class TweenLite {
 	}
 
 	public function initTweenVals():Void{
-		flash.Lib.trace("TweenLite.hx - initTweenVals - this.tweens : "+this.tweens);
+		//flash.Lib.trace("TweenLite.hx - initTweenVals - this.tweens : "+this.tweens);
 		var ndl:Float = this.delay - ((flash.Lib.getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
 		var p:String, valChange:Float; //For looping (for p in this.vars)
 		if (Std.is(this.target, Array))
@@ -366,10 +366,10 @@ class TweenLite {
 				}
 				else {
 					if (this.target.hasOwnProperty(p)) {
-						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + this.vars);
+						/*flash.Lib.trace(">>>>>>>>>>>>>>>>> " + this.vars);
 						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + p);
 						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Reflect.field(this.vars, p));
-						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Std.is(Reflect.field(this.vars, p), Float));
+						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Std.is(Reflect.field(this.vars, p), Float));*/
 						if (Std.is(Reflect.field(this.vars, p), Float)) {
 							valChange = cast(Reflect.field(this.vars, p), Float) -  cast(Reflect.field(this.target, p), Float);
 						}
@@ -579,7 +579,7 @@ class TweenLite {
 	private function get_active():Bool
 	{
 		//flash.Lib.trace("TweenLite.hx - get_active - _active : " + _active);
-		var er:Error = new Error("BREAK"); //creating but not throwing the error
+		//var er:Error = new Error("BREAK"); //creating but not throwing the error
 		//flash.Lib.trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 		if (_active)
 		{
