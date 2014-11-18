@@ -259,18 +259,18 @@ class MapControls extends Sprite
 
 	private function onMapResize(event:Event):Void
 	{
-		/*var w:Float = map.getWidth();
+		var w:Float = map.getWidth();
 		var h:Float = map.getHeight();
 		
-		for (child in positions)
+		for (child in Reflect.fields(positions))
 		{
-			var position:Object = positions[child];
-			for (reference in position)
+			var position:Object = Reflect.field(positions, child);
+			for (reference in Reflect.fields(position))
 			{
 				if (reference == 'align') continue;
-				positionFunctions[reference](this[child], position[reference], position['align']);
+				Reflect.field(positionFunctions, reference)(Reflect.field(this, child), Reflect.field(position, reference), Reflect.field(position, 'align'));
 			}
-		}*/
+		}
 	}
 
 	public function onFullScreenEvent(event:Event):Void

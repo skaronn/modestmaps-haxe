@@ -21,6 +21,7 @@ import com.modestmaps.geo.IProjection;
 import com.modestmaps.geo.Location;
 import com.modestmaps.geo.MercatorProjection;
 import com.modestmaps.geo.Transformation;
+import openfl.utils.Object;
 
 class AbstractMapProvider
 {	

@@ -7,6 +7,7 @@
 package com.modestmaps.mapproviders;
  
 import com.modestmaps.core.Coordinate;
+import openfl.utils.Object;
 
 class OpenStreetMapProvider extends AbstractMapProvider implements IMapProvider
 {
@@ -20,14 +21,15 @@ class OpenStreetMapProvider extends AbstractMapProvider implements IMapProvider
 		return "OPEN_STREET_MAP";
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	public function getTileUrls(coord:Coordinate):Array<Object>
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
+		//flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - sourceCoord : "+sourceCoord);
 		if (sourceCoord.row < 0 || sourceCoord.row >= Math.pow(2, coord.zoom)) {
-			flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - []");
+			//flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - []");
 			return [];
 		}
-		flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png'");
+		//flash.Lib.trace("OpenStreetMapProvider.hx - getTileUrls - http://tile.openstreetmap.org/"+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+".png'");
 		return [ 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png' ];
 	}
 }

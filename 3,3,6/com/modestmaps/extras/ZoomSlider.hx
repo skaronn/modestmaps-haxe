@@ -1,6 +1,5 @@
 package com.modestmaps.extras;
 
-
 import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;
 
@@ -8,18 +7,19 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import flash.filters.BevelFilter;
-import flash.filters.BitmapFilterType;
-import flash.filters.DropShadowFilter;
+import openfl.filters.BitmapFilterType;
+import openfl.filters.DropShadowFilter;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
-//import com.greensock.TweenLite;
 import gs.TweenLite;
 
-/** This is an example of a slider that modifies the zoom level of the given map.
- * 
- *  It is provided mainly for ModestMapsSample.as and to test the arbitrary 
- *  zoom level functionality, but feel free to use it if you like yellow bevels. */ 
+/** 
+* This is an example of a slider that modifies the zoom level of the given map.
+* 
+*  It is provided mainly for ModestMapsSample.as and to test the arbitrary 
+*  zoom level functionality, but feel free to use it if you like yellow bevels.
+*/ 
 class ZoomSlider extends Sprite
 {
 	private var map:Map;
@@ -56,12 +56,15 @@ class ZoomSlider extends Sprite
 		track.graphics.moveTo(0, 0);
 		track.graphics.lineTo(0, trackHeight);
 		track.graphics.lineStyle(0, 0x000000, 0.2);
-		/* 
-		for (var i:Int = map.grid.minZoom; i <= map.grid.maxZoom; i++) {
+		
+		//for (var i:Int = map.grid.minZoom; i <= map.grid.maxZoom; i++)
+		for (i in cast(map.grid.minZoom, Int)...cast(map.grid.maxZoom, Int))
+		{
 			var tick:Float = trackHeight * (i - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
 			track.graphics.moveTo(-2, tick);
 			track.graphics.lineTo(2, tick);
-		} */
+		}
+		
 		track.x = 5;
 		addChild(track);
 
@@ -83,7 +86,7 @@ class ZoomSlider extends Sprite
 	{
 		var p:Point = globalToLocal(new Point(event.stageX, event.stageY));
 		thumb.y = p.y;
-		//TweenLite.to(map.grid, 0.25, { zoomLevel: Math.round(map.grid.minZoom + (map.grid.maxZoom - map.grid.minZoom) * (1 - proportion)) }); 
+		TweenLite.to(map.grid, 0.25, { zoomLevel: Math.round(map.grid.minZoom + (map.grid.maxZoom - map.grid.minZoom) * (1 - proportion)) }); 
 	}
 
 	private function onThumbMouse(event:Event):Void
@@ -129,14 +132,14 @@ class ZoomSlider extends Sprite
 		return _proportion;
 	}
 
-	private function set_proportion(prop:Float)
+	private function set_proportion(prop:Float):Float
 	{
 		if (!dragging) {
 			_proportion = thumb.y = prop * trackHeight;
 		}
 		else {
 			map.grid.zoomLevel = map.grid.minZoom + (map.grid.maxZoom - map.grid.minZoom) * (1.0 - prop);
-			//_proportion = map.grid.zoomLevel
+			_proportion = map.grid.zoomLevel;
 		}
 		return _proportion;
 	}

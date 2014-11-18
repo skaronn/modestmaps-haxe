@@ -5,7 +5,6 @@ import com.modestmaps.core.painter.ITilePainterOverride;
 import com.modestmaps.core.painter.TilePainter;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
-import flash.Lib;
 import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
@@ -17,6 +16,7 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
+import openfl.utils.Object;
 import openfl.utils.Timer;
 
 class TileGrid extends Sprite
@@ -421,20 +421,20 @@ class TileGrid extends Sprite
 		if (recentlySeen.length > maxRecentlySeen)
 		{
 			// can we sort so that biggest zoom levels get removed first, without removing currently visible tiles?
-			/*
-			var visibleKeys:Array = recentlySeen.slice(recentlySeen.length - visibleTiles.length, recentlySeen.length);
+			
+			var visibleKeys:Array<Object> = recentlySeen.slice(recentlySeen.length - visibleTiles.length, recentlySeen.length);
 
 			// take a look at everything else
 			recentlySeen = recentlySeen.slice(0, recentlySeen.length - visibleTiles.length);
 			recentlySeen.sort((cast Array).DESCENDING);
 			recentlySeen = recentlySeen.concat(visibleKeys);
-			*/
 			
 			// throw away keys at the beginning of recentlySeen
 			recentlySeen = recentlySeen.slice(cast(recentlySeen.length - maxRecentlySeen, Int), recentlySeen.length);
 			
 			// loop over our internal tile cache 
 			// and throw out tiles not in recentlySeen
+			trace("tilePainter : " + tilePainter);
 			tilePainter.retainKeysInCache(recentlySeen);
 		}
 		

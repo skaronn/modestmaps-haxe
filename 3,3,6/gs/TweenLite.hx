@@ -379,7 +379,7 @@ class TweenLite {
 						Reflect.setField(this.tweens, p, {o:this.target, s:Reflect.field(this.target, p), c:valChange}); //o: object, p:property, s:starting value, c:change in value, e: easing function
 					}
 					else {
-						this.extraTweens[cast(p, Int)] = {o:this.target, s:0, c:0, v:Reflect.field(this.vars, p)}; //classes that extend this one (like TweenFilterLite) may need it (like for blurX, blurY, and other filter properties)
+						Reflect.setField(this.extraTweens, p, {o:this.target, s:0, c:0, v:Reflect.field(this.vars, p)}); //classes that extend this one (like TweenFilterLite) may need it (like for blurX, blurY, and other filter properties)
 					}
 				}
 			}
