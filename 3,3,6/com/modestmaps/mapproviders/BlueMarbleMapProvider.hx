@@ -21,11 +21,11 @@ class BlueMarbleMapProvider extends AbstractMapProvider implements IMapProvider
 		return "BLUE_MARBLE";
 	}
 
-	public function getTileUrls(coord:Coordinate):Array
+	public function getTileUrls(coord:Coordinate):Array<Object>
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
 		if (sourceCoord.row < 0 || sourceCoord.row >= Math.pow(2, coord.zoom)) {
-		return [];
+			return [];
 		}
 		return [ baseURL + (sourceCoord.zoom) + '-r' + (sourceCoord.row) + '-c' + (sourceCoord.column) + '.jpg' ];
 	}

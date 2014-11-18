@@ -35,11 +35,11 @@ class AbstractMapProvider
 	private var __bottomRightInLimit:Coordinate;
 
 	/**
-	 * Abstract constructor, should not be instantiated directly.
-	 * 
-	 * @param	minZoom
-	 * @param	maxZoom
-	 */
+	* Abstract constructor, should not be instantiated directly.
+	* 
+	* @param	minZoom
+	* @param	maxZoom
+	*/
 	public function new(minZoom:Int=MIN_ZOOM, maxZoom:Int=MAX_ZOOM)
 	{
 		// see: http://modestmaps.mapstraction.com/trac/wiki/TileCoordinateComparisons#TileGeolocations
@@ -83,12 +83,12 @@ class AbstractMapProvider
 	}
 
 	/**
-	 * Get top left outer-zoom limit and bottom right inner-zoom limits,
-	 * as Coordinates in a two element array.
-	 * 
-	 * @return
-	 */
-	public function outerLimits():Array<Dynamic>
+	* Get top left outer-zoom limit and bottom right inner-zoom limits,
+	* as Coordinates in a two element array.
+	* 
+	* @return
+	*/
+	public function outerLimits():Array<Object>
 	{
 		return [ __topLeftOutLimit.copy(), __bottomRightInLimit.copy() ];
 	}
@@ -103,25 +103,19 @@ class AbstractMapProvider
 	}
 
 	/**
-	 * Return untransformed and unprojected location for a coordinate.
-	 * 
-	 * @param	coordinate
-	 * @return
-	 */
+	* Return untransformed and unprojected location for a coordinate.
+	* 
+	* @param	coordinate
+	* @return
+	*/
 	public function coordinateLocation(coordinate:Coordinate):Location
 	{
 		return __projection.coordinateLocation(coordinate);
 	}
 	
-	//@:isVar public var tileWidth(get, null):Float;
-	//function get_tileWidth() { return DEFAULT_TILE_SIZE; }
-	
 	public function tileWidth():Float{ 
 		return DEFAULT_TILE_SIZE;
 	}
-	
-	//@:isVar public var tileHeight(get, null):Float;
-	//function get_tileHeight() { return DEFAULT_TILE_SIZE; }
 	
 	public function tileHeight():Float{
 		return DEFAULT_TILE_SIZE;
