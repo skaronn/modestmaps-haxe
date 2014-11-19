@@ -10,6 +10,7 @@ import com.modestmaps.util.DebugUtil;
 
 import openfl.events.Event;
 import openfl.geom.Point;
+import openfl.utils.Object;
 
 class MapEvent extends Event
 {
@@ -30,7 +31,7 @@ class MapEvent extends Event
 	public var panDelta:Point;
 
 	public static inline var RESIZED:String = 'resized';
-	public var newSize:Array<Dynamic>;
+	public var newSize:Array<Object>;
 		
 	public static inline var COPYRIGHT_CHANGED:String = 'copyrightChanged';
 	public var newCopyright:String;
@@ -50,27 +51,27 @@ class MapEvent extends Event
 	/** listen out for this if you want to be sure map is in its final state before reprojecting markers etc. */
 	public static inline var RENDERED:String = 'rendered';
 
-	public function new(type:String, rest:Array<Dynamic>=null)
+	public function new(type:String, rest:Array<Object>=null)
 	{
 		super(type, true, true);
 		
 		//trace("MapEvent - type : "+type);
 		//trace("MapEvent - rest : "+rest);
-		//DebugUtil.dumpStack(this, "new");
-		
+				
 		switch(type)
 		{
 			case PANNED:
-				trace("MapEvent - PANNED - : " +(rest.length > 0 && Std.is(rest[0], Point)));
+				//trace("MapEvent - PANNED - : " +(rest.length > 0 && Std.is(rest[0], Point)));
 				if (rest.length > 0 && Std.is(rest[0], Point))
 				{
-					trace("MapEvent - PANNED - rest[0] : " + rest[0]);
+					//trace("MapEvent - PANNED - rest[0] : " + rest[0]);
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
+				//DebugUtil.dumpStack(this, "new");
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					trace("MapEvent - ZOOMED_BY - rest[0] : "+rest[0]);
+					//trace("MapEvent - ZOOMED_BY - rest[0] : "+rest[0]);
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:

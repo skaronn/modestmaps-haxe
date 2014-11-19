@@ -81,7 +81,10 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 		* in each group of 256.
 		*/
 		//for (var c:Coordinate = __topLeftOutLimit.copy(); c.zoom <= __bottomRightInLimit.zoom; c.zoom += 1)
-		for (c in __topLeftOutLimit.copy() ... cast(__bottomRightInLimit.zoom, Int))
+		var c : Coordinate = __topLeftOutLimit.copy();
+		var zoom : Int = Std.int(c.zoom);
+		var bottomRightInLimitZoom : Int = Std.int(__bottomRightInLimit.zoom) + 1;
+		/*for (c in zoom ... bottomRightInLimitZoom)
 		{	
 			// edges of the image at current zoom level
 			var tlo:Coordinate = __topLeftOutLimit.zoomTo(c.zoom);
@@ -89,7 +92,7 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 			
 			// left-to-right, top-to-bottom, like reading a book
 			//for (c.row = tlo.row; c.row <= bri.row; c.row += 1)
-			for (c.row in tlo.row ... bri.row)
+			for (c.row in Std.int(tlo.row) ... Std.int(bri.row) + 1)
 			{
 				//for (c.column = tlo.column; c.column <= bri.column; c.column += 1)
 				for (c.column in tlo.column ... bri.column)
@@ -101,7 +104,7 @@ class AbstractZoomifyMapProvider extends AbstractMapProvider implements IMapProv
 					i += 1;
 				}
 			}   
-		}
+		}*/
 	}
 
 	private function coordinateGroup(c:Coordinate):Float

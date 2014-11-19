@@ -278,15 +278,4 @@ class MapControls extends Sprite
 	{
 		onMapResize(event);
 	}
-	/*
-	private static function getMapWidth():Float
-	{
-		return map.getWidth();
-	}
-	
-	private function getMapHeight():Float
-	{
-		return map.getHeight();
-	}
-	*/
 }

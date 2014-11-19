@@ -14,7 +14,7 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.TimerEvent;
 import openfl.geom.Point;
-import flash.utils.Dictionary;
+import flash.utils.Object;
 import openfl.utils.Timer;
 
 class GoogleTilePainter extends EventDispatcher implements ITilePainter
@@ -57,7 +57,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 		return null;
 	}
 
-	public function retainKeysInCache(recentlySeen:Array<Dynamic>):Void
+	public function retainKeysInCache(recentlySeen:Array<Object>):Void
 	{
 	/*
 	var tempCache:Dictionary = new Dictionary();

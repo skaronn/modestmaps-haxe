@@ -18,20 +18,20 @@ import com.modestmaps.mapproviders.IMapProvider;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
+import openfl.utils.Object;
 
-//import com.greensock.TweenLite;
 import gs.TweenLite;
 
 class TweenMap extends Map
 {
 
 	/** easing function used for panLeft, panRight, panUp, panDown */
-	public var panEase:Dynamic = quadraticEaseOut;
+	public var panEase:Object = quadraticEaseOut;
 	/** time to pan using panLeft, panRight, panUp, panDown */
 	public var panDuration:Float = 0.5;
 
 	/** easing function used for zoomIn, zoomOut */
-	public var zoomEase:Dynamic = quadraticEaseOut;
+	public var zoomEase:Object = quadraticEaseOut;
 	/** time to zoom using zoomIn, zoomOut */
 	public var zoomDuration:Float = 0.2;
 
@@ -52,7 +52,7 @@ class TweenMap extends Map
 	*
 	* @see com.modestmaps.core.TileGrid
 	*/
-	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Dynamic> = null)
+	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Object> = null)
 	{
 		super(width, height, draggable, provider, rest);
 		grid.setTileClass(TweenTile);
@@ -222,7 +222,7 @@ class TweenMap extends Map
 	* 
 	* @see com.modestmaps.Map#panTo
 	*/
-	public function tweenTo(location:Location, duration:Float, easing:Dynamic=null):Void
+	public function tweenTo(location:Location, duration:Float, easing:Object=null):Void
 	{
 		var pan:Point = new Point(mapWidth/2, mapHeight/2).subtract(locationPoint(location,grid));
 		 grid.prepareForPanning();

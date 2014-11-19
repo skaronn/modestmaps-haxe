@@ -17,26 +17,25 @@ import openfl.geom.Rectangle;
  */
 class PolygonClip extends MarkerClip
 {
-public function new(map:Map)
-{
-	super(map);
-	this.scaleZoom = true;
-	this.markerSortFunction = null
-}
-
-override private function markerInBounds(marker:DisplayObject, w:Float, h:Float):Bool
-{
-   		var rect:Rectangle = new Rectangle(-w, -h, w*3, h*3);
-	return rect.intersects(marker.getBounds(map));
-}
-
-override public function updateClip(marker:DisplayObject):Bool
-{
-	// we need to redraw this marker before MarkerClip.updateClip so that markerInBounds will be correct
-	if (marker is Redrawable) {
-	Redrawable(marker).redraw();
+	public function new(map:Map)
+	{
+		super(map);
+		this.scaleZoom = true;
+		this.markerSortFunction = null
 	}
-	return super.updateClip(marker);
-}
 
+	override private function markerInBounds(marker:DisplayObject, w:Float, h:Float):Bool
+	{
+		var rect:Rectangle = new Rectangle(-w, -h, w*3, h*3);
+		return rect.intersects(marker.getBounds(map));
+	}
+
+	override public function updateClip(marker:DisplayObject):Bool
+	{
+		// we need to redraw this marker before MarkerClip.updateClip so that markerInBounds will be correct
+		if (marker is Redrawable) {
+			Redrawable(marker).redraw();
+		}
+		return super.updateClip(marker);
+	}
 }

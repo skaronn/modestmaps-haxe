@@ -23,7 +23,7 @@ class AbstractProjection implements IProjection
 	public function new(zoom:Float, T:Transformation)
 	{
 		// a transformation is not strictly necessary
-		if(T!=null)
+		if(T != null)
 		this.T = T;
 		
 		this.zoom = zoom;
@@ -63,7 +63,8 @@ class AbstractProjection implements IProjection
 	{
 		point = rawProject(point);
 
-		if(T!=null)
+		if (T != null)
+		
 		point = T.transform(point);
 		
 		return point;
@@ -74,15 +75,15 @@ class AbstractProjection implements IProjection
 	*/
 	public function unproject(point:Point):Point
 	{
-		if(T!=null)
+		if (T != null)
+		
 		point = T.untransform(point);
-
 		point = rawUnproject(point);
 		
 		return point;
 	}
 
-	   /**
+	/**
 	* @return projected and transformed coordinate for a location.
 	*/
 	public function locationCoordinate(location:Location):Coordinate
@@ -92,7 +93,7 @@ class AbstractProjection implements IProjection
 		return new Coordinate(point.y, point.x, zoom);
 	}
 
-	   /**
+	/**
 	* @return untransformed and unprojected location for a coordinate.
 	*/
 	public function coordinateLocation(coordinate:Coordinate):Location

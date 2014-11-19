@@ -78,17 +78,13 @@ class DailyPlanetProvider extends AbstractMapProvider implements IMapProvider
 		coord.column %= tilesWide;
 		return coord;
 	}
-
-	public var tileWidth(get, null):Float;
 	
-	private function get_tileWidth():Float
+	override public function tileWidth():Float
 	{
 		return 512;
 	}
 
-	public var tileHeight(get, null):Float;
-	
-	private function get_tileHeight():Float
+	override public function tileHeight():Float
 	{
 		return 512;
 	}	

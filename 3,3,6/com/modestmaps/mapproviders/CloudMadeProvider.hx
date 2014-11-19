@@ -1,6 +1,7 @@
 package com.modestmaps.mapproviders;
 
 import com.modestmaps.core.Coordinate;
+import openfl.utils.Object;
 
 class CloudMadeProvider extends OpenStreetMapProvider
 {
@@ -27,13 +28,13 @@ class CloudMadeProvider extends OpenStreetMapProvider
 
 	override public function getTileUrls(coord:Coordinate):Array<Object>
 	{
-		var worldSize:Int = Math.pow(2, coord.zoom);
+		var worldSize:Int = Std.int(Math.pow(2, coord.zoom));
 		if (coord.row < 0 || coord.row >= worldSize) {
 			return [];
 		}
 		coord = sourceCoordinate(coord);
-		var server:String = [ 'a.', 'b.', 'c.', '' ][int(worldSize * coord.row + coord.column) % 4];
-		var url:String = 'http://' + server + 'tile.cloudmade.com/' + [ key, style, tileWidth, coord.zoom, coord.column, coord.row ].join('/') + '.png'; 
+		var server:String = [ 'a.', 'b.', 'c.', '' ][Std.int(worldSize * coord.row + coord.column) % 4];
+		var url:String = 'http://' + server + 'tile.cloudmade.com/' + [ key, style, Std.string(tileWidth), Std.string(coord.zoom), Std.string(coord.column), Std.string(coord.row) ].join('/') + '.png'; 
 		return [ url ];
 	}
 

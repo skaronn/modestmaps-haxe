@@ -11,11 +11,11 @@ import haxe.ds.StringMap;
 import openfl.utils.Object;
 
 /**
- * @author tom
- * @author darren
- * @author migurski
- 	 * $Id:$
- */
+* @author tom
+* @author darren
+* @author migurski
+* $Id:$
+*/
 
 class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 {

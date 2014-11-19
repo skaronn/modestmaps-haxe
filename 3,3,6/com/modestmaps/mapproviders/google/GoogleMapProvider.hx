@@ -6,6 +6,7 @@ import com.modestmaps.core.painter.ITilePainter;
 import com.modestmaps.core.painter.ITilePainterOverride;
 import com.modestmaps.mapproviders.AbstractMapProvider;
 import com.modestmaps.mapproviders.IMapProvider;
+import openfl.utils.Object;
 
 class GoogleMapProvider extends AbstractMapProvider implements IMapProvider implements ITilePainterOverride
 {
@@ -27,7 +28,7 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider impl
 		return tilePainter.toString();
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	public function getTileUrls(coord:Coordinate):Array<Object>
 	{
 		return [];
 	}

@@ -11,9 +11,14 @@ import com.modestmaps.core.Coordinate;
 
 class HereMapProvider extends AbstractMapProvider implements IMapProvider
 {
-	public function new(minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM, app_id:String, app_code:String)
+	private var appId : String;
+	private var appCode : String;
+	
+	public function new(/*minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM,*/ appId:String, appCode:String)
 	{
-		super(minZoom, maxZoom);
+		super(AbstractMapProvider.MIN_ZOOM, AbstractMapProvider.MAX_ZOOM);
+		this.appId = appId;		
+		this.appCode = appCode;		
 	}
 
 	public function toString() : String
@@ -25,10 +30,10 @@ class HereMapProvider extends AbstractMapProvider implements IMapProvider
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
 		if (sourceCoord.row < 0 || sourceCoord.row >= Math.pow(2, coord.zoom)) {
-			flash.Lib.trace("HereMapProvider.hx - getTileUrls - []");
+			//flash.Lib.trace("HereMapProvider.hx - getTileUrls - []");
 			return [];
 		}
-		flash.Lib.trace("HereMapProvider.hx - getTileUrls - 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png'");
+		//flash.Lib.trace("HereMapProvider.hx - getTileUrls - 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png'");
 		return [ 'http://tile.openstreetmap.org/'+(sourceCoord.zoom)+'/'+(sourceCoord.column)+'/'+(sourceCoord.row)+'.png' ];
 	}
 }

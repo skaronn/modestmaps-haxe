@@ -1,11 +1,12 @@
 package com.modestmaps.core.painter;
 
 import com.modestmaps.core.Tile;
+import openfl.utils.Object;
 
 class TileQueue
 {
 	// Tiles we want to load:
-	private var queue:Array<Dynamic>;
+	private var queue:Array<Object>;
 
 	public function new()
 	{
@@ -47,7 +48,7 @@ class TileQueue
 		queue.sort(callback);
 	}
 
-	public function retainAll(tiles:Array<Dynamic>):Array<Dynamic>
+	public function retainAll(tiles:Array<Object>):Array<Object>
 	{
 		var removed:Array<Dynamic> = [];
 		for (i in queue.length - 1...0)

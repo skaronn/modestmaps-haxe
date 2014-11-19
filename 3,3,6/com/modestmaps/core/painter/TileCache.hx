@@ -3,15 +3,15 @@ package com.modestmaps.core.painter;
 import com.modestmaps.core.Tile;
 import haxe.ds.ObjectMap;
 
-import flash.utils.Dictionary;
+import flash.utils.Object;
 
 /**
- * the alreadySeen Dictionary here will contain up to grid.maxTilesToKeep Tiles
+ * The alreadySeen Dictionary here will contain up to grid.maxTilesToKeep Tiles
  */
 class TileCache
 {
 	// Tiles we've already seen and fully loaded, by key (.name)
-	private var alreadySeen:ObjectMap<Dynamic, Dynamic>;
+	private var alreadySeen:ObjectMap<Object, Object>;
 	//private var alreadySeen:Dictionary;
 	private var tilePool:TilePool; // for handing tiles back!
 
@@ -19,7 +19,7 @@ class TileCache
 	{
 		this.tilePool = tilePool;
 		//alreadySeen = new Dictionary();
-		alreadySeen = new ObjectMap<Dynamic, Dynamic>();
+		alreadySeen = new ObjectMap<Object, Object>();
 	}
 
 	public var size(get, null):Int;
@@ -49,7 +49,7 @@ class TileCache
 		return Std.is(alreadySeen.get(key), Tile);
 	}
 
-	public function retainKeys(keys:Array<Dynamic>):Void
+	public function retainKeys(keys:Array<Object>):Void
 	{
 		for (key in alreadySeen)
 		{
@@ -69,6 +69,6 @@ class TileCache
 			untyped __delete__(alreadySeen, key);
 		}
 		//alreadySeen = new Dictionary();	
-		alreadySeen = new ObjectMap<Dynamic, Dynamic>();
+		alreadySeen = new ObjectMap<Object, Object>();
 	}
 }

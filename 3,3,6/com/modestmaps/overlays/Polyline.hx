@@ -1,5 +1,6 @@
 package com.modestmaps.overlays;
 
+import openfl.utils.Object;
 /**
  * Polyline class that takes polyline data and draws it in the given style.
  * 
@@ -20,37 +21,37 @@ package com.modestmaps.overlays;
  */
 class Polyline
 {
-public var id:String;
-public var locationsArray:Array<Dynamic>;
-public var lineThickness:Float;
-public var lineColor:Float;
-public var lineAlpha:Float;
-public var pixelHinting:Bool;
-public var scaleMode:String;
-public var caps:String;
-public var joints:String;
-public var miterLimit:Float;
-	
-public function new(id:String, 
-			 locationsArray:Array<Dynamic>,
-			 lineThickness:Float=3, 
-			 lineColor:Float=0xFF0000, 
-			 lineAlpha:Float=1, 
-			 pixelHinting:Bool=false, 
-			 scaleMode:String="normal", 
-			 caps:String=null, 
-			 joints:String=null, 
-			 miterLimit:Float=3)
-{
-	this.id = id;
-	this.locationsArray = locations:Array<Dynamic>;
-	this.lineThickness = lineThickness;
-	this.lineColor = lineColor;
-	this.lineAlpha = lineAlpha;
-	this.pixelHinting = pixelHinting;
-	this.scaleMode = scaleMode;
-	this.caps = caps;
-	this.joints = joints;
-	this.miterLimit = miterLimit;
-}
+	public var id:String;
+	public var locationsArray:Array<Object>;
+	public var lineThickness:Float;
+	public var lineColor:Float;
+	public var lineAlpha:Float;
+	public var pixelHinting:Bool;
+	public var scaleMode:String;
+	public var caps:String;
+	public var joints:String;
+	public var miterLimit:Float;
+		
+	public function new(id:String, 
+				 locationsArray:Array<Object>,
+				 lineThickness:Float=3, 
+				 lineColor:Float=0xFF0000, 
+				 lineAlpha:Float=1, 
+				 pixelHinting:Bool=false, 
+				 scaleMode:String="normal", 
+				 caps:String=null, 
+				 joints:String=null, 
+				 miterLimit:Float=3)
+	{
+		this.id = id;
+		this.locationsArray = locations:Array<Object>;
+		this.lineThickness = lineThickness;
+		this.lineColor = lineColor;
+		this.lineAlpha = lineAlpha;
+		this.pixelHinting = pixelHinting;
+		this.scaleMode = scaleMode;
+		this.caps = caps;
+		this.joints = joints;
+		this.miterLimit = miterLimit;
+	}
 }

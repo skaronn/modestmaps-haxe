@@ -93,8 +93,7 @@ class Button extends Sprite
 			graphics.lineStyle(2, fgColor, 1.0, true);
 			graphics.moveTo(7,10);
 			graphics.lineTo(13,10);
-			graphics.lineTo(7,10);
-		   
+			graphics.lineTo(7,10);		   
 		}
 		
 		transform.colorTransform = outTransform;

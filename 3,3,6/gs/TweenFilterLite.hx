@@ -17,9 +17,9 @@ faster tween engine either. The syntax is simple and the class doesn't rely on c
 problems with certain compilers. TweenFilterLite is simple, very fast, and more lightweight than any other popular tweening engine with similar features.
 
 ARGUMENTS:
-1) $mc: Target DisplayObject (typically a MovieClip or Sprite) whose properties we're tweening
-2) $duration: Duration (in seconds) of the effect
-3) $vars: An object containing the end values of all the properties you'd like to have tweened (or if you're using the 
+1) mc: Target DisplayObject (typically a MovieClip or Sprite) whose properties we're tweening
+2) duration: Duration (in seconds) of the effect
+3) vars: An object containing the end values of all the properties you'd like to have tweened (or if you're using the 
   	 TweenFilterLite.from() method, these variables would define the BEGINNING values). Examples are: blurX, blurY, contrast,
   	 color, distance, colorize, brightness, highlightAlpha, etc. Make sure you define a type property. Possible value are:
   	 "blur", "glow", "dropShadow", "bevel", and "color". (see below for more specifics)
@@ -141,349 +141,350 @@ import gs.TweenLite;
 import flash.filters.*;
 import openfl.display.DisplayObject;
 import flash.utils.GetTimer;
+import flash.utils.Object;
 
 class TweenFilterLite extends TweenLite {
-public static var version:Float = 5.87;
-public var _matrix:Array<Dynamic>;
-private var _mc:DisplayObject;
-private var _f:BitmapFilter; //Filter
-private var _fType:Type = TweenFilterLite; //in the render() function, we check for the _fType and if we don't set it to something here, it'll throw 1010 or 1009 errors. Typically it'll be a type of filter, like BlurFilter which gets set in the initTweenVals() function.
-private var _clrsa:Array<Dynamic>; //Array that pertains to any color properties (like "color", "highlightColor", "shadowColor", etc.)
-private var _endMatrix:Array<Dynamic>;
-private var _clrMtxTw:TweenLite; //The tween that's handling the Color Matrix Filter (if any)
-private static var _idMatrix:Array = [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0];
-private static var _lumR:Float = 0.212671; //Red constant - used for a few color matrix filter functions
-private static var _lumG:Float = 0.715160; //Green constant - used for a few color matrix filter functions
-private static var _lumB:Float = 0.072169; //Blue constant - used for a few color matrix filter functions
-public static var delayedCall:Dynamic = TweenLite.delayedCall; //Otherwise TweenFilterLite.delayedCall() would throw errors (it's a static method of TweenLite)
-public static var killTweensOf:Dynamic = TweenLite.killTweensOf; //Otherwise TweenFilterLite.killTweensOf() would throw errors (it's a static method of TweenLite)
-public static var killDelayedCallsTo:Dynamic = TweenLite.killTweensOf; //Otherwise TweenFilterLite.killDelayedCallsTo() would throw errors (it's a static method of TweenLite)
+	public static var version:Float = 5.87;
+	public var _matrix:Array<Object>;
+	private var _mc:DisplayObject;
+	private var _f:BitmapFilter; //Filter
+	private var _fType:Type = TweenFilterLite; //in the render() function, we check for the _fType and if we don't set it to something here, it'll throw 1010 or 1009 errors. Typically it'll be a type of filter, like BlurFilter which gets set in the initTweenVals() function.
+	private var _clrsa:Array<Object>; //Array that pertains to any color properties (like "color", "highlightColor", "shadowColor", etc.)
+	private var _endMatrix:Array<Object>;
+	private var _clrMtxTw:TweenLite; //The tween that's handling the Color Matrix Filter (if any)
+	private static var _idMatrix:Array = [1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0];
+	private static var _lumR:Float = 0.212671; //Red constant - used for a few color matrix filter functions
+	private static var _lumG:Float = 0.715160; //Green constant - used for a few color matrix filter functions
+	private static var _lumB:Float = 0.072169; //Blue constant - used for a few color matrix filter functions
+	public static var delayedCall:Object = TweenLite.delayedCall; //Otherwise TweenFilterLite.delayedCall() would throw errors (it's a static method of TweenLite)
+	public static var killTweensOf:Object = TweenLite.killTweensOf; //Otherwise TweenFilterLite.killTweensOf() would throw errors (it's a static method of TweenLite)
+	public static var killDelayedCallsTo:Object = TweenLite.killTweensOf; //Otherwise TweenFilterLite.killDelayedCallsTo() would throw errors (it's a static method of TweenLite)
 
-public function new($mc:DisplayObject, $duration:Float, $vars:Dynamic) {
-	super($mc, $duration, $vars);
-	if ($mc == null) {return};
-	_mc = $mc;
-	_clrsa = [];
-	if (this.vars.runBackwards == true) { //Keep in mind that when the duration is 0, the TweenLite constructor will force the runBackward property to be true so that the values will be immediately rendered. It will also call the removeTween() method.
-	initTweenVals();
-	}
-	if (TweenLite.version < 5.87 || Math.isNaN(TweenLite.version)) {
-	trace("ERROR! Please update your TweenLite class. TweenFilterLite requires a more recent version. Download updates at http://www.TweenLite.com.");
-	}
-}
-
-public static function to($mc:DisplayObject, $duration:Float, $vars:Dynamic):TweenFilterLite {
-	return new TweenFilterLite($mc, $duration, $vars);
-}
-
-//This function really helps if there are MovieClips whose filters we want to animate into place (they are already in their end state on the stage for example). 
-public static function from($mc:DisplayObject, $duration:Float, $vars:Dynamic):TweenFilterLite {
-	$vars.runBackwards = true;
-	return new TweenFilterLite($mc, $duration, $vars);
-}
-
-override public function initTweenVals():Void {
-	if (_mc != null) { //Otherwise it runs in the superconstructor before we can set the _mc
-	super.initTweenVals();
-	if (this.vars.type != null) {
-		var i:Int;
+	public function new(mc:DisplayObject, duration:Float, vars:Object) {
+		super(mc, duration, vars);
+		if (mc == null) {return};
+		_mc = mc;
 		_clrsa = [];
-		_matrix = _idMatrix.slice();
-		if (this.vars.quality == undefined || Math.isNaN(this.vars.quality)) {
-		this.vars.quality = 2;
+		if (this.vars.runBackwards == true) { //Keep in mind that when the duration is 0, the TweenLite constructor will force the runBackward property to be true so that the values will be immediately rendered. It will also call the removeTween() method.
+			initTweenVals();
 		}
-		if (this.vars.runBackwards == true) {
-		for (var p:String in this.tweens) {
-			this.tweens[p].flipped = true; //Gives us a way to identify the tweens that were already flipped in the initTweenVals() call. We only need to flip the new ones we're adding below (later)...
+		if (TweenLite.version < 5.87 || Math.isNaN(TweenLite.version)) {
+			trace("ERROR! Please update your TweenLite class. TweenFilterLite requires a more recent version. Download updates at http://www.TweenLite.com.");
 		}
+	}
+
+	public static function to(mc:DisplayObject, duration:Float, vars:Object):TweenFilterLite {
+		return new TweenFilterLite(mc, duration, vars);
+	}
+
+	//This function really helps if there are MovieClips whose filters we want to animate into place (they are already in their end state on the stage for example). 
+	public static function from(mc:DisplayObject, duration:Float, vars:Object):TweenFilterLite {
+		vars.runBackwards = true;
+		return new TweenFilterLite(mc, duration, vars);
+	}
+
+	override public function initTweenVals():Void {
+		if (_mc != null) { //Otherwise it runs in the superconstructor before we can set the _mc
+			super.initTweenVals();
+			if (this.vars.type != null) {
+				var i:Int;
+				_clrsa = [];
+				_matrix = _idMatrix.slice();
+				if (this.vars.quality == undefined || Math.isNaN(this.vars.quality)) {
+					this.vars.quality = 2;
+				}
+				if (this.vars.runBackwards == true) {
+					for (var p:String in this.tweens) {
+						this.tweens[p].flipped = true; //Gives us a way to identify the tweens that were already flipped in the initTweenVals() call. We only need to flip the new ones we're adding below (later)...
+					}
+				}
+				switch(this.vars.type.toLowerCase()) {
+				case "blur":
+					setFilter(BlurFilter, ["blurX", "blurY", "quality"], new BlurFilter(0, 0, this.vars.quality));
+					break;
+				case "glow":
+					setFilter(GlowFilter, ["alpha", "blurX", "blurY", "color", "quality", "strength", "inner", "knockout"], new GlowFilter(0xFFFFFF, 0, 0, 0, this.vars.strength || 1, this.vars.quality, this.vars.inner, this.vars.knockout));
+					break;
+				case "colormatrix":
+				case "color":
+				case "colormatrixfilter":
+				case "colorize":
+					setFilter(ColorMatrixFilter, [], new ColorMatrixFilter(_matrix));
+					_matrix = ColorMatrixFilter(_f).matrix;
+					if (this.vars.relative == true) {
+						_endMatrix = _matrix.slice();
+					} else {
+						_endMatrix = _idMatrix.slice();
+					}
+					_endMatrix = setBrightness(_endMatrix, this.vars.brightness);
+					_endMatrix = setContrast(_endMatrix, this.vars.contrast);
+					_endMatrix = setHue(_endMatrix, this.vars.hue);
+					_endMatrix = setSaturation(_endMatrix, this.vars.saturation);
+					_endMatrix = setThreshold(_endMatrix, this.vars.threshold);
+					if (!Math.isNaN(this.vars.colorize)) {
+						_endMatrix = colorize(_endMatrix, this.vars.colorize, this.vars.amount);
+					} else if (!Math.isNaN(this.vars.color)) { //Just in case they define "color" instead of "colorize"
+						_endMatrix = colorize(_endMatrix, this.vars.color, this.vars.amount);
+					}
+					var ndl:Float = this.delay - ((flash.Lib.getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
+					_clrMtxTw = new TweenLite(_matrix, this.duration, {endArray:_endMatrix, ease:this.vars.ease, delay:ndl, overwrite:false, runBackwards:this.vars.runBackwards});
+					_clrMtxTw.endTarget = _mc;
+					break;
+				case "shadow":
+				case "dropshadow":
+					setFilter(DropShadowFilter, ["alpha", "angle", "blurX", "blurY", "color", "distance", "quality", "strength", "inner", "knockout", "hideObject"], new DropShadowFilter(0, 45, 0x000000, 0, 0, 0, 1, this.vars.quality, this.vars.inner, this.vars.knockout, this.vars.hideObject));
+					break;
+				case "bevel":
+					setFilter(BevelFilter, ["angle", "blurX", "blurY", "distance", "highlightAlpha", "highlightColor", "quality", "shadowAlpha", "shadowColor", "strength"], new BevelFilter(0, 0, 0xFFFFFF, 0.5, 0x000000, 0.5, 2, 2, 0, this.vars.quality));
+					break;
+				}
+				if (this.vars.runBackwards == true) {
+					flipFilterVals();
+				}
+			}
 		}
-		switch(this.vars.type.toLowerCase()) {
-		case "blur":
-			setFilter(BlurFilter, ["blurX", "blurY", "quality"], new BlurFilter(0, 0, this.vars.quality));
-			break;
-		case "glow":
-			setFilter(GlowFilter, ["alpha", "blurX", "blurY", "color", "quality", "strength", "inner", "knockout"], new GlowFilter(0xFFFFFF, 0, 0, 0, this.vars.strength || 1, this.vars.quality, this.vars.inner, this.vars.knockout));
-			break;
-		case "colormatrix":
-		case "color":
-		case "colormatrixfilter":
-		case "colorize":
-			setFilter(ColorMatrixFilter, [], new ColorMatrixFilter(_matrix));
-			_matrix = ColorMatrixFilter(_f).matrix;
-			if (this.vars.relative == true) {
-			_endMatrix = _matrix.slice();
+	}
+
+	private function setFilter(filterType:Type, props:Array<Object>, defaultFilter:BitmapFilter):Void {
+		_fType = filterType;
+		var fltrs:Array = _mc.filters;
+		var i:Int, valChange:Float;
+		for (i = 0; i < fltrs.length; i++) {
+			if (fltrs[i] is filterType) {
+				_f = fltrs[i];
+				break;
+			}
+		}
+		if (_f == null) {
+			fltrs.push(defaultFilter);
+			_mc.filters = fltrs;
+			_f = defaultFilter;
+		}
+		var prop:String, tween:Object;
+		for (i = 0; i < props.length; i++) {
+			prop = props[i];
+			if (this.tweens[prop] != undefined) {
+				tween = this.tweens[prop];
+				delete this.tweens[prop];
+			} else if (this.extraTweens[prop] != undefined) {
+				tween = this.extraTweens[prop];
 			} else {
-			_endMatrix = _idMatrix.slice();
+				tween = null;
 			}
-			_endMatrix = setBrightness(_endMatrix, this.vars.brightness);
-			_endMatrix = setContrast(_endMatrix, this.vars.contrast);
-			_endMatrix = setHue(_endMatrix, this.vars.hue);
-			_endMatrix = setSaturation(_endMatrix, this.vars.saturation);
-			_endMatrix = setThreshold(_endMatrix, this.vars.threshold);
-			if (!Math.isNaN(this.vars.colorize)) {
-			_endMatrix = colorize(_endMatrix, this.vars.colorize, this.vars.amount);
-			} else if (!Math.isNaN(this.vars.color)) { //Just in case they define "color" instead of "colorize"
-			_endMatrix = colorize(_endMatrix, this.vars.color, this.vars.amount);
+			if (tween != null) {
+				if (prop == "brightness" || prop == "colorize" || prop == "amount" || prop == "saturation" || prop == "contrast" || prop == "hue" || prop == "threshold") { 
+				
+				} else if (prop == "color" || prop == "highlightColor" || prop == "shadowColor") {
+					var start_obj:Object = HEXtoRGB(_f[prop]);
+					var end_obj:Object = HEXtoRGB(this.vars[prop]);
+					_clrsa.push({p:prop, e:this.vars.ease, sr:start_obj.rb, cr:end_obj.rb - start_obj.rb, sg:start_obj.gb, cg:end_obj.gb - start_obj.gb, sb:start_obj.bb, cb:end_obj.bb - start_obj.bb});
+				} else if (prop == "quality" || prop == "inner" || prop == "knockout" || prop == "hideObject") {
+					_f[prop] = this.vars[prop];
+				} else {
+				if (Type.typeof(this.vars[prop]) == "number") {
+					valChange = this.vars[prop] - _f[prop];
+				} else {
+					valChange = Float(this.vars[prop]);
+				}
+					this.tweens[prop] = {o:_f, p:prop, s:_f[prop], c:valChange, e:this.vars.ease};
+				}
 			}
-			var ndl:Float = this.delay - ((flash.Lib.getTimer() - this.initTime) / 1000); //new delay. We need this because reversed (TweenLite.from() calls) need to maintain the delay in any sub-tweens (like for color or volume tweens) but normal TweenLite.to() tweens should have no delay because this function gets called only when the begin!
-			_clrMtxTw = new TweenLite(_matrix, this.duration, {endArray:_endMatrix, ease:this.vars.ease, delay:ndl, overwrite:false, runBackwards:this.vars.runBackwards});
-			_clrMtxTw.endTarget = _mc;
-			break;
-		case "shadow":
-		case "dropshadow":
-			setFilter(DropShadowFilter, ["alpha", "angle", "blurX", "blurY", "color", "distance", "quality", "strength", "inner", "knockout", "hideObject"], new DropShadowFilter(0, 45, 0x000000, 0, 0, 0, 1, this.vars.quality, this.vars.inner, this.vars.knockout, this.vars.hideObject));
-			break;
-		case "bevel":
-			setFilter(BevelFilter, ["angle", "blurX", "blurY", "distance", "highlightAlpha", "highlightColor", "quality", "shadowAlpha", "shadowColor", "strength"], new BevelFilter(0, 0, 0xFFFFFF, 0.5, 0x000000, 0.5, 2, 2, 0, this.vars.quality));
-			break;
-		}
-		if (this.vars.runBackwards == true) {
-		flipFilterVals();
 		}
 	}
-	}
-}
 
-private function setFilter($filterType:Type, $props:Array<Dynamic>, $defaultFilter:BitmapFilter):Void {
-	_fType = $filterType;
-	var fltrs:Array = _mc.filters;
-	var i:Int, valChange:Float;
-	for (i = 0; i < fltrs.length; i++) {
-	if (fltrs[i] is $filterType) {
-		_f = fltrs[i];
-		break;
+	private function flipFilterVals():Void {
+		var act:Bool = this.active;
+		var i:Int, tp:Object;
+		for (var p:String in this.tweens) {
+			if (this.tweens[p].flipped != true) {
+				tp = this.tweens[p];
+				tp.s += tp.c;
+				tp.c *= -1;
+				tp.o[p] = tp.s;
+				tp.flipped = true;
+			}
+		}
+		for (i = 0; i < _clrsa.length; i++) {
+			tp = _clrsa[i];
+			tp.sr += tp.cr;
+			tp.cr *= -1;
+			tp.sg += tp.cg;
+			tp.cg *= -1;
+			tp.sb += tp.cb;
+			tp.cb *= -1;
+			if (!act) {
+				_f[tp.p] = (tp.sr << 16 | tp.sg << 8 | tp.sb); //Translates RGB to HEX
+			}
+		}
+		if (act && this.duration != 0.001) { //If the duration was originally 0, we reset it to 0.001 in the TweenLite constructor to avoid problems with easing equations.
+			render(flash.Lib.getTimer());
+		} else if (_mc.parent != null && _fType != null) {
+			if (_endMatrix != null) {
+				ColorMatrixFilter(_f).matrix = _matrix;
+			}
+			var nf:Array = _mc.filters.slice();
+			for (i = nf.length - 1; i > -1; i--) {
+				if (nf[i] is _fType) {
+					nf[i] = _f;
+					break;
+				}
+			}
+			_mc.filters = nf;
+		}
+		if (this.vars.onUpdate != null) {
+			this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
+		}
 	}
-	}
-	if (_f == null) {
-	fltrs.push($defaultFilter);
-	_mc.filters = fltrs;
-	_f = $defaultFilter;
-	}
-	var prop:String, tween:Dynamic;
-	for (i = 0; i < $props.length; i++) {
-	prop = $props[i];
-	if (this.tweens[prop] != undefined) {
-		tween = this.tweens[prop];
-		delete this.tweens[prop];
-	} else if (this.extraTweens[prop] != undefined) {
-		tween = this.extraTweens[prop];
-	} else {
-		tween = null;
-	}
-	if (tween != null) {
-		if (prop == "brightness" || prop == "colorize" || prop == "amount" || prop == "saturation" || prop == "contrast" || prop == "hue" || prop == "threshold") { 
+
+	override public function render(t:UInt):Void {
+		var time:Float = (t - this.startTime) / 1000;
+		if (time > this.duration) {
+			time = this.duration;
+		}
+		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
+		var tp:Object; 
+		for (var p:String in this.tweens) {
+			tp = this.tweens[p];
+			tp.o[p] = tp.s + (factor * tp.c);
+		}
 		
-		} else if (prop == "color" || prop == "highlightColor" || prop == "shadowColor") {
-		var start_obj:Dynamic = HEXtoRGB(_f[prop]);
-		var end_obj:Dynamic = HEXtoRGB(this.vars[prop]);
-		_clrsa.push({p:prop, e:this.vars.ease, sr:start_obj.rb, cr:end_obj.rb - start_obj.rb, sg:start_obj.gb, cg:end_obj.gb - start_obj.gb, sb:start_obj.bb, cb:end_obj.bb - start_obj.bb});
-		} else if (prop == "quality" || prop == "inner" || prop == "knockout" || prop == "hideObject") {
-		_f[prop] = this.vars[prop];
-		} else {
-		if (Type.typeof(this.vars[prop]) == "number") {
-			valChange = this.vars[prop] - _f[prop];
-		} else {
-			valChange = Float(this.vars[prop]);
+		if (_mc.parent != null) { //Protects against scenarios where the _mc has been removed or isn't in the display list (in which case a 1010 error would get thrown)
+			var i:Int, r:Float, g:Float, b:Float;
+			for (i = 0; i < _clrsa.length; i++) {
+				tp = _clrsa[i];
+				r = tp.sr + (factor * tp.cr);
+				g = tp.sg + (factor * tp.cg);
+				b = tp.sb + (factor * tp.cb);
+				_f[tp.p] = (r << 16 | g << 8 | b); //Translates RGB to HEX
+			}
+			if (_endMatrix != null) {
+				ColorMatrixFilter(_f).matrix = _matrix;
+			}
+			var nf:Array = _mc.filters.slice();
+			for (i = nf.length - 1; i > -1; i--) {
+				if (nf[i] is _fType) {
+					nf[i] = _f;
+					break;
+				}
+			}
+			_mc.filters = nf;
 		}
-		this.tweens[prop] = {o:_f, p:prop, s:_f[prop], c:valChange, e:this.vars.ease};
+		
+		if (this.vars.onUpdate != null) {
+			this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
 		}
-	}
-	}
-}
-
-private function flipFilterVals():Void {
-	var act:Bool = this.active;
-	var i:Int, tp:Dynamic;
-	for (var p:String in this.tweens) {
-	if (this.tweens[p].flipped != true) {
-		tp = this.tweens[p];
-		tp.s += tp.c;
-		tp.c *= -1;
-		tp.o[p] = tp.s;
-		tp.flipped = true;
-	}
-	}
-	for (i = 0; i < _clrsa.length; i++) {
-	tp = _clrsa[i];
-	tp.sr += tp.cr;
-	tp.cr *= -1;
-	tp.sg += tp.cg;
-	tp.cg *= -1;
-	tp.sb += tp.cb;
-	tp.cb *= -1;
-	if (!act) {
-		_f[tp.p] = (tp.sr << 16 | tp.sg << 8 | tp.sb); //Translates RGB to HEX
-	}
-	}
-	if (act && this.duration != 0.001) { //If the duration was originally 0, we reset it to 0.001 in the TweenLite constructor to avoid problems with easing equations.
-	render(flash.Lib.getTimer());
-	} else if (_mc.parent != null && _fType != null) {
-	if (_endMatrix != null) {
-		ColorMatrixFilter(_f).matrix = _matrix;
-	}
-	var nf:Array = _mc.filters.slice();
-	for (i = nf.length - 1; i > -1; i--) {
-		if (nf[i] is _fType) {
-		nf[i] = _f;
-		break;
+		if (time == this.duration) { //Check to see if we're done
+			super.complete(true);
 		}
 	}
-	_mc.filters = nf;
-	}
-	if (this.vars.onUpdate != null) {
-	this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
-	}
-}
 
-override public function render($t:UInt):Void {
-	var time:Float = ($t - this.startTime) / 1000;
-	if (time > this.duration) {
-	time = this.duration;
+	public function HEXtoRGB(n:Float):Object {
+		return {rb:n >> 16, gb:(n >> 8) & 0xff, bb:n & 0xff};
 	}
-	var factor:Float = this.vars.ease(time, 0, 1, this.duration);
-	var tp:Dynamic; 
-	for (var p:String in this.tweens) {
-	tp = this.tweens[p];
-	tp.o[p] = tp.s + (factor * tp.c);
-	}
-	
-	if (_mc.parent != null) { //Protects against scenarios where the _mc has been removed or isn't in the display list (in which case a 1010 error would get thrown)
-	var i:Int, r:Float, g:Float, b:Float;
-	for (i = 0; i < _clrsa.length; i++) {
-		tp = _clrsa[i];
-		r = tp.sr + (factor * tp.cr);
-		g = tp.sg + (factor * tp.cg);
-		b = tp.sb + (factor * tp.cb);
-		_f[tp.p] = (r << 16 | g << 8 | b); //Translates RGB to HEX
-	}
-	if (_endMatrix != null) {
-		ColorMatrixFilter(_f).matrix = _matrix;
-	}
-	var nf:Array = _mc.filters.slice();
-	for (i = nf.length - 1; i > -1; i--) {
-		if (nf[i] is _fType) {
-		nf[i] = _f;
-		break;
+
+	//---- COLOR MATRIX FILTER FUNCTIONS -----------------------------------------------------------------------------------------------------------------------
+
+	public static function colorize(m:Array<Object>, color:Float, amount:Float = 100):Array<Object> { //You can use 
+		if (Math.isNaN(color)) {
+			return m;
+		} else if (Math.isNaN(amount)) {
+			amount = 1;
 		}
+		var r:Float = ((color >> 16) & 0xff) / 255;
+		var g:Float = ((color >> 8)  & 0xff) / 255;
+		var b:Float = (color	 & 0xff) / 255;
+		var inv:Float = 1 - amount;
+		var temp:Array =  [inv + amount * r * _lumR, amount * r * _lumG,	   amount * r * _lumB,	   0, 0,
+				  amount * g * _lumR,	inv + amount * g * _lumG, amount * g * _lumB,	   0, 0,
+				  amount * b * _lumR,	amount * b * _lumG,	   inv + amount * b * _lumB, 0, 0,
+				  0, 			 0, 			   0, 			 1, 0];	
+		return applyMatrix(temp, m);
 	}
-	_mc.filters = nf;
-	}
-	
-	if (this.vars.onUpdate != null) {
-	this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
-	}
-	if (time == this.duration) { //Check to see if we're done
-	super.complete(true);
-	}
-}
 
-public function HEXtoRGB($n:Float):Dynamic {
-	return {rb:$n >> 16, gb:($n >> 8) & 0xff, bb:$n & 0xff};
-}
-
-//---- COLOR MATRIX FILTER FUNCTIONS -----------------------------------------------------------------------------------------------------------------------
-
-public static function colorize($m:Array<Dynamic>, $color:Float, $amount:Float = 100):Array<Dynamic> { //You can use 
-	if (Math.isNaN($color)) {
-	return $m;
-	} else if (Math.isNaN($amount)) {
-	$amount = 1;
-	}
-	var r:Float = (($color >> 16) & 0xff) / 255;
-	var g:Float = (($color >> 8)  & 0xff) / 255;
-	var b:Float = ($color	 & 0xff) / 255;
-	var inv:Float = 1 - $amount;
-	var temp:Array =  [inv + $amount * r * _lumR, $amount * r * _lumG,	   $amount * r * _lumB,	   0, 0,
-			  $amount * g * _lumR,	inv + $amount * g * _lumG, $amount * g * _lumB,	   0, 0,
-			  $amount * b * _lumR,	$amount * b * _lumG,	   inv + $amount * b * _lumB, 0, 0,
-			  0, 			 0, 			   0, 			 1, 0];	
-	return applyMatrix(temp, $m);
-}
-
-public static function setThreshold($m:Array<Dynamic>, $n:Float):Array<Dynamic> {
-	if (Math.isNaN($n)) {
-	return $m;
-	}
-	var temp:Array = [_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * $n, 
-		_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * $n, 
-		_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * $n, 
-		0,	   0,	   0,	   1,  0]; 
-	return applyMatrix(temp, $m);
-}
-
-public static function setHue($m:Array<Dynamic>, $n:Float):Array<Dynamic> {
-	if (Math.isNaN($n)) {
-	return $m;
-	}
-	$n *= Math.PI / 180;
-	var c:Float = Math.cos($n);
-	var s:Float = Math.sin($n);
-	var temp:Array = [(_lumR + (c * (1 - _lumR))) + (s * (-_lumR)), (_lumG + (c * (-_lumG))) + (s * (-_lumG)), (_lumB + (c * (-_lumB))) + (s * (1 - _lumB)), 0, 0, (_lumR + (c * (-_lumR))) + (s * 0.143), (_lumG + (c * (1 - _lumG))) + (s * 0.14), (_lumB + (c * (-_lumB))) + (s * -0.283), 0, 0, (_lumR + (c * (-_lumR))) + (s * (-(1 - _lumR))), (_lumG + (c * (-_lumG))) + (s * _lumG), (_lumB + (c * (1 - _lumB))) + (s * _lumB), 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1];
-	return applyMatrix(temp, $m);
-}
-
-public static function setBrightness($m:Array<Dynamic>, $n:Float):Array<Dynamic> {
-	if (Math.isNaN($n)) {
-	return $m;
-	}
-	$n = ($n * 100) - 100;
-	return applyMatrix([1,0,0,0,$n,
-			0,1,0,0,$n,
-			0,0,1,0,$n,
-			0,0,0,1,0,
-			0,0,0,0,1], $m);
-}
-
-public static function setSaturation($m:Array<Dynamic>, $n:Float):Array<Dynamic> {
-	if (Math.isNaN($n)) {
-	return $m;
-	}
-	var inv:Float = 1 - $n;
-	var r:Float = inv * _lumR;
-	var g:Float = inv * _lumG;
-	var b:Float = inv * _lumB;
-	var temp:Array = [r + $n, g	 , b	 , 0, 0,
-			  r	 , g + $n, b	 , 0, 0,
-			  r	 , g	 , b + $n, 0, 0,
-			  0	 , 0	 , 0	 , 1, 0];
-	return applyMatrix(temp, $m);
-}
-
-public static function setContrast($m:Array<Dynamic>, $n:Float):Array<Dynamic> {
-	if (Math.isNaN($n)) {
-	return $m;
-	}
-	$n += 0.01;
-	var temp:Array =  [$n,0,0,0,128 * (1 - $n),
-			   0,$n,0,0,128 * (1 - $n),
-			   0,0,$n,0,128 * (1 - $n),
-			   0,0,0,1,0];
-	return applyMatrix(temp, $m);
-}
-
-public static function applyMatrix($m:Array<Dynamic>, $m2:Array<Dynamic>):Array<Dynamic> {
-	if (!($m is Array<Dynamic>) || !($m2 is Array<Dynamic>)) {
-	return $m2;
-	}
-	var temp:Array = [];
-	var i:Int = 0;
-	var z:Int = 0;
-	var y:Int, x:Int;
-	for (y = 0; y < 4; y++) {
-	for (x = 0; x < 5; x++) {
-		if (x == 4) {
-		z = $m[i + 4];
-		} else {
-		z = 0;
+	public static function setThreshold(m:Array<Object>, n:Float):Array<Object> {
+		if (Math.isNaN(n)) {
+			return m;
 		}
-		temp[i + x] = $m[i]   * $m2[x]	  + 
-			  $m[i+1] * $m2[x + 5]  + 
-			  $m[i+2] * $m2[x + 10] + 
-			  $m[i+3] * $m2[x + 15] +
-			  z;
+		var temp:Array = [_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * n, 
+			_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * n, 
+			_lumR * 256, _lumG * 256, _lumB * 256, 0,  -256 * n, 
+			0,	   0,	   0,	   1,  0]; 
+		return applyMatrix(temp, m);
 	}
-	i += 5;
+
+	public static function setHue(m:Array<Object>, n:Float):Array<Object> {
+		if (Math.isNaN(n)) {
+			return m;
+		}
+		n *= Math.PI / 180;
+		var c:Float = Math.cos(n);
+		var s:Float = Math.sin(n);
+		var temp:Array = [(_lumR + (c * (1 - _lumR))) + (s * (-_lumR)), (_lumG + (c * (-_lumG))) + (s * (-_lumG)), (_lumB + (c * (-_lumB))) + (s * (1 - _lumB)), 0, 0, (_lumR + (c * (-_lumR))) + (s * 0.143), (_lumG + (c * (1 - _lumG))) + (s * 0.14), (_lumB + (c * (-_lumB))) + (s * -0.283), 0, 0, (_lumR + (c * (-_lumR))) + (s * (-(1 - _lumR))), (_lumG + (c * (-_lumG))) + (s * _lumG), (_lumB + (c * (1 - _lumB))) + (s * _lumB), 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1];
+		return applyMatrix(temp, m);
 	}
-	return temp;
-}
+
+	public static function setBrightness(m:Array<Object>, n:Float):Array<Object> {
+		if (Math.isNaN(n)) {
+			return m;
+		}
+		n = (n * 100) - 100;
+		return applyMatrix([1,0,0,0,n,
+				0,1,0,0,n,
+				0,0,1,0,n,
+				0,0,0,1,0,
+				0,0,0,0,1], m);
+	}
+
+	public static function setSaturation(m:Array<Object>, n:Float):Array<Object> {
+		if (Math.isNaN(n)) {
+			return m;
+		}
+		var inv:Float = 1 - n;
+		var r:Float = inv * _lumR;
+		var g:Float = inv * _lumG;
+		var b:Float = inv * _lumB;
+		var temp:Array = [r + n, g	 , b	 , 0, 0,
+				  r	 , g + n, b	 , 0, 0,
+				  r	 , g	 , b + n, 0, 0,
+				  0	 , 0	 , 0	 , 1, 0];
+		return applyMatrix(temp, m);
+	}
+
+	public static function setContrast(m:Array<Object>, n:Float):Array<Object> {
+		if (Math.isNaN(n)) {
+			return m;
+		}
+		n += 0.01;
+		var temp:Array =  [n,0,0,0,128 * (1 - n),
+				   0,n,0,0,128 * (1 - n),
+				   0,0,n,0,128 * (1 - n),
+				   0,0,0,1,0];
+		return applyMatrix(temp, m);
+	}
+
+	public static function applyMatrix(m:Array<Object>, m2:Array<Object>):Array<Object> {
+		if (!(m is Array<Object>) || !(m2 is Array<Object>)) {
+			return m2;
+		}
+		var temp:Array = [];
+		var i:Int = 0;
+		var z:Int = 0;
+		var y:Int, x:Int;
+		for (y = 0; y < 4; y++) {
+		for (x = 0; x < 5; x++) {
+			if (x == 4) {
+				z = m[i + 4];
+			} else {
+				z = 0;
+			}
+			temp[i + x] = m[i]   * m2[x]	  + 
+				  m[i+1] * m2[x + 5]  + 
+				  m[i+2] * m2[x + 10] + 
+				  m[i+3] * m2[x + 15] +
+				  z;
+		}
+			i += 5;
+		}
+		return temp;
+	}
 }

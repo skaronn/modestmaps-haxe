@@ -670,7 +670,7 @@ class TweenLite {
 	}
 	
 	// If you want to be able to set or get the progress of a Tween, uncomment these getters/setters. 0 = beginning, 0.5 = halfway through, and 1 = complete
-	public var progress(get, set):Float;
+	/*@isVar */public var progress(get, set):Float;
 	
 	private function get_progress():Float {
 		return cast(((flash.Lib.getTimer() - this.startTime) / 1000) / this.duration, Float);

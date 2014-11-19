@@ -23,8 +23,6 @@ class BingMapsProvider extends AbstractMapProvider implements IMapProvider
 	public static inline var HYBRID : String = "HYBRID";	
 	public static inline var REST_API_URL : String = "http://dev.virtualearth.net/REST/v1/Imagery/Metadata/Road?key=";
 	
-	private var apiKey : String = null;
-
 	public static var serverSalt:Int = cast((Math.random() * 4), Int);		
 	
 	private static var URLSTART:StringMap<String> = [
@@ -45,7 +43,8 @@ class BingMapsProvider extends AbstractMapProvider implements IMapProvider
 		HYBRID => ".jpeg?g=90"
 	];
 
-	private var type:String;
+	private var type : String;
+	private var apiKey : String;
 	
 	private var hillShading:Bool;
 
