@@ -57,12 +57,14 @@ class ZoomSlider extends Sprite
 		track.graphics.lineTo(0, trackHeight);
 		track.graphics.lineStyle(0, 0x000000, 0.2);
 		
-		//for (var i:Int = map.grid.minZoom; i <= map.grid.maxZoom; i++)
-		for (i in cast(map.grid.minZoom, Int)...cast(map.grid.maxZoom, Int))
+		var minZoom : Int = Std.int(map.grid.minZoom);
+		var maxZoom : Int = Std.int(map.grid.maxZoom + 1);		
+		for (i in minZoom...maxZoom)
 		{
 			var tick:Float = trackHeight * (i - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
 			track.graphics.moveTo(-2, tick);
 			track.graphics.lineTo(2, tick);
+			//flash.Lib.trace("ZoomSlider.hx - new - tick : "+tick);
 		}
 		
 		track.x = 5;
@@ -118,9 +120,9 @@ class ZoomSlider extends Sprite
 
 	public function update(event:MapEvent=null):Void
 	{
-		if (event != null) trace(event.type, "in ZoomSlider.update");
+		if (event != null) trace(event.type + " in ZoomSlider.update : "+ dragging);
 		if (!dragging) {
-			_proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
+			proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
 		}
 	}
 

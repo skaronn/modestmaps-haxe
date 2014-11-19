@@ -31,6 +31,7 @@ import com.modestmaps.geo.*;
 import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.mapproviders.microsoft.MicrosoftProvider;
 import com.modestmaps.overlays.MarkerClip;
+import com.modestmaps.util.DebugUtil;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -131,26 +132,24 @@ class Map extends Sprite
 			var extent:MapExtent = new MapExtent(85, -85, 180, -180);
 			
 			// but adjust to fit the mapprovider's outer limits if there are any:
-			flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[0] : "+mapProvider.outerLimits()[0]);
-			flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[1] : "+mapProvider.outerLimits()[1]);
+			//flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[0] : "+mapProvider.outerLimits()[0]);
+			//flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[1] : "+mapProvider.outerLimits()[1]);
 			var l1:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[0]);
 			var l2:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[1]);
-			flash.Lib.trace("Map.hx - new - l1.lat : "+l1.lat);
-			flash.Lib.trace("Map.hx - new - l1.lon : "+l1.lon);
-			flash.Lib.trace("Map.hx - new - l2.lat : "+l2.lat);
-			flash.Lib.trace("Map.hx - new - l2.lon : "+l2.lon);
-			
-			if (!Math.isNaN(l1.lat) && Math.abs(l1.lat) != Math.NEGATIVE_INFINITY) {
-				//extent.north = l1.lat;
+			//flash.Lib.trace("Map.hx - new - l1.lat : "+l1.lat);
+			//flash.Lib.trace("Map.hx - new - l1.lon : "+l1.lon);
+						
+			if (!Math.isNaN(l1.lat) && Math.isFinite(Math.abs(l1.lat))) {
+				extent.north = l1.lat;
 			}		
-			if (!Math.isNaN(l2.lat) && Math.abs(l2.lat) != Math.NEGATIVE_INFINITY) {
-				//extent.south = l2.lat;
+			if (!Math.isNaN(l2.lat) && Math.isFinite(Math.abs(l2.lat))) {
+				extent.south = l2.lat;
+			}
+			if (!Math.isNaN(l1.lon) && Math.isFinite(Math.abs(l1.lon))) {
+				extent.west = l1.lon;
 			}		
-			if (!Math.isNaN(l1.lon) && Math.abs(l1.lon) != Math.NEGATIVE_INFINITY) {
-				//extent.west = l1.lon;
-			}		
-			if (!Math.isNaN(l2.lon) && Math.abs(l2.lon) != Math.NEGATIVE_INFINITY) {
-				//extent.east = l2.lon;
+			if (!Math.isNaN(l2.lon) && Math.isFinite(Math.abs(l2.lon))) {
+				extent.east = l2.lon;
 			}
 			
 			flash.Lib.trace("Map.hx - new - extent : "+extent);
@@ -177,8 +176,8 @@ class Map extends Sprite
 		//trace('applying extent', extent);
 		onExtentChanging();
 		// tell grid what the rock is cooking
-		flash.Lib.trace("Map.hx - locationsCoordinate - extent.northWest : "+ extent.northWest);
-		flash.Lib.trace("Map.hx - locationsCoordinate - extent.southEast : "+ extent.southEast);
+		//flash.Lib.trace("Map.hx - locationsCoordinate - extent.northWest : "+ extent.northWest);
+		//flash.Lib.trace("Map.hx - locationsCoordinate - extent.southEast : "+ extent.southEast);
 		grid.resetTiles(locationsCoordinate( [ extent.northWest, extent.southEast ] ));
 		onExtentChanged();
 	}
@@ -235,9 +234,7 @@ class Map extends Sprite
 	{
 		if (fitWidth == 0) fitWidth = mapWidth;
 		if (fitHeight == 0) fitHeight = mapHeight;
-		flash.Lib.trace("Map.hx - locationsCoordinate - locations : "+ locations);
-		var er:Error = new Error("BREAK"); //creating but not throwing the error
-		flash.Lib.trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
+		//flash.Lib.trace("Map.hx - locationsCoordinate - locations : "+ locations);
 		
 		var TL:Coordinate = mapProvider.locationCoordinate(locations[0].normalize());
 		var BR:Coordinate = TL.copy();
@@ -538,6 +535,7 @@ class Map extends Sprite
 
 		grid.doneZooming();
 		grid.donePanning();
+		flash.Lib.trace("Map.hx - zoomByAbout");
 	}
 
 	public function getRotation():Float
@@ -728,20 +726,10 @@ class Map extends Sprite
 	public function onExtentChanging():Void
 	{
 		if (hasEventListener(MapEvent.BEGIN_EXTENT_CHANGE)) {
-		dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, [ { getExtent(); } ]));
+			dispatchEvent(new MapEvent(MapEvent.BEGIN_EXTENT_CHANGE, [ { getExtent(); } ]));
 		}
 	}
-
-	//@isVar override public var doubleClickEnabled(null, set):Bool;
 	
-	public function set_doubleClickEnabled(enabled:Bool):Void
-	{
-		super.doubleClickEnabled = enabled;
-		trace("doubleClickEnabled on Map is no longer necessary!"); 
-		trace("\tto enable useful defaults, use:");
-		trace("\tmap.addEventListener(MouseEvent.DOUBLE_CLICK, map.onDoubleClick);");
-	}
-
 	/**
 	* pans and zooms in on double clicked location
 	*/
@@ -750,7 +738,8 @@ class Map extends Sprite
 		if (!__draggable) return;
 		
 		var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));
-		
+		//flash.Lib.trace("Map.hx - onDoubleClick - event.shiftKey : " +event.shiftKey);
+		//flash.Lib.trace("Map.hx - onDoubleClick - event.ctrlKey : " +event.ctrlKey);
 		if (event.shiftKey) {
 			if (grid.zoomLevel > grid.minZoom) {
 				zoomOutAbout(p);
@@ -760,9 +749,11 @@ class Map extends Sprite
 			}
 		}
 		else if (event.ctrlKey) {
+			//flash.Lib.trace("Map.hx - onDoubleClick - pointLocation(p) : " +pointLocation(p));
 			panAndZoomIn(pointLocation(p));
 		}
 		else {
+			//flash.Lib.trace("Map.hx - onDoubleClick - grid.zoomLevel < grid.maxZoom : " +(grid.zoomLevel < grid.maxZoom));
 			if (grid.zoomLevel < grid.maxZoom) {
 				zoomInAbout(p);
 			}
@@ -772,8 +763,8 @@ class Map extends Sprite
 		}
 	}	
 
-	var previousWheelEvent:Float = 0;
-	var minMouseWheelInterval:Float = 100;
+	private var previousWheelEvent:Float = 0;
+	private var minMouseWheelInterval:Float = 100;
 
 	public function onMouseWheel(event:MouseEvent):Void
 	{

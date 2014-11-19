@@ -292,7 +292,7 @@ class TweenLite {
 		
 		if (this.vars.runBackwards == true)
 		{
-			flash.Lib.trace("TweenLite.hx - new - this.vars.runBackwards: " + this.vars.runBackwards);
+			//flash.Lib.trace("TweenLite.hx - new - this.vars.runBackwards: " + this.vars.runBackwards);
 			initTweenVals();
 		}
 		
@@ -301,7 +301,7 @@ class TweenLite {
 		if (duration == 0 && this.delay == 0) {
 			complete(true);
 		} else if (!_listening) {
-			trace("TweenLite.hx - new - _listening : "+_listening);
+			//trace("TweenLite.hx - new - _listening : "+_listening);
 			_sprite.addEventListener(Event.ENTER_FRAME, executeAll);
 			_timer.addEventListener("timer", killGarbage);
 			_timer.start();
@@ -387,15 +387,15 @@ class TweenLite {
 		if (this.vars.runBackwards == true)
 		{
 			var tp:Object;
-			//for (p in this.tweens)
 			var fields = Reflect.fields(this.tweens);
 			for (p in fields)
 			{
-				tp = this.tweens[cast(p,Int)];
+				tp = Reflect.field(this.tweens, p);
 				tp.s += tp.c;
 				tp.c *= -1;
-				tp.o[cast(p, Int)] = tp.s;
+				Reflect.setField(tp.o, p, tp.s);
 			}
+			
 			if (this.vars.onUpdate != null) {
 				this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
 			}
@@ -631,7 +631,7 @@ class TweenLite {
 			_endTarget = t;
 			if (_all.get(t) == null) {
 				_all.set(t, new ObjectMap<Object, Object>());
-				flash.Lib.trace("TweenLite.hx - endTarget - _all.get(t) : "+_all.get(t));
+				//flash.Lib.trace("TweenLite.hx - endTarget - _all.get(t) : "+_all.get(t));
 			}
 			_all.set(t, this);
 		}

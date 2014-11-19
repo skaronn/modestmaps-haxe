@@ -3,8 +3,10 @@ package com.modestmaps.core;
 import com.modestmaps.core.painter.ITilePainter;
 import com.modestmaps.core.painter.ITilePainterOverride;
 import com.modestmaps.core.painter.TilePainter;
-import com.modestmaps.events.MapEvent;
 import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.extras.ui.DebugField;
+import com.modestmaps.util.DebugUtil;
 import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
@@ -262,7 +264,7 @@ class TileGrid extends Sprite
 	/** processes the tileQueue and optionally outputs stats into debugField */
 	private function onEnterFrame(event:Event=null):Void
 	{
-		if (debugField.parent!=null) {
+		if (debugField.parent != null) {
 			debugField.update(this, blankCount, recentlySeen.length, tilePainter);
 			debugField.x = mapWidth - debugField.width - 15; 
 			debugField.y = mapHeight - debugField.height - 15;
@@ -272,12 +274,14 @@ class TileGrid extends Sprite
 	private function onRendered():Void
 	{
 		// listen out for this if you want to be sure map is in its final state before reprojecting markers etc.
+		flash.Lib.trace("TileGrid.hx - onRendered");
 		dispatchEvent(new MapEvent(MapEvent.RENDERED));
 	}
 
 	private function onPanned():Void
 	{
 		var pt:Point = coordinatePoint(startPan);
+		DebugUtil.dumpStack(this, "onPanned");
 		dispatchEvent(new MapEvent(MapEvent.PANNED, [ { pt.subtract(new Point(mapWidth / 2, mapHeight / 2)) ; } ] ));		
 	}
 
@@ -326,14 +330,17 @@ class TileGrid extends Sprite
 	{
 		var t:Float = flash.Lib.getTimer();
 		
-		if (!_dirty || stage==null) {
-			//trace(flash.Lib.getTimer() - t, "ms in", provider);	
+		trace("onRender : " + (!_dirty || stage == null));
+		if (!_dirty || stage == null) {
+			//trace((flash.Lib.getTimer() - t) +" ms in "+ provider);	
+			//trace((flash.Lib.getTimer() - t) +" ms");	
 			onRendered();
 			return;
 		}
 
 		var boundsEnforced:Bool = enforceBounds();
 		
+		trace("onRender - (zooming || panning) : " + (zooming || panning));
 		if (zooming || panning) {
 			if (panning) {
 				onPanned();
@@ -571,38 +578,40 @@ class TileGrid extends Sprite
 
 					// if it still doesn't have an image yet, try more parent zooms
 						if (stillNeedsAnImage && maxParentSearch > 1 && currentTileZoom > minZoom) {
-
-						var startZoomSearch:Int = cast(currentTileZoom - 1, Int);
+							
+							var startZoomSearch:Int = Std.int(currentTileZoom - 1);
+							
+							//trace("repopulateVisibleTiles - startZoomSearch : "+startZoomSearch);
+							
+							if (currentTileZoom > previousTileZoom) {
+								// we already looked for parent level 1, and didn't find it, so:
+								startZoomSearch -= 1;
+							}
+							
+							var endZoomSearch:Int = cast(Math.max(cast(minZoom, Int), cast(currentTileZoom-maxParentSearch, Int)), Int);
+							var pzoom:Int = 0;
 						
-						if (currentTileZoom > previousTileZoom) {
-							// we already looked for parent level 1, and didn't find it, so:
-							startZoomSearch -= 1;
-						}
-						
-						var endZoomSearch:Int = cast(Math.max(cast(minZoom, Int), cast(currentTileZoom-maxParentSearch, Int)), Int);
-						var pzoom:Int = 0;
-						
-						for (pzoom in startZoomSearch...cast(endZoomSearch, Int))
-						{
-							var pkey:String = parentKey(col, row, cast(_currentTileZoom, Int), pzoom);
-							if (searchedParentKeys.get(pkey) != null)
+							for (pzoom in startZoomSearch...cast(endZoomSearch, Int))
 							{
-								searchedParentKeys.set(pkey, true);
-								if (ensureVisible(pkey) != null) {				
-									stillNeedsAnImage = false;
+								var pkey:String = parentKey(col, row, cast(_currentTileZoom, Int), pzoom);
+								if (searchedParentKeys.get(pkey) != null)
+								{
+									searchedParentKeys.set(pkey, true);
+									if (ensureVisible(pkey) != null) {				
+										stillNeedsAnImage = false;
+										break;
+									}
+									if (currentTileZoom - pzoom < maxParentLoad)
+									{
+										//trace("requesting parent tile at zoom", pzoom);
+										var pcoord:Array<Dynamic> = parentCoord(col, row, cast(currentTileZoom, Int), pzoom);
+										visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
+									}
+								}
+								else {
 									break;
 								}
-								if (currentTileZoom - pzoom < maxParentLoad)
-								{
-									//trace("requesting parent tile at zoom", pzoom);
-									var pcoord:Array<Dynamic> = parentCoord(col, row, cast(currentTileZoom, Int), pzoom);
-									visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
-								}
 							}
-							else {
-								break;
-							}
-						}
 						
 					}
 								
@@ -626,7 +635,7 @@ class TileGrid extends Sprite
 	*/
 	public function tilePainted(tile:Tile):Void
 	{		
-		if (currentTileZoom-tile.zoom <= maxParentLoad) {
+		if (currentTileZoom - tile.zoom <= maxParentLoad) {
 			tile.show();
 		}
 		else {
@@ -661,7 +670,7 @@ class TileGrid extends Sprite
 			scaleFactors[z] = cast(Math.pow(2.0, _currentTileZoom - z), Int);
 			// round up to the nearest pixel to avoid seams between zoom levels
 			if (roundScalesEnabled) {
-				tileScales[z] = cast(Math.ceil(Math.pow(2, zoomLevel-z) * _tileWidth) / _tileWidth, Int); 
+				tileScales[z] = cast(Math.ceil(Math.pow(2, zoomLevel-z) * tileWidth) / tileWidth, Int); 
 			}
 			else {
 				tileScales[z] = cast(Math.pow(2, zoomLevel-z), Int);
@@ -902,9 +911,9 @@ class TileGrid extends Sprite
 		if (_invertedMatrix == null)
 		{
 			_invertedMatrix = worldMatrix.clone();
-			flash.Lib.trace("TileGrid.hx - get_invertedMatrix - _invertedMatrix : " + _invertedMatrix);
+			//flash.Lib.trace("TileGrid.hx - get_invertedMatrix - _invertedMatrix : " + _invertedMatrix);
 			_invertedMatrix.invert();
-			_invertedMatrix.scale(scale/_tileWidth, scale/_tileHeight);
+			_invertedMatrix.scale(scale/tileWidth, scale/tileHeight);
 		}
 		return _invertedMatrix;
 	}
@@ -926,20 +935,20 @@ class TileGrid extends Sprite
 	}
 
 	/** convenience method for tileWidth */
-	//public var tileWidth(get, null):Float;
-	//
-	//private function get_tileWidth():Float
-	//{
-		//return _tileWidth;
-	//}
+	public var tileWidth(get, null):Float;
+	
+	private function get_tileWidth():Float
+	{
+		return _tileWidth;
+	}
 	
 	/** convenience method for tileHeight */
-	//public var tileHeight(get, null):Float;
-	//
-	//private function get_tileHeight():Float
-	//{
-		//return _tileHeight;
-	//}
+	public var tileHeight(get, null):Float;
+	
+	private function get_tileHeight():Float
+	{
+		return _tileHeight;
+	}
 
 	/** read-only, this is the level of tiles we'll be loading first */
 	public var currentTileZoom(get, null):Float;
@@ -1011,7 +1020,7 @@ class TileGrid extends Sprite
 	public function coordinatePoint(coord:Coordinate, context:DisplayObject=null):Point
 	{
 		// this is basically the same as coord.zoomTo, but doesn't make a new Coordinate:
-		var zoomFactor:Float = Math.pow(2, zoomLevel - coord.zoom) * _tileWidth/scale;
+		var zoomFactor:Float = Math.pow(2, zoomLevel - coord.zoom) * tileWidth/scale;
 		var zoomedColumn:Float = coord.column * zoomFactor;
 		var zoomedRow:Float = coord.row * zoomFactor;
 			
@@ -1081,13 +1090,16 @@ class TileGrid extends Sprite
 			doneZooming();
 		}
 
+		trace("prepareForZooming - zoomLevel : "+zoomLevel);
 		startZoom = zoomLevel;
 		zooming = true;
+		trace("prepareForZooming - zooming : "+zooming);
 		onStartZooming();
 	}
 
 	private function onStartZooming():Void
 	{
+		trace("onStartZooming - startZoom : "+startZoom);
 		dispatchEvent(new MapEvent(MapEvent.START_ZOOMING, [ { startZoom; } ] ));
 	}
 			
@@ -1112,7 +1124,7 @@ class TileGrid extends Sprite
 		worldMatrix.identity();
 		worldMatrix.scale(sc, sc);
 		worldMatrix.translate(mapWidth/2, mapHeight/2 );
-		worldMatrix.translate(-_tileWidth*coord.column, -_tileHeight*coord.row);
+		worldMatrix.translate(-tileWidth*coord.column, -tileHeight*coord.row);
 
 		// reset the inverted matrix, request a redraw, etc.
 		_dirty = true;
@@ -1215,8 +1227,8 @@ class TileGrid extends Sprite
 		// TODO: set limits independently of provider
 		this.limits = provider.outerLimits();
 
-		this._tileWidth = provider.tileWidth();
-		this._tileHeight = provider.tileHeight();
+		_tileWidth = provider.tileWidth();
+		_tileHeight = provider.tileHeight();
 		
 		calculateBounds();
 		
@@ -1247,10 +1259,10 @@ class TileGrid extends Sprite
 		tl = tl.zoomTo(0);
 		br = br.zoomTo(0);
 
-		minTx = tl.column * _tileWidth;
-		maxTx = br.column * _tileWidth;
-		minTy = tl.row * _tileHeight;
-		maxTy = br.row * _tileHeight;
+		minTx = tl.column * tileWidth;
+		maxTx = br.column * tileWidth;
+		minTy = tl.row * tileHeight;
+		maxTy = br.row * tileHeight;
 	}
 
 	/** this may seem like a heavy function, but it only gets called once per render 
@@ -1277,7 +1289,7 @@ class TileGrid extends Sprite
 		
 		var inverse:Matrix = matrix.clone();
 		inverse.invert();
-		inverse.scale(matrixScale/_tileWidth, matrixScale/_tileHeight);
+		inverse.scale(matrixScale/tileWidth, matrixScale/tileHeight);
 		
 		// zoom topLeft and bottomRight coords to 0
 		// so that they can be compared against minTx etc.
@@ -1290,8 +1302,8 @@ class TileGrid extends Sprite
 		
 		// apply horizontal constraints
 		
-		var leftX:Float = topLeft.column * _tileWidth;
-		var rightX:Float = bottomRight.column * _tileWidth;
+		var leftX:Float = topLeft.column * tileWidth;
+		var rightX:Float = bottomRight.column * tileWidth;
 		
 		if (rightX-leftX > maxTx-minTx) {
 			// if we're wider than the map, center align 

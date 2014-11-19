@@ -1,4 +1,4 @@
-package com.modestmaps.core;
+package com.modestmaps.extras.ui;
 
 import openfl.text.TextField;
 import com.modestmaps.core.TileGrid;
@@ -18,10 +18,11 @@ class DebugField extends TextField
 	private var lastFrameTime:Float;
 	private var fps:Float = 30;	
 
-	public function DebugField():Void
+	public function new():Void
 	{
+		super();
 		defaultTextFormat = new TextFormat(null, 12, 0x000000, false);
-		backgroundColor = 0xffffff;
+		backgroundColor = 0xFFFFFF;
 		background = true;
 		text = "messages";
 		name = 'debugField';
@@ -39,7 +40,7 @@ class DebugField extends TextField
 
 		lastFrameTime = flash.Lib.getTimer();
 
-		fps = (0.9 * fps) + (0.1 * (1000.0/frameDuration));
+		fps = Std.int((0.9 * fps) + (0.1 * (1000.0 / frameDuration)));
 
 		var well:Sprite = cast(grid.getChildByName('well'), Sprite);
 
@@ -50,10 +51,10 @@ class DebugField extends TextField
 			tileChildren += cast(well.getChildAt(i), Tile).numChildren;
 		}
 	  
-		this.text = "tx: " + NumberFormat.toFixed(grid.tx,3)
-			+ "\nty: " + NumberFormat.toFixed(grid.ty,3)
-			+ "\nsc: " + NumberFormat.toFixed(grid.scale,4)
-			+ "\nfps: " + NumberFormat.toFixed(fps,0)
+		this.text = "tx: " + NumberFormat.toFixed(grid.tx, 3)
+			+ "\nty: " + NumberFormat.toFixed(grid.ty, 3)
+			+ "\nsc: " + NumberFormat.toFixed(grid.scale, 4)
+			+ "\nfps: " + NumberFormat.toFixed(fps, 0)
 			+ "\ncurrent child count: " + well.numChildren
 			+ "\ncurrent child of tile count: " + tileChildren
 			+ "\nvisible tile count: " + grid.getVisibleTiles().length
@@ -67,21 +68,6 @@ class DebugField extends TextField
 			+ "\nmemory: " + NumberFormat.toFixed((System.totalMemory / 1048576), 1) + "MB"; 
 		width = textWidth+8;
 		height = textHeight+4;
-	}
-	
-	public static function dumpFields(tw:Object):Void {
-		//flash.Lib.trace("DebugField.hx - dump - instanceFields : "+Type.getInstanceFields(Type.getClass(tw)));
-		//flash.Lib.trace("DebugField.hx - dump - classFields : "+Type.getClassFields(Type.getClass(tw)));
-		//flash.Lib.trace("DebugField.hx - dump - fields : "+Reflect.fields(tw));
-		var concatFieldsDump : String = Type.getClassName(Type.getClass(tw)) + " => ";
-		var fields : Array<Object> = Type.getInstanceFields(Type.getClass(tw));
-		for (key in fields) {
-			var field : Object = fields[key];
-			if(!Reflect.isFunction(field)){
-				concatFieldsDump += "[" + key +" : " + Reflect.getProperty(tw, key) + "]";
-			}
-		}
-		flash.Lib.trace("TweenLite.hx - dump : " +concatFieldsDump);
 	}
 	
 }

@@ -109,17 +109,17 @@ class MarkerClip extends Sprite
 		return markers.length;
 	}
 
-	@isvar public var xx(null, set):Float;
+	//@isvar public var x(null, set):Float;
 	
-	private function set_xx(value:Float)
+	private function set_x(value:Float):Float
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 		return super.x;
 	}
 
-	@isvar public var yy(null, set):Float;
+	//@isvar public var y(null, set):Float;
 	
-	private function set_yy(value:Float)
+	private function set_y(value:Float):Float
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
 		return super.y;

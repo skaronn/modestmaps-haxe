@@ -6,6 +6,7 @@ package com.modestmaps.events;
 
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 
 import openfl.events.Event;
 import openfl.geom.Point;
@@ -49,21 +50,27 @@ class MapEvent extends Event
 	/** listen out for this if you want to be sure map is in its final state before reprojecting markers etc. */
 	public static inline var RENDERED:String = 'rendered';
 
-	//public function new(type:String, ...rest)
 	public function new(type:String, rest:Array<Dynamic>=null)
 	{
 		super(type, true, true);
 		
+		//trace("MapEvent - type : "+type);
+		//trace("MapEvent - rest : "+rest);
+		//DebugUtil.dumpStack(this, "new");
+		
 		switch(type)
 		{
 			case PANNED:
+				trace("MapEvent - PANNED - : " +(rest.length > 0 && Std.is(rest[0], Point)));
 				if (rest.length > 0 && Std.is(rest[0], Point))
 				{
+					trace("MapEvent - PANNED - rest[0] : " + rest[0]);
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
+					trace("MapEvent - ZOOMED_BY - rest[0] : "+rest[0]);
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:

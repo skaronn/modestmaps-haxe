@@ -5,8 +5,6 @@
 
 package com.modestmaps.core;
 
-//import com.greensock.TweenLite;
-import flash.Lib;
 import gs.TweenLite;
 
 class TweenTile extends Tile
@@ -14,7 +12,7 @@ class TweenTile extends Tile
 	public function dumpFields():String
 	{
 		var concatDumpFields : String = "{"+this+"[alpha:" + this.alpha +"]}";
-		//trace("TweenTile.as - dumpFields : " +concatDumpFields);
+		//flash.Lib.trace("TweenTile.hx - dumpFields : " +concatDumpFields);
 		return concatDumpFields;
 	}
 	

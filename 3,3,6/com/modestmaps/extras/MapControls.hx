@@ -43,6 +43,7 @@ class MapControls extends Sprite
 	private var map:Map;
 	private var keyboard:Bool;
 	private var fullScreen:Bool;
+	private var mapWidth : Float = 0;
 
 	private var buttons:Array<Object>;
 	private var actions:Array<Object>;
@@ -109,7 +110,7 @@ class MapControls extends Sprite
 			else { 
 				child.x = Std.parseFloat(s.substring(-2));
 			} 
-			//child.x -= a != null ? cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float) : 0;
+			//child.x -= a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[1]), Float) /*cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float)*/ : 0;
 		},
 		right: function(child:DisplayObject, s:String, a:String):Void { 
 			if (s.lastIndexOf("%") >= 0) { 
@@ -118,7 +119,7 @@ class MapControls extends Sprite
 			else { 
 				//child.x = map.getWidth() - Std.parseFloat(s.substring(-2)) - child.width;
 			} 
-			//child.x += a != null ? cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float) : 0;
+			//child.x += a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[1]), Float) /*cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float)*/ : 0;
 		},
 		top: function(child:DisplayObject, s:String, a:String):Void { 
 			if (s.lastIndexOf("%") >= 0) { 
@@ -127,7 +128,7 @@ class MapControls extends Sprite
 			else { 
 				child.y = Std.parseFloat(s.substring(-2));
 			} 
-			//child.y -= a != null ? cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float) : 0;
+			//child.y -= a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[0]), Float) /*cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float)*/ : 0;
 		},
 		bottom: function(child:DisplayObject, s:String, a:String):Void { 
 			if (s.lastIndexOf("%") >= 0) { 
@@ -136,7 +137,7 @@ class MapControls extends Sprite
 			else { 
 				//child.y = map.getHeight() - Std.parseFloat(s.substring(-2)) - child.height;
 			} 
-			//child.y += a != null ? cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float) : 0;
+			//child.y += a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[0]), Float) /*cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float)*/ : 0;
 		}
 	};
 
@@ -157,7 +158,7 @@ class MapControls extends Sprite
 		this.keyboard = keyboard;
 		this.fullScreen = fullScreen;
 		
-		if (buttonPositions) {
+		if (buttonPositions != null) {
 			this.positions = buttonPositions;
 		}
 		
@@ -277,4 +278,15 @@ class MapControls extends Sprite
 	{
 		onMapResize(event);
 	}
+	/*
+	private static function getMapWidth():Float
+	{
+		return map.getWidth();
+	}
+	
+	private function getMapHeight():Float
+	{
+		return map.getHeight();
+	}
+	*/
 }
