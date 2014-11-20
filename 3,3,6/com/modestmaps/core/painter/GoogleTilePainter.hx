@@ -14,8 +14,10 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.TimerEvent;
 import openfl.geom.Point;
-import flash.utils.Object;
+import openfl.utils.Object;
 import openfl.utils.Timer;
+
+import haxe.ds.ObjectMap;
 
 class GoogleTilePainter extends EventDispatcher implements ITilePainter
 {
@@ -23,7 +25,8 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 	private var googleMap:Map;
 	private var tileClass:Type;
 	private var timer:Timer;
-	private var cache:Dictionary = new Dictionary();
+	//private var cache:Dictionary = new Dictionary();
+	private var cache:ObjectMap<Dynamic, Dynamic>= new ObjectMap<Dynamic, Dynamic>();
 
 	public function new(googleMap:Map, type:IMapType)
 	{
@@ -128,7 +131,8 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 
 	public function isPainted(tile:Tile):Bool
 	{
-		return tile.numChildren > 0 ? (cast(tile.getChildAt(0), Dynamic)['loadComplete'] : false;
+		//return tile.numChildren > 0 ? (cast(tile.getChildAt(0), Dynamic)['loadComplete'] : false;
+		return false;
 	}
 
 	public function cancelPainting(tile:Tile):Void
@@ -142,8 +146,9 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 
 	public function isPainting(tile:Tile):Bool
 	{
-		var img:Dynamic = tile.numChildren > 0 ? (cast(tile.getChildAt(0), Dynamic) : false;  
-		return img!=null && img.hasOwnProperty('loadComplete') && !img['loadComplete'];
+		//var img:Dynamic = tile.numChildren > 0 ? (cast(tile.getChildAt(0), Dynamic) : false;  
+		//return img!=null && img.hasOwnProperty('loadComplete') && !img['loadComplete'];
+		return false;
 	}
 
 	public function reset():Void

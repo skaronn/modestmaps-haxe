@@ -225,7 +225,7 @@ class TweenMap extends Map
 	public function tweenTo(location:Location, duration:Float, easing:Object=null):Void
 	{
 		var pan:Point = new Point(mapWidth/2, mapHeight/2).subtract(locationPoint(location,grid));
-		 grid.prepareForPanning();
+		grid.prepareForPanning();
 		TweenLite.to(grid, duration, { ty: grid.ty + pan.y,
 					   tx: grid.tx + pan.x,
 					   ease: easing,

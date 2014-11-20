@@ -19,14 +19,15 @@ class ZoomBox extends Sprite
 
 	private var p:Point;
 
-	public function new(map:Map, boxLineThickness:Float = 0, boxLineColor:Float = 0xff0000,	boxFillColor:Float = 0xffffff, boxFillAlpha:Float = 0.2)
+	public function new(map:Map, boxLineThickness:Float = 0, boxLineColor:UInt = 0xff0000,	boxFillColor:UInt = 0xffffff, boxFillAlpha:Float = 0.2)
 	{
+		super();
 		this.map = map;
 		
 		box = new Shape();
-		box.graphics.lineStyle(boxLineThickness, boxLineColor, 1, false, LineScaleMode.NONE);
-		box.graphics.beginFill(boxFillColor, boxFillAlpha);
-		box.graphics.drawRect(0,0,100,100);
+		box.graphics.lineStyle(boxLineThickness, boxLineColor, 1.0, false, LineScaleMode.NONE, null, null, 1.0);		
+		box.graphics.beginFill(boxFillColor, boxFillAlpha);		
+		box.graphics.drawRect(0, 0, 100, 100);		
 		box.graphics.endFill();
 		box.visible = false;		
 		addChild(box);

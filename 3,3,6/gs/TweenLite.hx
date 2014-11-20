@@ -70,6 +70,7 @@ EXAMPLES:
 As a simple example, you could tween the alpha to 50% (0.5) and move the x position of a MovieClip named "clip_mc" 
 to 120 and fade the volume to 0 over the course of 1.5 seconds like so:
 
+import com.modestmaps.core.TileGrid;
 import flash.Lib;
 import flash.Lib;
 import flash.utils.Object;
@@ -463,8 +464,13 @@ class TweenLite {
 		var tp:Object;
 			
 		for (p in Reflect.fields(this.tweens)) {
-			trace("TweenLite.as - render - p : " + p);
+			//trace("render - p : " + p);
 			tp = Reflect.field(this.tweens, p);
+			//trace("render - tp : " + tp);			
+			if(Type.getClassName(Type.getClass(tp.o)) == "com.modestmaps.core.TileGrid" ){
+				trace("render - " + tp.o + "[" + p + "] : " + Reflect.field(tp.o, p));
+				//trace(new Error(Type.getClassName(Type.getClass(this)) +", render").getStackTrace());
+			}
 			Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
 		}
 		

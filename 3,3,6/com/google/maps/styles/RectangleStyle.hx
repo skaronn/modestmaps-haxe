@@ -8,7 +8,6 @@ class RectangleStyle
 	{
 		_fillStyle = null;
 		_strokeStyle = null;
-		super();
 		if (arg1 != null)
 		{
 			copyFromObject(arg1);
@@ -75,7 +74,7 @@ class RectangleStyle
 		loc1 = null;
 		if (arg1 == null)
 		{
-		return null;
+			return null;
 		}
 		loc1 = new RectangleStyle();
 		loc1.copyFromObject(arg1);
