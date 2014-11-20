@@ -61,28 +61,33 @@ class MapEvent extends Event
 		switch(type)
 		{
 			case PANNED:
-				//trace("MapEvent - PANNED - : " +(rest.length > 0 && Std.is(rest[0], Point)));
 				if (rest.length > 0 && Std.is(rest[0], Point))
 				{
-					//trace("MapEvent - PANNED - rest[0] : " + rest[0]);
+					trace("MapEvent - PANNED - rest[0] : " + rest[0]);
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
-				//DebugUtil.dumpStack(this, "new");
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					//trace("MapEvent - ZOOMED_BY - rest[0] : "+rest[0]);
+					trace("MapEvent - ZOOMED_BY - rest[0] : "+rest[0]);
+					//DebugUtil.dumpStack(this, "new - ZOOMED_BY");
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
 					newExtent = rest[0];
-				}		
+				}
 			case START_ZOOMING:
+				if (rest.length > 0 && Std.is(rest[0], Float))
+				{
+					trace("MapEvent - START_ZOOMING - rest[0] : "+rest[0]);
+					zoomLevel = rest[0];
+				}
 			case STOP_ZOOMING:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
+					trace("MapEvent - STOP_ZOOMING - rest[0] : "+rest[0]);
 					zoomLevel = rest[0];
 				}			
 			case RESIZED:

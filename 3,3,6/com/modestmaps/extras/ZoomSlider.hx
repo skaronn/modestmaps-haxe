@@ -2,6 +2,7 @@ package com.modestmaps.extras;
 
 import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;
+import com.modestmaps.util.DebugUtil;
 
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -120,10 +121,12 @@ class ZoomSlider extends Sprite
 
 	public function update(event:MapEvent=null):Void
 	{
-		if (event != null) trace(event.type + " in ZoomSlider.update : "+ dragging);
+		if (event != null) trace(event.type + " in ZoomSlider.update : " + dragging);
 		if (!dragging) {
 			proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
+			//trace("update - proportion : "+proportion);
 		}
+		//DebugUtil.dumpStack(this, "update");
 	}
 
 	public var proportion(get, set):Float;

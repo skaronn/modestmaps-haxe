@@ -461,9 +461,9 @@ class TweenLite {
 		}
 		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
 		var tp:Object;
-		
-		var fields = Reflect.fields(this.tweens);		
-		for (p in fields) {
+			
+		for (p in Reflect.fields(this.tweens)) {
+			trace("TweenLite.as - render - p : " + p);
 			tp = Reflect.field(this.tweens, p);
 			Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
 		}
