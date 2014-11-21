@@ -2,7 +2,8 @@ package com.google.maps.wrappers;
 
 import com.google.maps.*;
 import com.google.maps.interfaces.*;
-import flash.geom.*;
+import openfl.geom.*;
+import openfl.utils.Object;
 
 class IMapTypeWrapper extends com.google.maps.wrappers.EventDispatcherWrapper implements com.google.maps.interfaces.IMapType
 {
@@ -12,17 +13,18 @@ class IMapTypeWrapper extends com.google.maps.wrappers.EventDispatcherWrapper im
 		return;
 	}
 
-	public function getCopyrights(arg1:com.google.maps.LatLngBounds, arg2:Float):Array
+	public function getCopyrights(arg1:com.google.maps.LatLngBounds, arg2:Float):Array<Object>
 	{
 		com.google.maps.wrappers.Wrapper.checkValid(this.instance);
 		return com.google.maps.wrappers.Wrapper.instance().wrapCopyrightNoticeArray(this.instance.getCopyrights(this.extWrapper.wrapLatLngBounds(arg1), arg2));
 	}
 
-	public override var interfaceChain(getInterfaceChain, null):Array<Dynamic>;
-		private function getInterfaceChain():Array
-	{
-		return ["IMapType"];
-	}
+	//public override var interfaceChain(get, null):Array<Object>;
+	
+	//private function get_interfaceChain():Array<Object>
+	//{
+		//return ["IMapType"];
+	//}
 
 	public function getName(arg1:Bool=false):String
 	{
@@ -48,7 +50,7 @@ class IMapTypeWrapper extends com.google.maps.wrappers.EventDispatcherWrapper im
 		return this.instance.getMinimumResolution(this.extWrapper.wrapLatLng(arg1));
 	}
 
-	public function getTileLayers():Array
+	public function getTileLayers():Array<Object>
 	{
 		com.google.maps.wrappers.Wrapper.checkValid(this.instance);
 		return com.google.maps.wrappers.Wrapper.instance().wrapITileLayerArray(this.instance.getTileLayers());

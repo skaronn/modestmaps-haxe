@@ -2,11 +2,12 @@ package com.google.maps;
 
 import com.google.maps.wrappers.*;
 
+import openfl.utils.Object;
+
 class MapTypeOptions 
 {
-	public function new(arg1:Dynamic=null)
+	public function new(arg1:Object=null)
 	{
-		super();
 		if (arg1 != null)
 		{
 			this.copyFromObject(arg1);
@@ -14,15 +15,15 @@ class MapTypeOptions
 		return;
 	}
 
-	private function setMinResolution(arg1:Dynamic):Void
+	private function setMinResolution(arg1:Object):Void
 	{
 		this._minResolution = cast(arg1, Float);
 		return;
 	}
 
-	public var linkColor(getLinkColor, setLinkColor):Dynamic;
+	public var linkColor(getLinkColor, setLinkColor):Object;
 	
-	private function getLinkColor():Dynamic
+	private function getLinkColor():Object
 	{
 		return this._linkColor;
 	}
@@ -46,7 +47,7 @@ class MapTypeOptions
 		return;
 	}
 
-	private function setLinkColor(arg1:Dynamic):Void
+	private function setLinkColor(arg1:Object):Void
 	{
 		this._linkColor = cast(arg1, Float);
 		return;
@@ -58,9 +59,9 @@ class MapTypeOptions
 		return;
 	}
 
-	public var tileSize(getTileSize, setTileSize):Dynamic;
+	public var tileSize(getTileSize, setTileSize):Object;
 	
-	private function getTileSize():Dynamic
+	private function getTileSize():Object
 	{
 		return this._tileSize;
 	}
@@ -71,33 +72,33 @@ class MapTypeOptions
 		return;
 	}
 
-	public var minResolution(getMinResolution, setMinResolution):Dynamic;
+	public var minResolution(getMinResolution, setMinResolution):Object;
 	
-	private function getMinResolution():Dynamic
+	private function getMinResolution():Object
 	{
 		return this._minResolution;
 	}
 
-	private function setMaxResolution(arg1:Dynamic):Void
+	private function setMaxResolution(arg1:Object):Void
 	{
 		this._maxResolution = cast(arg1, Float);
 		return;
 	}
 
-	public var radius(getRadius, setRadius):Dynamic;
+	public var radius(getRadius, setRadius):Object;
 	
-	private function getRadius():Dynamic
+	private function getRadius():Object
 	{
 		return this._radius;
 	}
 
-	private function setRadius(arg1:Dynamic):Void
+	private function setRadius(arg1:Object):Void
 	{
 		this._radius = cast(arg1, Float);
 		return;
 	}
 
-	private function setTileSize(arg1:Dynamic):Void
+	private function setTileSize(arg1:Object):Void
 	{
 		this._tileSize = cast(arg1, Float);
 		return;
@@ -117,31 +118,29 @@ class MapTypeOptions
 		return this._shortName;
 	}
 
-	private function setTextColor(arg1:Dynamic):Void
+	private function setTextColor(arg1:Object):Void
 	{
-		this._textColor = cast(arg1, Float);
-		return;
+		_textColor = cast(arg1, Float);
 	}
 
-	public function copyFromObject(arg1:Dynamic):Void
+	public function copyFromObject(arg1:Object):Void
 	{
 		com.google.maps.wrappers.Wrapper.copyProperties(this, arg1, ["maxResolution", "minResolution", "tileSize", "textColor", "linkColor", "radius"], Number);
 		com.google.maps.wrappers.Wrapper.copyProperties(this, arg1, ["shortName", "urlArg", "errorMessage", "alt"], String);
-		return;
 	}
 
-	public var maxResolution(getMaxResolution, setMaxResolution):Dynamic;
+	public var maxResolution(get, set):Object;
 	
-	private function getMaxResolution():Dynamic
+	private function get_maxResolution():Object
 	{
-		return this._maxResolution;
+		return _maxResolution;
 	}
 
-	public var urlArg(getUrlArg, setUrlArg):String;
+	public var urlArg(get, set):String;
 	
-	private function getUrlArg():String
+	private function get_urlArg():String
 	{
-		return this._urlArg;
+		return _urlArg;
 	}
 
 	public function toString():String
@@ -149,21 +148,21 @@ class MapTypeOptions
 		return "MapTypeOptions: { shortName: " + this.shortName + "\n\t  urlArg: " + this._urlArg + "\n\t  maxResolution: " + this._maxResolution + "\n\t  minResolution: " + this._minResolution + "\n\t  tileSize: " + this._tileSize + "\n\t  textColor: " + this._textColor + "\n\t  linkColor: " + this._linkColor + "\n\t  errorMessage: " + this._errorMessage + "\n\t  alt: " + this._alt + "\n\t  radius: " + this._radius + " }";
 	}
 
-	public var textColor(getTextColor, setTextColor):Dynamic;
+	public var textColor(get, set):Object;
 	
-	private function getTextColor():Dynamic
+	private function get_textColor():Object
 	{
 		return this._textColor;
 	}
 
-	public static function merge(arg1:Array<Dynamic>):com.google.maps.MapTypeOptions
+	public static function merge(arg1:Array<Object>):com.google.maps.MapTypeOptions
 	{
-		return com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.MapTypeOptions, arg1) as com.google.maps.MapTypeOptions;
+		return cast(com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.MapTypeOptions, arg1), com.google.maps.MapTypeOptions);
 	}
 
-	public static function fromObject(arg1:Dynamic):com.google.maps.MapTypeOptions
+	public static function fromObject(arg1:Object):com.google.maps.MapTypeOptions
 	{
-		var loc1:Dynamic;
+		var loc1:Object;
 		loc1 = null;
 		if (arg1 == null)
 		{
@@ -176,7 +175,7 @@ class MapTypeOptions
 
 	public static function getDefaultOptions():com.google.maps.MapTypeOptions
 	{
-		var loc1:Dynamic;
+		var loc1:Object;
 		loc1 = null;
 		loc1 = com.google.maps.ClientBootstrap.getInstance();
 		return loc1.getMapsFactory().getDefaultMapTypeOptions();
@@ -184,7 +183,7 @@ class MapTypeOptions
 
 	public static function setDefaultOptions(arg1:com.google.maps.MapTypeOptions):Void
 	{
-		var loc1:Dynamic;
+		var loc1:Object;
 		loc1 = null;
 		loc1 = com.google.maps.ClientBootstrap.getInstance();
 		loc1.getMapsFactory().setDefaultMapTypeOptions(arg1);
@@ -193,21 +192,21 @@ class MapTypeOptions
 
 	private var _urlArg:String;
 
-	private var _linkColor:Dynamic;
+	private var _linkColor:Object;
 
-	private var _minResolution:Dynamic;
+	private var _minResolution:Object;
 
 	private var _shortName:String;
 
 	private var _alt:String;
 
-	private var _tileSize:Dynamic;
+	private var _tileSize:Object;
 
-	private var _maxResolution:Dynamic;
+	private var _maxResolution:Object;
 
-	private var _textColor:Dynamic;
+	private var _textColor:Object;
 
-	private var _radius:Dynamic;
+	private var _radius:Object;
 
 	private var _errorMessage:String;
 }

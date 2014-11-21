@@ -564,7 +564,7 @@ class Wrapper
 		var loc2:Dynamic;
 		loc2 = null;
 		var loc3:Dynamic;
-		loc3 = NaN;
+		loc3 = Math.NaN;
 		var loc4:Dynamic;
 		loc4 = null;
 		var loc5:Dynamic;
@@ -726,7 +726,7 @@ class Wrapper
 		var loc2:Dynamic;
 		loc2 = false;
 		var loc3:Dynamic;
-		loc3 = NaN;
+		loc3 = Math.NaN;
 		if (arg2 == null)
 		{
 			return null;

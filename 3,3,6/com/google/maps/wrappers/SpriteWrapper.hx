@@ -99,7 +99,7 @@ class SpriteWrapper extends flash.display.Sprite implements com.google.maps.inte
 		var loc2:Dynamic;
 		loc2 = null;
 		loc1 = com.google.maps.ClientBootstrap.getInstance();
-		loc2 = loc1.getMapsFactory()[createMethodName];
+		loc2 = Reflect.field(loc1.getMapsFactory(), createMethodName);
 		com.google.maps.wrappers.Wrapper.instance().wrap(this.initOptions == null ? loc2(this, this.getBaseEventDispatcher()) : loc2(this, this.getBaseEventDispatcher(), this.initOptions), this, interfaceClass, wrapperClass);
 		isObjectReady = true;
 		onObjectReady();

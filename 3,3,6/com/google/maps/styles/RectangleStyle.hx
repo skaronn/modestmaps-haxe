@@ -62,9 +62,9 @@ class RectangleStyle
 
 	public var fillStyle(null, set):com.google.maps.styles.FillStyle;
 	
-	private function set_fillStyle(arg1:com.google.maps.styles.FillStyle):Void
+	private function set_fillStyle(arg1:com.google.maps.styles.FillStyle):com.google.maps.styles.FillStyle
 	{
-		this._fillStyle = arg1;
+		_fillStyle = arg1;
 		return _fillStyle;
 	}
 
@@ -83,7 +83,7 @@ class RectangleStyle
 
 	public static function mergeStyles(arg1:Array<Dynamic>):com.google.maps.styles.RectangleStyle
 	{
-		return com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.styles.RectangleStyle, arg1) as com.google.maps.styles.RectangleStyle;
+		return cast(com.google.maps.wrappers.Wrapper.mergeStyles(com.google.maps.styles.RectangleStyle, arg1), com.google.maps.styles.RectangleStyle);
 	}
 
 	private var _fillStyle:com.google.maps.styles.FillStyle=null;

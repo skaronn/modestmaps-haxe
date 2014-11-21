@@ -2,6 +2,8 @@ package com.google.maps.wrappers;
 
 import com.google.maps.interfaces.*;
 
+import openfl.utils.Object;
+
 class WrapperBase implements com.google.maps.interfaces.IWrappable
 {
 	public function new()
@@ -9,31 +11,33 @@ class WrapperBase implements com.google.maps.interfaces.IWrappable
 		return;
 	}
 
-	function initializeWrapper(arg1:Dynamic, arg2:Dynamic):Void
+	function initializeWrapper(arg1:Object, arg2:Object):Void
 	{
 		this.instance = arg1;
 		this.extWrapper = arg2;
 		return;
 	}
 
-	private function setWrapper(arg1:Dynamic):Void
+	private function setWrapper(arg1:Object):Void
 	{
 		return;
 	}
 
-	public var interfaceChain(getInterfaceChain, setInterfaceChain):Array<Dynamic>;
-		private function getInterfaceChain():Array
+	public var interfaceChain(getInterfaceChain, setInterfaceChain):Array<Object>;
+	
+	private function getInterfaceChain():Array<Object>
 	{
 		return null;
 	}
 
-	public var wrapper(getWrapper, setWrapper):Dynamic;
-		private function getWrapper():Dynamic
+	public var wrapper(getWrapper, setWrapper):Object;
+	
+	private function getWrapper():Object
 	{
 		return this.instance;
 	}
 
-	private var extWrapper:Dynamic;
+	private var extWrapper:Object;
 
-	private var instance:Dynamic;
+	private var instance:Object;
 }
