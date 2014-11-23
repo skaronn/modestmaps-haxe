@@ -243,7 +243,7 @@ class TweenLite {
 		{ 
 			//flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
 			_all.remove(target);
-			_all.set(target, /*new ObjectMap<Object, Object>()*/dictionary);
+			_all.set(target, dictionary);
 		}
 		dictionary.set(this, target);
 		//_all.set(_all.get(this), this);
@@ -302,7 +302,7 @@ class TweenLite {
 		if (duration == 0 && this.delay == 0) {
 			complete(true);
 		} else if (!_listening) {
-			//trace("TweenLite.hx - new - _listening : "+_listening);
+			trace("TweenLite.hx - new - _listening : "+_listening);
 			_sprite.addEventListener(Event.ENTER_FRAME, executeAll);
 			_timer.addEventListener("timer", killGarbage);
 			_timer.start();
@@ -329,9 +329,9 @@ class TweenLite {
 			{
 				if (this.target.get(Std.string(i)) != endArray[i] && this.target.get(Std.string(i)) != null)
 				{
-					//this.tweens[i.toString()] = {o:this.target, s:this.target[i], c:endArray[i] - this.target[i]}; //o: object, s:starting value, c:change in value, e: easing function
-					var foo = Reflect.field(this.tweens, Std.string(i));
-					foo = {o:this.target, s:this.target.get(Std.string(i)), c:endArray[i] - this.target.get(Std.string(i))}; //o: object, s:starting value, c:change in value, e: easing function
+					trace("1 - >>>>>>>>> initTweenVals - this.target["+Std.string(i)+"] : "+this.target[Std.int(i)]);
+					Reflect.setField(this.tweens, Std.string(i), { o:this.target, s:this.target[Std.int(i)], c:endArray[i] - this.target.get(Std.string(i)) }); //o: object, s:starting value, c:change in value, e: easing function
+					trace("2 - >>>>>>>>> initTweenVals - Reflect.field(this.tweens, "+Std.string(i)+") : "+Reflect.field(this.tweens, Std.string(i)));
 				}
 			}
 		}
@@ -366,18 +366,30 @@ class TweenLite {
 					volTween.endTarget = this.target;
 				}
 				else {
-					if (this.target.hasOwnProperty(p)) {
-						/*flash.Lib.trace(">>>>>>>>>>>>>>>>> " + this.vars);
-						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + p);
+					//trace(">>>>>>>>>>>>>>>>> initTweenVals - p : " + p);
+					//trace(">>>>>>>>>>>>>>>>> initTweenVals "+this.target+".hasOwnProperty("+p+") : " + this.target.hasOwnProperty(p));
+					//trace(">>>>>>>>>>>>>>>>> initTweenVals Reflect.hasField("+this.target+", "+p+") : " + Reflect.hasField(this.target, p));
+					//trace(">>>>>>>>>>>>>>>>> initTweenVals Reflect.getProperty("+this.target+", "+p+") : " + Reflect.getProperty(this.target, p));
+					if (Reflect.getProperty(this.target, p) != null /*this.target.hasOwnProperty(p)*/ ) {
+						/*
+						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + this.vars);
 						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Reflect.field(this.vars, p));
 						flash.Lib.trace(">>>>>>>>>>>>>>>>> " + Std.is(Reflect.field(this.vars, p), Float));*/
 						if (Std.is(Reflect.field(this.vars, p), Float)) {
-							valChange = cast(Reflect.field(this.vars, p), Float) -  cast(Reflect.field(this.target, p), Float);
+							//valChange = cast(Reflect.field(this.vars, p), Float) -  cast(Reflect.field(this.target, p), Float);
+							valChange = cast(Reflect.getProperty(this.vars, p), Float) -  cast(Reflect.getProperty(this.target, p), Float);
 						}
 						else {
-							valChange = cast(Reflect.field(this.vars, p), Float);
+							//valChange = cast(Reflect.field(this.vars, p), Float);
+							valChange = cast(Reflect.getProperty(this.vars, p), Float);
 						}
-						Reflect.setField(this.tweens, p, {o:this.target, s:Reflect.field(this.target, p), c:valChange}); //o: object, p:property, s:starting value, c:change in value, e: easing function
+						//if(p == "ty" || p == "tx"){
+							//trace("3 - >>>>>>>>> initTweenVals - Reflect.getProperty(" + this.target + ", " + p + ") : " + Reflect.getProperty(this.target, p));
+							//trace("3 - >>>>>>>>> initTweenVals - Reflect.field(" + this.target + ", " + p + ") : " + Reflect.field(this.target, p));
+						//}
+						Reflect.setField(this.tweens, p, { o:this.target, s:Reflect.getProperty(this.target, p)/*Reflect.field(this.target, p)*/, c:valChange } ); //o: object, p:property, s:starting value, c:change in value, e: easing function
+						//trace("4 - >>>>>>>>> initTweenVals - c : "+valChange);
+						//trace("5 - >>>>>>>>> initTweenVals - Reflect.field("+this.tweens+", "+p+") : "+Reflect.field(this.tweens, p));
 					}
 					else {
 						Reflect.setField(this.extraTweens, p, {o:this.target, s:0, c:0, v:Reflect.field(this.vars, p)}); //classes that extend this one (like TweenFilterLite) may need it (like for blurX, blurY, and other filter properties)
@@ -408,7 +420,7 @@ class TweenLite {
 
 	public static function to(target:Object, duration:Float, vars:Object) : TweenLite
 	{
-		//flash.Lib.trace("TweenLite.hx - to - vars: " + vars);
+		//trace("- to - target: " + target +", duration : " + duration + ", vars : "+ vars);
 		return new TweenLite(target, duration, vars);
 	}
 
@@ -462,23 +474,26 @@ class TweenLite {
 		}
 		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
 		var tp:Object;
+		
+		//trace("render - this.tweens : "+this.tweens);
 			
 		for (p in Reflect.fields(this.tweens)) {
-			//trace("render - p : " + p);
 			tp = Reflect.field(this.tweens, p);
-			//trace("render - tp : " + tp);			
-			if(Type.getClassName(Type.getClass(tp.o)) == "com.modestmaps.core.TileGrid" ){
-				trace("render - " + tp.o + "[" + p + "] : " + Reflect.field(tp.o, p));
+			Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
+			if (Type.getClassName(Type.getClass(tp.o)) == "com.modestmaps.core.TileGrid") {
+				//trace("render - tp => "+tp+ ", p => " + p +", tp.c => " + tp.c  + ", " + tp.o + "[" + p + "] => " + Reflect.field(tp.o, p));
+				trace("render - p : "+p+", tp : "+tp);
 				//trace(new Error(Type.getClassName(Type.getClass(this)) +", render").getStackTrace());
 			}
-			Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
 		}
 		
 		if (this.vars.onUpdate != null) {
+			//trace("render - this.vars.onUpdate : "+this.vars.onUpdate);
 			this.vars.onUpdate.apply(null, this.vars.onUpdateParams);
 		}
 		
 		if (time == this.duration) { //Check to see if we're done
+			//trace("render - this.duration : "+this.duration);
 			complete(true);
 		}
 	}
@@ -500,7 +515,7 @@ class TweenLite {
 				//trace("TweenLite.hx - executeAll - tw " + tw.dumpFields());
 				//trace("TweenLite.as - executeAll - tw : " + Type.typeof(tw) + " => " +  tw.dumpFields());
 				var tw : TweenLite = cast(tweenLite, TweenLite);
-				if (tweenLite != null && tw.active) {
+				if (tw != null && tw.active) {
 					tw.render(t);
 					if (_all.get(p) == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
 						break;
@@ -584,7 +599,7 @@ class TweenLite {
 	
 	private function get_active():Bool
 	{
-		//flash.Lib.trace("TweenLite.hx - get_active - _active : " + _active);
+		//trace("get_active - _active : " + _active);
 		//var er:Error = new Error("BREAK"); //creating but not throwing the error
 		//flash.Lib.trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 		if (_active)
@@ -644,7 +659,7 @@ class TweenLite {
 		return _endTarget;
 	}
 		
-	@isVar public var volumeProxy(get, set):Float;
+	@:isVar public var volumeProxy(get, set):Float;
 	
 	private function get_volumeProxy():Float {
 		return _sound.volume;
@@ -656,7 +671,7 @@ class TweenLite {
 		return this.target.soundTransform;
 	}
 		
-	@isVar public var colorProxy(get, set):Float;
+	@:isVar public var colorProxy(get, set):Float;
 	
 	private function get_colorProxy():Float {
 		return 0;
@@ -676,7 +691,7 @@ class TweenLite {
 	}
 	
 	// If you want to be able to set or get the progress of a Tween, uncomment these getters/setters. 0 = beginning, 0.5 = halfway through, and 1 = complete
-	/*@isVar */public var progress(get, set):Float;
+	@:isVar public var progress(get, set):Float;
 	
 	private function get_progress():Float {
 		return cast(((flash.Lib.getTimer() - this.startTime) / 1000) / this.duration, Float);

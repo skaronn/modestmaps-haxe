@@ -95,14 +95,17 @@ class Map extends Sprite
 	{
 		super();		
 		if (mapProvider == null) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
-		flash.Lib.trace("Map.hx - mapProvider : " + mapProvider);
 		// TODO getter/setter for this that disables interaction in TileGrid
 		__draggable = draggable;
 
 		// don't call setMapProvider here
 		// the extent calculations are all squirrely
 		this.mapProvider = mapProvider;
-
+		trace("new - mapProvider : " + mapProvider);
+		trace("new - width : " + width);
+		trace("new - height : " + height);
+		//DebugUtil.dumpStack(this, "new");
+		
 		// initialize the grid (so point/location/coordinate functions should be valid after this)
 		grid = new TileGrid(width, height, draggable, mapProvider);
 		grid.addEventListener(Event.CHANGE, onExtentChanged);
@@ -352,9 +355,11 @@ class Map extends Sprite
 			mapHeight = h;
 
 			// mask out out of bounds marker remnants
-			scrollRect = new Rectangle(0,0,mapWidth,mapHeight);
-			
+			scrollRect = new Rectangle(0, 0, mapWidth, mapHeight);
+						
 			grid.resizeTo(new Point(mapWidth, mapHeight));
+			
+			trace(" setSize - this.getSize() : " + this.getSize());
 			
 			dispatchEvent(new MapEvent(MapEvent.RESIZED, this.getSize()));
 		}		
@@ -483,7 +488,12 @@ class Map extends Sprite
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
 	public function panRight(event:Event=null):Void
 	{
-		panBy(-(mapWidth * panFraction), 0);
+		trace("panRight - mapWidth : "+mapWidth);
+		trace("panRight - panFraction : " + panFraction);
+		var result = cast(-(mapWidth * panFraction), Float);
+		trace("panRight - result : " +result);
+		panBy(result, 0);
+		//DebugUtil.dumpStack(this, "panBy");
 	}
 
 	public function panBy(px:Float, py:Float):Void
@@ -735,6 +745,7 @@ class Map extends Sprite
 	*/
 	public function onDoubleClick(event:MouseEvent):Void
 	{
+		trace("onDoubleClick - __draggable : "+__draggable);
 		if (!__draggable) return;
 		
 		var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));

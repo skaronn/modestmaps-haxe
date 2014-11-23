@@ -109,7 +109,7 @@ class MarkerClip extends Sprite
 		return markers.length;
 	}
 
-	//@isvar public var x(null, set):Float;
+	//@:isVar public var x(null, set):Float;
 	
 	private function set_x(value:Float):Float
 	{
@@ -117,7 +117,7 @@ class MarkerClip extends Sprite
 		return super.x;
 	}
 
-	//@isvar public var y(null, set):Float;
+	//@:isVar public var y(null, set):Float;
 	
 	private function set_y(value:Float):Float
 	{

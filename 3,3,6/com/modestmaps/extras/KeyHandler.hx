@@ -5,7 +5,7 @@ import com.modestmaps.Map;
 import openfl.events.Event;
 import flash.events.KeyboardEvent;
 import openfl.events.MouseEvent;
-import flash.ui.Keyboard;
+import openfl.ui.Keyboard;
 
 class KeyHandler
 {
@@ -24,6 +24,7 @@ class KeyHandler
 			map.panLeft();
 		}
 		else if (event.keyCode == Keyboard.RIGHT) {
+			trace(" - onkey - Keyboard.RIGHT");
 			map.panRight();
 		}
 		else if (event.keyCode == Keyboard.UP) {

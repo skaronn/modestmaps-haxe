@@ -1,15 +1,16 @@
 package com.modestmaps.extras.ui;
 
-import flash.display.CapsStyle;
-import flash.display.JointStyle;
-import flash.display.Shape;
-import flash.display.StageDisplayState;
-import flash.events.ContextMenuEvent;
+import openfl.display.CapsStyle;
+import openfl.display.JointStyle;
+import openfl.display.Shape;
+import openfl.display.StageDisplayState;
+import openfl.events.ContextMenuEvent;
 import openfl.events.Event;
 import flash.events.FullScreenEvent;
+import flash.display.LineScaleMode;
 import flash.ui.ContextMenu;
 import flash.ui.ContextMenuItem;
-import flash.errors.Error;
+import openfl.errors.Error;
 
 class FullScreenButton extends Button
 {	
@@ -20,8 +21,7 @@ class FullScreenButton extends Button
 	{
 		// draw out arrows
 		super();
-		//outIcon.graphics.lineStyle(1, 0x000000, 1.0, true, "normal", CapsStyle.NONE, JointStyle.BEVEL);
-		outIcon.graphics.lineStyle(1, 0x000000);
+		outIcon.graphics.lineStyle(1, 0x000000, 1.0, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.BEVEL);
 		outIcon.graphics.moveTo(8,5);
 		outIcon.graphics.lineTo(4,4);
 		outIcon.graphics.lineTo(5,8);
@@ -40,7 +40,7 @@ class FullScreenButton extends Button
 		addChild(outIcon);
 
 		// draw out arrows
-		//inIcon.graphics.lineStyle(1, 0x000000, 1.0, true, "normal", CapsStyle.NONE, JointStyle.BEVEL);
+		inIcon.graphics.lineStyle(1, 0x000000, 1.0, true, LineScaleMode.NORMAL, CapsStyle.NONE, JointStyle.BEVEL);
 		inIcon.graphics.lineStyle(1, 0x000000);
 		inIcon.graphics.moveTo(7,4);
 		inIcon.graphics.lineTo(8,8);
@@ -57,11 +57,15 @@ class FullScreenButton extends Button
 		inIcon.graphics.moveTo(12,15);
 		inIcon.graphics.lineTo(11,11);
 		inIcon.graphics.lineTo(15,12);
-		//addChild(inIcon);
+		addChild(inIcon);
 		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
+	/**
+	 * 
+	 * @param	event
+	 */
 	private function onAddedToStage(event:Event):Void
 	{
 		stage.addEventListener(FullScreenEvent.FULL_SCREEN, onFullScreenEvent);
@@ -71,7 +75,7 @@ class FullScreenButton extends Button
 		var fullScreenCM:ContextMenu = new ContextMenu();
 		fullScreenCM.hideBuiltInItems();
 
-		var fs:ContextMenuItem = new ContextMenuItem("Go Full Screen" );
+		var fs:ContextMenuItem = new ContextMenuItem("Go Full Screen");
 		fs.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, goFullScreen);
 		fullScreenCM.customItems.push(fs);
 
@@ -83,6 +87,10 @@ class FullScreenButton extends Button
 		this.parent.contextMenu = fullScreenCM;
 	}
 
+	/**
+	 * 
+	 * @param	event
+	 */
 	public function toggleFullScreen(event:Event=null):Void
 	{
 		if (stage.displayState == StageDisplayState.FULL_SCREEN) {
@@ -94,9 +102,10 @@ class FullScreenButton extends Button
 	}
 
 	/**
-	 * functions to enter and leave full screen mode
-	 * @param	event
-	 */
+	* Function to enter and leave full screen mode
+	* 
+	* @param event
+	*/
 	public function goFullScreen(event:Event=null):Void
 	{
 		try {
@@ -107,9 +116,9 @@ class FullScreenButton extends Button
 		}
 	}
 	/**
-	 * 
-	 * @param	event
-	 */
+	* 
+	* @param event
+	*/
 	public function exitFullScreen(event:Event=null):Void
 	{
 		try {
@@ -121,11 +130,11 @@ class FullScreenButton extends Button
 	}
 
 	/**
-	 * function to enable and disable the context menu items,
-	 * based on what mode we are in.
-	 * 
-	 * @param	event
-	 */
+	* Function to enable and disable the context menu items,
+	* based on what mode we are in.
+	* 
+	* @param event
+	*/
 	public function onFullScreenEvent(event:Event):Void
 	{
 		if (stage.displayState == StageDisplayState.FULL_SCREEN)

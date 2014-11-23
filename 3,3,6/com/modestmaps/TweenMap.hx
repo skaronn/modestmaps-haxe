@@ -14,6 +14,7 @@ import com.modestmaps.core.MapExtent;
 import com.modestmaps.core.TweenTile;
 import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
@@ -54,6 +55,8 @@ class TweenMap extends Map
 	*/
 	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Object> = null)
 	{
+		trace("new - width : " + width);
+		trace("new - height : " + height);
 		super(width, height, draggable, provider, rest);
 		grid.setTileClass(TweenTile);
 	}
@@ -66,7 +69,8 @@ class TweenMap extends Map
 		if (!grid.panning && !grid.zooming)
 		{
 			grid.prepareForPanning();
-			TweenLite.to(grid, panDuration, { tx: grid.tx+px, ty: grid.ty+py, onComplete: grid.donePanning, ease: panEase });
+			trace("panBy - grid : " + grid + ", panDuration : " + panDuration + ", tx : " + cast(grid.tx + px, Float) + ", ty : " + cast(grid.ty + py, Float) + ", onComplete : " + grid.donePanning + ", ease : " +panEase);
+			TweenLite.to(grid, panDuration, { tx: grid.tx + px, ty: grid.ty + py, onComplete: grid.donePanning, ease: panEase } );
 		}
 	}	  
 		

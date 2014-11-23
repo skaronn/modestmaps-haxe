@@ -20,7 +20,8 @@ import openfl.events.ProgressEvent;
 import openfl.events.TimerEvent;
 import openfl.net.URLRequest;
 import openfl.system.LoaderContext;
-import flash.utils.Dictionary;
+//import flash.utils.Dictionary;
+import openfl.utils.Object;
 import openfl.utils.Timer;
 import openfl.errors.Error;
 
@@ -51,24 +52,24 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	private var tileQueue:TileQueue;
 	private var tileCache:TileCache;
 	private var tilePool:TilePool;	
-	private var queueFunction:Dynamic;
+	private var queueFunction:Object;
 	private var queueTimer:Timer;	
 
 	// per-tile, the array of images we're going to load, which can be empty
 	// TODO: document this in IMapProvider, so that provider implementers know
 	// they are free to check the bounds of their overlays and don't have to serve
 	// millions of 404s
-	private var layersNeeded:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>();	
-	private var loaderTiles:ObjectMap<Dynamic, Dynamic> = new ObjectMap<Dynamic, Dynamic>();
+	private var layersNeeded:ObjectMap<Object, Object> = new ObjectMap<Object, Object>();	
+	private var loaderTiles:ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
 
 	// open requests
-	private var openRequests:Array<Dynamic> = [];
+	private var openRequests:Array<Object> = [];
 
 	// keeping track for dispatching MapEvent.ALL_TILES_LOADED and MapEvent.BEGIN_TILE_LOADING
 	private var previousOpenRequests:Int = 0;
 
 	// loader cache is shared across map instances, hence this is static for the time being	
-	private static var loaderCache:ObjectMap<Dynamic, Dynamic>;
+	private static var loaderCache:ObjectMap<Object, Object>;
 	private static var cachedUrls:Array<String> = [];
 
 	/**
@@ -245,7 +246,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			}
 		}		
 
-		layersNeeded = new ObjectMap<Dynamic, Dynamic>();
+		layersNeeded = new ObjectMap<Object, Object>();
 		
 		tileQueue.clear();
 			
@@ -261,7 +262,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		// TODO: add urls to Tile?
 		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - tile : " + tile);
 		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - layersNeeded.get("+tile.name+") : "+ layersNeeded.get(tile.name));
-		var urls:Array<Dynamic> = cast(layersNeeded.get(tile.name), Array<Dynamic>);
+		var urls:Array<Object> = cast(layersNeeded.get(tile.name), Array<Object>);
 		//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - urls : "+ urls);
 		if (urls != null && urls.length > 0)
 		{
@@ -274,9 +275,9 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				loadNextURLForTile(tile);
 			}
 			else {
-				//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - requesting : "+ url);
+				//trace("loadNextURLForTile - requesting : "+ url);
 				var tileLoader:Loader = new Loader();
-				//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - loaderTiles : "+ loaderTiles);
+				//trace("loadNextURLForTile - loaderTiles : "+ loaderTiles);
 				loaderTiles.set(tileLoader, tile);
 				tileLoader.name = tile.name;
 				try {
@@ -286,7 +287,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 					}
 					else {
 						var urlRequest:URLRequest = Std.is(url, URLRequest) ? url : new URLRequest(url);
-						//flash.Lib.trace("TilePainter.hx - loadNextURLForTile - urlRequest.url : "+ urlRequest.url);
+						//trace("loadNextURLForTile - urlRequest.url : "+ urlRequest.url);
 						tileLoader.load(urlRequest);
 					}
 					tileLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadEnd, false, 0, true);
@@ -298,10 +299,11 @@ class TilePainter extends EventDispatcher implements ITilePainter
 				}
 			}
 		}
-		else if (urls!=null && urls.length == 0) {
+		else if (urls != null && urls.length == 0) {
 			tileGrid.tilePainted(tile);
 			tileCache.putTile(tile);
-			untyped __delete__(layersNeeded, tile.name);
+			//untyped __delete__(layersNeeded, tile.name);
+			layersNeeded.remove(tile.name);
 		}		
 	}	
 
@@ -316,7 +318,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		if (openRequests.length < maxOpenRequests && tileQueue.length > 0)
 		{
 			// prune queue for tiles that aren't visible
-			var removedTiles:Array<Dynamic> = tileQueue.retainAll(tileGrid.getVisibleTiles());
+			var removedTiles:Array<Object> = tileQueue.retainAll(tileGrid.getVisibleTiles());
 			
 			// keep layersNeeded tidy:
 			for (removedTile in removedTiles)
@@ -371,7 +373,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 		var loader:Loader = cast(event.target, LoaderInfo).loader;
 		
 		if (cacheLoaders && !loaderCache.get(loader.contentLoaderInfo.url)) {
-			flash.Lib.trace("caching content for" + loader.contentLoaderInfo.url);
+			trace("caching content for" + loader.contentLoaderInfo.url);
 			try {
 				var content:Bitmap = cast(loader.content, Bitmap);
 				loaderCache.get(loader.contentLoaderInfo.url) = content;

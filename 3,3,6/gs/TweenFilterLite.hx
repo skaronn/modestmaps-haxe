@@ -161,6 +161,7 @@ class TweenFilterLite extends TweenLite {
 	public static var killDelayedCallsTo:Object = TweenLite.killTweensOf; //Otherwise TweenFilterLite.killDelayedCallsTo() would throw errors (it's a static method of TweenLite)
 
 	public function new(mc:DisplayObject, duration:Float, vars:Object) {
+		trace("new");
 		super(mc, duration, vars);
 		if (mc == null) {return};
 		_mc = mc;

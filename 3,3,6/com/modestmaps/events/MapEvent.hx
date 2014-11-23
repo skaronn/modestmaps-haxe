@@ -63,51 +63,56 @@ class MapEvent extends Event
 			case PANNED:
 				if (rest.length > 0 && Std.is(rest[0], Point))
 				{
-					trace("MapEvent - PANNED - rest[0] : " + rest[0]);
+					trace("PANNED - rest[0] : " + rest[0]);
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					trace("MapEvent - ZOOMED_BY - rest[0] : "+rest[0]);
+					trace("ZOOMED_BY - rest[0] : "+rest[0]);
 					//DebugUtil.dumpStack(this, "new - ZOOMED_BY");
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
+					trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
 					newExtent = rest[0];
 				}
 			case START_ZOOMING:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					trace("MapEvent - START_ZOOMING - rest[0] : "+rest[0]);
+					trace("START_ZOOMING - rest[0] : "+rest[0]);
 					zoomLevel = rest[0];
 				}
 			case STOP_ZOOMING:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					trace("MapEvent - STOP_ZOOMING - rest[0] : "+rest[0]);
+					trace("STOP_ZOOMING - rest[0] : "+rest[0]);
 					zoomLevel = rest[0];
 				}			
 			case RESIZED:
-				if (rest.length > 0 && Std.is(rest[0], Array))
+				if (rest.length > 0 && Std.is(rest, Array))
 				{
-					newSize = rest[0];
+					trace("RESIZED - rest : "+rest);
+					newSize = rest;
 				}
 			case COPYRIGHT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], String))
 				{
+					trace("COPYRIGHT_CHANGED - rest[0] : "+rest[0]);
 					newCopyright = rest[0];
 				}	
 			case BEGIN_EXTENT_CHANGE:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
+					trace("BEGIN_EXTENT_CHANGE - rest[0] : "+rest[0]);
 					oldExtent = rest[0];
 				}		
 			case MAP_PROVIDER_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], IMapProvider))
 				{
+					trace("MAP_PROVIDER_CHANGED - rest[0] : "+rest[0]);
 					newMapProvider = rest[0];
 				}
 		}

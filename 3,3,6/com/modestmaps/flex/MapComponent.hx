@@ -156,7 +156,7 @@ class MapComponent extends UIComponent
 		return _extent;
 	}
 
-	@isVar public var center(get, set):Location;
+	@:isVar public var center(get, set):Location;
 	
 	/**
 	 * Like the "extent" setter, the "center" setter accepts a String in addition to
@@ -202,7 +202,7 @@ class MapComponent extends UIComponent
 	private var mapProviderDirty:Bool = true;
 	private var _mapProvider:IMapProvider = DEFAULT_MAP_PROVIDER;
 	
-	@isVar public var provider(get, set):IMapProvider;
+	@:isVar public var provider(get, set):IMapProvider;
 
 	/**
 	 * The "provider" setter accepts either a String (Flex Builder should provide

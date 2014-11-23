@@ -155,13 +155,6 @@ class TileGrid extends Sprite
 	// setting this.dirty = true will request an Event.RENDER
 	private var _dirty:Bool;
 	
-	public var tx : Float = 0;
-	public var ty : Float = 0;
-	public var a : Float = 0;
-	public var b : Float = 0;
-	public var c : Float = 0;
-	public var d : Float = 0;
-
 	// setting to true will dispatch a CHANGE event which Map will convert to an EXTENT_CHANGED for us
 	private var matrixChanged:Bool = false;
 
@@ -232,7 +225,7 @@ class TileGrid extends Sprite
 		if (draggable) {
 			addEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
 		}
-		//addEventListener(Event.RENDER, onRender);
+		addEventListener(Event.RENDER, onRender);
 		addEventListener(Event.ENTER_FRAME, onEnterFrame);
 		addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -341,18 +334,19 @@ class TileGrid extends Sprite
 	private function onRender(event:Event=null):Void
 	{
 		var t:Float = flash.Lib.getTimer();
-		//trace("onRender - dirty & stage : " + (!dirty || stage == null));
+		trace("onRender - (!dirty || stage == null) : " + (!dirty || stage == null));
+		//DebugUtil.dumpStack(this, "onRender");
 		if (!dirty || stage == null) {
-			////trace((flash.Lib.getTimer() - t) +" ms");	
+			//trace((flash.Lib.getTimer() - t) +" ms");	
 			onRendered();
 			return;
 		}
 
 		var boundsEnforced:Bool = enforceBounds();
-		//trace("onRender - zooming : " +  zooming);
-		//trace("onRender - panning : " +  panning);
+		
 		if (zooming || panning) {
 			if (panning) {
+				trace("onRender - panning : " +  panning);
 				onPanned();
 			}	
 			if (zooming) {
@@ -361,9 +355,11 @@ class TileGrid extends Sprite
 			}
 		}
 		else if (boundsEnforced) {
+			trace("onRender - boundsEnforced : " + boundsEnforced);
 			onChanged();
 		}
 		else if (matrixChanged) {
+			trace("onRender - matrixChanged : " + matrixChanged);
 			matrixChanged = false;
 			onChanged();
 		}
@@ -384,7 +380,7 @@ class TileGrid extends Sprite
 		
 		// this is the level of tiles we'll be loading:
 		_currentTileZoom = newZoom;
-		//trace("onRender - _currentTileZoom : " +  _currentTileZoom);
+		trace("onRender - _currentTileZoom : " +  _currentTileZoom);
 		// find start and end columns for the visible tiles, at current tile zoom
 		// we project all four corners to take account of potential rotation in worldMatrix
 		var tlC:Coordinate = topLeftCoordinate.zoomTo(currentTileZoom);
@@ -1065,11 +1061,11 @@ class TileGrid extends Sprite
 
 	public function prepareForPanning(dragging:Bool = false):Void
 	{
-		////trace("prepareForPanning - panning : " + panning);
+		//trace("prepareForPanning - panning : " + panning);
 		if (panning) { 
 			donePanning();
 		}
-		////trace("prepareForPanning - (!dragging && draggable) : "+(!dragging && draggable));
+		//trace("prepareForPanning - (!dragging && draggable) : "+(!dragging && draggable));
 		if (!dragging && draggable) {
 			if (hasEventListener(MouseEvent.MOUSE_DOWN)) {
 				removeEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
@@ -1082,13 +1078,13 @@ class TileGrid extends Sprite
 
 	private function onStartPanning():Void
 	{
-		////trace(">>> onStartPanning");
+		//trace(">>> onStartPanning");
 		dispatchEvent(new MapEvent(MapEvent.START_PANNING));
 	}
 
 	public function donePanning():Void
 	{
-		////trace("donePanning - draggable : "+draggable);
+		//trace("donePanning - draggable : "+draggable);
 		if (draggable) {
 			if (!hasEventListener(MouseEvent.MOUSE_DOWN)) {
 				addEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
@@ -1144,8 +1140,8 @@ class TileGrid extends Sprite
 
 		worldMatrix.identity();
 		worldMatrix.scale(sc, sc);
-		worldMatrix.translate(mapWidth / 2, mapHeight / 2 );		
-		worldMatrix.translate( -tileWidth * coord.column, -tileHeight * coord.row);		
+		worldMatrix.translate(mapWidth / 2, mapHeight / 2);		
+		worldMatrix.translate(-tileWidth * coord.column, -tileHeight * coord.row);		
 
 		// reset the inverted matrix, request a redraw, etc.
 		dirty = true;
@@ -1370,12 +1366,12 @@ class TileGrid extends Sprite
 	 */
 	private function enforceBounds():Bool
 	{
-		////trace("enforceBounds - enforceBoundsEnabled : "+enforceBoundsEnabled);
+		//trace("enforceBounds - enforceBoundsEnabled : "+enforceBoundsEnabled);
 		if (!enforceBoundsEnabled) {
 			return false;
 		}		
 		var touched:Bool = enforceBoundsOnMatrix(worldMatrix);
-		////trace("enforceBounds - touched : "+touched);
+		//trace("enforceBounds - touched : "+touched);
 	    /* this is potentially the way to wrap the x position
 		but all the tiles flash and the values aren't quite right
 		so wrapping the matrix needs more work :(
@@ -1410,11 +1406,12 @@ class TileGrid extends Sprite
 	
 	private function set_dirty(d:Bool):Bool
 	{
+		trace("set_dirty : "+d);
 		_dirty = d;
 		if (d) {
-			trace("set_dirty : "+_dirty);
 			//DebugUtil.dumpStack(this, "set_dirty");
 			if (stage != null) stage.invalidate();
+			
 			_invertedMatrix = null;
 			_topLeftCoordinate = null;
 			_bottomRightCoordinate = null;
@@ -1442,7 +1439,9 @@ class TileGrid extends Sprite
 		dirty = true;
 	}
 	
-	//@:isVar public var a(get, set):Float;
+	@:isVar public var a(get, set):Float;
+	//public var a(get, set):Float;
+	//public var a : Float = 0;
 	
 	private function set_a(n:Float)
 	{
@@ -1456,7 +1455,9 @@ class TileGrid extends Sprite
 		return worldMatrix.a;
 	}
 	
-	//@:isVar public var b(get, set):Float;
+	@:isVar public var b(get, set):Float;
+	//public var b(get, set):Float;
+	//public var b : Float = 0;
 	
 	private function set_b(n:Float)
 	{
@@ -1470,7 +1471,9 @@ class TileGrid extends Sprite
 		return worldMatrix.b;
 	}
 	
-	//@:isVar public var c(get, set):Float;
+	@:isVar public var c(get, set):Float;
+	//public var c(get, set):Float;
+	//public var c : Float = 0;
 	
 	private function set_c(n:Float)
 	{
@@ -1484,37 +1487,45 @@ class TileGrid extends Sprite
 		return worldMatrix.c;
 	}
 	
-	//@:isVar public var d(get, set):Float;
-	
+	@:isVar public var d(get, set):Float;
+	//public var d(get, set):Float;
+	//public var d : Float = 0;
+		
 	private function set_d(n:Float)
 	{
 		worldMatrix.d = n;
-		trace("set_d : "+worldMatrix.d);
+		//trace("set_d : "+worldMatrix.d);
 		dirty = true;
-		return d;
+		return worldMatrix.d;
 	}
 		
 	private function get_d():Float
 	{
-		trace("get_d : "+worldMatrix.d);
+		//trace("get_d : "+worldMatrix.d);
 		return worldMatrix.d;
 	}
 	
-	//@:isVar public var tx(get, set):Float;
+	@:isVar public var tx(get, set):Float;
+	//public var tx(get, set):Float;
+	//public var tx : Float = 0;
 	
 	private function set_tx(n:Float)
 	{
 		worldMatrix.tx = n;
 		dirty = true;
+		//trace("set_tx");
 		return worldMatrix.tx;
 	}
 	
 	private function get_tx():Float
 	{
+		//trace("get_tx");
 		return worldMatrix.tx;
 	}
 	
-	//@:isVar public var ty(get, set):Float;
+	@:isVar public var ty(get, set):Float;
+	//public var ty(get, set):Float;
+	//public var ty : Float = 0;
 	
 	private function set_ty(n:Float)
 	{
@@ -1525,6 +1536,7 @@ class TileGrid extends Sprite
 	
 	private function get_ty():Float
 	{
+		//trace("get_ty : " +  worldMatrix.ty);
 		return worldMatrix.ty;
 	}					
 }

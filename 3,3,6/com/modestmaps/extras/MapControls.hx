@@ -4,6 +4,7 @@ import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.extras.ui.Button;
 import com.modestmaps.extras.ui.FullScreenButton;
+import com.modestmaps.util.DebugUtil;
 import haxe.ds.ObjectMap;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -43,7 +44,6 @@ class MapControls extends Sprite
 	private var map:Map;
 	private var keyboard:Bool;
 	private var fullScreen:Bool;
-	private var mapWidth : Float = 0;
 
 	private var buttons:Array<Object>;
 	private var actions:Array<Object>;
@@ -103,41 +103,41 @@ class MapControls extends Sprite
 	}
 
 	private var positionFunctions:Object = {
-		left: function(child:DisplayObject, s:String, a:String):Void{
+		left: function(child:DisplayObject, s:String, a:String, map:Map, horizontalAlignFunction:Object):Void {
 			if (s.lastIndexOf("%") >= 0) {
-				//child.x = map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0;
+				child.x = map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0;
 			}
 			else { 
 				child.x = Std.parseFloat(s.substring(-2));
 			} 
-			//child.x -= a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[1]), Float) /*cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float)*/ : 0;
+			child.x -= a != null ? cast(Reflect.field(horizontalAlignFunction, a.split('-')[1]), Float) : 0;
 		},
-		right: function(child:DisplayObject, s:String, a:String):Void { 
+		right: function(child:DisplayObject, s:String, a:String, map:Map, horizontalAlignFunction:Object):Void { 
 			if (s.lastIndexOf("%") >= 0) { 
-				//child.x = map.getWidth() - (map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0) - child.width;
+				child.x = map.getWidth() - (map.getWidth() * Std.parseFloat(s.substring(-1)) / 100.0) - child.width;
 			}
 			else { 
-				//child.x = map.getWidth() - Std.parseFloat(s.substring(-2)) - child.width;
+				child.x = map.getWidth() - Std.parseFloat(s.substring(-2)) - child.width;
 			} 
-			//child.x += a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[1]), Float) /*cast(hAlignFunctions[cast(a.split('-')[1], Int)](child), Float)*/ : 0;
+			child.x += a != null ? cast(Reflect.field(horizontalAlignFunction, a.split('-')[1]), Float) : 0;
 		},
-		top: function(child:DisplayObject, s:String, a:String):Void { 
+		top: function(child:DisplayObject, s:String, a:String, map:Map, horizontalAlignFunction:Object):Void { 
 			if (s.lastIndexOf("%") >= 0) { 
-				//child.y = map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0;
+				child.y = map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0;
 			}
 			else { 
 				child.y = Std.parseFloat(s.substring(-2));
 			} 
-			//child.y -= a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[0]), Float) /*cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float)*/ : 0;
+			child.y -= a != null ? cast(Reflect.field(horizontalAlignFunction, a.split('-')[0]), Float) : 0;
 		},
-		bottom: function(child:DisplayObject, s:String, a:String):Void { 
+		bottom: function(child:DisplayObject, s:String, a:String, map:Map, horizontalAlignFunction:Object):Void { 
 			if (s.lastIndexOf("%") >= 0) { 
-				//child.y = map.getHeight() - (map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0) - child.height;
+				child.y = map.getHeight() - (map.getHeight() * Std.parseFloat(s.substring(-1)) / 100.0) - child.height;
 			}
 			else { 
-				//child.y = map.getHeight() - Std.parseFloat(s.substring(-2)) - child.height;
+				child.y = map.getHeight() - Std.parseFloat(s.substring(-2)) - child.height;
 			} 
-			//child.y += a != null ? cast(Reflect.field(hAlignFunctions, a.split('-')[0]), Float) /*cast(vAlignFunctions[cast(a.split('-')[0], Int)](child), Float)*/ : 0;
+			child.y += a != null ? cast(Reflect.field(horizontalAlignFunction, a.split('-')[0]), Float) : 0;
 		}
 	};
 
@@ -165,6 +165,7 @@ class MapControls extends Sprite
 		filters = [ new DropShadowFilter(1, 45, 0, 1, 3, 3, .7 ,2) ];
 		
 		var buttonSprite:Sprite = new Sprite();
+		
 		addChild(buttonSprite);
 		
 		actions = [ map.panLeft, map.panRight, map.panUp, map.panDown, map.zoomIn, map.zoomOut ];
@@ -207,8 +208,8 @@ class MapControls extends Sprite
 		
 		// since our size is based on map size, wait for map to be resized, so we don't 
 		// accidentally get sized before the map on stage resize events		
-		map.addEventListener( MapEvent.RESIZED, onMapResize );  
-		map.addEventListener( MouseEvent.MOUSE_DOWN, onMouseDownClick);
+		map.addEventListener(MapEvent.RESIZED, onMapResize);  
+		map.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDownClick);
 		
 		onMapResize(null);
 	}
@@ -260,16 +261,15 @@ class MapControls extends Sprite
 
 	private function onMapResize(event:Event):Void
 	{
-		var w:Float = map.getWidth();
-		var h:Float = map.getHeight();
-		
+		//DebugUtil.dumpStack(this, "onMapResize");
+			
 		for (child in Reflect.fields(positions))
 		{
 			var position:Object = Reflect.field(positions, child);
 			for (reference in Reflect.fields(position))
 			{
 				if (reference == 'align') continue;
-				Reflect.field(positionFunctions, reference)(Reflect.field(this, child), Reflect.field(position, reference), Reflect.field(position, 'align'));
+				Reflect.field(positionFunctions, reference)(Reflect.field(this, child), Reflect.field(position, reference), Reflect.field(position, 'align'), map, hAlignFunctions);
 			}
 		}
 	}
