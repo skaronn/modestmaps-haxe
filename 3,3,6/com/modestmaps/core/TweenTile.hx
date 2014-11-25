@@ -9,11 +9,13 @@ import gs.TweenLite;
 
 class TweenTile extends Tile
 {			
-	public function dumpFields():String
+	override public function toString():String
 	{
-		var concatDumpFields : String = "{"+this+"[alpha:" + this.alpha +"]}";
-		//flash.Lib.trace("TweenTile.hx - dumpFields : " +concatDumpFields);
-		return concatDumpFields;
+		var tweenTile : String = "";
+		/*if(this.alpha != undefined){
+			tweenTile = "{" + this + "[alpha:" + this.alpha +"]}";
+		}*/
+		return tweenTile;
 	}
 	
 	public static var FADE_TIME:Float = 0.25;

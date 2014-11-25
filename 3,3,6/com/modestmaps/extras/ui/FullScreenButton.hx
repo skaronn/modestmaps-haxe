@@ -4,7 +4,7 @@ import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
 import openfl.display.Shape;
 import openfl.display.StageDisplayState;
-import openfl.events.ContextMenuEvent;
+import flash.events.ContextMenuEvent;
 import openfl.events.Event;
 import flash.events.FullScreenEvent;
 import flash.display.LineScaleMode;

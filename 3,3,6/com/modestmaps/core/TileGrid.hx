@@ -275,7 +275,7 @@ class TileGrid extends Sprite
 	private function onRendered():Void
 	{
 		// listen out for this if you want to be sure map is in its final state before reprojecting markers etc.
-		//trace("onRendered");
+		trace("onRendered");
 		dispatchEvent(new MapEvent(MapEvent.RENDERED));
 	}
 
@@ -334,14 +334,16 @@ class TileGrid extends Sprite
 	private function onRender(event:Event=null):Void
 	{
 		var t:Float = flash.Lib.getTimer();
+		trace("onRender - dirty : " + 	dirty);
+		trace("onRender - stage  : " + stage);
 		trace("onRender - (!dirty || stage == null) : " + (!dirty || stage == null));
 		//DebugUtil.dumpStack(this, "onRender");
 		if (!dirty || stage == null) {
-			//trace((flash.Lib.getTimer() - t) +" ms");	
+			//trace((flash.Lib.getTimer() - t) +" ms");
 			onRendered();
 			return;
 		}
-
+		
 		var boundsEnforced:Bool = enforceBounds();
 		
 		if (zooming || panning) {
@@ -1061,12 +1063,13 @@ class TileGrid extends Sprite
 
 	public function prepareForPanning(dragging:Bool = false):Void
 	{
-		//trace("prepareForPanning - panning : " + panning);
-		if (panning) { 
+		if (panning) {
+			trace("prepareForPanning - panning : " + panning);
 			donePanning();
 		}
-		//trace("prepareForPanning - (!dragging && draggable) : "+(!dragging && draggable));
+		
 		if (!dragging && draggable) {
+			trace("prepareForPanning - (!dragging && draggable) : "+(!dragging && draggable));
 			if (hasEventListener(MouseEvent.MOUSE_DOWN)) {
 				removeEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
 			}
@@ -1406,10 +1409,9 @@ class TileGrid extends Sprite
 	
 	private function set_dirty(d:Bool):Bool
 	{
-		trace("set_dirty : "+d);
+
 		_dirty = d;
 		if (d) {
-			//DebugUtil.dumpStack(this, "set_dirty");
 			if (stage != null) stage.invalidate();
 			
 			_invertedMatrix = null;
@@ -1440,8 +1442,6 @@ class TileGrid extends Sprite
 	}
 	
 	@:isVar public var a(get, set):Float;
-	//public var a(get, set):Float;
-	//public var a : Float = 0;
 	
 	private function set_a(n:Float)
 	{
@@ -1456,8 +1456,6 @@ class TileGrid extends Sprite
 	}
 	
 	@:isVar public var b(get, set):Float;
-	//public var b(get, set):Float;
-	//public var b : Float = 0;
 	
 	private function set_b(n:Float)
 	{
@@ -1472,8 +1470,6 @@ class TileGrid extends Sprite
 	}
 	
 	@:isVar public var c(get, set):Float;
-	//public var c(get, set):Float;
-	//public var c : Float = 0;
 	
 	private function set_c(n:Float)
 	{
@@ -1488,44 +1484,34 @@ class TileGrid extends Sprite
 	}
 	
 	@:isVar public var d(get, set):Float;
-	//public var d(get, set):Float;
-	//public var d : Float = 0;
 		
 	private function set_d(n:Float)
 	{
 		worldMatrix.d = n;
-		//trace("set_d : "+worldMatrix.d);
 		dirty = true;
 		return worldMatrix.d;
 	}
 		
 	private function get_d():Float
 	{
-		//trace("get_d : "+worldMatrix.d);
 		return worldMatrix.d;
 	}
 	
 	@:isVar public var tx(get, set):Float;
-	//public var tx(get, set):Float;
-	//public var tx : Float = 0;
 	
 	private function set_tx(n:Float)
 	{
 		worldMatrix.tx = n;
 		dirty = true;
-		//trace("set_tx");
 		return worldMatrix.tx;
-	}
+	}	
 	
 	private function get_tx():Float
 	{
-		//trace("get_tx");
 		return worldMatrix.tx;
 	}
 	
 	@:isVar public var ty(get, set):Float;
-	//public var ty(get, set):Float;
-	//public var ty : Float = 0;
 	
 	private function set_ty(n:Float)
 	{
@@ -1536,7 +1522,6 @@ class TileGrid extends Sprite
 	
 	private function get_ty():Float
 	{
-		//trace("get_ty : " +  worldMatrix.ty);
 		return worldMatrix.ty;
 	}					
 }

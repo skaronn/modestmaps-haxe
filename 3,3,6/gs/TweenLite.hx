@@ -420,7 +420,7 @@ class TweenLite {
 
 	public static function to(target:Object, duration:Float, vars:Object) : TweenLite
 	{
-		//trace("- to - target: " + target +", duration : " + duration + ", vars : "+ vars);
+		//trace("to - target: " + target +", duration : " + duration + ", vars : "+ vars);
 		return new TweenLite(target, duration, vars);
 	}
 
@@ -475,14 +475,14 @@ class TweenLite {
 		var factor:Float = this.vars.ease(time, 0, 1, this.duration);
 		var tp:Object;
 		
-		//trace("render - this.tweens : "+this.tweens);
-			
+		//trace("render - this.tweens : "+this.tweens);			
 		for (p in Reflect.fields(this.tweens)) {
 			tp = Reflect.field(this.tweens, p);
-			Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
+			//Reflect.setField(tp.o, p, tp.s + (factor * tp.c));
+			Reflect.setProperty(tp.o, p, tp.s + (factor * tp.c));
 			if (Type.getClassName(Type.getClass(tp.o)) == "com.modestmaps.core.TileGrid") {
 				//trace("render - tp => "+tp+ ", p => " + p +", tp.c => " + tp.c  + ", " + tp.o + "[" + p + "] => " + Reflect.field(tp.o, p));
-				trace("render - p : "+p+", tp : "+tp);
+				//trace("render - p : "+p+", tp : "+tp);
 				//trace(new Error(Type.getClassName(Type.getClass(this)) +", render").getStackTrace());
 			}
 		}
