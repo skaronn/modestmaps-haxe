@@ -302,7 +302,7 @@ class TweenLite {
 		if (duration == 0 && this.delay == 0) {
 			complete(true);
 		} else if (!_listening) {
-			trace("TweenLite.hx - new - _listening : "+_listening);
+			//trace("TweenLite.hx - new - _listening : "+_listening);
 			_sprite.addEventListener(Event.ENTER_FRAME, executeAll);
 			_timer.addEventListener("timer", killGarbage);
 			_timer.start();
@@ -329,9 +329,9 @@ class TweenLite {
 			{
 				if (this.target.get(Std.string(i)) != endArray[i] && this.target.get(Std.string(i)) != null)
 				{
-					trace("1 - >>>>>>>>> initTweenVals - this.target["+Std.string(i)+"] : "+this.target[Std.int(i)]);
+					//trace("1 - >>>>>>>>> initTweenVals - this.target["+Std.string(i)+"] : "+this.target[Std.int(i)]);
 					Reflect.setField(this.tweens, Std.string(i), { o:this.target, s:this.target[Std.int(i)], c:endArray[i] - this.target.get(Std.string(i)) }); //o: object, s:starting value, c:change in value, e: easing function
-					trace("2 - >>>>>>>>> initTweenVals - Reflect.field(this.tweens, "+Std.string(i)+") : "+Reflect.field(this.tweens, Std.string(i)));
+					//trace("2 - >>>>>>>>> initTweenVals - Reflect.field(this.tweens, "+Std.string(i)+") : "+Reflect.field(this.tweens, Std.string(i)));
 				}
 			}
 		}
@@ -420,7 +420,10 @@ class TweenLite {
 
 	public static function to(target:Object, duration:Float, vars:Object) : TweenLite
 	{
-		//trace("to - target: " + target +", duration : " + duration + ", vars : "+ vars);
+		if (target != "")
+		{
+			trace("to - target :" + target +", duration:" + duration + ", vars:" + vars);
+		}
 		return new TweenLite(target, duration, vars);
 	}
 
@@ -428,6 +431,7 @@ class TweenLite {
 	public static function from(target:Object, duration:Float, vars:Object) : TweenLite
 	{
 		vars.runBackwards = true;
+		trace("from - target :" + target +", duration:" + duration + ", vars:" + vars);
 		return new TweenLite(target, duration, vars);
 	}
 
@@ -543,6 +547,7 @@ class TweenLite {
 		{
 			this.vars.onComplete.apply(null, this.vars.onCompleteParams);
 		}
+		
 		removeTween(this);
 	}
 

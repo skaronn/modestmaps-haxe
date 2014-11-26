@@ -121,7 +121,7 @@ class ZoomSlider extends Sprite
 
 	public function update(event:MapEvent=null):Void
 	{
-		if (event != null) trace(event.type + " in ZoomSlider.update : " + dragging);
+		//if (event != null) trace(event.type + " in ZoomSlider.update : " + dragging);
 		if (!dragging) {
 			proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
 			//trace("update - proportion : "+proportion);

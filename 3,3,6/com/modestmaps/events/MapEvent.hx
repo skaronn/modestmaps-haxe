@@ -69,13 +69,13 @@ class MapEvent extends Event
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
-				trace("ZOOMED_BY - rest[0] : "+rest[0]);
+				//trace("ZOOMED_BY - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:
-				trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
+				//trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
 					newExtent = rest[0];
