@@ -31,8 +31,6 @@ class Location
 		var regexp = new EReg("[0-9]*,[0-9]*", "i");
 		var parts:Array<String> = regexp.split(location);
 		if (lonlat) parts.reverse();
-		//flash.Lib.trace("Location.hx - fromString - parts[0] : " + parts[0]);
-		//flash.Lib.trace("Location.hx - fromString - parts[1] : "+ parts[1]);
 		return new Location(Std.Std.parseFloat(parts[0]), Std.Std.parseFloat(parts[1]));
 	}
 
@@ -43,8 +41,6 @@ class Location
 	 */
 	public function new(lat:Float, lon:Float)
 	{
-		//flash.Lib.trace("Location.hx - new - lat : " + lat);
-		//flash.Lib.trace("Location.hx - new - lon : " + lon);
 		this.lat = lat;
 		this.lon = lon;
 	}
@@ -61,8 +57,6 @@ class Location
 
 	public function clone():Location
 	{
-		//flash.Lib.trace("Location.hx - clone - lat : " + lat);
-		//flash.Lib.trace("Location.hx - clone - lon : " + lon);
 		return new Location(lat, lon);
 	}
 
@@ -74,11 +68,8 @@ class Location
 	{
 		var loc:Location = clone();
 		loc.lat = Math.max(MIN_LAT, Math.min(MAX_LAT, loc.lat));
-		//flash.Lib.trace("Location.hx - normalize - loc.lat : " + loc.lat);
-		//flash.Lib.trace("Location.hx - normalize - loc.lon : " + loc.lon);
 		while (loc.lon > 180) loc.lon -= 360;
 		while (loc.lon < -180) loc.lon += 360;
-		//flash.Lib.trace("Location.hx - normalize - loc : "+loc);
 		return loc;
 	}
 

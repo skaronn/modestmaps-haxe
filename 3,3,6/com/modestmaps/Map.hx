@@ -135,12 +135,8 @@ class Map extends Sprite
 			var extent:MapExtent = new MapExtent(85, -85, 180, -180);
 			
 			// but adjust to fit the mapprovider's outer limits if there are any:
-			//flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[0] : "+mapProvider.outerLimits()[0]);
-			//flash.Lib.trace("Map.hx - new - mapProvider.outerLimits()[1] : "+mapProvider.outerLimits()[1]);
 			var l1:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[0]);
 			var l2:Location = mapProvider.coordinateLocation(mapProvider.outerLimits()[1]);
-			//flash.Lib.trace("Map.hx - new - l1.lat : "+l1.lat);
-			//flash.Lib.trace("Map.hx - new - l1.lon : "+l1.lon);
 						
 			if (!Math.isNaN(l1.lat) && Math.isFinite(Math.abs(l1.lat))) {
 				extent.north = l1.lat;
@@ -154,8 +150,6 @@ class Map extends Sprite
 			if (!Math.isNaN(l2.lon) && Math.isFinite(Math.abs(l2.lon))) {
 				extent.east = l2.lon;
 			}
-			
-			flash.Lib.trace("Map.hx - new - extent : "+extent);
 			setExtent(extent);
 		}
 		
@@ -179,8 +173,6 @@ class Map extends Sprite
 		//trace('applying extent', extent);
 		onExtentChanging();
 		// tell grid what the rock is cooking
-		//flash.Lib.trace("Map.hx - locationsCoordinate - extent.northWest : "+ extent.northWest);
-		//flash.Lib.trace("Map.hx - locationsCoordinate - extent.southEast : "+ extent.southEast);
 		grid.resetTiles(locationsCoordinate( [ extent.northWest, extent.southEast ] ));
 		onExtentChanged();
 	}
@@ -416,7 +408,7 @@ class Map extends Sprite
 	{
 		var previousGeometry:String = null;
 		
-		if (mapProvider!=null)
+		if (mapProvider != null)
 		{
 			previousGeometry = mapProvider.geometry();
 		}
@@ -425,7 +417,7 @@ class Map extends Sprite
 
 		mapProvider = newProvider;
 		
-		if (grid!=null)
+		if (grid != null)
 		{
 			grid.setMapProvider(mapProvider);
 		}
@@ -498,7 +490,8 @@ class Map extends Sprite
 
 	public function panBy(px:Float, py:Float):Void
 	{
-		if (!grid.panning && !grid.zooming) {
+		if (!grid.panning && !grid.zooming)
+		{
 			grid.prepareForPanning();
 			grid.tx += px;
 			grid.ty += py;
@@ -521,7 +514,7 @@ class Map extends Sprite
 	/** zoom in or out by zoomDelta, keeping the requested point in the same place */
 	public function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
 	{
-		if (targetPoint==null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint == null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);
 		
 		if (grid.zoomLevel + zoomDelta < grid.minZoom) {
 			zoomDelta = grid.minZoom - grid.zoomLevel;		
@@ -565,7 +558,7 @@ class Map extends Sprite
 	/** rotate by angle (radians), keeping the requested point in the same place */
 	public function rotateByAbout(angle:Float, targetPoint:Point=null):Void
 	{
-		if (targetPoint==null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint == null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);
 		
 		grid.prepareForZooming();
 		grid.prepareForPanning();
@@ -597,7 +590,7 @@ class Map extends Sprite
 	/** zoom in or out by sc, moving the given location to the requested target */	
 	public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
 	{
-		if (targetPoint==null) targetPoint = new Point(mapWidth/2, mapHeight/2);
+		if (targetPoint == null) targetPoint = new Point(mapWidth/2, mapHeight/2);
 		
 		var p:Point = locationPoint(location);
 		
@@ -616,7 +609,9 @@ class Map extends Sprite
 		grid.doneZooming();
 	}
 			
-	/** put the given location in the middle of the map */
+	/** 
+	 * put the given location in the middle of the map
+	 */
 	public function setCenter(location:Location):Void
 	{
 		onExtentChanging();
@@ -669,7 +664,8 @@ class Map extends Sprite
 	 */ 
 	public function zoomBy(dir:Int):Void
 	{
-		if (!grid.panning) {
+		if (!grid.panning)
+		{
 			var target:Float = dir < 0 ? Math.floor(grid.zoomLevel+dir) : Math.ceil(grid.zoomLevel+dir);
 			grid.zoomLevel = Math.min(Math.max(grid.minZoom, target), grid.maxZoom);
 		}
@@ -706,7 +702,8 @@ class Map extends Sprite
 		markerClip.removeMarker(id); // also calls grid.removeMarker
 	}
 
-	public function removeAllMarkers():Void {
+	public function removeAllMarkers():Void
+	{
 		markerClip.removeAllMarkers();
 	}
 
@@ -749,8 +746,7 @@ class Map extends Sprite
 		if (!__draggable) return;
 		
 		var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));
-		//flash.Lib.trace("Map.hx - onDoubleClick - event.shiftKey : " +event.shiftKey);
-		//flash.Lib.trace("Map.hx - onDoubleClick - event.ctrlKey : " +event.ctrlKey);
+
 		if (event.shiftKey) {
 			if (grid.zoomLevel > grid.minZoom) {
 				zoomOutAbout(p);
@@ -760,11 +756,9 @@ class Map extends Sprite
 			}
 		}
 		else if (event.ctrlKey) {
-			//flash.Lib.trace("Map.hx - onDoubleClick - pointLocation(p) : " +pointLocation(p));
 			panAndZoomIn(pointLocation(p));
 		}
 		else {
-			//flash.Lib.trace("Map.hx - onDoubleClick - grid.zoomLevel < grid.maxZoom : " +(grid.zoomLevel < grid.maxZoom));
 			if (grid.zoomLevel < grid.maxZoom) {
 				zoomInAbout(p);
 			}
@@ -775,6 +769,7 @@ class Map extends Sprite
 	}	
 
 	private var previousWheelEvent:Float = 0;
+	
 	private var minMouseWheelInterval:Float = 100;
 
 	public function onMouseWheel(event:MouseEvent):Void

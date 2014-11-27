@@ -6,6 +6,7 @@ import com.modestmaps.events.MapEvent;
 import com.modestmaps.events.MarkerEvent;
 import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 import haxe.Timer;
 
 import openfl.display.DisplayObject;
@@ -13,6 +14,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
+import openfl.utils.Object;
 import haxe.ds.ObjectMap;
 
 @:meta(Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent"))
@@ -25,10 +27,10 @@ class MarkerClip extends Sprite
 	private var map:Map;
 
 	private var drawCoord:Coordinate;
-	private var locations:ObjectMap<DisplayObject, Dynamic> = new ObjectMap<DisplayObject, Coordinate>();
+	private var locations:ObjectMap<DisplayObject, Location> = new ObjectMap<DisplayObject, Location>();
 	private var coordinates:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
-	private var markers:ObjectMap<Dynamic, Dynamic> = new ObjectMap<DisplayObject, Coordinate>(); // all markers
-	private var markersByName:Dynamic = {};
+	private var markers:Array<Object> = new Array<Object>(); // all markers
+	private var markersByName:Object = {};
 
 	/** enable this if you want intermediate zooming steps to
 	 * stretch your graphics instead of reprojecting the points
@@ -48,7 +50,7 @@ class MarkerClip extends Sprite
 
 	// the function used to sort the markers array before re-ordering them
 	// on the z plane (by child index)
-	public var markerSortFunction:Dynamic = sortMarkersByYPosition;
+	public var markerSortFunction:Object = sortMarkersByYPosition;
 
 	// the projection of the current map's provider
 	// if this changes we need to recache coordinates
@@ -97,10 +99,9 @@ class MarkerClip extends Sprite
 		map.addEventListener(MapEvent.MAP_PROVIDER_CHANGED, onMapProviderChanged);
 
 		// these were previously in Map, but now MarkerEvents bubble it makes more sense to have them here
-		addEventListener( MouseEvent.CLICK, onMarkerClick );
-		addEventListener( MouseEvent.ROLL_OVER, onMarkerRollOver, true );	
-		addEventListener( MouseEvent.ROLL_OUT, onMarkerRollOut, true );	
-
+		addEventListener(MouseEvent.CLICK, onMarkerClick);
+		addEventListener(MouseEvent.ROLL_OVER, onMarkerRollOver, true);	
+		addEventListener(MouseEvent.ROLL_OUT, onMarkerRollOut, true);
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -108,27 +109,33 @@ class MarkerClip extends Sprite
 	{
 		return markers.length;
 	}
-
-	//@:isVar public var x(null, set):Float;
 	
-	private function set_x(value:Float):Float
+	private var _absciss: Float;
+
+	public var absciss(null, set):Float;
+	
+	private function set_absciss(value:Float):Float
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
-		return super.x;
+		_absciss = super.x;
+		DebugUtil.dumpStack(this, "set_absciss : "+_absciss);
+		return _absciss;
 	}
-
-	//@:isVar public var y(null, set):Float;
 	
-	private function set_y(value:Float):Float
+	private var _ordinate: Float;
+
+	public var ordinate(null, set):Float;
+	
+	private function set_ordinate(value:Float):Float
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
-		return super.y;
+		_ordinate = super.y;
+		DebugUtil.dumpStack(this, "set_ordinate : "+_ordinate);
+		return _ordinate;
 	}
 
 	private function onAddedToStage(event:Event):Void
-	{
-		//addEventListener(Event.RENDER, updateClips);
-		
+	{		
 		dirty = true;
 		updateClips();
 		
@@ -137,21 +144,18 @@ class MarkerClip extends Sprite
 	}
 
 	private function onRemovedFromStage(event:Event):Void
-	{
-		//removeEventListener(Event.RENDER, updateClips);
-		
+	{		
 		removeEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
 	public function attachMarker(marker:DisplayObject, location:Location):Void
-	{		
-		//if (markers.indexOf(marker) == -1)
-		if (markers.exists(marker))
+	{
+		if (markers.indexOf(marker) == -1)
 		{
 			locations.set(marker, location.clone());
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
-			markersByName.set(marker.name, marker);
+			Reflect.setField(markersByName, marker.name, marker);
 			markers.push(marker);
 			
 			var added:Bool = updateClip(marker);
@@ -164,8 +168,8 @@ class MarkerClip extends Sprite
 
 	private function markerInBounds(marker:DisplayObject, w:Float, h:Float):Bool
 	{
-		return marker.x > -w / 2 && marker.x < w / 2 &&
-		   marker.y > -h / 2 && marker.y < h / 2;
+		return marker.x > -w / 2 && marker.x < w / 2 && 
+		marker.y > -h / 2 && marker.y < h / 2;
 	}
 
 	public function getMarker(id:String):DisplayObject
@@ -208,16 +212,20 @@ class MarkerClip extends Sprite
 		var index:Int = markers.indexOf(marker);
 		
 		if (index >= 0) {
-			markers.splice(index,1);
+			markers.splice(index, 1);
 		}
-		untyped __delete__(locations, marker);
-		untyped __delete__(coordinates, marker);
-		untyped __delete__(markersByName, marker.name);
+
+		locations.remove(marker);
+		coordinates.remove(marker);
+		markersByName.remove(marker.name);
 	}
 
-	// removeAllMarkers was implemented on trunk
-	// meanwhile clearMarkers arrived in the tweening branch
-	// let's go with the body from clearMarkers because it's shorter	
+	/**
+	* 
+	* removeAllMarkers was implemented on trunk
+	* meanwhile clearMarkers arrived in the tweening branch
+	* let's go with the body from clearMarkers because it's shorter
+	*/	
 	public function removeAllMarkers():Void
 	{
 		while (markers.length > 0) {
@@ -241,17 +249,21 @@ class MarkerClip extends Sprite
 		
 		drawCoord = center.copy();
 		
-		this.x = map.getWidth() / 2;
-		this.y = map.getHeight() / 2;		
+		this.absciss = map.getWidth() / 2;
+		this.ordinate = map.getHeight() / 2;		
 		
 		if (scaleZoom) {
 			scaleX = scaleY = 1.0;
 		}		
 		
 		var doSort:Bool = false;
-		for (marker in markers)
+		
+		var marker:DisplayObject;		
+		for (markerField in markers)
 		{
-			doSort = updateClip(marker) || doSort; // wow! bad things did happen when this said doSort ||= updateClip(marker);
+			marker = cast(markerField, DisplayObject);
+			var boolUpdateClip : Bool = updateClip(marker);
+			doSort = boolUpdateClip ? boolUpdateClip : doSort; // wow! bad things did happen when this said doSort ||= updateClip(marker);
 		}
 
 		if (doSort) {
@@ -261,19 +273,23 @@ class MarkerClip extends Sprite
 		dirty = false;
 	}
 
-	/** call this if you've made a change to the underlying map geometry such that
-	  * provider.locationCoordinate(location) will return a different coordinate */
+	/** 
+	* call this if you've made a change to the underlying map geometry such that
+	* provider.locationCoordinate(location) will return a different coordinate 
+	**/
 	public function resetCoordinates():Void
 	{
 		var provider:IMapProvider = map.getMapProvider();
 		// I wish Array.map didn't require three parameters!
-		for (marker in markers) {
+		var marker:DisplayObject;		
+		for (markerField in markers)
+		{
+			marker = cast(markerField, DisplayObject);
 			coordinates.set(marker, provider.locationCoordinate(locations.get(marker)));
 		}
 		dirty = true;
 	}
 
-	//private var sortTimer:Int;
 	private var sortTimer:Timer;
 
 	private function requestSort(updateOrder:Bool=false):Void
@@ -300,25 +316,31 @@ class MarkerClip extends Sprite
 		// apply depths to maintain the order things were added in
 		var index:Int = 0;
 		
-		for (marker in markers)
+		var marker:DisplayObject;		
+		for (markerField in markers)
 		{
+			marker = cast(markerField, DisplayObject);
 			if (contains(marker))
 			{
-				setChildIndex(marker, cast(Math.min(cast(index, Float), cast(numChildren - 1, Float)), Int) );
+				setChildIndex(marker, Std.int(Math.min(index, numChildren - 1)));
 				index++;
 			}
 		}
 	}
 
-	/** returns true if the marker was added to the stage, so that updateClips or attachMarker can sort the markers */ 
+	/** 
+	 * returns true if the marker was added to the stage, so that updateClips or attachMarker can sort the markers
+	 */ 
 	public function updateClip(marker:DisplayObject):Bool
-	{		
+	{
 		if (marker.visible)
 		{
+			trace("updateClip - marker.visible : "+ marker.visible);
 			// this method previously used the location of the marker
 			// but map.locationPoint hands off to grid to grid.coordinatePoint
 			// in the end so we may as well cache the first step
 			var point:Point = map.grid.coordinatePoint(cast(coordinates.get(marker), Coordinate), this);
+			trace("updateClip - point : "+point);
 			marker.x = snapToPixels ? Math.round(point.x) : point.x;
 			marker.y = snapToPixels ? Math.round(point.y) : point.y;
 
@@ -327,8 +349,10 @@ class MarkerClip extends Sprite
 			
 			if (markerInBounds(marker, w, h))
 			{
+				trace("updateClip - marker.markerInBounds");
 				if (!contains(marker))
 				{
+					trace("updateClip - marker : "+ marker);
 					addChild(marker);
 					// notify the caller that we've added something and need to sort markers
 					return true;
@@ -354,7 +378,7 @@ class MarkerClip extends Sprite
 
 	private function onMapPanned(event:MapEvent):Void
 	{
-		if (drawCoord!=null) {
+		if (drawCoord != null) {
 			var p:Point = map.grid.coordinatePoint(drawCoord);
 			this.x = p.x;
 			this.y = p.y;
@@ -432,7 +456,7 @@ class MarkerClip extends Sprite
 	{
 		_dirty = d;
 		if (d) {
-			if (stage!=null) stage.invalidate();
+			if (stage != null) stage.invalidate();
 		}
 		return _dirty;
 	}
@@ -454,8 +478,8 @@ class MarkerClip extends Sprite
 	private function onMarkerClick(event:MouseEvent):Void
 	{
 		var marker:DisplayObject = cast(event.target ,DisplayObject);
-		var location:Location = getMarkerLocation( marker );
-		dispatchEvent( new MarkerEvent( MarkerEvent.MARKER_CLICK, marker, location, true) );
+		var location:Location = getMarkerLocation(marker);
+		dispatchEvent(new MarkerEvent(MarkerEvent.MARKER_CLICK, marker, location, true));
 	}
 
 	/**
@@ -468,8 +492,8 @@ class MarkerClip extends Sprite
 	private function onMarkerRollOver(event:MouseEvent):Void
 	{
 		var marker:DisplayObject = cast(event.target, DisplayObject);
-		var location:Location = getMarkerLocation( marker );
-		dispatchEvent( new MarkerEvent( MarkerEvent.MARKER_ROLL_OVER, marker, location, true) );
+		var location:Location = getMarkerLocation(marker);
+		dispatchEvent(new MarkerEvent(MarkerEvent.MARKER_ROLL_OVER, marker, location, true));
 	}
 
 	/**
@@ -482,7 +506,7 @@ class MarkerClip extends Sprite
 	private function onMarkerRollOut(event:MouseEvent):Void
 	{
 		var marker:DisplayObject = cast(event.target, DisplayObject);
-		var location:Location = getMarkerLocation( marker );
-		dispatchEvent( new MarkerEvent( MarkerEvent.MARKER_ROLL_OUT, marker, location, true) );
+		var location:Location = getMarkerLocation(marker);
+		dispatchEvent(new MarkerEvent(MarkerEvent.MARKER_ROLL_OUT, marker, location, true));
 	}	
 }

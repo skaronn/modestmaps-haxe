@@ -453,7 +453,7 @@ class TileGrid extends Sprite
 			
 			// loop over our internal tile cache 
 			// and throw out tiles not in recentlySeen
-			////trace("tilePainter : " + tilePainter);
+			//trace("tilePainter : " + tilePainter);
 			tilePainter.retainKeysInCache(recentlySeen);
 		}
 		
@@ -535,12 +535,13 @@ class TileGrid extends Sprite
 				// yes, this is quite involved, but it should be fast enough because most of the loops
 				// don't get hit most of the time
 				
-				if (!tileReady) {
-				
+				if (!tileReady) 
+				{				
 					var foundParent:Bool = false;
 					var foundChildren:Int = 0;
 
-					if (currentTileZoom > previousTileZoom) {			
+					if (currentTileZoom > previousTileZoom)
+					{			
 						// if it still doesn't have enough images yet, or it's fading in, try a double size parent instead
 						if (maxParentSearch > 0 && currentTileZoom > minZoom) {
 							var firstParentKey:String = parentKey(col, row, cast(currentTileZoom, Int), cast(currentTileZoom-1, Int));
