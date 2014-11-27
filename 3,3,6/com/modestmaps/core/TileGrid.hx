@@ -1030,19 +1030,47 @@ class TileGrid extends Sprite
 		} 
 		return _centerCoordinate; 		
 	}
+	
+	public function transformPoint(point:Point):Point
+	{		
+		trace("transformPoint - point.x : "+point.x);
+		trace("transformPoint - a : "+a);
+		trace("transformPoint - point.y : "+point.y);
+		trace("transformPoint - c : "+c);
+		trace("transformPoint - tx : "+tx);
+		trace("transformPoint - b : "+b);
+		trace("transformPoint - d : "+d);
+		trace("transformPoint - ty : " + ty);
+		trace("transformPoint - point.x : " + cast(point.x * a + point.y * c + tx, Float);
+		trace("transformPoint - point.y : " + cast(point.x * b + point.y * d + ty, Float);
+		var pt : Point = new Point (point.x * a + point.y * c + tx, point.x * b + point.y * d + ty);
+		trace("transformPoint - point : " + pt);
+		trace("----------------------------");
+		return pt;
+	}
 
 	public function coordinatePoint(coord:Coordinate, context:DisplayObject=null):Point
 	{
 		// this is basically the same as coord.zoomTo, but doesn't make a new Coordinate:
-		var zoomFactor:Float = Math.pow(2, zoomLevel - coord.zoom) * tileWidth/scale;
+		var zoomFactor:Float = Math.pow(2, zoomLevel - coord.zoom) * tileWidth / scale;
 		var zoomedColumn:Float = coord.column * zoomFactor;
-		var zoomedRow:Float = coord.row * zoomFactor;
-			
-		var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));
-
+		var zoomedRow:Float = coord.row * zoomFactor;		
+		
+		//trace("coordinatePoint - worldMatrix.a : "+worldMatrix.a);
+		//trace("coordinatePoint - worldMatrix.b : "+worldMatrix.b);
+		//trace("coordinatePoint - worldMatrix.c : "+worldMatrix.c);
+		//trace("coordinatePoint - worldMatrix.d : " + worldMatrix.d);
+		//trace("coordinatePoint - tx : " + tx);
+		//trace("coordinatePoint - ty : " + ty);
+		//var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));	
+		var screenPoint:Point = transformPoint(new Point(zoomedColumn, zoomedRow));
+		
 		if (context != null && context != this)
-		{
+		{	
+			trace("coordinatePoint - zoomedColumn : "+zoomedColumn+", zoomedRow : "+zoomedRow);
+			//trace("coordinatePoint - point : "+screenPoint);
 			screenPoint = this.parent.localToGlobal(screenPoint);
+			//trace("coordinatePoint - screenPoint : "+screenPoint);
 			screenPoint = context.globalToLocal(screenPoint);
 		}
 

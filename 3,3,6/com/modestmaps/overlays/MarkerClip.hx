@@ -157,7 +157,7 @@ class MarkerClip extends Sprite
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
 			Reflect.setField(markersByName, marker.name, marker);
 			markers.push(marker);
-			
+			//trace("attachMarker - marker : "+ marker);
 			var added:Bool = updateClip(marker);
 			
 			if (added) {
@@ -335,12 +335,11 @@ class MarkerClip extends Sprite
 	{
 		if (marker.visible)
 		{
-			trace("updateClip - marker.visible : "+ marker.visible);
 			// this method previously used the location of the marker
 			// but map.locationPoint hands off to grid to grid.coordinatePoint
 			// in the end so we may as well cache the first step
 			var point:Point = map.grid.coordinatePoint(cast(coordinates.get(marker), Coordinate), this);
-			trace("updateClip - point : "+point);
+			//trace("updateClip - point : "+point);
 			marker.x = snapToPixels ? Math.round(point.x) : point.x;
 			marker.y = snapToPixels ? Math.round(point.y) : point.y;
 
