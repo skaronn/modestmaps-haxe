@@ -75,9 +75,9 @@ class MapEvent extends Event
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:
-				//trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
+					trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
 					newExtent = rest[0];
 				}
 			case START_ZOOMING:
@@ -93,9 +93,9 @@ class MapEvent extends Event
 					zoomLevel = rest[0];
 				}			
 			case RESIZED:
-				//trace("RESIZED - rest : "+rest);
 				if (rest.length > 0 && Std.is(rest, Array))
 				{
+					trace("RESIZED - rest : "+rest);
 					newSize = rest;
 				}
 			case COPYRIGHT_CHANGED:

@@ -9,6 +9,7 @@ import com.modestmaps.core.Coordinate;
 import com.modestmaps.geo.Location;
 import com.modestmaps.geo.Transformation;
 import com.modestmaps.geo.IProjection;
+import com.modestmaps.util.DebugUtil;
  
 import openfl.errors.Error;
 
@@ -88,8 +89,13 @@ class AbstractProjection implements IProjection
 	*/
 	public function locationCoordinate(location:Location):Coordinate
 	{
-		var point:Point = new Point(Math.PI*location.lon/180, Math.PI*location.lat/180);
+		//DebugUtil.dumpStack(this, "locationCoordinate");
+		trace("locationCoordinate - x : "+Math.PI * location.lon / 180);
+		trace("locationCoordinate - y : "+Math.PI * location.lat / 180);
+		var point:Point = new Point(Math.PI * location.lon / 180, Math.PI * location.lat / 180);
 		point = project(point);
+		trace("locationCoordinate - point : " + point);
+		trace("locationCoordinate - new Coordinate("+point.y+", "+point.x+", "+zoom+") : "+new Coordinate(point.y, point.x, zoom));
 		return new Coordinate(point.y, point.x, zoom);
 	}
 
@@ -101,6 +107,6 @@ class AbstractProjection implements IProjection
 		coordinate = coordinate.zoomTo(zoom);
 		var point:Point = new Point(coordinate.column, coordinate.row);
 		point = unproject(point);
-		return new Location(180*point.y/Math.PI, 180*point.x/Math.PI);
+		return new Location(180 * point.y / Math.PI, 180 * point.x / Math.PI);
 	}
 }

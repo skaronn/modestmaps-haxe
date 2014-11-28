@@ -237,6 +237,7 @@ class Map extends Sprite
 		// get outermost top left and bottom right coordinates to cover all locations
 		for (i in 1...locations.length)
 		{
+			trace("MAP240");
 			var coordinate:Coordinate = mapProvider.locationCoordinate(locations[i].normalize());
 			TL.row = Math.min(TL.row, coordinate.row);
 			TL.column = Math.min(TL.column, coordinate.column);

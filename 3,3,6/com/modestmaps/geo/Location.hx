@@ -27,11 +27,13 @@ class Location
 	 */
 	public static function fromString(location:String, lonlat:Bool=false):Location
 	{
-		//var regexp = "/\s*,\s*/";
-		var regexp = new EReg("[0-9]*,[0-9]*", "i");
+		trace("Location - location : "+location);
+		var regexp = new EReg("s*, s*", "i");
 		var parts:Array<String> = regexp.split(location);
 		if (lonlat) parts.reverse();
-		return new Location(Std.Std.parseFloat(parts[0]), Std.Std.parseFloat(parts[1]));
+		trace("Location - parts[0] : "+parts[0]);
+		trace("Location - parts[1] : "+parts[1]);
+		return new Location(Std.parseFloat(parts[0]), Std.parseFloat(parts[1]));
 	}
 
 	/**

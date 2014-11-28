@@ -222,6 +222,7 @@ class TileGrid extends Sprite
 
 	private function onAddedToStage(event:Event):Void
 	{
+		trace("onAddedToStage");
 		if (draggable) {
 			addEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
 		}
@@ -275,7 +276,7 @@ class TileGrid extends Sprite
 	private function onRendered():Void
 	{
 		// listen out for this if you want to be sure map is in its final state before reprojecting markers etc.
-		//trace("onRendered");
+		trace("onRendered");
 		dispatchEvent(new MapEvent(MapEvent.RENDERED));
 	}
 
@@ -301,7 +302,7 @@ class TileGrid extends Sprite
 	{
 		// doesn't bubble, unlike MapEvent
 		// Map will pick this up and dispatch MapEvent.EXTENT_CHANGED for us
-		//trace("onChanged");
+		trace("onChanged");
 		dispatchEvent(new Event(Event.CHANGE, false, false));		
 	}
 
@@ -333,6 +334,7 @@ class TileGrid extends Sprite
 	 */
 	private function onRender(event:Event=null):Void
 	{
+		trace("onRendered");
 		var t:Float = flash.Lib.getTimer();
 		//trace("onRender - dirty : " + 	dirty);
 		//trace("onRender - stage  : " + stage);
@@ -357,11 +359,11 @@ class TileGrid extends Sprite
 			}
 		}
 		else if (boundsEnforced) {
-			//trace("onRender - boundsEnforced : " + boundsEnforced);
+			trace("onRender - boundsEnforced : " + boundsEnforced);
 			onChanged();
 		}
 		else if (matrixChanged) {
-			//trace("onRender - matrixChanged : " + matrixChanged);
+			trace("onRender - matrixChanged : " + matrixChanged);
 			matrixChanged = false;
 			onChanged();
 		}
@@ -1041,8 +1043,8 @@ class TileGrid extends Sprite
 		trace("transformPoint - b : "+b);
 		trace("transformPoint - d : "+d);
 		trace("transformPoint - ty : " + ty);
-		trace("transformPoint - point.x : " + cast(point.x * a + point.y * c + tx, Float);
-		trace("transformPoint - point.y : " + cast(point.x * b + point.y * d + ty, Float);
+		trace("transformPoint - point.x : " + cast(point.x * a + point.y * c + tx, Float));
+		trace("transformPoint - point.y : " + cast(point.x * b + point.y * d + ty, Float));
 		var pt : Point = new Point (point.x * a + point.y * c + tx, point.x * b + point.y * d + ty);
 		trace("transformPoint - point : " + pt);
 		trace("----------------------------");
@@ -1056,21 +1058,28 @@ class TileGrid extends Sprite
 		var zoomedColumn:Float = coord.column * zoomFactor;
 		var zoomedRow:Float = coord.row * zoomFactor;		
 		
+		//trace("coordinatePoint - context : " + context);
 		//trace("coordinatePoint - worldMatrix.a : "+worldMatrix.a);
 		//trace("coordinatePoint - worldMatrix.b : "+worldMatrix.b);
 		//trace("coordinatePoint - worldMatrix.c : "+worldMatrix.c);
 		//trace("coordinatePoint - worldMatrix.d : " + worldMatrix.d);
 		//trace("coordinatePoint - tx : " + tx);
 		//trace("coordinatePoint - ty : " + ty);
-		//var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));	
-		var screenPoint:Point = transformPoint(new Point(zoomedColumn, zoomedRow));
+		var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));	
 		
 		if (context != null && context != this)
-		{	
-			trace("coordinatePoint - zoomedColumn : "+zoomedColumn+", zoomedRow : "+zoomedRow);
+		{
+			//trace("coordinatePoint - context : " +Type.getClassName(Type.getClass(context)));
+			if (Type.getClassName(Type.getClass(context)) == "com.modestmaps.overlays.MarkerClip") {
+				trace("coordinatePoint - zoomedColumn : " + zoomedColumn + ", coord : " + coord);
+				//DebugUtil.dumpStack(this, "coordinatePoint");
+				var p = new Point(zoomedColumn, zoomedRow);
+				trace("coordinatePoint - p : "+p);
+				screenPoint = transformPoint(p);
+				trace("coordinatePoint - screenPoint : "+screenPoint);
+			}
 			//trace("coordinatePoint - point : "+screenPoint);
 			screenPoint = this.parent.localToGlobal(screenPoint);
-			//trace("coordinatePoint - screenPoint : "+screenPoint);
 			screenPoint = context.globalToLocal(screenPoint);
 		}
 
@@ -1175,6 +1184,7 @@ class TileGrid extends Sprite
 		worldMatrix.translate(-tileWidth * coord.column, -tileHeight * coord.row);		
 
 		// reset the inverted matrix, request a redraw, etc.
+		trace("resetTiles");
 		dirty = true;
 	}
 
