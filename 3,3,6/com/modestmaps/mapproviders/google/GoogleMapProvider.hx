@@ -1,6 +1,14 @@
+/**
+ * MapProvider for Google Map Tile API.
+ * https://developers.google.com/maps
+ * 
+ * @author skaronn
+ * $Id$
+ */
 package com.modestmaps.mapproviders.google;
 
 import com.modestmaps.core.Coordinate;
+
 import openfl.utils.Object;
 
 class GoogleMapProvider extends AbstractMapProvider implements IMapProvider
@@ -18,14 +26,14 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider
 		
 	private var mapType:String;
 	
-	var IMAGE_FORMAT = {
+	private var IMAGE_FORMAT = {
 		jpeg : 0,		
 		gif : 1,		
 		png : 2,		
 		png8 : 3		
 	};
 
-	var MAP_TYPE = { 
+	private var MAP_TYPE = { 
 		roadmap : 0,
 		satellite : 1,
 		hybrid : 2
@@ -50,7 +58,8 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider
 	private function getTileUrl(column:Float, row:Float, zoom:Float):String
 	{
 		var tileUrl:String = null;
-		switch (mapType) {
+		switch (mapType) 
+		{
 			case GoogleMapProvider.SKY_MOON:
 				tileUrl = "http://mw1.google.com/mw-planetary/sky/skytiles_v1/" + column + "_" + row + "_" + zoom + ".jpg";
 
@@ -83,7 +92,6 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider
 				tileUrl = "http://mt3.google.com/vt/v=w2.97&x=" + column + "&y=" + row + "&z=" + zoom;
 	
 		}
-		trace(tileUrl);
 		return tileUrl;
 	}
 			

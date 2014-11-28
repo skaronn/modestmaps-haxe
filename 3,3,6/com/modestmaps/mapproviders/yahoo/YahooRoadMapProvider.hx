@@ -4,6 +4,8 @@ import com.modestmaps.core.Coordinate;
 import com.modestmaps.mapproviders.AbstractMapProvider;
 import com.modestmaps.mapproviders.IMapProvider;
 
+import openfl.utils.Object;
+
 /**
  * @author darren
  * $Id$
@@ -20,8 +22,9 @@ class YahooRoadMapProvider extends AbstractMapProvider implements IMapProvider
 		return "YAHOO_ROAD";
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	public function getTileUrls(coord:Coordinate):Array<Object>
 	{	
+		//trace("http://us.maps2.yimg.com/us.png.maps.yimg.com/png?v=3.52&t=m" + getZoomString(sourceCoordinate(coord)));
 		return [ "http://us.maps2.yimg.com/us.png.maps.yimg.com/png?v=3.52&t=m" + getZoomString(sourceCoordinate(coord)) ];
 	}
 

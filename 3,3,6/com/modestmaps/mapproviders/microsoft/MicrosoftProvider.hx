@@ -69,27 +69,18 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		
 		// convert row + col to zoom string
 		// padded with zeroes so we end up with zoom digits after slicing:
-		//var rowBinaryString:String = Std.string(sourceCoord.row);
 		var rowBinaryString:String = BinaryUtil.convertToBinary(Std.int(sourceCoord.row));
-		//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - rowBinaryString - 0 : " + rowBinaryString);
 		rowBinaryString = rowBinaryString.substr(Std.int(-sourceCoord.zoom));	
-		//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - rowBinaryString - 1 : " + rowBinaryString);
-
 		var colBinaryString : String = BinaryUtil.convertToBinary(Std.int(sourceCoord.column));
-		//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - colBinaryString - 0 : " + colBinaryString);
 		colBinaryString = colBinaryString.substr(Std.int(-sourceCoord.zoom));
-		//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - colBinaryString - 1 : " + colBinaryString);
 
 		// generate zoom string by combining strings
 		var zoomString : String = "";
 
 		for (i in 0 ... Std.int(sourceCoord.zoom))
 		{
-			//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - zoomString - 0 : " + rowBinaryString.charAt( i ) + colBinaryString.charAt( i ));
 			zoomString += BinaryUtil.convertToDecimal(rowBinaryString.charAt( i ) + colBinaryString.charAt( i ));
-			//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - zoomString - 1 : " + zoomString);
 		}
-		//flash.Lib.trace("MicrosoftProvider.hx - getZoomString - zoomString - 2 : " + zoomString);
 		return zoomString; 
 	}
 
@@ -106,7 +97,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		// this is so that requests will be consistent in this session, rather than totally random
 		var serverRequest:Float = cast((serverSalt + coord.row + coord.column + coord.zoom) % 4, Float);
 		var server:Int = cast(Math.abs(serverRequest), Int);
-		//flash.Lib.trace("MicrosoftProvider.hx - getTileUrls - urls : " +  URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) );
+		trace("getTileUrls - urls : " +  URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) );
 		return [ URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) ];
 	}
 

@@ -5,7 +5,7 @@ import com.modestmaps.geo.Transformation;
 
 class ACTransitMapProvider extends AbstractZoomifyMapProvider implements IMapProvider
 {
-	public function new()
+	public function new(apiSecurityTokenApplication : String)
 	{
 		super();
 		defineImageProperties('http://actransit.modestmaps.com/', 11258, 7085);
