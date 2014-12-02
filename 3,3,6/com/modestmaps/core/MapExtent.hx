@@ -172,10 +172,15 @@ class MapExtent
 	*/
 	public static function fromString(mapExtent:String):MapExtent
 	{
-		//str.split("'/\s*,\s*/'");
-		var regexp = new EReg("[0-9]*,[0-9]*", "i");
+		//var regexp = new EReg("[0-9]*,[0-9]*", "i");
+		var regexp = new EReg("s*, s*", "i");
 		var parts:Array<String> = regexp.split(mapExtent);
-		return new MapExtent(Std.parseFloat(parts[0]),
+		trace("fromString - Std.parseFloat(parts[0]) : " + Std.parseFloat(parts[0]));
+		trace("fromString - Std.parseFloat(parts[1]) : " + Std.parseFloat(parts[1]));
+		trace("fromString - Std.parseFloat(parts[2]) : " + Std.parseFloat(parts[2]));
+		trace("fromString - Std.parseFloat(parts[3]) : " + Std.parseFloat(parts[3]));
+		return new MapExtent(
+			Std.parseFloat(parts[0]),
 			Std.parseFloat(parts[1]),
 			Std.parseFloat(parts[2]),
 			Std.parseFloat(parts[3])
@@ -211,7 +216,7 @@ class MapExtent
 			len++;
 		}
 		
-		flash.Lib.trace("MapExtent.hx - fromLocations - len : " + len);
+		trace("fromLocations - len : " + len);
 		
 		if (extent!=null) {
 			extent = new MapExtent();

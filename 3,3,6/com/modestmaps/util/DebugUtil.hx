@@ -18,9 +18,9 @@ import openfl.errors.*;
 class DebugUtil
 {	
 	public static function dumpObject(tw:Object):Void {
-		//flash.Lib.trace("DebugField.hx - dump - instanceFields : "+Type.getInstanceFields(Type.getClass(tw)));
-		//flash.Lib.trace("DebugField.hx - dump - classFields : "+Type.getClassFields(Type.getClass(tw)));
-		//flash.Lib.trace("DebugField.hx - dump - fields : "+Reflect.fields(tw));
+		//trace("DebugField.hx - dump - instanceFields : "+Type.getInstanceFields(Type.getClass(tw)));
+		//trace("DebugField.hx - dump - classFields : "+Type.getClassFields(Type.getClass(tw)));
+		//trace("DebugField.hx - dump - fields : "+Reflect.fields(tw));
 		var concatFieldsDump : String = Type.getClassName(Type.getClass(tw)) + " => ";
 		var fields : Array<Object> = Type.getInstanceFields(Type.getClass(tw));
 		for (key in fields) {
@@ -32,11 +32,11 @@ class DebugUtil
 		flash.Lib.trace(concatFieldsDump);
 	}
 	
-		private static function traceLog(o:Object):Void {		
+	private static function traceLog(o:Object):Void {		
 		var len:UInt = 0;
-		if(Std.is(o, ObjectMap)){
+		if (Std.is(o, ObjectMap)) {
 			var object : ObjectMap<Object, Object> = o;
-			flash.Lib.trace("\n");
+			trace("\n");
 			for (key in object.keys()) {
 				var dictionaryValues : String = "";
 				var dictionaryLength : UInt = 0;
@@ -58,17 +58,17 @@ class DebugUtil
 				}*/
 				len++;
 			}
-			flash.Lib.trace("\n");
-			flash.Lib.trace("TweenLite.hx - traceLog - nb elements : " +len);
+			trace("\n");
+			trace("TweenLite.hx - traceLog - nb elements : " +len);
 		}
 		else {
-			flash.Lib.trace("TweenLite.hx - traceLog - object => " +o);
+			trace("TweenLite.hx - traceLog - object => " +o);
 		}
 	}
 	
 	public static function dumpStack(obj:Object, methodName:String):Void {
-		var er:Error = new Error(Type.getClassName(Type.getClass(obj)) +", "+ methodName); //creating but not throwing the error
-		flash.Lib.trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
+		var er:Error = new Error((obj != null ? Type.getClassName(Type.getClass(obj)) : "[class Object]")+", "+ methodName); //creating but not throwing the error
+		trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 	}
 	
 }

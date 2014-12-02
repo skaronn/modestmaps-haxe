@@ -104,9 +104,13 @@ class AbstractProjection implements IProjection
 	*/
 	public function coordinateLocation(coordinate:Coordinate):Location
 	{
+		//DebugUtil.dumpStack(this, "coordinateLocation");
 		coordinate = coordinate.zoomTo(zoom);
+		trace("coordinateLocation - coordinate : "+coordinate);
 		var point:Point = new Point(coordinate.column, coordinate.row);
 		point = unproject(point);
+		trace("coordinateLocation - point : " + point);
+		trace("locationCoordinate - new Location("+180 * point.y / Math.PI+", "+180 * point.x / Math.PI+") : "+new Location(180 * point.y / Math.PI, 180 * point.x / Math.PI));
 		return new Location(180 * point.y / Math.PI, 180 * point.x / Math.PI);
 	}
 }

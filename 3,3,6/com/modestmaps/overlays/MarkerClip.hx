@@ -135,8 +135,11 @@ class MarkerClip extends Sprite
 	}
 
 	private function onAddedToStage(event:Event):Void
-	{		
+	{
+		addEventListener(Event.RENDER, updateClips);
+		
 		dirty = true;
+		trace("onAddedToStage - dirty : "+dirty);
 		updateClips();
 		
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -152,18 +155,18 @@ class MarkerClip extends Sprite
 	public function attachMarker(marker:DisplayObject, location:Location):Void
 	{
 		trace("attachMarker - markers : "+markers);
-		if (markers.indexOf(marker) == -2)
+		if (markers.indexOf(marker) == -1)
 		{
 			locations.set(marker, location.clone());
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
 			trace("attachMarker - map.getMapProvider().locationCoordinate("+location+") : "+ map.getMapProvider().locationCoordinate(location));
 			Reflect.setField(markersByName, marker.name, marker);
 			markers.push(marker);
-			//var added:Bool = updateClip(marker);
-			//
-			//if (added) {
-				//requestSort(true);
-			//}
+			var added:Bool = updateClip(marker);
+			
+			if (added) {
+				requestSort(true);
+			}
 		}
 	}
 
@@ -239,22 +242,24 @@ class MarkerClip extends Sprite
 	{
 		trace("updateClips - event : " + event);
 		if (!dirty) {
-			trace("!dirty");
+			trace("updateClips - !dirty");
 			return;
 		}
 		
 		var center:Coordinate = map.grid.centerCoordinate;
 		
-		if (center.equalTo(drawCoord)){
+		if (center.equalTo(drawCoord)) {
+			trace("updateClips - dirty = false");
 			dirty = false;
-			trace("dirty = false");
 			return;
 		}
 		
 		drawCoord = center.copy();
 		
-		this.absciss = map.getWidth() / 2;
-		this.ordinate = map.getHeight() / 2;		
+		//this.absciss = map.getWidth() / 2;
+		this.x = map.getWidth() / 2;
+		//this.ordinate = map.getHeight() / 2;		
+		this.y = map.getHeight() / 2;		
 		
 		if (scaleZoom) {
 			scaleX = scaleY = 1.0;
@@ -267,12 +272,12 @@ class MarkerClip extends Sprite
 		trace("updateClips - markers.length : " + markers.length);
 		for (i in 0 ... markers.length)
 		{
-			trace("updateClips - >>>>>>>>>>>>>>>>>>>>> markers[i] : " + markers[i]);
+			trace("updateClips - markers["+i+"] : " + markers[i]);
 			var boolUpdateClip : Bool = updateClip(markers[i]);
 			doSort = boolUpdateClip ? boolUpdateClip : doSort; // wow! bad things did happen when this said doSort ||= updateClip(marker);
-			//trace(">>>>>>>>>>>>>>>>>>>>> doSort : "+doSort);
 		}
 
+		trace("updateClips - doSort : "+doSort);
 		if (doSort) {
 			requestSort(true); 
 		}

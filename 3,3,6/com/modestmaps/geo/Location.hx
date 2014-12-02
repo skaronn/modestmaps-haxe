@@ -2,9 +2,11 @@
  * $Id$
  */
 package com.modestmaps.geo;
+import com.modestmaps.util.DebugUtil;
 
 import de.polygonal.core.fmt.NumberFormat;
 import openfl.errors.*;
+
 /**
  * 
  */
@@ -27,12 +29,12 @@ class Location
 	 */
 	public static function fromString(location:String, lonlat:Bool=false):Location
 	{
-		trace("Location - location : "+location);
+		trace("fromString - location : "+location);
 		var regexp = new EReg("s*, s*", "i");
 		var parts:Array<String> = regexp.split(location);
 		if (lonlat) parts.reverse();
-		trace("Location - parts[0] : "+parts[0]);
-		trace("Location - parts[1] : "+parts[1]);
+		trace("fromString - parts[0] : "+parts[0]);
+		trace("fromString - parts[1] : " + parts[1]);
 		return new Location(Std.parseFloat(parts[0]), Std.parseFloat(parts[1]));
 	}
 
@@ -45,6 +47,9 @@ class Location
 	{
 		this.lat = lat;
 		this.lon = lon;
+		//trace("new - this.lat : " + this.lat);
+		//trace("new - this.lon : " + this.lon);
+		//DebugUtil.dumpStack(null, "new");
 	}
 
 	/**

@@ -207,7 +207,8 @@ class TileGrid extends Sprite
 
 		worldMatrix = new Matrix();
 		
-		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);		
+		trace("new");		
+		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
 	/**
@@ -223,6 +224,7 @@ class TileGrid extends Sprite
 	private function onAddedToStage(event:Event):Void
 	{
 		trace("onAddedToStage");
+		//DebugUtil.dumpStack(this, "onAddedToStage");
 		if (draggable) {
 			addEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
 		}
@@ -232,7 +234,6 @@ class TileGrid extends Sprite
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		dirty = true;
 		// force an on-render in case we were added in a render handler
-		//trace("onAddedToStage");
 		onRender();
 	}
 
@@ -334,11 +335,9 @@ class TileGrid extends Sprite
 	 */
 	private function onRender(event:Event=null):Void
 	{
-		trace("onRendered");
+		trace("onRender - dirty : " + dirty);
+		trace("onRender - stage : " + stage);
 		var t:Float = flash.Lib.getTimer();
-		//trace("onRender - dirty : " + 	dirty);
-		//trace("onRender - stage  : " + stage);
-		//trace("onRender - (!dirty || stage == null) : " + (!dirty || stage == null));
 		//DebugUtil.dumpStack(this, "onRender");
 		if (!dirty || stage == null) {
 			//trace((flash.Lib.getTimer() - t) +" ms");

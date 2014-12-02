@@ -44,6 +44,7 @@ class MapScale extends Sprite
 
 	private function redraw(event:MapEvent):Void
 	{
+		trace("redraw");
 		var pixelWidth:Float = 100;
 		
 		// pick two points on the map, 150px apart

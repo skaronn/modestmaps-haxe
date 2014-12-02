@@ -55,23 +55,23 @@ class MapEvent extends Event
 	{
 		super(type, true, true);
 		
-		//if (type == RENDERED) {
-			//trace("new - type : RENDERED");
-		//}
-		//trace("MapEvent - rest : "+rest);
-				
+		if (type == RENDERED) {
+			trace("new - type : RENDERED, rest : " + rest);
+			//DebugUtil.dumpStack(this, "new");
+		}
+		
 		switch(type)
 		{
 			case PANNED:
-				//trace("PANNED - rest[0] : " + rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], Point))
 				{
+					trace("PANNED - rest[0] : " + rest[0]);
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
-				//trace("ZOOMED_BY - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
+					trace("ZOOMED_BY - rest[0] : "+rest[0]);
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:
@@ -81,15 +81,15 @@ class MapEvent extends Event
 					newExtent = rest[0];
 				}
 			case START_ZOOMING:
-				trace("START_ZOOMING - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
+					trace("START_ZOOMING - rest[0] : "+rest[0]);
 					zoomLevel = rest[0];
 				}
-			case STOP_ZOOMING:
-				trace("STOP_ZOOMING - rest[0] : "+rest[0]);
+			case STOP_ZOOMING:				
 				if (rest.length > 0 && Std.is(rest[0], Float))
-				{					
+				{	
+					trace("STOP_ZOOMING - rest[0] : "+rest[0]);				
 					zoomLevel = rest[0];
 				}			
 			case RESIZED:
@@ -99,21 +99,21 @@ class MapEvent extends Event
 					newSize = rest;
 				}
 			case COPYRIGHT_CHANGED:
-				//trace("COPYRIGHT_CHANGED - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], String))
 				{
+					trace("COPYRIGHT_CHANGED - rest[0] : "+rest[0]);
 					newCopyright = rest[0];
 				}	
 			case BEGIN_EXTENT_CHANGE:
-				//trace("BEGIN_EXTENT_CHANGE - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
+					trace("BEGIN_EXTENT_CHANGE - rest[0] : "+rest[0]);
 					oldExtent = rest[0];
 				}		
 			case MAP_PROVIDER_CHANGED:
-				//trace("MAP_PROVIDER_CHANGED - rest[0] : "+rest[0]);
 				if (rest.length > 0 && Std.is(rest[0], IMapProvider))
 				{
+					trace("MAP_PROVIDER_CHANGED - rest[0] : "+rest[0]);
 					newMapProvider = rest[0];
 				}
 		}

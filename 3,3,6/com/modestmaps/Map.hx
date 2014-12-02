@@ -237,7 +237,6 @@ class Map extends Sprite
 		// get outermost top left and bottom right coordinates to cover all locations
 		for (i in 1...locations.length)
 		{
-			trace("MAP240");
 			var coordinate:Coordinate = mapProvider.locationCoordinate(locations[i].normalize());
 			TL.row = Math.min(TL.row, coordinate.row);
 			TL.column = Math.min(TL.column, coordinate.column);
@@ -248,7 +247,7 @@ class Map extends Sprite
 		}
 		
 		// multiplication factor between horizontal span and map width
-		flash.Lib.trace("Map.hx - mapProvider.tileWidth : " + mapProvider.tileWidth());
+		trace("locationsCoordinate - mapProvider.tileWidth : " + mapProvider.tileWidth());
 		var hFactor:Float = (BR.column - TL.column) / (fitWidth / mapProvider.tileWidth());
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
@@ -258,7 +257,7 @@ class Map extends Sprite
 		var hPossibleZoom:Float = TL.zoom - Math.ceil(hZoomDiff);
 		
 		// multiplication factor between vertical span and map height
-		flash.Lib.trace("Map.hx - mapProvider.tileHeight : " + mapProvider.tileHeight());
+		trace("locationsCoordinate - mapProvider.tileHeight : " + mapProvider.tileHeight());
 		var vFactor:Float = (BR.row - TL.row) / (fitHeight / mapProvider.tileHeight());
 		
 		// multiplication factor expressed as base-2 logarithm, for zoom difference
@@ -298,6 +297,7 @@ class Map extends Sprite
 
 		extent.northWest = mapProvider.coordinateLocation(grid.topLeftCoordinate);
 		extent.southEast = mapProvider.coordinateLocation(grid.bottomRightCoordinate);
+		trace("getExtent - extent : " + extent);
 		return extent;
 	}
 
@@ -352,7 +352,7 @@ class Map extends Sprite
 						
 			grid.resizeTo(new Point(mapWidth, mapHeight));
 			
-			trace(" setSize - this.getSize() : " + this.getSize());
+			trace("setSize - this.getSize() : " + this.getSize());
 			
 			dispatchEvent(new MapEvent(MapEvent.RESIZED, this.getSize()));
 		}		
@@ -539,7 +539,7 @@ class Map extends Sprite
 
 		grid.doneZooming();
 		grid.donePanning();
-		flash.Lib.trace("Map.hx - zoomByAbout");
+		flash.Lib.trace("zoomByAbout");
 	}
 
 	public function getRotation():Float
@@ -719,6 +719,7 @@ class Map extends Sprite
 	*/
 	public function onExtentChanged(event:Event=null):Void
 	{
+		trace("onExtentChanged - event : "+event);
 		if (hasEventListener(MapEvent.EXTENT_CHANGED))
 		{
 			dispatchEvent(new MapEvent(MapEvent.EXTENT_CHANGED, [ { getExtent(); } ]));
