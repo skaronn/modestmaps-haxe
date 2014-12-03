@@ -90,12 +90,12 @@ class AbstractProjection implements IProjection
 	public function locationCoordinate(location:Location):Coordinate
 	{
 		//DebugUtil.dumpStack(this, "locationCoordinate");
-		trace("locationCoordinate - x : "+Math.PI * location.lon / 180);
-		trace("locationCoordinate - y : "+Math.PI * location.lat / 180);
+		//trace("locationCoordinate - x : "+Math.PI * location.lon / 180);
+		//trace("locationCoordinate - y : "+Math.PI * location.lat / 180);
 		var point:Point = new Point(Math.PI * location.lon / 180, Math.PI * location.lat / 180);
 		point = project(point);
-		trace("locationCoordinate - point : " + point);
-		trace("locationCoordinate - new Coordinate("+point.y+", "+point.x+", "+zoom+") : "+new Coordinate(point.y, point.x, zoom));
+		//trace("locationCoordinate - point : " + point);
+		//trace("locationCoordinate - new Coordinate("+point.y+", "+point.x+", "+zoom+") : "+new Coordinate(point.y, point.x, zoom));
 		return new Coordinate(point.y, point.x, zoom);
 	}
 
@@ -106,11 +106,11 @@ class AbstractProjection implements IProjection
 	{
 		//DebugUtil.dumpStack(this, "coordinateLocation");
 		coordinate = coordinate.zoomTo(zoom);
-		trace("coordinateLocation - coordinate : "+coordinate);
+		//trace("coordinateLocation - coordinate : "+coordinate);
 		var point:Point = new Point(coordinate.column, coordinate.row);
 		point = unproject(point);
-		trace("coordinateLocation - point : " + point);
-		trace("locationCoordinate - new Location("+180 * point.y / Math.PI+", "+180 * point.x / Math.PI+") : "+new Location(180 * point.y / Math.PI, 180 * point.x / Math.PI));
+		//trace("coordinateLocation - point : " + point);
+		//trace("locationCoordinate - new Location("+180 * point.y / Math.PI+", "+180 * point.x / Math.PI+") : "+new Location(180 * point.y / Math.PI, 180 * point.x / Math.PI));
 		return new Location(180 * point.y / Math.PI, 180 * point.x / Math.PI);
 	}
 }

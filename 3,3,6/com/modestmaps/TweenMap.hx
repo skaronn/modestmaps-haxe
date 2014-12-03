@@ -55,8 +55,7 @@ class TweenMap extends Map
 	*/
 	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Object> = null)
 	{
-		//trace("new - width : " + width);
-		//trace("new - height : " + height);
+		trace("new : "+width+", "+height+", "+draggable+", "+provider+", "+rest);
 		super(width, height, draggable, provider, rest);
 		grid.setTileClass(TweenTile);
 	}

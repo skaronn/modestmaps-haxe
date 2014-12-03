@@ -101,13 +101,15 @@ class Map extends Sprite
 		// don't call setMapProvider here
 		// the extent calculations are all squirrely
 		this.mapProvider = mapProvider;
-		trace("new - mapProvider : " + mapProvider);
 		trace("new - width : " + width);
 		trace("new - height : " + height);
+		trace("new - draggable : " + draggable);
+		trace("new - mapProvider : " + mapProvider);
 		//DebugUtil.dumpStack(this, "new");
 		
 		// initialize the grid (so point/location/coordinate functions should be valid after this)
 		grid = new TileGrid(width, height, draggable, mapProvider);
+		trace("new - grid : " + grid);
 		grid.addEventListener(Event.CHANGE, onExtentChanged);
 		addChild(grid);
 
@@ -118,16 +120,20 @@ class Map extends Sprite
 
 		// if rest was passed in from super constructor in a subclass,
 		// it will be an array...
-		if (rest != null && rest.length > 0 && Std.is (rest[0], Array)){
-			rest = rest[0];
+		//trace("new - rest is Array : " + Std.is (rest, Array));
+		if (rest != null && rest.length > 0 && Std.is (rest, Array)) {
+			trace("new - rest[0] : " + rest[0]);
+			rest = [ { rest[0]; } ];
 		}
 		// (doing that is OK because none of the arguments we're expecting are Arrays)
 		
 		// look at ... rest arguments for MapExtent or Location/zoom
-		if (rest != null && rest.length > 0 && Std.is(rest[0], MapExtent)){
+		if (rest != null && rest.length > 0 && Std.is(rest[0], MapExtent)) {
+			trace("new - setExtent(" + cast(rest[0], MapExtent) + ")");
 			setExtent(cast(rest[0], MapExtent));
 		}
 		else if (rest != null && rest.length > 1 && Std.is (rest[0], Location) && Std.is (rest[0], Float)) {
+			trace("new - setCenterZoom(" + cast(rest[0], Location) + ", " + cast(rest[1], Float) + ")");
 			setCenterZoom(cast(rest[0], Location), cast(rest[1], Float));
 		}
 		else {
@@ -170,7 +176,7 @@ class Map extends Sprite
 	*/
 	public function setExtent(extent:MapExtent):Void
 	{
-		//trace('applying extent', extent);
+		trace("setExtent - applying extent ", extent);
 		onExtentChanging();
 		// tell grid what the rock is cooking
 		grid.resetTiles(locationsCoordinate( [ extent.northWest, extent.southEast ] ));

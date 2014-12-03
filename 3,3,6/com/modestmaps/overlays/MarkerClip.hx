@@ -82,8 +82,10 @@ class MarkerClip extends Sprite
 		mouseChildren = true;
 			
 		this.map = map;
-		this.x = map.getWidth() / 2;
-		this.y = map.getHeight() / 2;
+		trace("new - map.getWidth() / 2 : " + map.getWidth() / 2);
+		trace("new - map.getHeight() / 2 : " + map.getHeight() / 2);
+		this.absciss = map.getWidth() / 2;
+		this.ordinate = map.getHeight() / 2;
 		
 		previousGeometry = map.getMapProvider().geometry();
 
@@ -118,6 +120,8 @@ class MarkerClip extends Sprite
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 		_absciss = super.x;
+		trace("set_absciss - super.x : "+super.x);
+		trace("set_absciss - this.x : "+this.x);
 		//DebugUtil.dumpStack(this, "set_absciss : "+_absciss);
 		return _absciss;
 	}
@@ -130,6 +134,8 @@ class MarkerClip extends Sprite
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
 		_ordinate = super.y;
+		trace("set_ordinate - super.y : " + super.y);
+		trace("set_ordinate - this.y : " + this.y);
 		//DebugUtil.dumpStack(this, "set_ordinate : "+_ordinate);
 		return _ordinate;
 	}
@@ -140,7 +146,7 @@ class MarkerClip extends Sprite
 		
 		dirty = true;
 		trace("onAddedToStage - dirty : "+dirty);
-		updateClips();
+		//updateClips();
 		
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
@@ -155,19 +161,19 @@ class MarkerClip extends Sprite
 	public function attachMarker(marker:DisplayObject, location:Location):Void
 	{
 		trace("attachMarker - markers : "+markers);
-		if (markers.indexOf(marker) == -1)
-		{
-			locations.set(marker, location.clone());
-			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
-			trace("attachMarker - map.getMapProvider().locationCoordinate("+location+") : "+ map.getMapProvider().locationCoordinate(location));
-			Reflect.setField(markersByName, marker.name, marker);
-			markers.push(marker);
-			var added:Bool = updateClip(marker);
-			
-			if (added) {
-				requestSort(true);
-			}
-		}
+		//if (markers.indexOf(marker) == -1)
+		//{
+			//locations.set(marker, location.clone());
+			//coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
+			//trace("attachMarker - map.getMapProvider().locationCoordinate("+location+") : "+ map.getMapProvider().locationCoordinate(location));
+			//Reflect.setField(markersByName, marker.name, marker);
+			//markers.push(marker);
+			//var added:Bool = updateClip(marker);
+			//
+			//if (added) {
+				//requestSort(true);
+			//}
+		//}
 	}
 
 	private function markerInBounds(marker:DisplayObject, w:Float, h:Float):Bool
@@ -241,25 +247,24 @@ class MarkerClip extends Sprite
 	public function updateClips(event:Event=null):Void
 	{
 		trace("updateClips - event : " + event);
+		trace("updateClips - dirty : " + dirty);
 		if (!dirty) {
-			trace("updateClips - !dirty");
+			trace("updateClips - return : " + return);
 			return;
 		}
 		
 		var center:Coordinate = map.grid.centerCoordinate;
 		
 		if (center.equalTo(drawCoord)) {
-			trace("updateClips - dirty = false");
+			trace("updateClips - center.equalTo(drawCoord)");
 			dirty = false;
 			return;
 		}
 		
 		drawCoord = center.copy();
 		
-		//this.absciss = map.getWidth() / 2;
-		this.x = map.getWidth() / 2;
-		//this.ordinate = map.getHeight() / 2;		
-		this.y = map.getHeight() / 2;		
+		this.absciss = map.getWidth() / 2;
+		this.ordinate = map.getHeight() / 2;
 		
 		if (scaleZoom) {
 			scaleX = scaleY = 1.0;
@@ -276,9 +281,9 @@ class MarkerClip extends Sprite
 			var boolUpdateClip : Bool = updateClip(markers[i]);
 			doSort = boolUpdateClip ? boolUpdateClip : doSort; // wow! bad things did happen when this said doSort ||= updateClip(marker);
 		}
-
-		trace("updateClips - doSort : "+doSort);
+		
 		if (doSort) {
+			trace("updateClips - requestSort(true)");
 			requestSort(true); 
 		}
 		
