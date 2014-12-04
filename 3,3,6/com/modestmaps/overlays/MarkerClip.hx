@@ -82,8 +82,8 @@ class MarkerClip extends Sprite
 		mouseChildren = true;
 			
 		this.map = map;
-		trace("new - map.getWidth() / 2 : " + map.getWidth() / 2);
-		trace("new - map.getHeight() / 2 : " + map.getHeight() / 2);
+		//trace("new - map.getWidth() / 2 : " + map.getWidth() / 2);
+		//trace("new - map.getHeight() / 2 : " + map.getHeight() / 2);
 		this.absciss = map.getWidth() / 2;
 		this.ordinate = map.getHeight() / 2;
 		
@@ -120,8 +120,8 @@ class MarkerClip extends Sprite
 	{
 		super.x = snapToPixels ? Math.round(value) : value;
 		_absciss = super.x;
-		trace("set_absciss - super.x : "+super.x);
-		trace("set_absciss - this.x : "+this.x);
+		//trace("set_absciss - super.x : "+super.x);
+		//trace("set_absciss - this.x : "+this.x);
 		//DebugUtil.dumpStack(this, "set_absciss : "+_absciss);
 		return _absciss;
 	}
@@ -134,8 +134,8 @@ class MarkerClip extends Sprite
 	{
 		super.y = snapToPixels ? Math.round(value) : value;
 		_ordinate = super.y;
-		trace("set_ordinate - super.y : " + super.y);
-		trace("set_ordinate - this.y : " + this.y);
+		//trace("set_ordinate - super.y : " + super.y);
+		//trace("set_ordinate - this.y : " + this.y);
 		//DebugUtil.dumpStack(this, "set_ordinate : "+_ordinate);
 		return _ordinate;
 	}
@@ -145,7 +145,7 @@ class MarkerClip extends Sprite
 		addEventListener(Event.RENDER, updateClips);
 		
 		dirty = true;
-		trace("onAddedToStage - dirty : "+dirty);
+		//trace("onAddedToStage - dirty : "+dirty);
 		//updateClips();
 		
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
@@ -160,20 +160,20 @@ class MarkerClip extends Sprite
 
 	public function attachMarker(marker:DisplayObject, location:Location):Void
 	{
-		trace("attachMarker - markers : "+markers);
-		//if (markers.indexOf(marker) == -1)
-		//{
-			//locations.set(marker, location.clone());
-			//coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
+		//trace("attachMarker - markers : "+markers);
+		if (markers.indexOf(marker) == -1)
+		{
+			locations.set(marker, location.clone());
+			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
 			//trace("attachMarker - map.getMapProvider().locationCoordinate("+location+") : "+ map.getMapProvider().locationCoordinate(location));
-			//Reflect.setField(markersByName, marker.name, marker);
-			//markers.push(marker);
-			//var added:Bool = updateClip(marker);
-			//
-			//if (added) {
-				//requestSort(true);
-			//}
-		//}
+			Reflect.setField(markersByName, marker.name, marker);
+			markers.push(marker);
+			var added:Bool = updateClip(marker);
+			
+			if (added) {
+				requestSort(true);
+			}
+		}
 	}
 
 	private function markerInBounds(marker:DisplayObject, w:Float, h:Float):Bool
@@ -246,17 +246,17 @@ class MarkerClip extends Sprite
 		
 	public function updateClips(event:Event=null):Void
 	{
-		trace("updateClips - event : " + event);
-		trace("updateClips - dirty : " + dirty);
+		//trace("updateClips - event : " + event);
+		//trace("updateClips - dirty : " + dirty);
 		if (!dirty) {
-			trace("updateClips - return : " + return);
+			//trace("updateClips - return : " + return);
 			return;
 		}
 		
 		var center:Coordinate = map.grid.centerCoordinate;
 		
 		if (center.equalTo(drawCoord)) {
-			trace("updateClips - center.equalTo(drawCoord)");
+			//trace("updateClips - center.equalTo(drawCoord)");
 			dirty = false;
 			return;
 		}
@@ -274,16 +274,16 @@ class MarkerClip extends Sprite
 		
 		//DebugUtil.dumpStack(this, "updateClips");
 		//for (markerField in markers)
-		trace("updateClips - markers.length : " + markers.length);
+		//trace("updateClips - markers.length : " + markers.length);
 		for (i in 0 ... markers.length)
 		{
-			trace("updateClips - markers["+i+"] : " + markers[i]);
+			//trace("updateClips - markers["+i+"] : " + markers[i]);
 			var boolUpdateClip : Bool = updateClip(markers[i]);
 			doSort = boolUpdateClip ? boolUpdateClip : doSort; // wow! bad things did happen when this said doSort ||= updateClip(marker);
 		}
 		
 		if (doSort) {
-			trace("updateClips - requestSort(true)");
+			//trace("updateClips - requestSort(true)");
 			requestSort(true); 
 		}
 		
@@ -355,7 +355,7 @@ class MarkerClip extends Sprite
 			// this method previously used the location of the marker
 			// but map.locationPoint hands off to grid to grid.coordinatePoint
 			// in the end so we may as well cache the first step
-			trace("updateClip - coordinates.get(marker) : "+cast(coordinates.get(marker)));
+			//trace("updateClip - coordinates.get(marker) : "+cast(coordinates.get(marker)));
 			var point:Point = map.grid.coordinatePoint(cast(coordinates.get(marker), Coordinate), this);
 			marker.x = snapToPixels ? Math.round(point.x) : point.x;
 			marker.y = snapToPixels ? Math.round(point.y) : point.y;
@@ -365,10 +365,10 @@ class MarkerClip extends Sprite
 			
 			if (markerInBounds(marker, w, h))
 			{
-				trace("updateClip - marker.markerInBounds");
+				//trace("updateClip - marker.markerInBounds");
 				if (!contains(marker))
 				{
-					trace("updateClip - marker : "+ marker);
+					//trace("updateClip - marker : "+ marker);
 					addChild(marker);
 					// notify the caller that we've added something and need to sort markers
 					return true;
@@ -395,8 +395,8 @@ class MarkerClip extends Sprite
 	{
 		if (drawCoord != null) {
 			var p:Point = map.grid.coordinatePoint(drawCoord);
-			this.x = p.x;
-			this.y = p.y;
+			this.absciss = p.x;
+			this.ordinate = p.y;
 		}
 		else {
 			dirty = true;

@@ -303,7 +303,7 @@ class Map extends Sprite
 
 		extent.northWest = mapProvider.coordinateLocation(grid.topLeftCoordinate);
 		extent.southEast = mapProvider.coordinateLocation(grid.bottomRightCoordinate);
-		trace("getExtent - extent : " + extent);
+		//trace("getExtent - extent : " + extent);
 		return extent;
 	}
 
@@ -754,7 +754,8 @@ class Map extends Sprite
 		if (!__draggable) return;
 		
 		var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));
-
+		p = new Point(393, 411);
+		trace(">>>>>>>>>>> onDoubleClick - p : "+p);
 		if (event.shiftKey) {
 			if (grid.zoomLevel > grid.minZoom) {
 				zoomOutAbout(p);

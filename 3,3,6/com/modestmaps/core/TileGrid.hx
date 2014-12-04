@@ -277,14 +277,15 @@ class TileGrid extends Sprite
 	private function onRendered():Void
 	{
 		// listen out for this if you want to be sure map is in its final state before reprojecting markers etc.
-		trace("onRendered");
+		//trace("onRendered");
 		dispatchEvent(new MapEvent(MapEvent.RENDERED));
 	}
 
 	private function onPanned():Void
 	{
-		//trace("onPanned");
+		//trace("onPanned - startPan : "+startPan);
 		var pt:Point = coordinatePoint(startPan);
+		trace("onPanned - pt : "+pt);
 		dispatchEvent(new MapEvent(MapEvent.PANNED, [ { pt.subtract(new Point(mapWidth / 2, mapHeight / 2)) ; } ] ));		
 	}
 
@@ -295,7 +296,7 @@ class TileGrid extends Sprite
 		var zoomEvent:MapEvent = new MapEvent(MapEvent.ZOOMED_BY, [ { zoomLevel - startZoom; } ] );
 		// this might also be useful
 		zoomEvent.zoomLevel = zoomLevel;
-		trace("onZoomed - zoomEvent.zoomLevel : "+zoomEvent.zoomLevel);
+		//trace("onZoomed - zoomEvent.zoomLevel : "+zoomEvent.zoomLevel);
 		dispatchEvent(zoomEvent);	
 	}
 
@@ -335,8 +336,8 @@ class TileGrid extends Sprite
 	 */
 	private function onRender(event:Event=null):Void
 	{
-		trace("onRender - dirty : " + dirty);
-		trace("onRender - stage : " + stage);
+		//trace("onRender - dirty : " + dirty);
+		//trace("onRender - stage : " + stage);
 		var t:Float = flash.Lib.getTimer();
 		//DebugUtil.dumpStack(this, "onRender");
 		if (!dirty || stage == null) {
@@ -1052,10 +1053,19 @@ class TileGrid extends Sprite
 
 	public function coordinatePoint(coord:Coordinate, context:DisplayObject=null):Point
 	{
+		//trace("coordinatePoint : "+coord);
+		//trace("context : "+context);
+		trace("zoomLevel : "+zoomLevel);
+		trace("coord.zoom : "+coord.zoom);
+		trace("tileWidth : "+tileWidth);
+		trace("scale : "+scale);
 		// this is basically the same as coord.zoomTo, but doesn't make a new Coordinate:
 		var zoomFactor:Float = Math.pow(2, zoomLevel - coord.zoom) * tileWidth / scale;
+		trace("zoomFactor : "+zoomFactor);
 		var zoomedColumn:Float = coord.column * zoomFactor;
+		trace("zoomedColumn : "+zoomedColumn);
 		var zoomedRow:Float = coord.row * zoomFactor;		
+		trace("zoomedRow : "+zoomedRow);
 		
 		//trace("coordinatePoint - context : " + context);
 		//trace("coordinatePoint - worldMatrix.a : "+worldMatrix.a);
@@ -1065,18 +1075,19 @@ class TileGrid extends Sprite
 		//trace("coordinatePoint - tx : " + tx);
 		//trace("coordinatePoint - ty : " + ty);
 		var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));	
+		trace("screenPoint : " + screenPoint);
 		
 		if (context != null && context != this)
 		{
 			//trace("coordinatePoint - context : " +Type.getClassName(Type.getClass(context)));
-			if (Type.getClassName(Type.getClass(context)) == "com.modestmaps.overlays.MarkerClip") {
-				trace("coordinatePoint - zoomedColumn : " + zoomedColumn + ", coord : " + coord);
-				//DebugUtil.dumpStack(this, "coordinatePoint");
-				var p = new Point(zoomedColumn, zoomedRow);
-				trace("coordinatePoint - p : "+p);
-				screenPoint = transformPoint(p);
-				trace("coordinatePoint - screenPoint : "+screenPoint);
-			}
+			//if (Type.getClassName(Type.getClass(context)) == "com.modestmaps.overlays.MarkerClip") {
+				//trace("coordinatePoint - zoomedColumn : " + zoomedColumn + ", coord : " + coord);
+				////DebugUtil.dumpStack(this, "coordinatePoint");
+				//var p = new Point(zoomedColumn, zoomedRow);
+				//trace("coordinatePoint - p : "+p);
+				//screenPoint = transformPoint(p);
+				//trace("coordinatePoint - screenPoint : "+screenPoint);
+			//}
 			//trace("coordinatePoint - point : "+screenPoint);
 			screenPoint = this.parent.localToGlobal(screenPoint);
 			screenPoint = context.globalToLocal(screenPoint);
@@ -1187,20 +1198,21 @@ class TileGrid extends Sprite
 		dirty = true;
 	}
 
-	public var zoomLevel(get, set):Float;
+	@:isVar public var zoomLevel(get, set):Float;
 	
 	private function get_zoomLevel():Float
 	{
+		trace("get_zoomLevel : "+ Math.log(scale) / Math.log(2));
 		return Math.log(scale) / Math.log(2);
 	}
 
-	private function set_zoomLevel(n:Float)
+	private function set_zoomLevel(n:Float):Float
 	{
 		if (zoomLevel != n)
 		{
 			scale = Math.pow(2, n);			
 		}
-		return zoomLevel;
+		return n;
 	}
 
 	public var scale(get, set):Float;

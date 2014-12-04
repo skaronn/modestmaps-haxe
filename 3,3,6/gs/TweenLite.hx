@@ -422,7 +422,7 @@ class TweenLite {
 	{
 		if (target != "")
 		{
-			trace("to - target :" + target +", duration:" + duration + ", vars:" + vars);
+			//trace("to - target :" + target +", duration:" + duration + ", vars:" + vars);
 		}
 		return new TweenLite(target, duration, vars);
 	}

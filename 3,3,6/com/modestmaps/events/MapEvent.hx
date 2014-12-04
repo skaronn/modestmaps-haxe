@@ -56,7 +56,7 @@ class MapEvent extends Event
 		super(type, true, true);
 		
 		if (type == RENDERED) {
-			trace("new - type : RENDERED, rest : " + rest);
+			//trace("new - type : RENDERED, rest : " + rest);
 			//DebugUtil.dumpStack(this, "new");
 		}
 		
