@@ -18,9 +18,6 @@ import openfl.errors.*;
 class DebugUtil
 {	
 	public static function dumpObject(tw:Object):Void {
-		//trace("DebugField.hx - dump - instanceFields : "+Type.getInstanceFields(Type.getClass(tw)));
-		//trace("DebugField.hx - dump - classFields : "+Type.getClassFields(Type.getClass(tw)));
-		//trace("DebugField.hx - dump - fields : "+Reflect.fields(tw));
 		var concatFieldsDump : String = Type.getClassName(Type.getClass(tw)) + " => ";
 		var fields : Array<Object> = Type.getInstanceFields(Type.getClass(tw));
 		for (key in fields) {
@@ -40,8 +37,6 @@ class DebugUtil
 			for (key in object.keys()) {
 				var dictionaryValues : String = "";
 				var dictionaryLength : UInt = 0;
-				//trace (key + " ======> " + object.get(key));
-				//trace (key.dumpFields() + " => " + object.get(key));
 				var fields : ObjectMap<Object, Object> = object.get(key);
 				for (value in fields.keys()) {
 					trace(value);
@@ -50,12 +45,7 @@ class DebugUtil
 					dictionaryLength++;
 				}
 				
-				//trace("traceLog - " + key + " ======> " + object.get(key) + "{" + dictionaryValues + "}[" + dictionaryLength + "]");
 				trace("traceLog - " + key + " ======> " + object.get(key) + "{" + dictionaryValues + "}[" + dictionaryLength + "]");
-				//flash.Lib.trace("TweenLite.hx - traceLog - dictionary length : " +dictionaryLength);
-				/*if(dictionaryValues != ""){
-					trace(key.dumpFields() + " => " +"{" +  object.get(key) + ":" + dictionaryValues + "}");					
-				}*/
 				len++;
 			}
 			trace("\n");
