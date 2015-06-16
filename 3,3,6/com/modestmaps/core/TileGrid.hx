@@ -3,11 +3,10 @@ package com.modestmaps.core;
 import com.modestmaps.core.painter.ITilePainter;
 import com.modestmaps.core.painter.ITilePainterOverride;
 import com.modestmaps.core.painter.TilePainter;
-import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.extras.ui.DebugField;
+import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.util.DebugUtil;
-import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -20,6 +19,8 @@ import openfl.geom.Rectangle;
 import openfl.text.TextField;
 import openfl.utils.Object;
 import openfl.utils.Timer;
+
+import haxe.ds.ObjectMap;
 
 class TileGrid extends Sprite
 {
@@ -207,7 +208,7 @@ class TileGrid extends Sprite
 
 		worldMatrix = new Matrix();
 		
-		trace("new");		
+		//trace("new");		
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -223,7 +224,7 @@ class TileGrid extends Sprite
 
 	private function onAddedToStage(event:Event):Void
 	{
-		trace("onAddedToStage");
+		//trace("onAddedToStage");
 		//DebugUtil.dumpStack(this, "onAddedToStage");
 		if (draggable) {
 			addEventListener(MouseEvent.MOUSE_DOWN, mousePressed, true);
@@ -285,7 +286,7 @@ class TileGrid extends Sprite
 	{
 		//trace("onPanned - startPan : "+startPan);
 		var pt:Point = coordinatePoint(startPan);
-		trace("onPanned - pt : "+pt);
+		//trace("onPanned - pt : "+pt);
 		dispatchEvent(new MapEvent(MapEvent.PANNED, [ { pt.subtract(new Point(mapWidth / 2, mapHeight / 2)) ; } ] ));		
 	}
 
@@ -304,7 +305,7 @@ class TileGrid extends Sprite
 	{
 		// doesn't bubble, unlike MapEvent
 		// Map will pick this up and dispatch MapEvent.EXTENT_CHANGED for us
-		trace("onChanged");
+		//trace("onChanged");
 		dispatchEvent(new Event(Event.CHANGE, false, false));		
 	}
 
@@ -359,11 +360,11 @@ class TileGrid extends Sprite
 			}
 		}
 		else if (boundsEnforced) {
-			trace("onRender - boundsEnforced : " + boundsEnforced);
+			//trace("onRender - boundsEnforced : " + boundsEnforced);
 			onChanged();
 		}
 		else if (matrixChanged) {
-			trace("onRender - matrixChanged : " + matrixChanged);
+			//trace("onRender - matrixChanged : " + matrixChanged);
 			matrixChanged = false;
 			onChanged();
 		}
@@ -423,6 +424,7 @@ class TileGrid extends Sprite
 		//for (var i:Int = well.numChildren-1; i >= 0; i--) {
 		for (i in well.numChildren-1...0) {
 			var wellTile:Tile = cast(well.getChildAt(i), Tile);
+			//trace("wellTile : "+wellTile);
 			if (visibleTiles.indexOf(wellTile) < 0) {
 				well.removeChild(wellTile);
 				wellTile.hide();
@@ -491,18 +493,18 @@ class TileGrid extends Sprite
 		var searchedParentKeys:ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
 
 		// loop over currently visible tiles
+		//trace("repopulateVisibleTiles - minCol : " + minCol);
+		//trace("repopulateVisibleTiles - maxCol : " + maxCol);
+		//trace("repopulateVisibleTiles - minRow : " + minRow);
+		//trace("repopulateVisibleTiles - maxRow : " + maxRow);
 		//for (var col:Int = minCol; col <= maxCol; col++)
-		//trace("TileGrid.hx - repopulateVisibleTiles - minCol : " + minCol);
-		//trace("TileGrid.hx - repopulateVisibleTiles - maxCol : " + maxCol);
-		//trace("TileGrid.hx - repopulateVisibleTiles - minRow : " + minRow);
-		//trace("TileGrid.hx - repopulateVisibleTiles - maxRow : " + maxRow);
-		for (col in minCol...maxCol + 1)		
+		for (col in minCol...maxCol+ 1)		
 		{
-			//trace("TileGrid.hx - repopulateVisibleTiles - maxRow : " + maxRow);
+			trace("repopulateVisibleTiles - col : " + col);
 			//for (var row:Int = minRow; row <= maxRow; row++)
 			for (row in minRow...maxRow + 1)			
 			{
-				//trace("TileGrid.hx - repopulateVisibleTiles - row : " + row);
+				trace("repopulateVisibleTiles - row : " + row);
 				// create a string key for this tile
 				var key:String = tileKey(col, row, cast(_currentTileZoom, Int));
 				
@@ -1035,19 +1037,19 @@ class TileGrid extends Sprite
 	
 	public function transformPoint(point:Point):Point
 	{		
-		trace("transformPoint - point.x : "+point.x);
-		trace("transformPoint - a : "+a);
-		trace("transformPoint - point.y : "+point.y);
-		trace("transformPoint - c : "+c);
-		trace("transformPoint - tx : "+tx);
-		trace("transformPoint - b : "+b);
-		trace("transformPoint - d : "+d);
-		trace("transformPoint - ty : " + ty);
-		trace("transformPoint - point.x : " + cast(point.x * a + point.y * c + tx, Float));
-		trace("transformPoint - point.y : " + cast(point.x * b + point.y * d + ty, Float));
+		//trace("transformPoint - point.x : "+point.x);
+		//trace("transformPoint - a : "+a);
+		//trace("transformPoint - point.y : "+point.y);
+		//trace("transformPoint - c : "+c);
+		//trace("transformPoint - tx : "+tx);
+		//trace("transformPoint - b : "+b);
+		//trace("transformPoint - d : "+d);
+		//trace("transformPoint - ty : " + ty);
+		//trace("transformPoint - point.x : " + cast(point.x * a + point.y * c + tx, Float));
+		//trace("transformPoint - point.y : " + cast(point.x * b + point.y * d + ty, Float));
 		var pt : Point = new Point (point.x * a + point.y * c + tx, point.x * b + point.y * d + ty);
-		trace("transformPoint - point : " + pt);
-		trace("----------------------------");
+		//trace("transformPoint - point : " + pt);
+		//trace("----------------------------");
 		return pt;
 	}
 
@@ -1055,17 +1057,17 @@ class TileGrid extends Sprite
 	{
 		//trace("coordinatePoint : "+coord);
 		//trace("context : "+context);
-		trace("zoomLevel : "+zoomLevel);
-		trace("coord.zoom : "+coord.zoom);
-		trace("tileWidth : "+tileWidth);
-		trace("scale : "+scale);
+		//trace("zoomLevel : "+zoomLevel);
+		//trace("coord.zoom : "+coord.zoom);
+		//trace("tileWidth : "+tileWidth);
+		//trace("scale : "+scale);
 		// this is basically the same as coord.zoomTo, but doesn't make a new Coordinate:
 		var zoomFactor:Float = Math.pow(2, zoomLevel - coord.zoom) * tileWidth / scale;
-		trace("zoomFactor : "+zoomFactor);
+		//trace("zoomFactor : "+zoomFactor);
 		var zoomedColumn:Float = coord.column * zoomFactor;
-		trace("zoomedColumn : "+zoomedColumn);
+		//trace("zoomedColumn : "+zoomedColumn);
 		var zoomedRow:Float = coord.row * zoomFactor;		
-		trace("zoomedRow : "+zoomedRow);
+		//trace("zoomedRow : "+zoomedRow);
 		
 		//trace("coordinatePoint - context : " + context);
 		//trace("coordinatePoint - worldMatrix.a : "+worldMatrix.a);
@@ -1075,7 +1077,7 @@ class TileGrid extends Sprite
 		//trace("coordinatePoint - tx : " + tx);
 		//trace("coordinatePoint - ty : " + ty);
 		var screenPoint:Point = worldMatrix.transformPoint(new Point(zoomedColumn, zoomedRow));	
-		trace("screenPoint : " + screenPoint);
+		//trace("screenPoint : " + screenPoint);
 		
 		if (context != null && context != this)
 		{
@@ -1166,7 +1168,7 @@ class TileGrid extends Sprite
 
 	private function onStartZooming():Void
 	{
-		trace("onStartZooming - startZoom : "+startZoom);
+		//trace("onStartZooming - startZoom : "+startZoom);
 		dispatchEvent(new MapEvent(MapEvent.START_ZOOMING, [ { startZoom; } ] ));
 	}
 			
@@ -1194,7 +1196,7 @@ class TileGrid extends Sprite
 		worldMatrix.translate(-tileWidth * coord.column, -tileHeight * coord.row);		
 
 		// reset the inverted matrix, request a redraw, etc.
-		trace("resetTiles");
+		//trace("resetTiles");
 		dirty = true;
 	}
 
@@ -1202,7 +1204,7 @@ class TileGrid extends Sprite
 	
 	private function get_zoomLevel():Float
 	{
-		trace("get_zoomLevel : "+ Math.log(scale) / Math.log(2));
+		//trace("get_zoomLevel : "+ Math.log(scale) / Math.log(2));
 		return Math.log(scale) / Math.log(2);
 	}
 

@@ -4,13 +4,13 @@ import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
 import openfl.display.Shape;
 import openfl.display.StageDisplayState;
-import flash.events.ContextMenuEvent;
 import openfl.events.Event;
+import openfl.errors.Error;
 import flash.events.FullScreenEvent;
+import flash.events.ContextMenuEvent;
 import flash.display.LineScaleMode;
 import flash.ui.ContextMenu;
 import flash.ui.ContextMenuItem;
-import openfl.errors.Error;
 
 class FullScreenButton extends Button
 {	

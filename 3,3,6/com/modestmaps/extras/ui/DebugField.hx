@@ -15,8 +15,8 @@ import openfl.utils.Object;
 class DebugField extends TextField
 {
 	// for stats:
-	private var lastFrameTime:Float;
-	private var fps:Float = 30;	
+	private var lastFrameTime:Int;
+	private var fps:Int = 30;	
 
 	public function new():Void
 	{
@@ -43,7 +43,8 @@ class DebugField extends TextField
 		fps = Std.int((0.9 * fps) + (0.1 * (1000.0 / frameDuration)));
 
 		var well:Sprite = cast(grid.getChildByName('well'), Sprite);
-
+		//trace("well.numChildren : "+well.numChildren);
+		
 		// report stats:
 		var tileChildren:Int = 0;
 		

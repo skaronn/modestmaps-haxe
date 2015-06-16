@@ -65,55 +65,55 @@ class MapEvent extends Event
 			case PANNED:
 				if (rest.length > 0 && Std.is(rest[0], Point))
 				{
-					trace("PANNED - rest[0] : " + rest[0]);
+					//trace("PANNED - rest[0] : " + rest[0]);
 					panDelta = rest[0];
 				}
 			case ZOOMED_BY:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					trace("ZOOMED_BY - rest[0] : "+rest[0]);
+					//trace("ZOOMED_BY - rest[0] : "+rest[0]);
 					zoomDelta = rest[0];
 				}
 			case EXTENT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
-					trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
+					//trace("EXTENT_CHANGED - rest[0] : "+rest[0]);
 					newExtent = rest[0];
 				}
 			case START_ZOOMING:
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{
-					trace("START_ZOOMING - rest[0] : "+rest[0]);
+					//trace("START_ZOOMING - rest[0] : "+rest[0]);
 					zoomLevel = rest[0];
 				}
 			case STOP_ZOOMING:				
 				if (rest.length > 0 && Std.is(rest[0], Float))
 				{	
-					trace("STOP_ZOOMING - rest[0] : "+rest[0]);				
+					//trace("STOP_ZOOMING - rest[0] : "+rest[0]);				
 					zoomLevel = rest[0];
 				}			
 			case RESIZED:
 				if (rest.length > 0 && Std.is(rest, Array))
 				{
-					trace("RESIZED - rest : "+rest);
+					//trace("RESIZED - rest : "+rest);
 					newSize = rest;
 				}
 			case COPYRIGHT_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], String))
 				{
-					trace("COPYRIGHT_CHANGED - rest[0] : "+rest[0]);
+					//trace("COPYRIGHT_CHANGED - rest[0] : "+rest[0]);
 					newCopyright = rest[0];
 				}	
 			case BEGIN_EXTENT_CHANGE:
 				if (rest.length > 0 && Std.is(rest[0], MapExtent))
 				{
-					trace("BEGIN_EXTENT_CHANGE - rest[0] : "+rest[0]);
+					//trace("BEGIN_EXTENT_CHANGE - rest[0] : "+rest[0]);
 					oldExtent = rest[0];
 				}		
 			case MAP_PROVIDER_CHANGED:
 				if (rest.length > 0 && Std.is(rest[0], IMapProvider))
 				{
-					trace("MAP_PROVIDER_CHANGED - rest[0] : "+rest[0]);
+					//trace("MAP_PROVIDER_CHANGED - rest[0] : "+rest[0]);
 					newMapProvider = rest[0];
 				}
 		}

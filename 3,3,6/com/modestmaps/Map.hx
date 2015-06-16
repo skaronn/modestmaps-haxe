@@ -176,7 +176,7 @@ class Map extends Sprite
 	*/
 	public function setExtent(extent:MapExtent):Void
 	{
-		trace("setExtent - applying extent ", extent);
+		trace("setExtent - applying extent : "+ extent);
 		onExtentChanging();
 		// tell grid what the rock is cooking
 		grid.resetTiles(locationsCoordinate( [ extent.northWest, extent.southEast ] ));
@@ -479,13 +479,17 @@ class Map extends Sprite
 	}
 
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
-	public function panLeft(event:Event=null):Void
+	public function panLeft(event:Event = null):Void	
 	{
-		panBy((mapWidth * panFraction), 0);
+		trace("panLeft - mapWidth : "+mapWidth);
+		trace("panLeft - panFraction : " + panFraction);
+		var result = cast((mapWidth * panFraction), Float);
+		trace("panRight - result : " +result);
+		panBy(result, 0);
 	}	  
 
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
-	public function panRight(event:Event=null):Void
+	public function panRight(event:Event = null):Void	
 	{
 		trace("panRight - mapWidth : "+mapWidth);
 		trace("panRight - panFraction : " + panFraction);
@@ -507,7 +511,7 @@ class Map extends Sprite
 	}
 
 	/** zoom in, keeping the requested point in the same place */
-	public function zoomInAbout(targetPoint:Point=null, duration:Float=-1):Void
+	public function zoomInAbout(targetPoint:Point = null, duration:Float = -1):Void
 	{
 		zoomByAbout(1, targetPoint, duration);
 	}
