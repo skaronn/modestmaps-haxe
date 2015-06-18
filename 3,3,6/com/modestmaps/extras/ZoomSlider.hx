@@ -35,11 +35,11 @@ class ZoomSlider extends Sprite
 	
 	private var _proportion:Float;
 	
-	public function new(map:Map, trackHeight:Float=DEFAULT_HEIGHT)
+	public function new(map:Map, trackHeight:Float = DEFAULT_HEIGHT)
 	{
 		super();
-		this.map = map;
 		this.trackHeight = trackHeight;
+		this.map = map;
 
 		map.addEventListener(MapEvent.EXTENT_CHANGED, update);
 		map.addEventListener(MapEvent.ZOOMED_BY, update);
@@ -124,7 +124,7 @@ class ZoomSlider extends Sprite
 		//if (event != null) trace("update - event.type : " + event.type + ", dragging : " + dragging);
 		if (!dragging) {
 			proportion = 1.0 - (map.grid.zoomLevel - map.grid.minZoom) / (map.grid.maxZoom - map.grid.minZoom);
-			trace("update - proportion : "+proportion);
+			//trace("update - proportion : "+proportion);
 		}
 		//DebugUtil.dumpStack(this, "update");
 	}

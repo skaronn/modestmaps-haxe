@@ -11,11 +11,7 @@ class TweenTile extends Tile
 {			
 	override public function toString():String
 	{
-		var tweenTile : String = "";
-		/*if(this.alpha != undefined){
-			tweenTile = "{" + this + "[alpha:" + this.alpha +"]}";
-		}*/
-		return tweenTile;
+		return "{ [alpha:" + this.alpha +"] }";
 	}
 	
 	public static var FADE_TIME:Float = 0.25;

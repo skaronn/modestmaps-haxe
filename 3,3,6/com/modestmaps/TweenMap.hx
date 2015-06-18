@@ -28,11 +28,13 @@ class TweenMap extends Map
 
 	/** easing function used for panLeft, panRight, panUp, panDown */
 	public var panEase:Object = quadraticEaseOut;
+	
 	/** time to pan using panLeft, panRight, panUp, panDown */
 	public var panDuration:Float = 0.5;
 
 	/** easing function used for zoomIn, zoomOut */
 	public var zoomEase:Object = quadraticEaseOut;
+	
 	/** time to zoom using zoomIn, zoomOut */
 	public var zoomDuration:Float = 0.2;
 
@@ -76,7 +78,7 @@ class TweenMap extends Map
 	/** 
 	* default easing function for panUp, panDown, panLeft, panRight, etc.
 	*/
-	private static function quadraticEaseOut(t:Float, b:Float, c:Float, d:Float):Float
+	private static function quadraticEaseOut(t:Float, b:Float, c:Float, d:Float):Float	
 	{
 		return -c * (t /= d) * (t - 2) + b;
 	}
@@ -86,10 +88,9 @@ class TweenMap extends Map
 	public function tweenToMatrix(m:Matrix, duration:Float):Void
 	{
 		grid.prepareForZooming();
-		grid.prepareForPanning();
-		enforceToRestore = grid.enforceBoundsEnabled;
+		grid.prepareForPanning();		
+		enforceToRestore = grid.enforceBoundsEnabled;		
 		grid.enforceBoundsEnabled = false;
-
 		grid.enforceBoundsOnMatrix(m);
 		
 		TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
@@ -101,17 +102,16 @@ class TweenMap extends Map
 	*/
 	private function panAndZoomComplete():Void
 	{
-		grid.enforceBoundsEnabled = enforceToRestore;
-		
+		grid.enforceBoundsEnabled = enforceToRestore;		
 		grid.donePanning();
 		grid.doneZooming();
 	}	
 
 	/** zoom in or out by sc, moving the given location to the requested target (or map center, if omitted) */	
-	override public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
+	override public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		if (duration < 0) duration = panAndZoomDuration;
-		if (targetPoint != null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint != null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);		
 		
 		var p:Point = locationPoint(location);
 		
@@ -125,7 +125,7 @@ class TweenMap extends Map
 		}
 		
 		// round the zoom delta up or down so that we end up at a power of 2
-		var preciseZoomDelta:Float = constrainedDelta + (Math.round(grid.zoomLevel+constrainedDelta) - (grid.zoomLevel+constrainedDelta));
+		var preciseZoomDelta:Float = constrainedDelta + (Math.round(grid.zoomLevel + constrainedDelta) - (grid.zoomLevel + constrainedDelta));		
 		
 		sc = Math.pow(2, preciseZoomDelta);
 		
@@ -139,10 +139,10 @@ class TweenMap extends Map
 	}
 
 	/** zoom in or out by zoomDelta, keeping the requested point in the same place */	
-	override public function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
+	override public function zoomByAbout(zoomDelta:Float, targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		if (duration < 0) duration = panAndZoomDuration;
-		if (targetPoint != null) targetPoint = new Point(mapWidth/2, mapHeight/2);		
+		if (targetPoint != null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);		
 
 		var constrainedDelta:Float = zoomDelta;
 
@@ -154,7 +154,7 @@ class TweenMap extends Map
 		}
 		
 		// round the zoom delta up or down so that we end up at a power of 2
-		var preciseZoomDelta:Float = constrainedDelta + (Math.round(grid.zoomLevel+constrainedDelta) - (grid.zoomLevel+constrainedDelta));
+		var preciseZoomDelta:Float = constrainedDelta + (Math.round(grid.zoomLevel + constrainedDelta) - (grid.zoomLevel + constrainedDelta));		
 
 		var sc:Float = Math.pow(2, preciseZoomDelta);
 		
@@ -168,7 +168,7 @@ class TweenMap extends Map
 	}
 
 	/** EXPERIMENTAL! */
-	public function tweenExtent(extent:MapExtent, duration:Float=-1):Void
+	public function tweenExtent(extent:MapExtent, duration:Float = -1):Void
 	{
 		if (duration < 0) duration = panAndZoomDuration;
 
@@ -182,7 +182,7 @@ class TweenMap extends Map
 		
 		m.translate(-p.x, -p.y);
 		m.scale(sc, sc);
-		m.translate(mapWidth/2, mapHeight/2);
+		m.translate(mapWidth / 2, mapHeight / 2);		
 		
 		tweenToMatrix(m, duration); 
 	}
@@ -198,7 +198,7 @@ class TweenMap extends Map
 	* @see com.modestmaps.TweenMap#panEase
 	* @see com.modestmaps.TweenMap#tweenTo
 	*/
-	public function panTo(location:Location, forceAnimate:Bool=false):Void
+	public function panTo(location:Location, forceAnimate:Bool = false):Void
 	{
 		var p:Point = locationPoint(location, grid);
 
@@ -225,10 +225,10 @@ class TweenMap extends Map
 	* 
 	* @see com.modestmaps.Map#panTo
 	*/
-	public function tweenTo(location:Location, duration:Float, easing:Object=null):Void
+	public function tweenTo(location:Location, duration:Float, easing:Object = null):Void
 	{
-		var pan:Point = new Point(mapWidth/2, mapHeight/2).subtract(locationPoint(location,grid));
-		grid.prepareForPanning();
+		var pan:Point = new Point(mapWidth / 2, mapHeight / 2).subtract(locationPoint(location, grid));
+		// grid.prepareForPanning();
 		TweenLite.to(grid, duration, { ty: grid.ty + pan.y,
 					   tx: grid.tx + pan.x,
 					   ease: easing,
@@ -247,7 +247,7 @@ class TweenMap extends Map
 		{
 			var target:Float = (dir < 0) ? Math.floor(grid.zoomLevel + dir) : Math.ceil(grid.zoomLevel + dir);
 			target = Math.max(grid.minZoom, Math.min(grid.maxZoom, target));
-
+			trace("grid : " + grid);
 			TweenLite.to(grid, zoomDuration, { zoomLevel: target,
 							   onStart: grid.prepareForZooming,
 							   onComplete: grid.doneZooming,
@@ -273,7 +273,7 @@ class TweenMap extends Map
 			if (grid.zoomLevel > grid.minZoom) {
 				mouseWheelingOut = true;
 				mouseWheelingIn = false;
-				sc = Math.max(0.5, 1.0+event.delta/20.0);
+				sc = Math.max(0.5, 1.0 + event.delta / 20.0);
 			}
 		}
 		else if (event.delta > 0)
@@ -282,7 +282,7 @@ class TweenMap extends Map
 			{
 				mouseWheelingIn = true;
 				mouseWheelingOut = false;			
-				sc = Math.min(2.0, 1.0+event.delta/20.0);		
+				sc = Math.min(2.0, 1.0 + event.delta / 20.0);
 			}
 		}
 
@@ -303,8 +303,7 @@ class TweenMap extends Map
 		
 		TweenLite.delayedCall(0.1, doneMouseWheeling);
 		
-		event.updateAfterEvent();
-		
+		event.updateAfterEvent();		
 	}
 
 	/**

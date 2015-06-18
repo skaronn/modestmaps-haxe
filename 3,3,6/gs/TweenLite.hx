@@ -186,6 +186,11 @@ class TweenLite {
 	public var extraTweens:Object; //If we run into a property that's supposed to be tweening but the target has no such property, those tweens get dumped in here.
 	public var target:Object; //Target object (often a MovieClip)
 	
+	private static function traceObject(object:Object):String
+	{	
+		return "[object "+(Type.getClassName(Type.getClass(object)))+"]";
+	}
+	
 	private static function traceLog(o:Object):Void {		
 		var len:UInt = 0;
 		if(Std.is(o, ObjectMap)){
@@ -229,8 +234,10 @@ class TweenLite {
 		return dictionaryValues;
 	}
 	
-	public function dumpFields():String{
-		return "[_active : " + this._active +"][_color : " + this._color +"][_endTarget : " + this._endTarget.dumpFields() +"][_sound : " + this._sound +"][delay : " + this.delay +"][duration : " + this.duration +"][extraTweens : " + this.extraTweens +"][initTime : " + this.initTime +"][startTime : " + this.startTime +"][target : " + this.target +"][tweens : " + this.tweens +"][vars : " + this.vars +"]";
+	public static function dumpFields(tw : TweenLite):String {
+		return "[_active : " + tw._active + "][_color : " + tw._color + "][_sound : " + tw._sound +"][delay : " + tw.delay +"][duration : " + tw.duration +"][extraTweens : " + tw.extraTweens +"][initTime : " + tw.initTime +"][startTime : " + tw.startTime +"][tweens : " + tw.tweens +"][vars : " + tw.vars +"][target : " + traceObject(tw.target) +"][_endTarget : " + traceObject(tw._endTarget) + "]";
+		//return "[_active : " + this._active +"][_color : " + this._color +"][_endTarget : " + this._endTarget.dumpFields() +"][_sound : " + this._sound +"][delay : " + this.delay +"][duration : " + this.duration +"][extraTweens : " + this.extraTweens +"][initTime : " + this.initTime +"][startTime : " + this.startTime +"][target : " + this.target +"][tweens : " + this.tweens +"][vars : " + this.vars +"]";
+
 	}
 		
 	public function new(target:Object, duration:Float, vars:Object) {		
@@ -241,7 +248,7 @@ class TweenLite {
 		var dictionary : ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
 		if ((vars.overwrite != false && target != null) || _all.get(target) == null)
 		{ 
-			//flash.Lib.trace("TweenLite.hx - new - _all.remove(target)");
+			//trace(" - new - _all.remove("+traceObject(target)+")");
 			_all.remove(target);
 			_all.set(target, dictionary);
 		}
@@ -503,7 +510,7 @@ class TweenLite {
 	}
 
 	public static function executeAll(e:Event):Void {
-		//flash.Lib.trace("TweenLite.hx - executeAll - e : " + e);
+		//trace(" - executeAll - e : " + e);
 		//flash.Lib.trace("TweenLite.hx - executeAll - _all : " + _all);
 		var a:Object = _all;
 		//flash.Lib.trace("TweenLite.hx - executeAll - a : " + a);
@@ -516,10 +523,12 @@ class TweenLite {
 			var fields : ObjectMap<Object, Object> = cast(_all.get(p), ObjectMap<Object, Object>);
 			//flash.Lib.trace("TweenLite.hx - executeAll - fields : " + fields.keys());
 			for (tweenLite in fields.keys()) {
-				//trace("TweenLite.hx - executeAll - tw " + tw.dumpFields());
+				
 				//trace("TweenLite.as - executeAll - tw : " + Type.typeof(tw) + " => " +  tw.dumpFields());
 				var tw : TweenLite = cast(tweenLite, TweenLite);
 				if (tw != null && tw.active) {
+					//trace("executeAll - tw : " + traceObject(tw));
+					//trace("executeAll - tw : " + dumpFields(tw));
 					tw.render(t);
 					if (_all.get(p) == null) { //Could happen if, for example, an onUpdate triggered a killTweensOf() for the object that's currently looping here. Without this code, we run the risk of hitting 1010 errors
 						break;

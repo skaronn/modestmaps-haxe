@@ -16,7 +16,6 @@ class ZoomBox extends Sprite
 {
 	private var map:Map;
 	private var box:Shape;
-
 	private var p:Point;
 
 	public function new(map:Map, boxLineThickness:Float = 0, boxLineColor:UInt = 0xff0000,	boxFillColor:UInt = 0xffffff, boxFillAlpha:Float = 0.2)
