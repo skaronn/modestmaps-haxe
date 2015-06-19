@@ -1,19 +1,23 @@
 package com.modestmaps.util;
 
-import openfl.text.TextField;
 import com.modestmaps.core.TileGrid;
 import com.modestmaps.core.Tile;
-import openfl.text.TextFormat;
-import openfl.utils.Timer;
-import openfl.display.Sprite;
-import openfl.system.System;
 import com.modestmaps.core.painter.TilePainter;
-import com.modestmaps.core.painter.ITilePainter;	
-import de.polygonal.core.fmt.NumberFormat;
+import com.modestmaps.core.painter.ITilePainter;
+
+import openfl.display.Sprite;
+import openfl.text.TextFormat;
+import openfl.text.TextField;
+import openfl.system.System;
 import openfl.utils.Object;
-import haxe.ds.ObjectMap;
+import openfl.utils.Timer;
 import openfl.utils.*;
 import openfl.errors.*;
+
+import de.polygonal.core.fmt.NumberFormat;
+
+import haxe.ds.ObjectMap;
+
 
 class DebugUtil
 {	

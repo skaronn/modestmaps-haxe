@@ -33,6 +33,8 @@ import com.modestmaps.mapproviders.microsoft.MicrosoftProvider;
 import com.modestmaps.overlays.MarkerClip;
 import com.modestmaps.util.DebugUtil;
 
+import flash.errors.Error;
+
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -40,7 +42,6 @@ import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import flash.errors.Error;
 import openfl.utils.Object;
 
 @:meta(Event(name="startZooming",	  type="com.modestmaps.events.MapEvent"))
@@ -101,15 +102,15 @@ class Map extends Sprite
 		// don't call setMapProvider here
 		// the extent calculations are all squirrely
 		this.mapProvider = mapProvider;
-		trace("new - width : " + width);
+		/*trace("new - width : " + width);
 		trace("new - height : " + height);
 		trace("new - draggable : " + draggable);
-		trace("new - mapProvider : " + mapProvider);
+		trace("new - mapProvider : " + mapProvider);*/
 		//DebugUtil.dumpStack(this, "new");
 		
 		// initialize the grid (so point/location/coordinate functions should be valid after this)
 		grid = new TileGrid(width, height, draggable, mapProvider);
-		trace("new - grid : " + grid);
+		//trace("new - grid : " + grid);
 		grid.addEventListener(Event.CHANGE, onExtentChanged);
 		addChild(grid);
 
@@ -467,13 +468,13 @@ class Map extends Sprite
 	}
 		
 	/** Pan up by 1/3 (or panFraction) of the map height. */
-	public function panUp(event:Event=null):Void
+	public function panUp(event:Event = null):Void	
 	{
 		panBy(0, mapHeight * panFraction);
 	}	  
 
 	   /** Pan down by 1/3 (or panFraction) of the map height. */
-	public function panDown(event:Event=null):Void
+	public function panDown(event:Event = null):Void	
 	{
 		panBy(0, -mapHeight * panFraction);
 	}
@@ -481,26 +482,28 @@ class Map extends Sprite
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
 	public function panLeft(event:Event = null):Void	
 	{
-		trace("panLeft - mapWidth : "+mapWidth);
-		trace("panLeft - panFraction : " + panFraction);
+		//trace("panLeft - mapWidth : "+mapWidth);
+		//trace("panLeft - panFraction : " + panFraction);
 		var result = cast((mapWidth * panFraction), Float);
-		trace("panRight - result : " +result);
+		//trace("panLeft - result : " +result);
+		//DebugUtil.dumpStack(this, "panLeft");
 		panBy(result, 0);
 	}	  
 
 	/** Pan left by 1/3 (or panFraction) of the map width. */	
 	public function panRight(event:Event = null):Void	
 	{
-		trace("panRight - mapWidth : "+mapWidth);
-		trace("panRight - panFraction : " + panFraction);
+		//trace("panRight - mapWidth : "+mapWidth);
+		//trace("panRight - panFraction : " + panFraction);
 		var result = cast(-(mapWidth * panFraction), Float);
-		trace("panRight - result : " +result);
+		//trace("panRight - result : " +result);
+		//DebugUtil.dumpStack(this, "panRight");
 		panBy(result, 0);
-		//DebugUtil.dumpStack(this, "panBy");
 	}
 
-	public function panBy(px:Float, py:Float):Void
+	public function panBy(px:Float, py:Float):Void	
 	{
+		trace("panBy - px : " +px+", py : "+py);
 		if (!grid.panning && !grid.zooming)
 		{
 			grid.prepareForPanning();
@@ -517,13 +520,13 @@ class Map extends Sprite
 	}
 
 	/** zoom out, keeping the requested point in the same place */
-	public function zoomOutAbout(targetPoint:Point=null, duration:Float=-1):Void
+	public function zoomOutAbout(targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		zoomByAbout(-1, targetPoint, duration);
 	}
 
 	/** zoom in or out by zoomDelta, keeping the requested point in the same place */
-	public function zoomByAbout(zoomDelta:Float, targetPoint:Point=null, duration:Float=-1):Void
+	public function zoomByAbout(zoomDelta:Float, targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		if (targetPoint == null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);
 		
@@ -549,7 +552,7 @@ class Map extends Sprite
 
 		grid.doneZooming();
 		grid.donePanning();
-		flash.Lib.trace("zoomByAbout");
+		trace("zoomByAbout");
 	}
 
 	public function getRotation():Float
@@ -560,14 +563,14 @@ class Map extends Sprite
 	}
 
 	/** rotate to angle (radians), keeping the requested point in the same place */
-	public function setRotation(angle:Float, targetPoint:Point=null):Void
+	public function setRotation(angle:Float, targetPoint:Point = null):Void	
 	{
 		var rotation:Float = getRotation();
 		rotateByAbout(angle - rotation, targetPoint);		
 	}
 
 	/** rotate by angle (radians), keeping the requested point in the same place */
-	public function rotateByAbout(angle:Float, targetPoint:Point=null):Void
+	public function rotateByAbout(angle:Float, targetPoint:Point = null):Void	
 	{
 		if (targetPoint == null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);
 		
@@ -587,19 +590,19 @@ class Map extends Sprite
 	}	
 
 	/** zoom in and put the given location in the center of the screen, or optionally at the given targetPoint */
-	public function panAndZoomIn(location:Location, targetPoint:Point=null):Void
+	public function panAndZoomIn(location:Location, targetPoint:Point = null):Void	
 	{
 		panAndZoomBy(2, location, targetPoint);
 	}
 
 	/** zoom out and put the given location in the center of the screen, or optionally at the given targetPoint */	
-	public function panAndZoomOut(location:Location, targetPoint:Point=null):Void
+	public function panAndZoomOut(location:Location, targetPoint:Point = null):Void	
 	{
 		panAndZoomBy(0.5, location, targetPoint);
 	}
 
 	/** zoom in or out by sc, moving the given location to the requested target */	
-	public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point=null, duration:Float=-1):Void
+	public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		if (targetPoint == null) targetPoint = new Point(mapWidth/2, mapHeight/2);
 		

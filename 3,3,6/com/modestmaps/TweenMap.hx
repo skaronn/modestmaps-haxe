@@ -67,10 +67,11 @@ class TweenMap extends Map
 	*/
 	override public function panBy(px:Float, py:Float):Void
 	{
+		trace("grid.panning : " + grid.panning + " && grid.zooming : " + grid.zooming);
 		if (!grid.panning && !grid.zooming)
 		{
 			grid.prepareForPanning();
-			trace("panBy - grid : " + grid + ", panDuration : " + panDuration + ", tx : " + cast(grid.tx + px, Float) + ", ty : " + cast(grid.ty + py, Float) + ", onComplete : " + grid.donePanning + ", ease : " +panEase);
+			//trace("panBy - grid : " + grid + ", panDuration : " + panDuration + ", tx : " + cast(grid.tx + px, Float) + ", ty : " + cast(grid.ty + py, Float) + ", onComplete : " + grid.donePanning + ", ease : " +panEase);
 			TweenLite.to(grid, panDuration, { tx: grid.tx + px, ty: grid.ty + py, onComplete: grid.donePanning, ease: panEase } );
 		}
 	}	  

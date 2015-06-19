@@ -672,23 +672,24 @@ class TileGrid extends Sprite
 		// for positioning tile according to current transform, based on current tile zoom
 		var scaleFactors:Array<Int> = new Array<Int>();
 		// scales to compensate for zoom differences between current grid zoom level		
-		var tileScales:Array<Int> = new Array<Int>();
+		var tileScales:Array<Float> = new Array<Float>();
 		
 		for (z in 0...cast(maxZoom + 1, Int))
 		{
 			//trace("positionTiles - z : "+z);
 			scaleFactors[z] = Std.int(Math.pow(2.0, _currentTileZoom - z));
+			//trace("positionTiles - scaleFactors["+z+"] : "+scaleFactors[z]);
 			// round up to the nearest pixel to avoid seams between zoom levels
 			if (roundScalesEnabled) {
-				tileScales[z] = Std.int(Math.ceil(Math.pow(2, zoomLevel - z) * tileWidth) / tileWidth); 
-				trace("positionTiles (roundScalesEnabled) - (Math.ceil(Math.pow(2, zoomLevel - z) * tileWidth) / tileWidth) : " + (Math.ceil(Math.pow(2, zoomLevel - z) * tileWidth) / tileWidth));
+				tileScales[z] = Math.ceil(Math.pow(2, zoomLevel - z) * tileWidth) / tileWidth; 
+				//trace(z + " - positionTiles (roundScalesEnabled) - (Math.ceil(Math.pow(2, zoomLevel - z) * tileWidth) / tileWidth) : " + (Math.ceil(Math.pow(2, zoomLevel - z) * tileWidth) / tileWidth));
 				//trace("positionTiles (roundScalesEnabled) - (Math.pow(2, zoomLevel - z) * tileWidth) : " + (Math.pow(2, zoomLevel - z) * tileWidth));
 				//trace("positionTiles (roundScalesEnabled) - Math.pow(2, zoomLevel - z) : "+Math.pow(2, zoomLevel - z));
-				//trace("positionTiles (roundScalesEnabled) - tileScales["+z+"] : "+tileScales[z]);
+				//trace(z + " - positionTiles (roundScalesEnabled) - tileScales["+z+"] : "+tileScales[z]);
 			}
 			else {
 				tileScales[z] = Std.int(Math.pow(2, zoomLevel - z));
-				trace("positionTiles - tileScales["+z+"] : "+tileScales[z]);
+				//trace("positionTiles - tileScales["+z+"] : "+tileScales[z]);
 			}
 		}
 		
@@ -891,12 +892,12 @@ class TileGrid extends Sprite
 		stage.addEventListener(Event.MOUSE_LEAVE, mouseReleased);
 	}
 
-	public function mouseReleased(event:Event):Void
-	{
-		//trace("mouseReleased - event : "+event);
+	public function mouseReleased(event:Event):Void	
+	{		
 		stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseDragged);
 		stage.removeEventListener(MouseEvent.MOUSE_UP, mouseReleased);
 		stage.removeEventListener(Event.MOUSE_LEAVE, mouseReleased);
+		trace("mouseReleased - event : "+event);
 		donePanning();
 		dirty = true;
 		//trace("mouseReleased - Std.is(event, MouseEvent) : "+Std.is(event, MouseEvent));
