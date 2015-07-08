@@ -118,7 +118,7 @@ class Map extends Sprite
 		
 		markerClip = new MarkerClip(this);
 		addChild(markerClip);
-
+		
 		// if rest was passed in from super constructor in a subclass,
 		// it will be an array...
 		//trace("new - rest is Array : " + Std.is (rest, Array));
@@ -159,7 +159,7 @@ class Map extends Sprite
 			}
 			setExtent(extent);
 		}
-		
+				
 		addChild(grid.debugField);
 	}
 

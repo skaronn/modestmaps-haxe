@@ -146,7 +146,7 @@ class MarkerClip extends Sprite
 		
 		dirty = true;
 		//trace("onAddedToStage - dirty : "+dirty);
-		//updateClips();
+		updateClips();
 		
 		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 		addEventListener(Event.REMOVED_FROM_STAGE, onRemovedFromStage);		
@@ -169,8 +169,9 @@ class MarkerClip extends Sprite
 			Reflect.setField(markersByName, marker.name, marker);
 			markers.push(marker);
 			var added:Bool = updateClip(marker);
-			
+			//trace("attachMarker - added : "+added);
 			if (added) {
+				trace("attachMarker - markers.length : "+markers.length);
 				requestSort(true);
 			}
 		}
@@ -368,7 +369,7 @@ class MarkerClip extends Sprite
 				//trace("updateClip - marker.markerInBounds");
 				if (!contains(marker))
 				{
-					//trace("updateClip - marker : "+ marker);
+					trace("updateClip - marker.x : "+ marker.x+", marker.y : "+marker.y);
 					addChild(marker);
 					// notify the caller that we've added something and need to sort markers
 					return true;
