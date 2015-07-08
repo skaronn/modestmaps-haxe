@@ -1,4 +1,4 @@
-# [<img src="http://content.stamen.com/files/modestmaps_logo.png" alt="Modest maps" width="140">](http://modestmaps.com/) [<img src="http://haxe.org/img/haxe-logo-horizontal.svg" alt="Haxe logo" width="140">](http://haxe.org) - [modestmaps-haxe]
+# [<img src="https://code.google.com/p/modestmaps/logo?cct=0" alt="Modest maps" width="153" height="53">](http://modestmaps.com/) [<img src="http://haxe.org/img/haxe-logo-horizontal.svg" alt="Haxe logo" width="140">](http://haxe.org) - modestmaps-haxe
 ===============
 Modest Maps is a library that to displays and interacts tile based maps providers (Yahoo, Google Maps, Open Street Map, Here Map, Microsoft Maps).
 
