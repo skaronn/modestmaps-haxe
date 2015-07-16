@@ -1,13 +1,14 @@
-# [<img src="https://code.google.com/p/modestmaps/logo?cct=0" alt="Modest maps" width="153" height="53">](http://modestmaps.com/) modestmaps-haxe [<img src="http://haxe.org/img/haxe-logo-horizontal.svg" alt="Haxe logo" width="140">](http://haxe.org)
+# [<img src="https://code.google.com/p/modestmaps/logo?cct=0" alt="Modest maps" width="153" height="53">](http://modestmaps.com/)[<img src="http://haxe.org/img/haxe-logo-horizontal.svg" alt="Haxe logo" width="140">](http://haxe.org) modestmaps-haxe
 
-Modest Maps is a library that to displays and interacts tile based maps providers (Yahoo, Google Maps, Open Street Map, Here Map, Microsoft Maps).
+Modest Maps - Haxe is a simple library that enables to display and interact online with tile based mapping portals (Yahoo, Google Maps, Open Street Map, Here Map, Microsoft Maps).
+It provides directions, interactive maps, and satellite/aerial imagery of many countries plus geographic data for the world.
 
-Modest Maps for Haxe was written to allows you easily build cross-platform map application.
+It was written to allows you easily build cross-platform mapping application.
 
 Haxe is an open source toolkit under the GNU General Public version 2, BSD and GNU Lesser General Public version 2.1 licenses. 
 For more information about Haxe, head to the [offical Haxe website](http://haxe.org).
 
-#Following platforms:
+#Platforms:
  * HTML5  [NOT YET SUPPORTED]
  * Flash  [SUPPORTED]
  * Windows  [NOT YET SUPPORTED]
@@ -36,6 +37,18 @@ For more information about Haxe, head to the [offical Haxe website](http://haxe.
  * Cabspotting
  * Data linking
 
-A basic example is available in the library that can be run using [FlashDevelop](http://flashdevelop.org/).
+### project.xml
 
-Work in progress...
+    <include path="/path/to/modestmaps-haxe" />
+
+
+###License
+
+The MIT License (MIT) - [LICENSE.md](LICENSE.md)
+
+Copyright &copy; 2015
+
+Author: Marcus Skaronn
+
+WORK IN PROGRESS !!!
+----------------
