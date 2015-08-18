@@ -1,17 +1,17 @@
 package com.modestmaps.extras;
 
+import openfl.display.Sprite;
+import openfl.external.ExternalInterface;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+import openfl.text.TextFormatAlign;
+//import openfl.utils.ClearTimeout;
+//import openfl.utils.SetTimeout;
+
 import com.modestmaps.Map;
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.geo.Location;
-
-import openfl.display.Sprite;
-import flash.external.ExternalInterface;
-import openfl.text.TextField;
-import openfl.text.TextFormat;
-import openfl.text.TextFormatAlign;
-import flash.utils.ClearTimeout;
-import flash.utils.SetTimeout;
 
 /** 
  * VERY EXPERIMENTAL, requires javascript, uses this technique: 
@@ -22,7 +22,7 @@ import flash.utils.SetTimeout;
  * In general, lots of this needs reworking... at least, IMapProviders should be able to provide copyright strings 
  * without requiring javascript, and without needing to edit this file.
  */
-@:meta(Event(name="copyrightChanged", type="com.modestmaps.events.MapEvent")] 
+//@:meta(Event(name="copyrightChanged", type="com.modestmaps.events.MapEvent") 
 class MapCopyright extends Sprite
 {
 private static inline var script_js:XML = <script>

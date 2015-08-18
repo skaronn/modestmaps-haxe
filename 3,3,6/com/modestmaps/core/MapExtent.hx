@@ -1,13 +1,17 @@
 /*
  * $Id$
+ * 
+ * https://developers.arcgis.com/flex/sample-code/map-extent-and-mouse-coordinates.htm
+ * https://www.openstreetmap.org/export#map=6/8.733/41.353
  */
 package com.modestmaps.core;
 
-import com.modestmaps.geo.Location;
-import de.polygonal.ds.Map;
-import flash.Lib;
-import openfl.utils.Object;
+import Map;
+
 import openfl.geom.Rectangle;
+import openfl.utils.Object;
+
+import com.modestmaps.geo.Location;
 
 class MapExtent
 {
@@ -23,7 +27,7 @@ class MapExtent
 	 * @param e the eastern-most longitude
 	 * @param w the westest longitude
 	 */
-	public function new(n:Float=0, s:Float=0, e:Float=0, w:Float=0)
+	public function new(n:Float = 0, s:Float = 0, e:Float = 0, w:Float = 0)	
 	{
 		north = Math.max(n, s);
 		south = Math.min(n, s);
@@ -47,7 +51,9 @@ class MapExtent
 		west = Math.min(extent.west, west);		
 	}
 
-	/** enlarges this extent so that the given location is inside it */
+	/** 
+	 * enlarges this extent so that the given location is inside it
+	 */
 	public function enclose(location:Location):Void
 	{
 		north = Math.max(location.lat, north);
@@ -193,18 +199,18 @@ class MapExtent
 	* @param	locations
 	* @return
 	*/
-	public static function fromLocations(locations:Array<Object>):MapExtent
+	public static function fromLocations(locations:Array<Object>):MapExtent	
 	{
-		if (locations==null || locations.length == 0) return new MapExtent();
+		if (locations == null || locations.length == 0) return new MapExtent();		
 		
 		var extent:MapExtent = null;
 		var location:Location = null;
-		var len : Int = 0;
+		//var len : Int = 0;
 		for (location in locations)
 		{
 			if (extent == null)
 			{
-				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {
+				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {					
 					extent = new MapExtent(location.lat, location.lat, location.lon, location.lon);
 				}			
 			}
@@ -213,12 +219,12 @@ class MapExtent
 					extent.enclose(location);
 				}
 			}
-			len++;
+			//len++;
 		}
 		
-		trace("fromLocations - len : " + len);
+		//trace("fromLocations - len : " + len);
 		
-		if (extent!=null) {
+		if (extent != null) {
 			extent = new MapExtent();
 		}
 		
@@ -241,12 +247,10 @@ class MapExtent
 	* @param	locationProp
 	* @return
 	*/
-	public static function fromLocationProperties(objects:Map<String, Object>, locationProp:String="location"):MapExtent
+	public static function fromLocationProperties(objects:Map<String, Object>, locationProp:String = "location"):MapExtent
 	{
 		var fromLocationProp : Location = cast(objects.get(locationProp), Location);
-		var locations : Array<Object> = [fromLocationProp];
-		return fromLocations(locations);
-		//return fromLocations(objects.map(function(obj:Dynamic, ...rest):Location { return obj[locationProp] as Location })); } ));
+		return fromLocations([fromLocationProp]);
 	}
 
 }

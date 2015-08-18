@@ -23,8 +23,8 @@ class Distance
 	 * @return distance between given start and end locations in metres
 	 * 
 	 * @see http://jan.ucc.nau.edu/~cvm/latlon_formula.html 
-	 * */
-	public static function approxDistance(start:Location, end:Location, r:Float=R_METERS):Float 
+	 */
+	public static function approxDistance(start:Location, end:Location, r:Float = R_METERS):Float
 	{
 		
 		var a1:Float = radians(start.lat);
@@ -32,10 +32,8 @@ class Distance
 		var a2:Float = radians(end.lat);
 		var b2:Float = radians(end.lon);
 
-		var d:Float;
-		with(Math) {
-			d = acos(cos(a1)*cos(b1)*cos(a2)*cos(b2) + cos(a1)*sin(b1)*cos(a2)*sin(b2) + sin(a1)*sin(a2)) * r;
-		}
+		var d:Float = Math.acos(Math.cos(a1) * Math.cos(b1) * Math.cos(a2) *Math.cos(b2) + Math.cos(a1) * Math.sin(b1) * Math.cos(a2) * Math.sin(b2) + Math.sin(a1) * Math.sin(a2)) * r;
+		
 		return d;
 	}	
 

@@ -2,15 +2,17 @@ package com.modestmaps.extras.ui;
 
 import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
 import openfl.display.Shape;
 import openfl.display.StageDisplayState;
 import openfl.events.Event;
 import openfl.errors.Error;
+#if flash
 import flash.events.FullScreenEvent;
-import flash.events.ContextMenuEvent;
-import flash.display.LineScaleMode;
 import flash.ui.ContextMenu;
 import flash.ui.ContextMenuItem;
+#end
+import openfl.events.ContextMenuEvent;
 
 class FullScreenButton extends Button
 {	

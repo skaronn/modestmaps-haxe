@@ -22,11 +22,14 @@ class Overlay extends Sprite
 
 	public function new(map:Map)
 	{
+		super();
 		this.mouseEnabled = false;
 		this.mouseChildren = false;
 		this.map = map;
 		this.cacheAsBitmap = true;
-		this.blendMode = BlendMode.MULTIPLY;
+		#if flash
+		this.blendMode = flash.display.BlendMode.MULTIPLY;
+		#end
 
 		addChild(polyCont);
 		polyCont.addChild(polySprite);
@@ -48,23 +51,22 @@ class Overlay extends Sprite
 
 	private function onMapResize(event:Event):Void
 	{
-	/*
 		graphics.clear();
-		graphics.beginFill(0xcccccc);
+		graphics.beginFill(0xCCCCCC);
 		var w:Float = map.getWidth();
 		var h:Float = map.getHeight();
-		graphics.drawRect(0, 0, w, h); */
+		graphics.drawRect(0, 0, w, h);
 		refresh();
 	}
 
 	public function refresh():Void
 	{
 		polyCont.scaleX = polyCont.scaleY = 1.0;
-		polyCont.x = stage.stageWidth/2;
-		polyCont.y = stage.stageHeight/2;
-		polySprite.x = stage.stageWidth/2;
-		polySprite.y = stage.stageHeight/2;
-		redraw(polySprite);
+		/*polyCont.x = stage.stageWidth / 2;		
+		polyCont.y = stage.stageHeight / 2;		
+		polySprite.x = stage.stageWidth / 2;		
+		polySprite.y = stage.stageHeight / 2;		
+		redraw(polySprite);*/
 	}
 
 	/** redraw the overlay onto the given Sprite - override this in your subclass */
@@ -89,7 +91,7 @@ class Overlay extends Sprite
 
 	private function onMapStartPan(event:MapEvent):Void
 	{
-		panStart = new Point(polyCont.x,polyCont.y);
+		panStart = new Point(polyCont.x, polyCont.y);
 	}
 
 	private function onMapStopPan(event:MapEvent):Void

@@ -1,5 +1,8 @@
 package com.modestmaps.overlays;
 
+import openfl.display.CapsStyle;
+import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
 import openfl.utils.Object;
 /**
  * Polyline class that takes polyline data and draws it in the given style.
@@ -19,6 +22,7 @@ import openfl.utils.Object;
  * Originally contributed by simonoliver.
  * 
  */
+
 class Polyline
 {
 	public var id:String;
@@ -27,24 +31,24 @@ class Polyline
 	public var lineColor:Float;
 	public var lineAlpha:Float;
 	public var pixelHinting:Bool;
-	public var scaleMode:String;
-	public var caps:String;
-	public var joints:String;
+	public var scaleMode:LineScaleMode;
+	public var caps:CapsStyle;
+	public var joints:JointStyle;
 	public var miterLimit:Float;
 		
 	public function new(id:String, 
 				 locationsArray:Array<Object>,
-				 lineThickness:Float=3, 
-				 lineColor:Float=0xFF0000, 
-				 lineAlpha:Float=1, 
-				 pixelHinting:Bool=false, 
-				 scaleMode:String="normal", 
-				 caps:String=null, 
-				 joints:String=null, 
-				 miterLimit:Float=3)
+				 lineThickness:Float = 3,
+				 lineColor:Float = 0xFF0000,
+				 lineAlpha:Float = 1,
+				 pixelHinting:Bool = false, 
+				 scaleMode:LineScaleMode = null,
+				 caps:CapsStyle = null,
+				 joints:JointStyle = null,
+				 miterLimit:Float = 3)
 	{
 		this.id = id;
-		this.locationsArray = locations:Array<Object>;
+		this.locationsArray = locationsArray;
 		this.lineThickness = lineThickness;
 		this.lineColor = lineColor;
 		this.lineAlpha = lineAlpha;

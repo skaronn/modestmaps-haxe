@@ -1,9 +1,5 @@
 package com.modestmaps.extras;
 
-import com.modestmaps.Map;
-import com.modestmaps.core.MapExtent;
-import com.modestmaps.geo.Location;
-
 import openfl.display.LineScaleMode;
 import openfl.display.Shape;
 import openfl.display.Sprite;
@@ -11,6 +7,10 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
+
+import com.modestmaps.Map;
+import com.modestmaps.core.MapExtent;
+import com.modestmaps.geo.Location;
 
 class ZoomBox extends Sprite
 {

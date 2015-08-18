@@ -25,24 +25,25 @@
  */
 package com.modestmaps;
 
-import com.modestmaps.core.*;
-import com.modestmaps.events.*;
-import com.modestmaps.geo.*;
-import com.modestmaps.mapproviders.IMapProvider;
-import com.modestmaps.mapproviders.microsoft.MicrosoftProvider;
-import com.modestmaps.overlays.MarkerClip;
-import com.modestmaps.util.DebugUtil;
-
-import flash.errors.Error;
-
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+import openfl.errors.Error;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.utils.Object;
+
+import com.modestmaps.core.Coordinate;
+import com.modestmaps.core.MapExtent;
+import com.modestmaps.core.TileGrid;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.geo.Location;
+import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.mapproviders.microsoft.MicrosoftProvider;
+import com.modestmaps.overlays.MarkerClip;
+import com.modestmaps.util.DebugUtil;
 
 @:meta(Event(name="startZooming",	  type="com.modestmaps.events.MapEvent"))
 @:meta(Event(name="stopZooming",	   type="com.modestmaps.events.MapEvent"))
@@ -447,7 +448,7 @@ class Map extends Sprite
 	*
 	* @return   Matching point.
 	*/
-	public function locationPoint(location:Location, context:DisplayObject=null):Point
+	public function locationPoint(location:Location, context:DisplayObject = null):Point
 	{
 		var coord:Coordinate = mapProvider.locationCoordinate(location);
 		return grid.coordinatePoint(coord, context);
@@ -461,7 +462,7 @@ class Map extends Sprite
 	*
 	* @return   Matching location.
 	*/
-	public function pointLocation(point:Point, context:DisplayObject=null):Location
+	public function pointLocation(point:Point, context:DisplayObject = null):Location
 	{
 		var coord:Coordinate = grid.pointCoordinate(point, context);
 		return mapProvider.coordinateLocation(coord);

@@ -1,15 +1,14 @@
 package com.modestmaps.extras;
 
-import com.modestmaps.Map;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.extras.ui.Button;
-import com.modestmaps.extras.ui.FullScreenButton;
-import com.modestmaps.util.DebugUtil;
 import haxe.ds.ObjectMap;
+
+#if flash
+import flash.events.FullScreenEvent;
+import com.modestmaps.extras.ui.FullScreenButton;
+#end
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
-import flash.events.FullScreenEvent;
 import openfl.events.KeyboardEvent;
 import openfl.events.MouseEvent;
 import openfl.filters.DropShadowFilter;
@@ -17,6 +16,12 @@ import openfl.geom.ColorTransform;
 import openfl.text.TextField;
 import openfl.ui.Keyboard;
 import openfl.utils.Object;
+
+import com.modestmaps.Map;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.extras.ui.Button;
+import com.modestmaps.util.DebugUtil;
+
 
 /** 
  * this is a bit of a silly class really,
@@ -38,8 +43,10 @@ class MapControls extends Sprite
 
 	public var inButton:Button;
 	public var outButton:Button;
-
+	
+	#if flash
 	public var fullScreenButton:FullScreenButton = new FullScreenButton();
+	#end
 
 	private var map:Map;
 	private var keyboard:Bool;
@@ -62,8 +69,10 @@ class MapControls extends Sprite
 		upButton: { left: '40px', bottom: '40px' },
 		downButton: { left: '40px', bottom: '15px' },
 		inButton: { left: '95px', bottom: '40px' },
-		outButton: { left: '95px', bottom: '15px' },
-		fullScreenButton: { left: '125px', bottom: '15px' }
+		outButton: { left: '95px', bottom: '15px' }
+		#if flash
+		,fullScreenButton: { left: '125px', bottom: '15px' }
+		#end
 	};
 
 	public static var SIDES:Object = {
@@ -72,8 +81,10 @@ class MapControls extends Sprite
 		upButton: { left: '50%', top: '15px', align: 'top-center' },
 		downButton: { right: '50%', bottom: '15px', align: 'top-center' },
 		inButton: { left: '15px', top: '15px' },
-		outButton: { left: '15px', top: '40px' },
-		fullScreenButton: { left: '15px', bottom: '15px' }
+		outButton: { left: '15px', top: '40px' }
+		#if flash
+		,fullScreenButton: { left: '15px', bottom: '15px' }
+		#end
 	};
 
 	private var positions:Object = GROUPED;
@@ -141,7 +152,7 @@ class MapControls extends Sprite
 		}
 	};
 
-	public function new(map:Map, keyboard:Bool=true, fullScreen:Bool=false, buttonPositions:Object=null, buttonClass:Class<Object>=null)
+	public function new(map:Map, keyboard:Bool = true, fullScreen:Bool = false, buttonPositions:Object = null, buttonClass:Class<Object> = null)
 	{
 		super();
 		if (buttonClass != null) buttonClass = Button;
@@ -173,8 +184,10 @@ class MapControls extends Sprite
 		
 		if (fullScreen)
 		{
+			#if flash
 			buttons.push(fullScreenButton);
 			actions.push(fullScreenButton.toggleFullScreen);
+			#end
 		}   
 
 		for (i in 0...buttons.length)
@@ -203,7 +216,9 @@ class MapControls extends Sprite
 		}
 		
 		if (fullScreen) { 
+			#if flash
 			stage.addEventListener(FullScreenEvent.FULL_SCREEN, onFullScreenEvent);
+			#end
 		}
 		
 		// since our size is based on map size, wait for map to be resized, so we don't 
@@ -269,7 +284,7 @@ class MapControls extends Sprite
 			for (reference in Reflect.fields(position))
 			{
 				if (reference == 'align') continue;
-				Reflect.field(positionFunctions, reference)(Reflect.field(this, child), Reflect.field(position, reference), Reflect.field(position, 'align'), map, hAlignFunctions);
+				Reflect.field(positionFunctions, reference) (Reflect.field(this, child), Reflect.field(position, reference), Reflect.field(position, 'align'), map, hAlignFunctions);
 			}
 		}
 	}

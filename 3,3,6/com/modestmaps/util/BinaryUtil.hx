@@ -3,8 +3,9 @@
  * $Id$
  */
 package com.modestmaps.util;
-import openfl.utils.ByteArray;
 
+import openfl.utils.ByteArray;
+ 
 class BinaryUtil 
 {
 	private static var PADDING:String = "00000000000000000000000000000000";
@@ -38,6 +39,11 @@ class BinaryUtil
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param	decimalValue
+	 * @return
+	 */
 	private static function decimalToBinary(decimalValue:Int):String
 	{
 		var stringBinary:Dynamic = decimalValue;
@@ -45,6 +51,11 @@ class BinaryUtil
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param	binaryRepresentation
+	 * @return
+	 */
 	private static function binaryToDecimal(binaryRepresentation:String):Int
 	{			
 		var result : Float = 0;
@@ -52,12 +63,17 @@ class BinaryUtil
 		{
 			if (binaryRepresentation.charAt(i) == '1')
 			{
-				result = result + Math.pow(2, binaryRepresentation.length-1-i);
+				result = result + Math.pow(2, binaryRepresentation.length - 1 - i);				
 			}
 		}
 		return Std.int(result);
 	}
 	
+	/**
+	 * 
+	 * @param	binaryRepresentation
+	 * @return
+	 */
 	private static function binaryToHexadecimal(binaryRepresentation:String):String
 	{
 		var binaryToIntRepresentation : Int = binaryToDecimal(binaryRepresentation);

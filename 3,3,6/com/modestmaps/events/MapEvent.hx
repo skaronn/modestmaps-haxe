@@ -4,13 +4,13 @@
 
 package com.modestmaps.events;
 
-import com.modestmaps.core.MapExtent;
-import com.modestmaps.mapproviders.IMapProvider;
-import com.modestmaps.util.DebugUtil;
-
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.utils.Object;
+
+import com.modestmaps.core.MapExtent;
+import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 
 class MapEvent extends Event
 {
@@ -51,7 +51,7 @@ class MapEvent extends Event
 	/** listen out for this if you want to be sure map is in its final state before reprojecting markers etc. */
 	public static inline var RENDERED:String = 'rendered';
 
-	public function new(type:String, rest:Array<Object>=null)
+	public function new(type:String, rest:Array<Object> = null)	
 	{
 		super(type, true, true);
 		

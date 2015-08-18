@@ -1,11 +1,5 @@
 package com.modestmaps.core.painter;
 
-import com.modestmaps.core.Coordinate;
-import com.modestmaps.core.Tile;
-import com.modestmaps.core.TileGrid;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.mapproviders.IMapProvider;
-import de.polygonal.ds.Map;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
 import haxe.macro.Type;
@@ -24,6 +18,12 @@ import openfl.system.LoaderContext;
 import openfl.utils.Object;
 import openfl.utils.Timer;
 import openfl.errors.Error;
+
+import com.modestmaps.core.Coordinate;
+import com.modestmaps.core.Tile;
+import com.modestmaps.core.TileGrid;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.mapproviders.IMapProvider;
 
 class TilePainter extends EventDispatcher implements ITilePainter
 {
@@ -173,7 +173,8 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 */
 	public function isPainted(tile:Tile):Bool
 	{
-		return layersNeeded.get(tile.name) == null;	
+		//return layersNeeded.get(tile.name) == null;	
+		return layersNeeded.get(tile.name) != null;	
 	}
 
 	/**
@@ -376,7 +377,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 			trace("caching content for" + loader.contentLoaderInfo.url);
 			try {
 				var content:Bitmap = cast(loader.content, Bitmap);
-				loaderCache.get(loader.contentLoaderInfo.url) = content;
+				loaderCache.set(loader.contentLoaderInfo.url, content);
 				cachedUrls.push(loader.contentLoaderInfo.url);
 				if (cachedUrls.length > maxLoaderCacheSize) {
 					loaderCache.remove(cachedUrls.shift());

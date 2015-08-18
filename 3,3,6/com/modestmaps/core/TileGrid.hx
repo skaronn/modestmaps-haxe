@@ -1,12 +1,6 @@
 package com.modestmaps.core;
 
-import com.modestmaps.core.painter.ITilePainter;
-import com.modestmaps.core.painter.ITilePainterOverride;
-import com.modestmaps.core.painter.TilePainter;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.extras.ui.DebugField;
-import com.modestmaps.mapproviders.IMapProvider;
-import com.modestmaps.util.DebugUtil;
+import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -20,7 +14,13 @@ import openfl.text.TextField;
 import openfl.utils.Object;
 import openfl.utils.Timer;
 
-import haxe.ds.ObjectMap;
+import com.modestmaps.core.painter.ITilePainter;
+import com.modestmaps.core.painter.ITilePainterOverride;
+import com.modestmaps.core.painter.TilePainter;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.extras.ui.DebugField;
+import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 
 class TileGrid extends Sprite
 {
@@ -269,7 +269,9 @@ class TileGrid extends Sprite
 	private function onEnterFrame(event:Event=null):Void
 	{
 		if (debugField.parent != null) {
-			debugField.update(this, blankCount, recentlySeen.length, tilePainter);
+			if (recentlySeen != null) {
+				debugField.update(this, blankCount, recentlySeen.length, tilePainter);
+			}
 			debugField.x = mapWidth - debugField.width - 15; 
 			debugField.y = mapHeight - debugField.height - 15;
 		}
@@ -409,7 +411,7 @@ class TileGrid extends Sprite
 		// move visible tiles to the end of recentlySeen if we're done loading them
 		// the 'least recently seen' tiles will be removed from the tileCache below
 		for (visibleTile in visibleTiles) {
-			if (tilePainter.isPainted(visibleTile)) {
+			if (tilePainter.isPainted(visibleTile) && recentlySeen != null) {
 				var ri:Int = recentlySeen.indexOf(visibleTile.name); 
 				if (ri >= 0) {
 					recentlySeen.splice(ri, 1);
@@ -441,7 +443,7 @@ class TileGrid extends Sprite
 		var maxRecentlySeen:Float = Math.max(visibleTiles.length, maxTilesToKeep);
 		
 		// prune cache of already seen tiles if it's getting too big:
-		if (recentlySeen.length > maxRecentlySeen)
+		if (recentlySeen != null && recentlySeen.length > maxRecentlySeen)
 		{
 			// can we sort so that biggest zoom levels get removed first, without removing currently visible tiles?
 			

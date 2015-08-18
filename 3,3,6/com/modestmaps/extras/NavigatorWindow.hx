@@ -1,17 +1,17 @@
 package com.modestmaps.extras;
 
+import openfl.display.LineScaleMode;
+import openfl.display.Shape;
+import openfl.display.Sprite;
+import openfl.events.MouseEvent;
+import openfl.filters.DropShadowFilter;
+import openfl.geom.Point;
+import openfl.geom.Rectangle;
+
 import com.modestmaps.Map;
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.events.MapEvent;
 import com.modestmaps.geo.Location;
-
-import flash.display.LineScaleMode;
-import flash.display.Shape;
-import openfl.display.Sprite;
-import openfl.events.MouseEvent;
-import flash.filters.DropShadowFilter;
-import openfl.geom.Point;
-import openfl.geom.Rectangle;	
 
 /** 
  * NavigatorWindow creates a small navigator map that will stick to the bottom 
@@ -57,18 +57,19 @@ class NavigatorWindow extends Sprite
 	private var boxFillAlpha:Float;
 
 	/** create a new navigator window with optional size and style parameters */
-	public function new( map:Map, 
-					 navWidth:Float=128,
-					 navHeight:Float=128,
-					 navBorder:Float=5,
-					 navBorderColor:UInt=0xffffff,
-					 boxLineThickness:Float=0,
-					 boxLineColor:UInt=0xff0000,
-					 boxFillColor:UInt=0x000000,
-					 boxFillAlpha:Float=0.2 )
+	public function new( map:Map,	
+					 navWidth:Float = 128,					 
+					 navHeight:Float = 128,					 
+					 navBorder:Float = 5,					 
+					 navBorderColor:UInt = 0xFFFFFF,					 
+					 boxLineThickness:Float = 0,					 
+					 boxLineColor:UInt = 0xff0000,					 
+					 boxFillColor:UInt = 0x000000,					 
+					 boxFillAlpha:Float = 0.2)
 	{
-		this.map = map;
+		super();
 		
+		this.map = map;		
 		this.navWidth = navWidth;
 		this.navHeight = navHeight;
 		this.navBorder = navBorder;
@@ -88,10 +89,10 @@ class NavigatorWindow extends Sprite
 
 		// this makes sure that the nav exists for filters
 		navMap.graphics.clear();
-		navMap.graphics.beginFill(0xeeeeee);
+		navMap.graphics.beginFill(0xEEEEEE);
 		navMap.graphics.drawRect(0, 0, navWidth, navHeight);
 		
-		navMap.filters = [ new DropShadowFilter(2,45,0,0.5,4,4,1,1,true) ];
+		navMap.filters = [ new DropShadowFilter(2, 45, 0, 0.5, 4, 4, 1, 1, true) ];
 
 		box = new Shape();
 		navMap.addChild(box);
@@ -154,7 +155,7 @@ class NavigatorWindow extends Sprite
 		syncNavMap(event);
 		
 		graphics.clear();
-		graphics.beginFill(navBorderColor)
+		graphics.beginFill(navBorderColor);
 		graphics.drawRect(navMap.x - navBorder, navMap.y - navBorder, navWidth + navBorder, navHeight + navBorder);
 	}
 
@@ -166,7 +167,7 @@ class NavigatorWindow extends Sprite
 	private function syncNavMap(event:MapEvent):Void
 	{
 		if (!ignoreMap) {
-			if (event && event.currentTarget != map) return;
+			if (event != null && event.currentTarget != map) return;
 			
 			ignoreNav = true; 
 			navMap.setCenter(map.getCenter());
@@ -181,9 +182,9 @@ class NavigatorWindow extends Sprite
 			box.graphics.clear();
 			box.graphics.lineStyle();
 			box.graphics.beginFill(boxFillColor, boxFillAlpha);
-			box.graphics.drawRect(0,0,navWidth,navHeight);
+			box.graphics.drawRect(0, 0, navWidth, navHeight);
 			box.graphics.lineStyle(boxLineThickness, boxLineColor, 1, false, LineScaleMode.NONE);
-			box.graphics.drawRect(nw.x,nw.y,se.x-nw.x,se.y-nw.y);
+			box.graphics.drawRect(nw.x, nw.y, se.x - nw.x, se.y - nw.y);
 			box.graphics.endFill();
 		}		
 	}

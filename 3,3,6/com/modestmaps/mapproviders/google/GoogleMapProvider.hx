@@ -7,9 +7,9 @@
  */
 package com.modestmaps.mapproviders.google;
 
-import com.modestmaps.core.Coordinate;
-
 import openfl.utils.Object;
+
+import com.modestmaps.core.Coordinate;
 
 class GoogleMapProvider extends AbstractMapProvider implements IMapProvider
 {

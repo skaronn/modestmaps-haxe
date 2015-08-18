@@ -1,12 +1,12 @@
 package com.modestmaps.extras;
 
+import openfl.display.Bitmap;
+import openfl.filters.GlowFilter;
+import openfl.text.AntiAliasType;
+import openfl.text.TextFormat;
+
 import com.modestmaps.Map;
 import com.modestmaps.events.MapEvent;
-
-import flash.display.Bitmap;
-import flash.filters.GlowFilter;
-import flash.text.AntiAliasType;
-import openfl.text.TextFormat;
 
 class VirtualEarthCopyright extends MapCopyright
 {

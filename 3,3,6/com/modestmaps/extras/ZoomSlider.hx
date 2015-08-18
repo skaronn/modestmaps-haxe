@@ -1,13 +1,11 @@
 package com.modestmaps.extras;
 
-import com.modestmaps.Map;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.util.DebugUtil;
-
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
+#if flash
 import flash.filters.BevelFilter;
+#end
 import openfl.filters.BitmapFilterType;
 import openfl.filters.DropShadowFilter;
 import openfl.geom.Point;
@@ -15,11 +13,15 @@ import openfl.geom.Rectangle;
 
 import gs.TweenLite;
 
+import com.modestmaps.Map;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.util.DebugUtil;
+
 /** 
 * This is an example of a slider that modifies the zoom level of the given map.
 * 
-*  It is provided mainly for ModestMapsSample.as and to test the arbitrary 
-*  zoom level functionality, but feel free to use it if you like yellow bevels.
+* It is provided mainly for ModestMapsSample.as and to test the arbitrary 
+* zoom level functionality, but feel free to use it if you like yellow bevels.
 */ 
 class ZoomSlider extends Sprite
 {
@@ -50,7 +52,9 @@ class ZoomSlider extends Sprite
 		this.y = 15;
 
 		track = new Sprite();
+		#if flash
 		track.filters = [ new BevelFilter(4, 45, 0xffffff, 0.2, 0x000000, 0.2, 4, 4, 1, 1, BitmapFilterType.INNER, false) ];
+		#end
 		track.addEventListener(MouseEvent.CLICK, onTrackClick);
 		track.buttonMode = track.useHandCursor = true;
 		track.graphics.lineStyle(5, 0xd9c588);
@@ -72,7 +76,9 @@ class ZoomSlider extends Sprite
 		addChild(track);
 
 		thumb = new Sprite();
-		thumb.filters = [ new BevelFilter(4, 45, 0xffffff, 0.2, 0x000000, 0.2, 0, 0, 1, 1, BitmapFilterType.INNER, false) ];
+		#if flash
+		thumb.filters = [ new BevelFilter(4, 45, 0xFFFFFF, 0.2, 0x000000, 0.2, 0, 0, 1, 1, BitmapFilterType.INNER, false) ];
+		#end
 		thumb.addEventListener(MouseEvent.MOUSE_DOWN, onThumbMouse);
 		thumb.buttonMode = thumb.useHandCursor = true;
 		thumb.graphics.beginFill(0xff8080);
@@ -80,7 +86,7 @@ class ZoomSlider extends Sprite
 		thumb.x = 5;
 		addChild(thumb);
 
-		filters = [ new DropShadowFilter(1,45,0,1,3,3,.7,2) ];
+		filters = [ new DropShadowFilter(1, 45, 0, 1, 3, 3, .7, 2) ];
 
 		update();
 	}
@@ -119,7 +125,7 @@ class ZoomSlider extends Sprite
 		}
 	}
 
-	public function update(event:MapEvent=null):Void
+	public function update(event:MapEvent = null):Void
 	{
 		//if (event != null) trace("update - event.type : " + event.type + ", dragging : " + dragging);
 		if (!dragging) {

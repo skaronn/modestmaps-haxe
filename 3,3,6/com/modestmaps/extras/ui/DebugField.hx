@@ -1,16 +1,19 @@
 package com.modestmaps.extras.ui;
 
-import openfl.text.TextField;
-import com.modestmaps.core.TileGrid;
-import com.modestmaps.core.Tile;
-import openfl.text.TextFormat;
-import openfl.utils.Timer;
 import openfl.display.Sprite;
 import openfl.system.System;
+import openfl.utils.Object;
+import openfl.utils.Timer;
+import openfl.text.TextField;
+import openfl.text.TextFormat;
+
+import hxculture.FormatNumber;
+import hxculture.cultures.FrFR;
+
+import com.modestmaps.core.TileGrid;
+import com.modestmaps.core.Tile;
 import com.modestmaps.core.painter.TilePainter;
 import com.modestmaps.core.painter.ITilePainter;	
-import de.polygonal.core.fmt.NumberFormat;
-import openfl.utils.Object;
 
 class DebugField extends TextField
 {
@@ -30,15 +33,18 @@ class DebugField extends TextField
 		selectable = false;
 		multiline = true;
 		wordWrap = false;
-		lastFrameTime = flash.Lib.getTimer(); 
+		lastFrameTime = Std.int(Date.now().getTime());
+		#if !debug
+		visible = false;
+		#end
 	}
 
 	public function update(grid:TileGrid, blankCount:Int, recentCount:Int, tilePainter:ITilePainter):Void
 	{
 		// for stats...
-		var frameDuration:Float = flash.Lib.getTimer() - lastFrameTime;
+		var frameDuration:Float = Std.int(Date.now().getTime()) - lastFrameTime;
 
-		lastFrameTime = flash.Lib.getTimer();
+		lastFrameTime = Std.int(Date.now().getTime());
 
 		fps = Std.int((0.9 * fps) + (0.1 * (1000.0 / frameDuration)));
 
@@ -52,10 +58,10 @@ class DebugField extends TextField
 			tileChildren += cast(well.getChildAt(i), Tile).numChildren;
 		}
 	  
-		this.text = "tx: " + NumberFormat.toFixed(grid.tx, 3)
-			+ "\nty: " + NumberFormat.toFixed(grid.ty, 3)
-			+ "\nsc: " + NumberFormat.toFixed(grid.scale, 4)
-			+ "\nfps: " + NumberFormat.toFixed(fps, 0)
+		this.text = "tx: " + FormatNumber.decimal(grid.tx, FrFR.culture, 3)
+			+ "\nty: " + FormatNumber.decimal(grid.ty, FrFR.culture, 3)
+			+ "\nsc: " + FormatNumber.decimal(grid.scale, FrFR.culture, 4)
+			+ "\nfps: " + FormatNumber.decimal(fps, FrFR.culture, 0)
 			+ "\ncurrent child count: " + well.numChildren
 			+ "\ncurrent child of tile count: " + tileChildren
 			+ "\nvisible tile count: " + grid.getVisibleTiles().length
@@ -66,9 +72,9 @@ class DebugField extends TextField
 			+ "\nrequests: " + tilePainter.getRequestCount()
 			+ "\nfinished (cached) tiles: " + tilePainter.getCacheSize()
 			+ "\ncachedLoaders: " + tilePainter.getLoaderCacheCount()
-			+ "\nmemory: " + NumberFormat.toFixed((System.totalMemory / 1048576), 1) + "MB"; 
-		width = textWidth+8;
-		height = textHeight+4;
+			+ "\nmemory: " + FormatNumber.decimal((System.totalMemory / 1048576), FrFR.culture, 1) + " MB"; 
+		width = textWidth + 8;
+		height = textHeight + 4;
 	}
 	
 }

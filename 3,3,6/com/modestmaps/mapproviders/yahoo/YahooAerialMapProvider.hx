@@ -10,7 +10,7 @@ import com.modestmaps.mapproviders.IMapProvider;
  */
 class YahooAerialMapProvider extends AbstractMapProvider implements IMapProvider
 {
-	public function new(minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM)
+	public function new(minZoom:Int = AbstractMapProvider.MIN_ZOOM, maxZoom:Int = AbstractMapProvider.MAX_ZOOM)
 	{
 		super(minZoom, maxZoom);
 	}
@@ -20,14 +20,14 @@ class YahooAerialMapProvider extends AbstractMapProvider implements IMapProvider
 		return "YAHOO_AERIAL";
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Dynamic>
-	{	
-		return [ "http://us.maps3.yimg.com/aerial.maps.yimg.com/tile?v=1.7&t=a" + getZoomString(sourceCoordinate(coord)) ];
-	}
-
 	private function getZoomString( coord : Coordinate ) : String
 	{	
 		var row : Float = ( Math.pow( 2, coord.zoom ) /2 ) - coord.row - 1;
 		return "&x=" + coord.column + "&y=" + row + "&z=" + (18 - coord.zoom);
-	}	
+	}
+	
+	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	{	
+		return [ "http://us.maps3.yimg.com/aerial.maps.yimg.com/tile?v=1.7&t=a" + getZoomString(sourceCoordinate(coord)) ];
+	}
 }

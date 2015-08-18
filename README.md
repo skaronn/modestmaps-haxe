@@ -8,19 +8,7 @@ It was written to allows you easily build cross-platform mapping application.
 Haxe is an open source toolkit under the GNU General Public version 2, BSD and GNU Lesser General Public version 2.1 licenses. 
 For more information about Haxe, head to the [offical Haxe website](http://haxe.org).
 
-#Platforms:
- * HTML5  [NOT YET SUPPORTED]
- * Flash  [SUPPORTED]
- * Windows  [NOT YET SUPPORTED]
- * Linux  [NOT YET SUPPORTED]
- * Neko  [NOT YET SUPPORTED]
- * Android  [NOT YET SUPPORTED]
- * Tizen  [NOT YET SUPPORTED]
- * IOS  [NOT YET SUPPORTED]
- * WebOS  [NOT YET SUPPORTED]
- * Blackberry  [NOT YET SUPPORTED]
-
-#Implemented features:
+##Implemented features:
  * Geocoding
  * Tile mapping
  * Zoom double click
@@ -30,19 +18,21 @@ For more information about Haxe, head to the [offical Haxe website](http://haxe.
  * Drag and drop
  * Marker
 
-#Missing features:
+##Missing features:
  * Overlays tooltip information
  * Great circle arc
  * Spotlight
  * Cabspotting
  * Data linking
 
-### project.xml
+##Installation:
+In order to use modestmaps-haxe, clone it inside your HaXe library directory
 
-    <include path="/path/to/modestmaps-haxe" />
+cd C:\HaxeToolkit\haxe\lib
+git clone https://github.com/skaronn/modestmaps-haxe
 
 
-###License
+##License
 
 The MIT License (MIT) - [LICENSE.md](LICENSE.md)
 

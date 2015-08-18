@@ -4,11 +4,11 @@
 
 package com.modestmaps.events;
 
+import openfl.display.DisplayObject;	
 import openfl.events.Event;
+
 import com.modestmaps.geo.Location;
 
-import openfl.display.DisplayObject;	
-	
 class MarkerEvent extends Event
 {
 	// these are prefixed marker to avoid conflicts with MouseEvent

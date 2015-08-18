@@ -5,9 +5,10 @@
  * $Id$
  */
 package com.modestmaps.mapproviders;
- 
-import com.modestmaps.core.Coordinate;
+
 import openfl.utils.Object;
+
+import com.modestmaps.core.Coordinate;
 
 class OpenStreetMapProvider extends AbstractMapProvider implements IMapProvider
 {

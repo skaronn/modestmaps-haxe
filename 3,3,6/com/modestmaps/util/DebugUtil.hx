@@ -1,23 +1,19 @@
 package com.modestmaps.util;
 
-import com.modestmaps.core.TileGrid;
-import com.modestmaps.core.Tile;
-import com.modestmaps.core.painter.TilePainter;
-import com.modestmaps.core.painter.ITilePainter;
+import haxe.ds.ObjectMap;
 
 import openfl.display.Sprite;
+import openfl.errors.Error;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.system.System;
 import openfl.utils.Object;
 import openfl.utils.Timer;
-import openfl.utils.*;
-import openfl.errors.*;
 
-import de.polygonal.core.fmt.NumberFormat;
-
-import haxe.ds.ObjectMap;
-
+import com.modestmaps.core.TileGrid;
+import com.modestmaps.core.Tile;
+import com.modestmaps.core.painter.TilePainter;
+import com.modestmaps.core.painter.ITilePainter;
 
 class DebugUtil
 {	
@@ -61,7 +57,7 @@ class DebugUtil
 	}
 	
 	public static function dumpStack(obj:Object, methodName:String):Void {
-		var er:Error = new Error((obj != null ? Type.getClassName(Type.getClass(obj)) : "[class Object]")+", "+ methodName); //creating but not throwing the error
+		var er:Error = new Error((obj != null ? Type.getClassName(Type.getClass(obj)) : "[class Object]") + ", " + methodName); //creating but not throwing the error
 		trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 	}
 	

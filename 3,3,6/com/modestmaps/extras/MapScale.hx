@@ -1,13 +1,17 @@
 package com.modestmaps.extras;
 
-import com.modestmaps.Map;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.geo.Location;
-
 import openfl.display.Sprite;
 import openfl.geom.Point;
 import openfl.text.TextField;
-import openfl.text.TextFormat;	
+import openfl.text.TextFormat;
+import openfl.utils.Object;
+
+import hxculture.FormatNumber;
+import hxculture.cultures.FrFR;
+
+import com.modestmaps.Map;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.geo.Location;
 
 class MapScale extends Sprite
 {
@@ -18,8 +22,9 @@ class MapScale extends Sprite
 
 	private var offsetX:Float;
 
-	public function new(map:Map, offsetX:Float=0):Void
+	public function new(map:Map, offsetX:Float = 0):Void
 	{
+		super();
 		this.map = map;
 		
 		this.offsetX = offsetX;
@@ -48,46 +53,49 @@ class MapScale extends Sprite
 		var pixelWidth:Float = 100;
 		
 		// pick two points on the map, 150px apart
-		var p1:Point = new Point(map.getWidth()/2 - pixelWidth/2, map.getHeight()/2);
-		var p2:Point = new Point(map.getWidth()/2 + pixelWidth/2, map.getHeight()/2);
+		var p1:Point = new Point(map.getWidth() / 2 - pixelWidth / 2, map.getHeight() / 2);		
+		var p2:Point = new Point(map.getWidth() / 2 + pixelWidth / 2, map.getHeight() / 2);		
 		
 		var start:Location = map.pointLocation(p1);
 		var end:Location = map.pointLocation(p2);
 		
-		var barParams:Array = [
+		var barParams:Array<Object> = [
 			{ radius: Distance.R_MILES, unit: "mile", units: "miles", field: leftField },
 			{ radius: Distance.R_KM, unit: "km", units: "km", field: rightField },
 		];
 		
 		graphics.clear();
 		
-		for (var i:Int = 0; i < barParams.length; i++) {
+		for (i in 0...barParams.length) {
 		
 			var d:Float = Distance.approxDistance(start, end, barParams[i].radius);
 			
 			var metersPerPixel:Float = d / pixelWidth;
 			
 			// powers of ten, two?
-			//var nearestPower:Float = Math.pow(2, Math.round(Math.log(d) / Math.log(2))); 
-			var nearestPower:Float = Std.parseFloat(d.toPrecision(1));
+			var nearestPower:Float = Math.pow(2, Math.round(Math.log(d) / Math.log(2))); 
+			//var nearestPower:Float = Std.parseFloat(d.toPrecision(1));
+			//var nearestPower:Float = Std.parseFloat(FormatNumber.decimal(d, FrFR.culture, 1));
 			
 			var pixels:Float = nearestPower / metersPerPixel;
 			
 			graphics.lineStyle(0, 0x000000);
-			graphics.beginFill(0xffffff);
-			graphics.drawRect(0, i*12, pixels, 5);
+			graphics.beginFill(0xFFFFFFF);
+			graphics.drawRect(0, i * 12, pixels, 5);
 			
 			var decDigits:Int = nearestPower < 1 ? 2 : 0;
-			var unit:String = nearestPower.toFixed(decDigits) == '1' ? barParams[i].unit : barParams[i].units;
+			//var unit:String = nearestPower.toFixed(decDigits) == '1' ? barParams[i].unit : barParams[i].units;
+			var unit:String = FormatNumber.decimal(nearestPower, FrFR.culture, decDigits) == '1' ? barParams[i].unit : barParams[i].units;
 			
 			var field:TextField = barParams[i].field;
 			
-			field.text = nearestPower.toFixed(decDigits) + " " + unit;
+			//field.text = nearestPower.toFixed(decDigits) + " " + unit;
+			field.text = FormatNumber.decimal(nearestPower, FrFR.culture, decDigits) + " " + unit;
 			field.width = field.textWidth + 4;
 			field.height = field.textHeight + 4;
 			
 			field.x = pixels + 2;
-			field.y = (i*12) + 2.5 - field.height/2;
+			field.y = (i * 12) + 2.5 - field.height / 2;
 		}
 		
 		onMapResized(null);

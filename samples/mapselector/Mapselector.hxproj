@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project version="2">
+  <!-- Output SWF options -->
+  <output>
+    <movie outputType="CustomBuild" />
+    <movie input="" />
+    <movie path="project.xml" />
+    <movie fps="30" />
+    <movie width="800" />
+    <movie height="600" />
+    <movie version="1" />
+    <movie minorVersion="0" />
+    <movie platform="Lime" />
+    <movie background="FFFFFF" />
+    <movie preferredSDK=";3;" />
+  </output>
+  <!-- Other classes to be compiled into your SWF -->
+  <classpaths>
+    <class path="C:\HaxeToolkit\haxe\lib\lime\2,5,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\polygonal-core\1,0,4" />
+    <class path="C:\HaxeToolkit\haxe\lib\polygonal-ds\1,4,1" />
+    <class path="C:\HaxeToolkit\haxe\lib\polygonal-printf\1,0,2-beta" />
+    <class path="C:\HaxeToolkit\haxe\lib\modestmaps-haxe\3,3,6" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\3,2,2" />
+    <class path="C:\HaxeToolkit\haxe\lib\actuate\1,8,6" />
+    <class path="Source" />
+    <class path="Export\flash\haxe" />
+  </classpaths>
+  <!-- Build options -->
+  <build>
+    <option directives="lime=2.5.0&#xA;polygonal-core=1.0.4&#xA;polygonal-ds=1.4.1&#xA;polygonal-printf=1.0.2-beta&#xA;modestmaps=3.3.6&#xA;modestmaps-haxe=3.3.6&#xA;openfl=3.2.2&#xA;actuate=1.8.6&#xA;openfl-next&#xA;tools=2.5.0&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
+    <option flashStrict="False" />
+    <option noInlineOnDebug="False" />
+    <option mainClass="ApplicationMain" />
+    <option enabledebug="False" />
+    <option additional="-swf-version 11.2&#xA;-debug " />
+  </build>
+  <!-- haxelib libraries -->
+  <haxelib>
+    <!-- example: <library name="..." /> -->
+  </haxelib>
+  <!-- Class files to compile (other referenced classes will automatically be included) -->
+  <compileTargets>
+    <!-- example: <compile path="..." /> -->
+  </compileTargets>
+  <!-- Paths to exclude from the Project Explorer tree -->
+  <hiddenPaths>
+    <hidden path="obj" />
+  </hiddenPaths>
+  <!-- Executed before build -->
+  <preBuildCommand>"$(CompilerPath)/haxelib" run lime build "$(OutputFile)" $(TargetBuild) -$(BuildConfig) -Dfdb</preBuildCommand>
+  <!-- Executed after build -->
+  <postBuildCommand alwaysRun="False" />
+  <!-- Other project options -->
+  <options>
+    <option showHiddenPaths="False" />
+    <option testMovie="Custom" />
+    <option testMovieCommand="" />
+  </options>
+  <!-- Plugin storage -->
+  <storage />
+</project>

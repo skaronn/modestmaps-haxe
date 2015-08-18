@@ -1,39 +1,42 @@
 package com.modestmaps.extras;
 
+import haxe.ds.ObjectMap;
+
+import openfl.display.Sprite;
+import openfl.filters.DropShadowFilter;
+import openfl.geom.Point;
+import openfl.utils.Object;
+
 import com.modestmaps.Map;
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.geo.Location;
-
-import openfl.display.Sprite;
-import flash.filters.DropShadowFilter;
-import openfl.geom.Point;
-import haxe.ds.ObjectMap;
 
 /** 
 * a subclass of overlay that will render dashed great-circle arcs
 */
 class GreatCircleOverlay extends Overlay
 {	
-	public var lines:Array = [];
-	private var styles:ObjectMap<Object,Object> = new ObjectMap<Object,Object>();
+	public var lines:Array<Object> = [];
+	private var styles:ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
 
 	public function new(map:Map)
 	{
 		super(map);
-		//this.filters = [ new DropShadowFilter(2,90,0x000000,0.35,8,8,2,1,false,false,false) ];
+		this.filters = [ new DropShadowFilter(2, 90, 0x000000, 0.35, 8, 8, 2, 1, false, false, false) ];
 	}
 
 	override public function redraw(sprite:Sprite):Void
 	{
 		sprite.graphics.clear();
-		for each (var line:Array in lines) {
-			var lineStyle:LineStyle = styles[line] as LineStyle;
-			var p:Point = map.locationPoint(line[0] as Location, sprite);
+		for (line in lines) {
+			var lineStyle:LineStyle = cast(styles.get(line), LineStyle);
+			var p:Point = map.locationPoint(cast(line[0], Location), sprite);
 			sprite.graphics.moveTo(p.x, p.y);
 			var i:Int = 0;
-			var prev:Location;
-			for each (var location:Location in line.slice(1)) {
-				var thickness:Float = Math.min(1,1-Math.abs(i-(line.length/2))/(line.length/3));
+			var prev:Location = null;
+			var fields = Reflect.fields(line.slice(1));
+			for (elt in fields) {
+				var thickness:Float = Math.min(1, 1 - Math.abs(i - (line.length / 2)) / (line.length / 3));
 				/*
 				if (i % 4 == 0 && i != line.length-1) {
 					sprite.graphics.lineStyle();
@@ -42,13 +45,14 @@ class GreatCircleOverlay extends Overlay
 					lineStyle.apply(sprite.graphics, 1+thickness);
 				}
 				*/
-				lineStyle.apply(sprite.graphics, 1+thickness);
+				var location : Location = cast(elt, Location);
+				lineStyle.apply(sprite.graphics, 1 + thickness);
 				p = map.locationPoint(location, sprite);
-				if (prev && (Math.abs(prev.lat-location.lat) > 10 || Math.abs(prev.lon-location.lon) > 10)) {
-					sprite.graphics.moveTo(p.x,p.y);
+				if (prev != null && (Math.abs(prev.lat - location.lat) > 10 || Math.abs(prev.lon - location.lon) > 10)) {
+					sprite.graphics.moveTo(p.x, p.y);
 				}
 				else {
-					sprite.graphics.lineTo(p.x,p.y);
+					sprite.graphics.lineTo(p.x, p.y);
 				}
 				i++;
 				prev = location;
@@ -58,41 +62,37 @@ class GreatCircleOverlay extends Overlay
 
 	public function addGreatCircle(start:Location, end:Location, lineStyle:LineStyle = null):MapExtent
 	{
-
 		var extent:MapExtent = new MapExtent();
-		var latlngs:Array = [];
-
-		with (Math) {
+		var latlngs:Array<Object> = [];
 		
-			var lat1:Float = start.lat * PI / 180.0;
-			var lon1:Float = start.lon * PI / 180.0;
-			var lat2:Float = end.lat * PI / 180.0;
-			var lon2:Float = end.lon * PI / 180.0;
-			
-			var d:Float = 2*asin(sqrt( pow((sin((lat1-lat2)/2)),2) + cos(lat1)*cos(lat2)*pow((sin((lon1-lon2)/2)),2)));
-			var bearing:Float = atan2(sin(lon1-lon2)*cos(lat2), cos(lat1)*sin(lat2)-sin(lat1)*cos(lat2)*cos(lon1-lon2))  / -(PI/180);
-			bearing = bearing < 0 ? 360 + bearing : bearing;
+		var lat1:Float = start.lat * Math.PI / 180.0;
+		var lon1:Float = start.lon * Math.PI / 180.0;
+		var lat2:Float = end.lat * Math.PI / 180.0;
+		var lon2:Float = end.lon * Math.PI / 180.0;
+		
+		var d:Float = 2 * Math.asin(Math.sqrt( Math.pow((Math.sin((lat1 - lat2) / 2)), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow((Math.sin((lon1 - lon2) / 2)), 2)));
+		var bearing:Float = Math.atan2(Math.sin(lon1 - lon2) * Math.cos(lat2), Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2))  / -(Math.PI / 180);
+		bearing = bearing < 0 ? 360 + bearing : bearing;
 
-			var numSegments:Int = int(40 + (400 * Distance.approxDistance(start,end) / (Math.PI * 2 * 6378000)));
-			for (var n:Int = 0 ; n < numSegments; n++ ) {
-				var f:Float = (1/(numSegments-1)) * n;
-				var A:Float = sin((1-f)*d)/sin(d);
-				var B:Float = sin(f*d)/sin(d);
-				var x:Float = A*cos(lat1)*cos(lon1) +  B*cos(lat2)*cos(lon2);
-				var y:Float = A*cos(lat1)*sin(lon1) +  B*cos(lat2)*sin(lon2);
-				var z:Float = A*sin(lat1)	   +  B*sin(lat2);
-
-				var latN:Float = atan2(z,sqrt(pow(x,2)+pow(y,2)));
-				var lonN:Float = atan2(y,x);
-				var l:Location = new Location(latN/(PI/180), lonN/(PI/180));
-				latlngs.push(l);
-				extent.enclose(l);
-			}
+		var numSegments:Int = Std.int(40 + (400 * Distance.approxDistance(start, end) / (Math.PI * 2 * 6378000)));
+		
+		for (n in 0...numSegments) {
+			var f:Float = (1 / (numSegments - 1)) * n;
+			var A:Float = Math.sin((1 - f) * d) / Math.sin(d);
+			var B:Float = Math.sin(f * d) / Math.sin(d);
+			var x:Float = A * Math.cos(lat1) * Math.cos(lon1) +  B * Math.cos(lat2) * Math.cos(lon2);
+			var y:Float = A * Math.cos(lat1) * Math.sin(lon1) +  B * Math.cos(lat2) * Math.sin(lon2);
+			var z:Float = A * Math.sin(lat1) +  B * Math.sin(lat2);
+			var latN:Float = Math.atan2(z, Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+			var lonN:Float = Math.atan2(y, x);
+			var l:Location = new Location(latN / (Math.PI / 180), lonN / (Math.PI / 180));
+			latlngs.push(l);
+			extent.enclose(l);
 		}
 		
 		lines.push(latlngs);
 		
-		styles[latlngs] = lineStyle || new LineStyle();
+		styles.set(latlngs, (lineStyle != null ? lineStyle : new LineStyle()));
 
 		refresh();
 		

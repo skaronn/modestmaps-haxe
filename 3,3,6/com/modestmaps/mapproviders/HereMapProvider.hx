@@ -6,10 +6,10 @@
  * $Id$
  */
 package com.modestmaps.mapproviders;
- 
-import com.modestmaps.core.Coordinate;
 
 import openfl.utils.Object;
+ 
+import com.modestmaps.core.Coordinate;
 
 class HereMapProvider extends AbstractMapProvider implements IMapProvider
 {
@@ -26,7 +26,7 @@ class HereMapProvider extends AbstractMapProvider implements IMapProvider
 	// provides map tiles with a traffic flow overlay
 	public static inline var TRAFFIC:String = "Traffic"; 
 	
-	public function new(appId:String, appCode:String, mapType:String=HereMapProvider.BASE, minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM)
+	public function new(appId:String, appCode:String, mapType:String = HereMapProvider.BASE, minZoom:Int = AbstractMapProvider.MIN_ZOOM, maxZoom:Int = AbstractMapProvider.MAX_ZOOM)
 	{
 		super(minZoom, maxZoom);
 		this.mapType = mapType;

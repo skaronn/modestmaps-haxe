@@ -1,16 +1,15 @@
 package com.modestmaps.overlays;
 
-import com.modestmaps.Map;
-import com.modestmaps.core.Coordinate;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.geo.Location;
-
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.utils.Object;
 
+import com.modestmaps.Map;
+import com.modestmaps.core.Coordinate;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.geo.Location;
 /** 
  * Polyline clip for rendering Polyline instances on your map.
  * 
@@ -45,6 +44,8 @@ class PolylineClip extends Sprite
 
 	public function new(map:Map)
 	{
+		super();
+		
 		this.map = map;
 		this.x = map.getWidth() / 2;
 		this.y = map.getHeight() / 2;
@@ -64,8 +65,10 @@ class PolylineClip extends Sprite
 
 	public function removePolylines():Void
 	{
-		for (var n:String in polylinesByName) {
-			delete polylinesByName[n];
+		var polylineFields : Array<String> = Reflect.fields(polylinesByName);
+		for (polylineName in polylineFields) {			
+			//delete polylinesByName[polylineName];
+			untyped __delete__(polylinesByName, polylineName);
 		}
 		polylines = [];
 		dirty = true;
@@ -74,25 +77,26 @@ class PolylineClip extends Sprite
 
 	public function addPolyline(polyline:Polyline):Void
 	{
-		polylinesByName[polyline.id] = polyline;	   
+		Reflect.setField(polylinesByName, polyline.id, polyline);	   
 		polylines.push(polyline);
 		dirty = true;	  
 	}
 
 	public function getPolyline(id:String):Polyline
 	{
-		return polylinesByName[id] as Polyline;
+		return cast(Reflect.field(polylinesByName, id), Polyline);
 	}
 
 	public function removePolyline(id:String):Void
 	{		
 		var polyline:Polyline = getPolyline(id);
-		if (polyline) {
+		if (polyline != null) {
 			var index:Int = polylines.indexOf(polyline);
 			if (index >= 0) {
 				polylines.splice(index,1);
 			}
-			delete polylinesByName[polyline.id];
+			//delete polylinesByName[polyline.id];
+			untyped __delete__(polylinesByName, polyline.id);
 		}	  
 	}
 		
@@ -112,7 +116,8 @@ class PolylineClip extends Sprite
 		
 		this.graphics.clear();
 		
-		for each (var polyline:Polyline in polylines) {		   
+		//for each (var polyline:Polyline in polylines) {
+		for (polyline in polylines) {
 			updatePolyline(polyline);		   
 		}
 		
@@ -127,23 +132,23 @@ class PolylineClip extends Sprite
 		var w:Float = map.getWidth() * 2;
 		var h:Float = map.getHeight() * 2;
 					
-		var localPointsArray:Array = new Array();
+		var localPointsArray:Array<Object> = new Array<Object>();
 		
-		var i:UInt=0;
+		var i:UInt = 0;
 		
-		this.graphics.lineStyle(polyline.lineThickness,polyline.lineColor,polyline.lineAlpha,polyline.pixelHinting,polyline.scaleMode,polyline.caps,polyline.joints,polyline.miterLimit);
+		this.graphics.lineStyle(polyline.lineThickness, Std.int(polyline.lineColor), polyline.lineAlpha, polyline.pixelHinting, polyline.scaleMode, polyline.caps, polyline.joints, polyline.miterLimit);
 			
 		var boundaryWindow:Rectangle = new Rectangle( -w / 2, -h / 2, w, h);
 				
 		// Calculate local coordinates for each point
-		for (i = 0; i < polyline.locationsArray.length; i++)
+		for (i in 0...polyline.locationsArray.length)
 		{		
 			var tLocation:Location = polyline.locationsArray[i];
 			var point:Point = map.locationPoint(tLocation, this);
 			localPointsArray.push(point);	
 		}
 		
-		for (i = 1; i < polyline.locationsArray.length; i++)
+		for (i in 1...polyline.locationsArray.length)
 		{
 			// Create duplicates of each point for clipping
 			var tPoint1:Point = new Point(localPointsArray[i - 1].x, localPointsArray[i - 1].y);
@@ -293,7 +298,7 @@ class PolylineClip extends Sprite
 	{
 		cacheAsBitmap = false;
 		if (scaleZoom) {
-			scaleX = scaleY = Math.pow(2, map.grid.zoomLevel-drawCoord.zoom);
+			scaleX = scaleY = Math.pow(2, map.grid.zoomLevel - drawCoord.zoom);
 		}
 		else {
 			dirty = true;
@@ -309,7 +314,7 @@ class PolylineClip extends Sprite
 			// this requests an Event.RENDER which Map will
 			// respond to and dispatch MapEvent.RENDERED 
 			// when it's done shuffling tiles
-			if (stage) stage.invalidate();
+			if (stage != null) stage.invalidate();
 		}
 		return _dirty;
 	}

@@ -2,10 +2,13 @@
  * $Id$
  */
 package com.modestmaps.geo;
-import com.modestmaps.util.DebugUtil;
 
-import de.polygonal.core.fmt.NumberFormat;
-import openfl.errors.*;
+import openfl.errors.Error;
+
+import hxculture.FormatNumber;
+import hxculture.cultures.FrFR;
+
+import com.modestmaps.util.DebugUtil;
 
 /**
  * 
@@ -27,7 +30,7 @@ class Location
 	 * @param	lonlat
 	 * @return
 	 */
-	public static function fromString(location:String, lonlat:Bool=false):Location
+	public static function fromString(location:String, lonlat:Bool = false):Location
 	{
 		//trace("fromString - location : "+location);
 		var regexp = new EReg("s*, s*", "i");
@@ -85,9 +88,8 @@ class Location
 	 * @param	precision
 	 * @return
 	 */
-	public function toString(precision:Int=5):String
+	public function toString(precision:Int = 5):String
 	{
-		//return [lat.toFixed(precision), lon.toFixed(precision)].join(',');
-		return [NumberFormat.toFixed(lat, precision), NumberFormat.toFixed(lon, precision)].join(',');
+		return [FormatNumber.decimal(lat, FrFR.culture, precision), FormatNumber.decimal(lon, FrFR.culture, precision)].join(',');
 	}
 }

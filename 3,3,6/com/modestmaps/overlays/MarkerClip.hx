@@ -1,13 +1,7 @@
 package com.modestmaps.overlays;
 
-import com.modestmaps.Map;
-import com.modestmaps.core.Coordinate;
-import com.modestmaps.events.MapEvent;
-import com.modestmaps.events.MarkerEvent;
-import com.modestmaps.geo.Location;
-import com.modestmaps.mapproviders.IMapProvider;
-import com.modestmaps.util.DebugUtil;
 import haxe.Timer;
+import haxe.ds.ObjectMap;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -15,7 +9,14 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
 import openfl.utils.Object;
-import haxe.ds.ObjectMap;
+
+import com.modestmaps.Map;
+import com.modestmaps.core.Coordinate;
+import com.modestmaps.events.MapEvent;
+import com.modestmaps.events.MarkerEvent;
+import com.modestmaps.geo.Location;
+import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 
 @:meta(Event(name="markerRollOver",	type="com.modestmaps.events.MarkerEvent"))
 @:meta(Event(name="markerRollOut",	 type="com.modestmaps.events.MarkerEvent"))

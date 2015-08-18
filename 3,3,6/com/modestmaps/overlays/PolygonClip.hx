@@ -1,10 +1,9 @@
 package com.modestmaps.overlays;
 
-import com.modestmaps.Map;
-
 import openfl.display.DisplayObject;
 import openfl.geom.Rectangle;
 
+import com.modestmaps.Map;
 /** 
  *  PolygonClip extends MarkerClip to take the bounds of the marker into account when showing/hiding,
  *  and to trigger a redraw of content that needs scaling.
@@ -21,20 +20,20 @@ class PolygonClip extends MarkerClip
 	{
 		super(map);
 		this.scaleZoom = true;
-		this.markerSortFunction = null
+		this.markerSortFunction = null;
 	}
 
 	override private function markerInBounds(marker:DisplayObject, w:Float, h:Float):Bool
 	{
-		var rect:Rectangle = new Rectangle(-w, -h, w*3, h*3);
+		var rect:Rectangle = new Rectangle( -w, -h, w * 3, h * 3);
 		return rect.intersects(marker.getBounds(map));
 	}
 
 	override public function updateClip(marker:DisplayObject):Bool
 	{
 		// we need to redraw this marker before MarkerClip.updateClip so that markerInBounds will be correct
-		if (marker is Redrawable) {
-			Redrawable(marker).redraw();
+		if (Std.is(marker, Redrawable)) {
+			cast(marker, Redrawable).redraw();
 		}
 		return super.updateClip(marker);
 	}

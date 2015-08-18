@@ -9,19 +9,19 @@
  */
 package com.modestmaps;
 
-import com.modestmaps.core.Coordinate;
-import com.modestmaps.core.MapExtent;
-import com.modestmaps.core.TweenTile;
-import com.modestmaps.geo.Location;
-import com.modestmaps.mapproviders.IMapProvider;
-import com.modestmaps.util.DebugUtil;
-
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.utils.Object;
 
 import gs.TweenLite;
+
+import com.modestmaps.core.Coordinate;
+import com.modestmaps.core.MapExtent;
+import com.modestmaps.core.TweenTile;
+import com.modestmaps.geo.Location;
+import com.modestmaps.mapproviders.IMapProvider;
+import com.modestmaps.util.DebugUtil;
 
 class TweenMap extends Map
 {

@@ -5,7 +5,6 @@
 	<assets path="assets" include="*.*" />
 		
 	<haxelib name="openfl" />
-	<haxelib name="polygonal-core" />
-	<haxelib name="polygonal-ds" />
+	<haxelib name="actuate" />
 
 </project>

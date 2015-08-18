@@ -1,19 +1,21 @@
 package com.modestmaps.overlays;
 
+import openfl.display.BitmapData;
+import openfl.display.CapsStyle;
+import openfl.display.JointStyle;
+import openfl.display.LineScaleMode;
+import openfl.display.Sprite;
+import openfl.events.Event;
+import openfl.geom.Matrix;
+import openfl.geom.Point;
+import openfl.utils.Object;
+
 import com.modestmaps.Map;
 import com.modestmaps.core.Coordinate;
 import com.modestmaps.core.MapExtent;
 import com.modestmaps.core.TileGrid;
 import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.IMapProvider;
-
-import flash.display.BitmapData;
-import flash.display.LineScaleMode;
-import openfl.display.Sprite;
-import openfl.events.Event;
-import openfl.geom.Matrix;
-import openfl.geom.Point;
-import openfl.utils.Object;
 
 class PolygonMarker extends Sprite implements Redrawable
 {
@@ -30,18 +32,18 @@ class PolygonMarker extends Sprite implements Redrawable
 
 	public var line:Bool = true;
 	public var lineThickness:Float = 0;
-	public var lineColor:UInt = 0xffffff;
+	public var lineColor:UInt = 0xFFFFFF;
 	public var lineAlpha:Float = 1;
 	public var linePixelHinting:Bool = false;
-	public var lineScaleMode:String = LineScaleMode.NONE;
-	public var lineCaps:String = null;
-	public var lineJoints:String = null; 
+	public var lineScaleMode:LineScaleMode = LineScaleMode.NONE;
+	public var lineCaps:CapsStyle = null;
+	public var lineJoints:JointStyle = null; 
 	public var lineMiterLimit:Float = 3; 	
 
 	public var autoClose:Bool = true;
 
 	public var fill:Bool = true;
-	public var fillColor:UInt = 0xff0000;
+	public var fillColor:UInt = 0xFF0000;
 	public var fillAlpha:Float = 0.2;
 
 	public var bitmapFill:Bool = false;
@@ -61,51 +63,58 @@ class PolygonMarker extends Sprite implements Redrawable
 	 * ring of the polygon, and subsequent arrays will be treated as holes if they overlap it.
 	 * 
 	 */
-	public function new(map:Map, locations:Array<Object>, autoClose:Bool=true)
+	public function new(map:Map, locations:Array<Object>, autoClose:Bool = true)	
 	{
+		super();
 		this.map = map;
 		this.provider = map.getMapProvider();
 		this.mouseEnabled = false;
 		this.autoClose = autoClose;
 
-		if (locations && locations.length > 0)
+		if (locations != null && locations.length > 0)
 		{
-			if (locations.length > 0 && locations[0] is Location)
+			if (locations.length > 0 && Std.is(locations[0], Location))
 			{
 				locations = [ locations ];
 			}
-			if (locations[0].length > 0 && locations[0] is Array<Object>)
+			if (locations[0].length > 0 && Std.is(locations[0], Array))
 			{
 				this.locations = [ locations[0] ];
 				this.extent = MapExtent.fromLocations(locations[0]);
-				this.location = locations[0][0] as Location;
+				this.location = cast(locations[0][0], Location);
 				this.coordinates = [ locations[0].map(l2c) ];
 				
-				for each (var hole:Array in locations.slice(1))
+
+				//for each (var hole:Array in locations.slice(1))
+				var hole:Array<Object>;
+				var slicedLocations = locations.slice(1);
+				for (holeIndex in 0...slicedLocations.length)
 				{
+					hole = cast(slicedLocations[holeIndex], Array<Object>);
 					addHole(hole);
 				}
 			}
 		}
 	}
 
-	public function addHole(hole:Array<Object>):Void
+	public function addHole(hole:Array<Object>):Void	
 	{
 		this.locations.push(hole);
 		this.extent.encloseExtent(MapExtent.fromLocations(hole));
-		this.coordinates.push(hole.map(l2c));	
+		//TOFIX
+		//this.coordinates.push(hole.map(l2c));	
 		updateGraphics();
 	}
 
-	private function l2c(l:Location, ...rest):Coordinate
+	private function l2c(l:Location, rest : Array<Object> = null):Coordinate
 	{
 		return provider.locationCoordinate(l);
 	}
 
-	public function redraw(event:Event=null):Void
+	public function redraw(event:Event = null):Void	
 	{	
-		if (event && drawZoom && Math.abs(map.grid.zoomLevel-drawZoom) < zoomTolerance) {
-			scaleX = scaleY = Math.pow(2, map.grid.zoomLevel-drawZoom);
+		if (event != null && drawZoom > 0 && Math.abs(map.grid.zoomLevel - drawZoom) < zoomTolerance) {			
+			scaleX = scaleY = Math.pow(2, map.grid.zoomLevel - drawZoom);			
 		}
 		else {
 			updateGraphics();
@@ -120,14 +129,15 @@ class PolygonMarker extends Sprite implements Redrawable
 		scaleX = scaleY = 1;
 		
 		graphics.clear();
+		
 		if (line) {
-			graphics.lineStyle(lineThickness, lineColor, lineAlpha, linePixelHinting, lineScaleMode, lineCaps, lineJoints, lineMiterLimit);
+			graphics.lineStyle(lineThickness, Std.int(lineColor), lineAlpha, linePixelHinting, lineScaleMode, lineCaps/*, lineJoints, lineMiterLimit*/);
 		}
 		else {
 			graphics.lineStyle();
 		}
 		if (fill) {
-			if (bitmapFill && bitmapData) {
+			if (bitmapFill && bitmapData != null) {
 				graphics.beginBitmapFill(bitmapData, bitmapMatrix, bitmapRepeat, bitmapSmooth);
 			} 
 			else {
@@ -135,18 +145,25 @@ class PolygonMarker extends Sprite implements Redrawable
 			}
 		}
 		
-		if (location) {
+		if (location != null ) {
 			var firstPoint:Point = grid.coordinatePoint(coordinates[0][0]);
-			for each (var ring:Array in coordinates) {
+			//for each (var ring:Array in coordinates) {
+			var ring:Array<Object>;
+			for (ringIndex in 0...coordinates.length) {
+				ring = cast(coordinates[ringIndex], Array<Object>) ;
 				var ringPoint:Point = grid.coordinatePoint(ring[0]);
-				graphics.moveTo(ringPoint.x-firstPoint.x, ringPoint.y-firstPoint.y);
-				var p:Point;
-				for each (var coord:Coordinate in ring.slice(1)) {
+				graphics.moveTo(ringPoint.x - firstPoint.x, ringPoint.y - firstPoint.y);				
+				var p:Point = null;
+				//for each (var coord:Coordinate in ring.slice(1)) {
+				var coord:Coordinate;
+				var slicedRing = ring.slice(1);
+				for (coordIndex in 0...slicedRing.length) {
+					coord = cast(slicedRing[coordIndex], Coordinate);
 					p = grid.coordinatePoint(coord);
-					graphics.lineTo(p.x-firstPoint.x, p.y-firstPoint.y);
+					graphics.lineTo(p.x - firstPoint.x, p.y - firstPoint.y);					
 				}
-				if (autoClose && !ringPoint.equals(p)) {
-					graphics.lineTo(ringPoint.x-firstPoint.x, ringPoint.y-firstPoint.y);
+				if (autoClose && !ringPoint.equals(p)) {					
+					graphics.lineTo(ringPoint.x - firstPoint.x, ringPoint.y - firstPoint.y);					
 				}
 			}
 		}

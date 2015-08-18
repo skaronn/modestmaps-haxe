@@ -47,7 +47,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 	
 	private var hillShading:Bool;
 
-	public function new(type:String=ROAD, hillShading:Bool=true, minZoom:Int=AbstractMapProvider.MIN_ZOOM, maxZoom:Int=AbstractMapProvider.MAX_ZOOM)
+	public function new(type:String = ROAD, hillShading:Bool = true, minZoom:Int = AbstractMapProvider.MIN_ZOOM, maxZoom:Int = AbstractMapProvider.MAX_ZOOM)
 	{
 		super(minZoom, maxZoom);
 		
@@ -55,7 +55,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		this.hillShading = hillShading;
 
 		if (hillShading) {
-			URLEND.set(ROAD, URLEND.get(ROAD)+"&shading=hill"); 
+			URLEND.set(ROAD, URLEND.get(ROAD) + "&shading=hill");
 		}
 
 		// Microsoft don't have a zoom level 0 right now:
@@ -69,10 +69,10 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		
 		// convert row + col to zoom string
 		// padded with zeroes so we end up with zoom digits after slicing:
-		var rowBinaryString:String = BinaryUtil.convertToBinary(Std.int(sourceCoord.row));
-		rowBinaryString = rowBinaryString.substr(Std.int(-sourceCoord.zoom));	
-		var colBinaryString : String = BinaryUtil.convertToBinary(Std.int(sourceCoord.column));
-		colBinaryString = colBinaryString.substr(Std.int(-sourceCoord.zoom));
+		var rowBinaryString:String = BinaryUtil.convertToBinary(Std.int(sourceCoord.row));		
+		rowBinaryString = rowBinaryString.substr(Std.int( -sourceCoord.zoom));		
+		var colBinaryString : String = BinaryUtil.convertToBinary(Std.int(sourceCoord.column));		
+		colBinaryString = colBinaryString.substr(Std.int( -sourceCoord.zoom));		
 
 		// generate zoom string by combining strings
 		var zoomString : String = "";
@@ -97,7 +97,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		// this is so that requests will be consistent in this session, rather than totally random
 		var serverRequest:Float = cast((serverSalt + coord.row + coord.column + coord.zoom) % 4, Float);
 		var server:Int = cast(Math.abs(serverRequest), Int);
-		trace("getTileUrls - urls : " +  URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) );
+		//trace("getTileUrls - urls : " +  URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) );
 		return [ URLSTART.get(type) + server + URLMIDDLE.get(type) + getZoomString(coord) + URLEND.get(type) ];
 	}
 

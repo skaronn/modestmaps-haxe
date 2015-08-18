@@ -153,16 +153,19 @@ Copyright 2007, GreenSock (This work is subject to the terms in http://www.green
 */
 
 package gs;
-import openfl.events.Event;
+
+import haxe.ds.ObjectMap;
+
 import openfl.display.Sprite;
 import openfl.display.MovieClip;
 import openfl.display.DisplayObject;
+import openfl.events.Event;
 import openfl.events.TimerEvent;
+import openfl.errors.Error;
 import openfl.media.SoundTransform;
 import openfl.geom.ColorTransform;
-import haxe.ds.ObjectMap;
-import openfl.utils.*;
-import openfl.errors.*;
+import openfl.utils.Object;
+import openfl.utils.Timer;
 
 class TweenLite {
 	public static var version:Float = 5.87;
@@ -355,8 +358,10 @@ class TweenLite {
 					_endColor = new ColorTransform();
 				if (this.vars.alpha != null) {
 					_endColor.alphaMultiplier = this.vars.alpha;
-					untyped __delete__(this, vars.alpha);
-					untyped __delete__(this, tweens.alpha);
+					//untyped __delete__(this, vars.alpha);
+					Reflect.deleteField(this, cast(this.vars.alpha, String));
+					//untyped __delete__(this, tweens.alpha);
+					Reflect.deleteField(this, cast(tweens.alpha, String));
 				}
 				else {
 					_endColor.alphaMultiplier = this.target.alpha;
@@ -582,7 +587,8 @@ class TweenLite {
 			
 			if (!found)
 			{
-				untyped __delete__(a, p);
+				//untyped __delete__(a, p);
+				Reflect.deleteField(a, cast(p, String));
 			}
 			else {
 				tg_cnt++;
