@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<icon path="assets/modestmaps_logo.png" />
+	
+	<assets path="assets" include="*.*" />
+		
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+
+</project>
