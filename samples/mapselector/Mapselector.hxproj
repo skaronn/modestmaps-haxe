@@ -8,7 +8,7 @@
     <movie fps="30" />
     <movie width="800" />
     <movie height="600" />
-    <movie version="0" />
+    <movie version="1" />
     <movie minorVersion="0" />
     <movie platform="Lime" />
     <movie background="FFFFFF" />
@@ -16,20 +16,19 @@
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
-    <class path="D:\HaxeToolkit\haxe\lib\lime\2,9,0" />
-    <class path="D:\HaxeToolkit\haxe\lib\polygonal-core\1,0,4" />
-    <class path="D:\HaxeToolkit\haxe\lib\polygonal-ds\1,4,1" />
-    <class path="D:\HaxeToolkit\haxe\lib\polygonal-printf\1,0,2-beta" />
-    <class path="D:\HaxeToolkit\haxe\lib\modestmaps-haxe\3,3,6" />
-    <class path="D:\HaxeToolkit\haxe\lib\openfl\3,6,0" />
-    <class path="D:\HaxeToolkit\haxe\lib\actuate\1,8,6" />
+    <class path="C:\HaxeToolkit\haxe\lib\lime\2,5,0" />
+    <class path="C:\HaxeToolkit\haxe\lib\polygonal-core\1,0,4" />
+    <class path="C:\HaxeToolkit\haxe\lib\polygonal-ds\1,4,1" />
+    <class path="C:\HaxeToolkit\haxe\lib\polygonal-printf\1,0,2-beta" />
+    <class path="C:\HaxeToolkit\haxe\lib\modestmaps-haxe\3,3,6" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\3,2,2" />
+    <class path="C:\HaxeToolkit\haxe\lib\actuate\1,8,6" />
     <class path="Source" />
-    <class path="D:\HaxeToolkit\haxe\lib\openfl\3,6,0\extern" />
     <class path="Export\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="lime=2.9.0&#xA;polygonal-core=1.0.4&#xA;polygonal-ds=1.4.1&#xA;polygonal-printf=1.0.2-beta&#xA;modestmaps=3.3.6&#xA;modestmaps-haxe=3.3.6&#xA;openfl=3.6.0&#xA;actuate=1.8.6&#xA;openfl-next&#xA;tools=2.9.0&#xA;no-compilation&#xA;openfl-flash&#xA;web&#xA;display" />
+    <option directives="lime=2.5.0&#xA;polygonal-core=1.0.4&#xA;polygonal-ds=1.4.1&#xA;polygonal-printf=1.0.2-beta&#xA;modestmaps=3.3.6&#xA;modestmaps-haxe=3.3.6&#xA;openfl=3.2.2&#xA;actuate=1.8.6&#xA;openfl-next&#xA;tools=2.5.0&#xA;no-compilation&#xA;openfl-flash&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
