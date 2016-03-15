@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	
+	<meta title="Basic" package="com.modestmaps.sample.basic" version="1.0.0" company="Company Name" />
+	<app main="Main" path="Export" file="Basic" />
+	
+	<source path="Source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="modestmaps-haxe" />
+	
+	<assets path="Assets" rename="assets" />
+	<icon path="Assets/openfl.svg" />
+	
+</project>
