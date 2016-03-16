@@ -1,6 +1,7 @@
 package com.modestmaps.core;
 
 import haxe.ds.ObjectMap;
+import haxe.ds.ArraySort;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -669,7 +670,7 @@ class TileGrid extends Sprite
 	{
 		// sort children by difference from current zoom level
 		// this means current is on top, +1 and -1 are next, then +2 and -2, etc.
-		untyped visibleTiles.sortOn(distanceFromCurrentZoomCompare, Array.DESCENDING);
+		ArraySort.sort(visibleTiles, distanceFromCurrentZoomCompare);
 		
 		// for positioning tile according to current transform, based on current tile zoom
 		var scaleFactors:Array<Int> = new Array<Int>();
