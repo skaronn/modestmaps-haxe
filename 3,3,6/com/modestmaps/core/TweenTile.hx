@@ -5,7 +5,7 @@
 
 package com.modestmaps.core;
 
-import gs.TweenLite;
+import motion.Actuate;
 
 class TweenTile extends Tile
 {			
@@ -34,19 +34,23 @@ class TweenTile extends Tile
 	{
 		if (alpha < 1) {
 			//flash.Lib.trace("TweenLite.hx - override public function show - alpha: " + alpha);			
-			TweenLite.to(this, FADE_TIME, { alpha : 1 } );
+			//TweenLite.to(this, FADE_TIME, { alpha : 1 } );
+			Actuate.tween(this, FADE_TIME, { alpha : 1 } );
+			
 		}
 	}	
 
 	override public function showNow():Void 
 	{
-		TweenLite.killTweensOf(this);
+		//TweenLite.killTweensOf(this);
+		Actuate.stop(this);
 		this.alpha = 1.0;
 	}	
 
 	override public function destroy():Void 
 	{
-		TweenLite.killTweensOf(this);
+		//TweenLite.killTweensOf(this);
+		Actuate.stop(this);
 		super.destroy();
 	}	
 	

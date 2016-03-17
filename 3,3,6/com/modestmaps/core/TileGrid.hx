@@ -1,6 +1,6 @@
 package com.modestmaps.core;
 
-import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -11,7 +11,7 @@ import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 import openfl.text.TextField;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 import openfl.utils.Timer;
 
 import com.modestmaps.core.painter.ITilePainter;
@@ -113,13 +113,13 @@ class TileGrid extends Sprite
 	private var tilePainter:ITilePainter;
 
 	// coordinate bounds derived from IMapProviders
-	private var limits:Array<Object>;
+	private var limits:Array<Coordinate>;
 
 	// keys we've recently seen
-	private var recentlySeen:Array<Object>;
+	private var recentlySeen:Array<String>;
 
 	// currently visible tiles
-	private var visibleTiles:Array<Object>;
+	private var visibleTiles:Array<Tile>;
 		
 	// number of tiles we're failing to show
 	private var blankCount:Int = 0;
@@ -257,7 +257,7 @@ class TileGrid extends Sprite
 	 * 
 	 * @see http://norvig.com/design-patterns/img013.gif  
 	 */ 
-	public function setTileClass(tileClass:Class<Object>):Void
+	public function setTileClass(tileClass:Class<Tile>):Void
 	{
 		// first get rid of everything, which passes tiles back to the pool
 		clearEverything();
@@ -447,7 +447,7 @@ class TileGrid extends Sprite
 		{
 			// can we sort so that biggest zoom levels get removed first, without removing currently visible tiles?
 			
-			var visibleKeys:Array<Object> = recentlySeen.slice(recentlySeen.length - visibleTiles.length, recentlySeen.length);
+			var visibleKeys:Array<String> = recentlySeen.slice(recentlySeen.length - visibleTiles.length, recentlySeen.length);
 
 			// take a look at everything else
 			recentlySeen = recentlySeen.slice(0, recentlySeen.length - visibleTiles.length);
@@ -492,28 +492,29 @@ class TileGrid extends Sprite
 		// for use in loops etc.
 		var coord:Coordinate = new Coordinate(0,0,0);
 
-		var searchedParentKeys:ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
+		var searchedParentKeys:StringMap<Bool> = new StringMap<Bool>();
+		var tile:Tile;	
 
 		// loop over currently visible tiles
-		//trace("repopulateVisibleTiles - minCol : " + minCol);
-		//trace("repopulateVisibleTiles - maxCol : " + maxCol);
-		//trace("repopulateVisibleTiles - minRow : " + minRow);
-		//trace("repopulateVisibleTiles - maxRow : " + maxRow);
+		trace("repopulateVisibleTiles - minCol : " + minCol);
+		trace("repopulateVisibleTiles - maxCol : " + maxCol);
+		trace("repopulateVisibleTiles - minRow : " + minRow);
+		trace("repopulateVisibleTiles - maxRow : " + maxRow);
 		for (col in minCol...maxCol + 1) {
 			//trace("repopulateVisibleTiles - col : " + col);
 			for (row in minRow...maxRow + 1) {
 				//trace("repopulateVisibleTiles - row : " + row);
 				// create a string key for this tile
 				var key:String = tileKey(col, row, cast(_currentTileZoom, Int));
-				//trace("repopulateVisibleTiles - key : " + key);
+				trace("repopulateVisibleTiles - key : " + key);
 				
 				// see if we already have this tile
-				var tile:Tile = cast(well.getChildByName(key), Tile);
-						
 				// create it if not, and add it to the load queue
-				if (tile == null) {
+				if (well.getChildByName(key) == null) {
+					trace("well.getChildByName("+key+") == null");
 					tile = tilePainter.getTileFromCache(key);
 					if (tile == null) {
+						trace("tile cache miss");
 						coord.row = row;
 						coord.column = col;
 						coord.zoom = currentTileZoom;
@@ -521,13 +522,20 @@ class TileGrid extends Sprite
 						tile = tilePainter.createAndPopulateTile(coord, key);
 					}
 					else {
+						trace("tile cache hit");
 						tile.show();
 					}
 					well.addChild(tile);
+				} else {
+					trace("We already have this tile");
+					tile = cast(well.getChildByName(key), Tile);
+					
+					//TODO is it ok?
+					//well.addChild(tile);
 				}
-				
+			
 				visibleTiles.push(tile);
-				
+			
 				var tileReady:Bool = tile.isShowing() && !tilePainter.isPainting(tile);
 				
 				// if the tile isn't ready yet, we're going to reuse a parent tile
@@ -547,7 +555,7 @@ class TileGrid extends Sprite
 						// if it still doesn't have enough images yet, or it's fading in, try a double size parent instead
 						if (maxParentSearch > 0 && currentTileZoom > minZoom) {
 							var firstParentKey:String = parentKey(col, row, cast(currentTileZoom, Int), cast(currentTileZoom-1, Int));
-							if (!searchedParentKeys.get(firstParentKey))
+							if (searchedParentKeys.get(firstParentKey)==null)
 							{
 								searchedParentKeys.set(firstParentKey, true);
 								if (ensureVisible(firstParentKey) != null) {
@@ -555,7 +563,7 @@ class TileGrid extends Sprite
 								}
 								if (!foundParent && (_currentTileZoom - 1 < maxParentLoad)) {
 									//trace("requesting parent tile at zoom", pzoom);
-									var firstParentCoord:Array<Object> = parentCoord(col, row, Std.int(currentTileZoom), Std.int(currentTileZoom - 1));									
+									var firstParentCoord:Array<Int> = parentCoord(col, row, Std.int(currentTileZoom), Std.int(currentTileZoom - 1));									
 									visibleTiles.push(requestLoad(firstParentCoord[0], firstParentCoord[1], Std.int(currentTileZoom - 1)));
 								}					
 							}
@@ -571,7 +579,7 @@ class TileGrid extends Sprite
 						{
 							for (czoom in Std.int(currentTileZoom + 1)...Std.int(Math.min(maxZoom, currentTileZoom + maxChildSearch)))
 							{
-								var ckeys:Array<Object> = childKeys(col, row, Std.int(currentTileZoom), czoom);
+								var ckeys:Array<String> = childKeys(col, row, Std.int(currentTileZoom), czoom);
 								for (ckey in ckeys)
 								{
 									if (ensureVisible(ckey) != null)
@@ -617,7 +625,7 @@ class TileGrid extends Sprite
 									if (currentTileZoom - pzoom < maxParentLoad)
 									{
 										//trace("requesting parent tile at zoom", pzoom);
-										var pcoord:Array<Object> = parentCoord(col, row, Std.int(currentTileZoom), pzoom);
+										var pcoord:Array<Int> = parentCoord(col, row, Std.int(currentTileZoom), pzoom);
 										visibleTiles.push(requestLoad(pcoord[0], pcoord[1], pzoom));
 									}
 								}
@@ -632,7 +640,7 @@ class TileGrid extends Sprite
 					}
 
 				} // if !tileReady
-				
+			
 			} // for row
 		} // for col
 		
@@ -660,7 +668,7 @@ class TileGrid extends Sprite
 	* (including parent and child tiles currently visible until
 	* the current zoom level finishes loading)
 	*/
-	public function getVisibleTiles():Array<Object>
+	public function getVisibleTiles():Array<Tile>
 	{
 		return visibleTiles;
 	}
@@ -858,7 +866,7 @@ class TileGrid extends Sprite
 	 * @param	parentZoom
 	 * @return
 	 */
-	private function parentCoord(col:Int, row:Int, zoom:Int, parentZoom:Int):Array<Object>
+	private function parentCoord(col:Int, row:Int, zoom:Int, parentZoom:Int):Array<Int>
 	{
 		var scaleFactor:Float = Math.pow(2.0, zoom - parentZoom);
 		var pcol:Int = Math.floor(cast(col, Float) / scaleFactor);
@@ -867,11 +875,11 @@ class TileGrid extends Sprite
 	}	
 
 	// TODO: check that this does the right thing with negative row/col?
-	private function childKeys(col:Int, row:Int, zoom:Int, childZoom:Int):Array<Object>
+	private function childKeys(col:Int, row:Int, zoom:Int, childZoom:Int):Array<String>
 	{
 			var scaleFactor:Float = Math.pow(2, zoom - childZoom); // one zoom in = 0.5			
 			var rowColSpan:Float = Math.pow(2, childZoom - zoom); // one zoom in = 2, two = 4			
-			var keys:Array<Object> = new Array<Object>();
+			var keys:Array<String> = new Array<String>();
 			//for (var ccol:Int = col/scaleFactor; ccol < (col/scaleFactor)+rowColSpan; ccol++) {
 			for (ccol in cast(col / scaleFactor, Int)...cast((col / scaleFactor) + rowColSpan, Int))
 			{
@@ -1330,8 +1338,8 @@ class TileGrid extends Sprite
 
 	private function calculateBounds():Void
 	{
-		var tl:Coordinate = cast(limits[0], Coordinate);
-		var br:Coordinate = cast(limits[1], Coordinate);
+		var tl:Coordinate = limits[0];
+		var br:Coordinate = limits[1];
 
 		_maxZoom = Math.max(tl.zoom, br.zoom);  
 		_minZoom = Math.min(tl.zoom, br.zoom);

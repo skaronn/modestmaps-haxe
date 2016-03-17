@@ -8,7 +8,7 @@ import com.modestmaps.mapproviders.IMapProvider;
 import com.modestmaps.util.BinaryUtil;
 import haxe.ds.ObjectMap;
 import haxe.ds.StringMap;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 /**
 * @author tom
@@ -23,7 +23,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 	public static inline var ROAD:String = "ROAD";
 	public static inline var HYBRID:String = "HYBRID";
 
-	public static var serverSalt:Int = cast((Math.random() * 4), Int);		
+	public static var serverSalt:Int = Std.int((Math.random() * 4));		
 	
 	private static var URLSTART:StringMap<String> = [
 		AERIAL => "http://a",
@@ -89,7 +89,7 @@ class MicrosoftProvider extends AbstractMapProvider implements IMapProvider
 		return "MICROSOFT_"+type;
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Object>
+	public function getTileUrls(coord:Coordinate):Array<String>
 	{
 		if (coord.row < 0 || coord.row >= Math.pow(2, coord.zoom)) {
 			return null;

@@ -7,7 +7,7 @@ import com.modestmaps.core.Coordinate;
 import com.modestmaps.geo.LinearProjection;
 import com.modestmaps.geo.Location;
 import com.modestmaps.geo.Transformation;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import openfl.net.URLVariables;
 import openfl.errors.Error;

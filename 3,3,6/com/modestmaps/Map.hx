@@ -33,7 +33,7 @@ import openfl.errors.Error;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.core.Coordinate;
 import com.modestmaps.core.MapExtent;
@@ -93,7 +93,7 @@ class Map extends Sprite
 	*
 	* @see com.modestmaps.core.TileGrid
 	*/
-	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, rest:Array<Object> = null)
+	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, mapProvider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
 		super();		
 		if (mapProvider == null) mapProvider = new MicrosoftProvider(MicrosoftProvider.ROAD);
@@ -233,7 +233,7 @@ class Map extends Sprite
 		return locationsCoordinate([ extent.northWest, extent.southEast ]);
 	}
 		
-	public function locationsCoordinate(locations:Array<Object>, fitWidth:Float=0, fitHeight:Float=0):Coordinate
+	public function locationsCoordinate(locations:Array<Location>, fitWidth:Float=0, fitHeight:Float=0):Coordinate
 	{
 		if (fitWidth == 0) fitWidth = mapWidth;
 		if (fitHeight == 0) fitHeight = mapHeight;
@@ -314,7 +314,7 @@ class Map extends Sprite
 	*
 	* @return   Array of center and zoom: [center location, zoom number].
 	*/
-	public function getCenterZoom():Array<Object>
+	public function getCenterZoom():Array<Dynamic>
 	{
 		return [ mapProvider.coordinateLocation(grid.centerCoordinate), grid.zoomLevel ];
 	}
@@ -371,10 +371,11 @@ class Map extends Sprite
 	*
 	* @return   Array of [width, height].
 	*/
-	public function getSize():Array<Object>
+	public function getSize():Array<Dynamic>
 	{
-		var size:Array<Object> = [mapWidth, mapHeight];
-		return size;
+		//var size:Array<Object> = [mapWidth, mapHeight];
+		//return size;
+		return [mapWidth, mapHeight];
 	}
 
 	public function getSizePoint():Point

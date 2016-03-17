@@ -29,7 +29,7 @@ import com.modestmaps.mapproviders.microsoft.*;
 import com.modestmaps.mapproviders.yahoo.*;
 
 import openfl.events.Event;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 import mx.core.UIComponent;
 
 @:meta(Event(name="startZooming",	  type="com.modestmaps.events.MapEvent")]

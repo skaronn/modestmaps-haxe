@@ -2,13 +2,13 @@ package com.modestmaps.overlays;
 
 import haxe.Timer;
 import haxe.ds.ObjectMap;
-
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.events.MouseEvent;
 import openfl.geom.Point;
-import openfl.utils.Object;
+//import openfl.utils.Object;
+import haxe.ds.StringMap;
 
 import com.modestmaps.Map;
 import com.modestmaps.core.Coordinate;
@@ -30,8 +30,8 @@ class MarkerClip extends Sprite
 	private var drawCoord:Coordinate;
 	private var locations:ObjectMap<DisplayObject, Location> = new ObjectMap<DisplayObject, Location>();
 	private var coordinates:ObjectMap<DisplayObject, Coordinate> = new ObjectMap<DisplayObject, Coordinate>();
-	private var markers:Array<Object> = new Array<Object>(); // all markers
-	private var markersByName:Object = {};
+	private var markers:Array<DisplayObject> = new Array<DisplayObject>(); // all markers
+	private var markersByName:StringMap<DisplayObject>=new StringMap<DisplayObject>(); // = {};
 
 	/** enable this if you want intermediate zooming steps to
 	 * stretch your graphics instead of reprojecting the points
@@ -51,7 +51,7 @@ class MarkerClip extends Sprite
 
 	// the function used to sort the markers array before re-ordering them
 	// on the z plane (by child index)
-	public var markerSortFunction:Object = sortMarkersByYPosition;
+	public var markerSortFunction:Dynamic = sortMarkersByYPosition;
 
 	// the projection of the current map's provider
 	// if this changes we need to recache coordinates
@@ -167,7 +167,8 @@ class MarkerClip extends Sprite
 			locations.set(marker, location.clone());
 			coordinates.set(marker, map.getMapProvider().locationCoordinate(location));
 			//trace("attachMarker - map.getMapProvider().locationCoordinate("+location+") : "+ map.getMapProvider().locationCoordinate(location));
-			Reflect.setField(markersByName, marker.name, marker);
+			//Reflect.setField(markersByName, marker.name, marker);
+			markersByName.set(marker.name, marker);
 			markers.push(marker);
 			var added:Bool = updateClip(marker);
 			//trace("attachMarker - added : "+added);
@@ -186,16 +187,17 @@ class MarkerClip extends Sprite
 
 	public function getMarker(id:String):DisplayObject
 	{
-		return cast(markersByName.get(id), DisplayObject);
+		return markersByName.get(id);
 	}
 
 	public function getMarkerLocation( marker:DisplayObject ) : Location {
-		return cast(locations.get(marker), Location);
+		return locations.get(marker);
 	}
 
 	public function hasMarker(marker:DisplayObject):Bool
 	{
 		return markers.indexOf(marker) != -1;
+		
 	}
 
 	public function setMarkerLocation(marker:DisplayObject, location:Location):Void
