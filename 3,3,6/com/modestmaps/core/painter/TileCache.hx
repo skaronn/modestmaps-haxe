@@ -1,7 +1,7 @@
 package com.modestmaps.core.painter;
 
 import com.modestmaps.core.Tile;
-import haxe.ds.ObjectMap;
+import haxe.ds.StringMap;
 
 import flash.utils.Object;
 
@@ -11,7 +11,7 @@ import flash.utils.Object;
 class TileCache
 {
 	// Tiles we've already seen and fully loaded, by key (.name)
-	private var alreadySeen:ObjectMap<Object, Object>;
+	private var alreadySeen:StringMap<Tile>;
 	//private var alreadySeen:Dictionary;
 	private var tilePool:TilePool; // for handing tiles back!
 
@@ -19,7 +19,7 @@ class TileCache
 	{
 		this.tilePool = tilePool;
 		//alreadySeen = new Dictionary();
-		alreadySeen = new ObjectMap<Object, Object>();
+		alreadySeen = new StringMap<Tile>();
 	}
 
 	public var size(get, null):Int;
@@ -41,7 +41,7 @@ class TileCache
 
 	public function getTile(key:String):Tile
 	{
-		return cast(alreadySeen.get(key), Tile);
+		return alreadySeen.get(key);
 	}
 
 	public function containsKey(key:String):Bool
@@ -51,11 +51,11 @@ class TileCache
 
 	public function retainKeys(keys:Array<Object>):Void
 	{
-		for (key in alreadySeen)
+		for (key in alreadySeen.keys())
 		{
 			if (keys.indexOf(key) < 0)
 			{
-				tilePool.returnTile(cast(alreadySeen.get(key), Tile));
+				tilePool.returnTile(alreadySeen.get(key));
 				untyped __delete__(alreadySeen, key);
 			}
 		}	
@@ -63,12 +63,12 @@ class TileCache
 
 	public function clear():Void
 	{
-		for (key in alreadySeen)
+		for (key in alreadySeen.keys())
 		{
-			tilePool.returnTile(cast(alreadySeen.get(key), Tile));
+			tilePool.returnTile(alreadySeen.get(key));
 			untyped __delete__(alreadySeen, key);
 		}
 		//alreadySeen = new Dictionary();	
-		alreadySeen = new ObjectMap<Object, Object>();
+		alreadySeen = new StringMap<Tile>();
 	}
 }

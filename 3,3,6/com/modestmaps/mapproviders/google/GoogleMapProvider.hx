@@ -7,7 +7,7 @@
  */
 package com.modestmaps.mapproviders.google;
 
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.core.Coordinate;
 
@@ -95,7 +95,7 @@ class GoogleMapProvider extends AbstractMapProvider implements IMapProvider
 		return tileUrl;
 	}
 			
-	public function getTileUrls(coord:Coordinate):Array<Object>
+	public function getTileUrls(coord:Coordinate):Array<String>
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
 		if (sourceCoord.row < 0 || sourceCoord.row >= Math.pow(2, coord.zoom)) {

@@ -12,7 +12,7 @@ import openfl.text.TextFormat;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.utils.ByteArray;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import hxculture.FormatNumber;
 import hxculture.cultures.FrFR;
@@ -89,7 +89,7 @@ class Main extends Sprite
 		
 		var polygonClip:PolygonClip = new PolygonClip(map);
 								
-		var locations:Array<Object> = [ new Location(48.886705, 2.343104),
+		var locations:Array<Location> = [ new Location(48.886705, 2.343104),
 								new Location(48.880981, 2.35534),
 								new Location(48.846222, 2.33716),
 								new Location(48.873792, 2.295028) ];

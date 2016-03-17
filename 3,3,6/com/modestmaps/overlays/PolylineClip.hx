@@ -1,10 +1,11 @@
 package com.modestmaps.overlays;
 
+import haxe.ds.StringMap;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.Map;
 import com.modestmaps.core.Coordinate;
@@ -31,8 +32,8 @@ class PolylineClip extends Sprite
 
 	private var drawCoord:Coordinate;
 
-	private var polylines:Array<Object> = []; // all markers
-	private var polylinesByName:Object = {};
+	private var polylines:Array<Polyline> = []; // all markers
+	private var polylinesByName:StringMap<Polyline>= new StringMap<Polyline>();
 
 	// enable this if you want intermediate zooming steps to
 	// stretch your graphics instead of reprojecting the points
@@ -77,14 +78,16 @@ class PolylineClip extends Sprite
 
 	public function addPolyline(polyline:Polyline):Void
 	{
-		Reflect.setField(polylinesByName, polyline.id, polyline);	   
+		//Reflect.setField(polylinesByName, polyline.id, polyline);
+		polylinesByName.set(polyline.id, polyline);
 		polylines.push(polyline);
 		dirty = true;	  
 	}
 
 	public function getPolyline(id:String):Polyline
 	{
-		return cast(Reflect.field(polylinesByName, id), Polyline);
+		//return cast(Reflect.field(polylinesByName, id), Polyline);
+		return polylinesByName.get(id);
 	}
 
 	public function removePolyline(id:String):Void
@@ -132,14 +135,15 @@ class PolylineClip extends Sprite
 		var w:Float = map.getWidth() * 2;
 		var h:Float = map.getHeight() * 2;
 					
-		var localPointsArray:Array<Object> = new Array<Object>();
+		var localPointsArray:Array<Point> = new Array<Point>();
 		
 		var i:UInt = 0;
 		
 		this.graphics.lineStyle(polyline.lineThickness, Std.int(polyline.lineColor), polyline.lineAlpha, polyline.pixelHinting, polyline.scaleMode, polyline.caps, polyline.joints, polyline.miterLimit);
 			
 		var boundaryWindow:Rectangle = new Rectangle( -w / 2, -h / 2, w, h);
-				
+
+		//TODO why 2 loops??
 		// Calculate local coordinates for each point
 		for (i in 0...polyline.locationsArray.length)
 		{		

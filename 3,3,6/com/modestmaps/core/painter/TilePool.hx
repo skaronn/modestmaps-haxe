@@ -1,7 +1,7 @@
 package com.modestmaps.core.painter;
 
 import com.modestmaps.core.Tile;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 /** 
  *  This post http://lab.polygonal.de/2008/06/18/using-object-pools/
@@ -17,15 +17,15 @@ class TilePool
 	private static inline var MIN_POOL_SIZE:Int = 256;
 	private static inline var MAX_NEW_TILES:Int = 256;
 
-	private var pool:Array<Object> = [];
-	private var tileClass:Class<Object>;
+	private var pool:Array<Tile> = [];
+	private var tileClass:Class<Tile>;
 
-	public function new(tileClass:Class<Object>)
+	public function new(tileClass:Class<Tile>)
 	{
 		this.tileClass = tileClass;
 	}
 
-	public function setTileClass(tileClass:Class<Object>):Void
+	public function setTileClass(tileClass:Class<Tile>):Void
 	{
 		this.tileClass = tileClass;
 		//flash.Lib.trace("TilePool.hx - setTileClass - this.tileClass " + this.tileClass);
@@ -39,7 +39,7 @@ class TilePool
 				pool.push(Type.createInstance(tileClass, [0, 0, 0]));
 			}
 		}			
-		var tile:Tile = cast(pool.pop(), Tile);
+		var tile:Tile = pool.pop();
 		tile.init(column, row, zoom);
 		//flash.Lib.trace("TilePool.hx - setTileClass - tile " + tile);
 		return tile;

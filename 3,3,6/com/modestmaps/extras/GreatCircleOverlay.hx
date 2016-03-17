@@ -5,7 +5,7 @@ import haxe.ds.ObjectMap;
 import openfl.display.Sprite;
 import openfl.filters.DropShadowFilter;
 import openfl.geom.Point;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.Map;
 import com.modestmaps.core.MapExtent;
@@ -16,8 +16,8 @@ import com.modestmaps.geo.Location;
 */
 class GreatCircleOverlay extends Overlay
 {	
-	public var lines:Array<Object> = [];
-	private var styles:ObjectMap<Object, Object> = new ObjectMap<Object, Object>();
+	public var lines:Array<Array<Location>> = [];
+	private var styles:ObjectMap<Array<Location>, LineStyle> = new ObjectMap<Array<Location>, LineStyle>();
 
 	public function new(map:Map)
 	{
@@ -29,8 +29,8 @@ class GreatCircleOverlay extends Overlay
 	{
 		sprite.graphics.clear();
 		for (line in lines) {
-			var lineStyle:LineStyle = cast(styles.get(line), LineStyle);
-			var p:Point = map.locationPoint(cast(line[0], Location), sprite);
+			var lineStyle:LineStyle = styles.get(line);
+			var p:Point = map.locationPoint(line[0], sprite);
 			sprite.graphics.moveTo(p.x, p.y);
 			var i:Int = 0;
 			var prev:Location = null;
@@ -63,7 +63,7 @@ class GreatCircleOverlay extends Overlay
 	public function addGreatCircle(start:Location, end:Location, lineStyle:LineStyle = null):MapExtent
 	{
 		var extent:MapExtent = new MapExtent();
-		var latlngs:Array<Object> = [];
+		var latlngs:Array<Location> = [];
 		
 		var lat1:Float = start.lat * Math.PI / 180.0;
 		var lon1:Float = start.lon * Math.PI / 180.0;

@@ -8,7 +8,7 @@ import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.Map;
 import com.modestmaps.core.Coordinate;
@@ -25,8 +25,8 @@ class PolygonMarker extends Sprite implements Redrawable
 
 	public var zoomTolerance:Float = 4;
 
-	public var locations:Array<Object>;
-	private var coordinates:Array<Object>; // cached after converting locations with the map provider
+	public var locations:Array <Array<Location>>;
+	private var coordinates:Array<Array<Coordinate>>; // cached after converting locations with the map provider
 	public var extent:MapExtent;
 	public var location:Location;
 
@@ -63,7 +63,7 @@ class PolygonMarker extends Sprite implements Redrawable
 	 * ring of the polygon, and subsequent arrays will be treated as holes if they overlap it.
 	 * 
 	 */
-	public function new(map:Map, locations:Array<Object>, autoClose:Bool = true)	
+	public function new(map:Map, locations:Array<Dynamic>, autoClose:Bool = true)	
 	{
 		super();
 		this.map = map;
@@ -86,18 +86,18 @@ class PolygonMarker extends Sprite implements Redrawable
 				
 
 				//for each (var hole:Array in locations.slice(1))
-				var hole:Array<Object>;
+				var hole:Array<Location>;
 				var slicedLocations = locations.slice(1);
 				for (holeIndex in 0...slicedLocations.length)
 				{
-					hole = cast(slicedLocations[holeIndex], Array<Object>);
+					hole = slicedLocations[holeIndex];
 					addHole(hole);
 				}
 			}
 		}
 	}
 
-	public function addHole(hole:Array<Object>):Void	
+	public function addHole(hole:Array<Location>):Void	
 	{
 		this.locations.push(hole);
 		this.extent.encloseExtent(MapExtent.fromLocations(hole));
@@ -106,7 +106,7 @@ class PolygonMarker extends Sprite implements Redrawable
 		updateGraphics();
 	}
 
-	private function l2c(l:Location, rest : Array<Object> = null):Coordinate
+	private function l2c(l:Location):Coordinate //old 2nd parm , rest : Array<Object> = null
 	{
 		return provider.locationCoordinate(l);
 	}
@@ -148,9 +148,9 @@ class PolygonMarker extends Sprite implements Redrawable
 		if (location != null ) {
 			var firstPoint:Point = grid.coordinatePoint(coordinates[0][0]);
 			//for each (var ring:Array in coordinates) {
-			var ring:Array<Object>;
+			var ring:Array<Coordinate>;
 			for (ringIndex in 0...coordinates.length) {
-				ring = cast(coordinates[ringIndex], Array<Object>) ;
+				ring = coordinates[ringIndex];
 				var ringPoint:Point = grid.coordinatePoint(ring[0]);
 				graphics.moveTo(ringPoint.x - firstPoint.x, ringPoint.y - firstPoint.y);				
 				var p:Point = null;

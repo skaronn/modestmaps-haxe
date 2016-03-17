@@ -19,9 +19,11 @@ class DebugUtil
 {	
 	public static function dumpObject(tw:Object):Void {
 		var concatFieldsDump : String = Type.getClassName(Type.getClass(tw)) + " => ";
-		var fields : Array<Object> = Type.getInstanceFields(Type.getClass(tw));
+		var fields : Array<String> = Type.getInstanceFields(Type.getClass(tw));
+		var key:Int;
+		
 		for (key in fields) {
-			var field : Object = fields[key];
+			var field : String = key; // fields[key];
 			if(!Reflect.isFunction(field)) {
 				concatFieldsDump += "[" + key +" : " + Reflect.getProperty(tw, key) + "]";
 			}
@@ -29,15 +31,15 @@ class DebugUtil
 		flash.Lib.trace(concatFieldsDump);
 	}
 	
-	private static function traceLog(o:Object):Void {		
+	private static function traceLog(o:Dynamic):Void {
 		var len:UInt = 0;
 		if (Std.is(o, ObjectMap)) {
-			var object : ObjectMap<Object, Object> = o;
+			var object : ObjectMap<Dynamic, Dynamic> = o;
 			trace("\n");
 			for (key in object.keys()) {
 				var dictionaryValues : String = "";
 				var dictionaryLength : UInt = 0;
-				var fields : ObjectMap<Object, Object> = object.get(key);
+				var fields : ObjectMap<Dynamic, Dynamic> = object.get(key);
 				for (value in fields.keys()) {
 					trace(value);
 					dictionaryValues += Type.typeof(value);

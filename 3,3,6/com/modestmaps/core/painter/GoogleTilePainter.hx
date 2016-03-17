@@ -1,8 +1,8 @@
 package com.modestmaps.core.painter;
 
-import com.google.maps.Map;
+/*import com.google.maps.Map;
 import com.google.maps.interfaces.IMapType;
-import com.google.maps.interfaces.ITileLayer;
+import com.google.maps.interfaces.ITileLayer;*/
 import com.modestmaps.core.Coordinate;
 import com.modestmaps.core.Tile;
 import com.modestmaps.core.TweenTile;
@@ -14,10 +14,10 @@ import openfl.events.Event;
 import openfl.events.EventDispatcher;
 import openfl.events.TimerEvent;
 import openfl.geom.Point;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 import openfl.utils.Timer;
 
-import haxe.ds.ObjectMap;
+//import haxe.ds.ObjectMap;
 
 class GoogleTilePainter extends EventDispatcher implements ITilePainter
 {
@@ -26,7 +26,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 	private var tileClass:Type;
 	private var timer:Timer;
 	//private var cache:Dictionary = new Dictionary();
-	private var cache:ObjectMap<Dynamic, Dynamic>= new ObjectMap<Dynamic, Dynamic>();
+	private var cache:StringMap<Tile>= new StringMap<Tile>();
 
 	public function new(googleMap:Map, type:IMapType)
 	{

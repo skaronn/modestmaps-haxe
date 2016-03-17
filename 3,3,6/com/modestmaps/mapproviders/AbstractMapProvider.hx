@@ -21,7 +21,7 @@ import com.modestmaps.geo.IProjection;
 import com.modestmaps.geo.Location;
 import com.modestmaps.geo.MercatorProjection;
 import com.modestmaps.geo.Transformation;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 class AbstractMapProvider
 {	
@@ -89,7 +89,7 @@ class AbstractMapProvider
 	* 
 	* @return
 	*/
-	public function outerLimits():Array<Object>
+	public function outerLimits():Array<Coordinate>
 	{
 		return [ __topLeftOutLimit.copy(), __bottomRightInLimit.copy() ];
 	}

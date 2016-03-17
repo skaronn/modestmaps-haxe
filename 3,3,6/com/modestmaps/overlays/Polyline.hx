@@ -3,7 +3,8 @@ package com.modestmaps.overlays;
 import openfl.display.CapsStyle;
 import openfl.display.JointStyle;
 import openfl.display.LineScaleMode;
-import openfl.utils.Object;
+//import openfl.utils.Object;
+import com.modestmaps.geo.Location;
 /**
  * Polyline class that takes polyline data and draws it in the given style.
  * 
@@ -26,7 +27,7 @@ import openfl.utils.Object;
 class Polyline
 {
 	public var id:String;
-	public var locationsArray:Array<Object>;
+	public var locationsArray:Array<Location>;
 	public var lineThickness:Float;
 	public var lineColor:Float;
 	public var lineAlpha:Float;
@@ -37,7 +38,7 @@ class Polyline
 	public var miterLimit:Float;
 		
 	public function new(id:String, 
-				 locationsArray:Array<Object>,
+				 locationsArray:Array<Location>,
 				 lineThickness:Float = 3,
 				 lineColor:Float = 0xFF0000,
 				 lineAlpha:Float = 1,

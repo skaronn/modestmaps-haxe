@@ -1,9 +1,10 @@
 package com.modestmaps.extras.ui;
 
 import openfl.Assets;
-import openfl.display.MovieClip;
+//import openfl.display.MovieClip;
 import openfl.display.BitmapData;
 import openfl.display.Bitmap;
+import openfl.display.Sprite;
 import openfl.events.MouseEvent; 
 
 /**
@@ -16,14 +17,14 @@ class MarkerLogo extends openfl.display.BitmapData
     
 }
 
-class SampleMarker extends MovieClip
+class SampleMarker extends Sprite
 { 
 	private var _title : String;
 
 	public function new ()
 	{
 		super();
-		stop();
+		//stop();
 		
 		buttonMode = true;
 		mouseChildren = false;

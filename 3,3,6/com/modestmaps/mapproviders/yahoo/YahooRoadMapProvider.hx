@@ -1,6 +1,6 @@
 package com.modestmaps.mapproviders.yahoo;
 
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.core.Coordinate;
 import com.modestmaps.mapproviders.AbstractMapProvider;
@@ -28,7 +28,7 @@ class YahooRoadMapProvider extends AbstractMapProvider implements IMapProvider
 		return "&x=" + coord.column + "&y=" + row + "&z=" + (18 - coord.zoom);
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Object>
+	public function getTileUrls(coord:Coordinate):Array<String>
 	{	
 		trace("http://us.maps2.yimg.com/us.png.maps.yimg.com/png?v=3.52&t=m" + getZoomString(sourceCoordinate(coord)));
 		return [ "http://us.maps2.yimg.com/us.png.maps.yimg.com/png?v=3.52&t=m" + getZoomString(sourceCoordinate(coord)) ];

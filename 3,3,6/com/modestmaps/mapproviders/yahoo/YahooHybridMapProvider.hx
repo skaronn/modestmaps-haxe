@@ -26,7 +26,7 @@ class YahooHybridMapProvider extends AbstractMapProvider implements IMapProvider
 		return "&x=" + coord.column + "&y=" + row + "&z=" + (18 - coord.zoom);
 	}
 	
-	public function getTileUrls(coord:Coordinate):Array<Dynamic>
+	public function getTileUrls(coord:Coordinate):Array<String>
 	{
 		return [ "http://us.maps3.yimg.com/aerial.maps.yimg.com/tile?v=1.7&t=a" + getZoomString(sourceCoordinate(coord)),
 			 "http://us.maps3.yimg.com/aerial.maps.yimg.com/png?v=2.2&t=h" + getZoomString(sourceCoordinate(coord)) ];		
