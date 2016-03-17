@@ -9,12 +9,14 @@
  */
 package com.modestmaps;
 
+import motion.easing.IEasing;
 import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 import openfl.geom.Point;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
-import gs.TweenLite;
+import motion.Actuate;
+import motion.easing.Quad;
 
 import com.modestmaps.core.Coordinate;
 import com.modestmaps.core.MapExtent;
@@ -27,13 +29,13 @@ class TweenMap extends Map
 {
 
 	/** easing function used for panLeft, panRight, panUp, panDown */
-	public var panEase:Object = quadraticEaseOut;
+	public var panEase:IEasing = Quad.easeOut;
 	
 	/** time to pan using panLeft, panRight, panUp, panDown */
 	public var panDuration:Float = 0.5;
 
 	/** easing function used for zoomIn, zoomOut */
-	public var zoomEase:Object = quadraticEaseOut;
+	public var zoomEase:IEasing = Quad.easeOut;
 	
 	/** time to zoom using zoomIn, zoomOut */
 	public var zoomDuration:Float = 0.2;
@@ -55,7 +57,7 @@ class TweenMap extends Map
 	*
 	* @see com.modestmaps.core.TileGrid
 	*/
-	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Object> = null)
+	public function new(width:Float = 320, height:Float = 240, draggable:Bool = true, provider:IMapProvider = null, rest:Array<Dynamic> = null)
 	{
 		trace("new : "+width+", "+height+", "+draggable+", "+provider+", "+rest);
 		super(width, height, draggable, provider, rest);
@@ -72,7 +74,8 @@ class TweenMap extends Map
 		{
 			grid.prepareForPanning();
 			//trace("panBy - grid : " + grid + ", panDuration : " + panDuration + ", tx : " + cast(grid.tx + px, Float) + ", ty : " + cast(grid.ty + py, Float) + ", onComplete : " + grid.donePanning + ", ease : " +panEase);
-			TweenLite.to(grid, panDuration, { tx: grid.tx + px, ty: grid.ty + py, onComplete: grid.donePanning, ease: panEase } );
+			//TweenLite.to(grid, panDuration, { tx: grid.tx + px, ty: grid.ty + py, onComplete: grid.donePanning, ease: panEase } );
+			Actuate.tween(grid, panDuration, { tx: grid.tx + px, ty: grid.ty + py }).ease(panEase).onComplete(grid.donePanning);
 		}
 	}	  
 		
@@ -94,7 +97,8 @@ class TweenMap extends Map
 		grid.enforceBoundsEnabled = false;
 		grid.enforceBoundsOnMatrix(m);
 		
-		TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
+		//TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
+		Actuate.tween(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty}).onComplete(panAndZoomComplete);		
 	}
 
 	/** 
@@ -209,11 +213,16 @@ class TweenMap extends Map
 			var pan:Point = centerPoint.subtract(p);
 
 			grid.prepareForPanning();
-			TweenLite.to(grid, panDuration, {ty: grid.ty + pan.y,
-							 tx: grid.tx + pan.x,
-							 ease: panEase,
-							 onStart: grid.prepareForPanning,
-							 onComplete: grid.donePanning});
+			//TweenLite.to(grid, panDuration, {ty: grid.ty + pan.y,
+			//				 tx: grid.tx + pan.x,
+			//				 ease: panEase,
+			//				 onStart: grid.prepareForPanning,
+			//				 onComplete: grid.donePanning});
+			Actuate.tween(grid, panDuration, {ty: grid.ty + pan.y,
+							 tx: grid.tx + pan.x})
+							 .ease(panEase)
+							 .onComplete(grid.donePanning);
+
 		}
 		else{
 			setCenter(location);
@@ -226,15 +235,21 @@ class TweenMap extends Map
 	* 
 	* @see com.modestmaps.Map#panTo
 	*/
-	public function tweenTo(location:Location, duration:Float, easing:Object = null):Void
+	public function tweenTo(location:Location, duration:Float, easing:IEasing = null):Void
 	{
 		var pan:Point = new Point(mapWidth / 2, mapHeight / 2).subtract(locationPoint(location, grid));
 		// grid.prepareForPanning();
-		TweenLite.to(grid, duration, { ty: grid.ty + pan.y,
+		/*TweenLite.to(grid, duration, { ty: grid.ty + pan.y,
 					   tx: grid.tx + pan.x,
 					   ease: easing,
 					   onStart: grid.prepareForPanning,
-					   onComplete: grid.donePanning });
+					   onComplete: grid.donePanning }); */
+		if (easing == null) easing = Quad.easeOut;
+		grid.prepareForPanning();
+		Actuate.tween(grid, duration, { ty: grid.ty + pan.y,
+					tx: grid.tx + pan.x})
+					.ease(easing)
+					.onComplete(grid.donePanning);
 	}
 
 	/**
@@ -249,10 +264,15 @@ class TweenMap extends Map
 			var target:Float = (dir < 0) ? Math.floor(grid.zoomLevel + dir) : Math.ceil(grid.zoomLevel + dir);
 			target = Math.max(grid.minZoom, Math.min(grid.maxZoom, target));
 			trace("grid : " + grid);
-			TweenLite.to(grid, zoomDuration, { zoomLevel: target,
+			
+			/*TweenLite.to(grid, zoomDuration, { zoomLevel: target,
 							   onStart: grid.prepareForZooming,
 							   onComplete: grid.doneZooming,
-							   ease: zoomEase });
+							   ease: zoomEase }); */
+			grid.prepareForZooming;
+			Actuate.tween(grid, zoomDuration, { zoomLevel: target})
+				.ease(zoomEase)
+				.onComplete(grid.doneZooming);
 		}
 	}
 
@@ -265,8 +285,10 @@ class TweenMap extends Map
 	{	   	
 		if (!__draggable || grid.panning) return;
 
-		TweenLite.killTweensOf(grid);
-		TweenLite.killDelayedCallsTo(doneMouseWheeling);
+		//TweenLite.killTweensOf(grid);
+		//TweenLite.killDelayedCallsTo(doneMouseWheeling);
+		Actuate.stop(grid);
+
 		var sc:Float = 0;
 		
 		if (event.delta < 0) {
@@ -302,7 +324,8 @@ class TweenMap extends Map
 			grid.setMatrix(m);		
 		}
 		
-		TweenLite.delayedCall(0.1, doneMouseWheeling);
+		//TweenLite.delayedCall(0.1, doneMouseWheeling);
+		Actuate.timer(0.1).onComplete(doneMouseWheeling);
 		
 		event.updateAfterEvent();		
 	}

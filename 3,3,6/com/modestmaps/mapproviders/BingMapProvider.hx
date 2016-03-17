@@ -1,7 +1,7 @@
 package com.modestmaps.mapproviders;
 
 import openfl.geom.Point;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.core.Coordinate;
 /**

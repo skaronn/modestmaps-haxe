@@ -7,7 +7,7 @@
  */
 package com.modestmaps.mapproviders;
 
-import openfl.utils.Object;
+//import openfl.utils.Object;
  
 import com.modestmaps.core.Coordinate;
 
@@ -39,7 +39,8 @@ class HereMapProvider extends AbstractMapProvider implements IMapProvider
 		return "HERE_MAP";
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Object>
+	//TODO: Why all the mapproviders returns an Array<String> instead of String, does it make sense?
+	public function getTileUrls(coord:Coordinate):Array<String>
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
 		if (sourceCoord.row < 0 || sourceCoord.row >= Math.pow(2, coord.zoom))

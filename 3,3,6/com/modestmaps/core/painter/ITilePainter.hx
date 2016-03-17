@@ -5,14 +5,14 @@ import com.modestmaps.core.Tile;
 import com.modestmaps.mapproviders.IMapProvider;
 
 import openfl.events.IEventDispatcher;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 interface ITilePainter extends IEventDispatcher
 {
-	function setTileClass(tileClass:Class<Object>):Void;
+	function setTileClass(tileClass:Class<Tile>):Void;
 	function setMapProvider(provider:IMapProvider):Void;
 	function getTileFromCache(key:String):Tile;
-	function retainKeysInCache(recentlySeen:Array<Object>):Void;
+	function retainKeysInCache(recentlySeen:Array<String>):Void;
 	function createAndPopulateTile(coord:Coordinate, key:String):Tile;
 	function isPainted(tile:Tile):Bool;
 	function cancelPainting(tile:Tile):Void;

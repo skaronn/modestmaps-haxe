@@ -7,9 +7,9 @@
 package com.modestmaps.core;
 
 import Map;
-
+import haxe.ds.StringMap;
 import openfl.geom.Rectangle;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.geo.Location;
 
@@ -199,7 +199,7 @@ class MapExtent
 	* @param	locations
 	* @return
 	*/
-	public static function fromLocations(locations:Array<Object>):MapExtent	
+	public static function fromLocations(locations:Array<Location>):MapExtent	
 	{
 		if (locations == null || locations.length == 0) return new MapExtent();		
 		
@@ -210,12 +210,12 @@ class MapExtent
 		{
 			if (extent == null)
 			{
-				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {					
+				if (location!=null && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {					
 					extent = new MapExtent(location.lat, location.lat, location.lon, location.lon);
 				}			
 			}
 			else {
-				if (location && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {
+				if (location !=null && !Math.isNaN(location.lat) && !Math.isNaN(location.lon)) {
 					extent.enclose(location);
 				}
 			}
@@ -223,7 +223,7 @@ class MapExtent
 		}
 		
 		//trace("fromLocations - len : " + len);
-		
+		//TODO Don't know why you reset the extent after calculating it
 		if (extent != null) {
 			extent = new MapExtent();
 		}
@@ -247,9 +247,9 @@ class MapExtent
 	* @param	locationProp
 	* @return
 	*/
-	public static function fromLocationProperties(objects:Map<String, Object>, locationProp:String = "location"):MapExtent
+	public static function fromLocationProperties(objects:StringMap<Location>, locationProp:String = "location"):MapExtent
 	{
-		var fromLocationProp : Location = cast(objects.get(locationProp), Location);
+		var fromLocationProp : Location = objects.get(locationProp);
 		return fromLocations([fromLocationProp]);
 	}
 

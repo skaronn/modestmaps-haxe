@@ -6,7 +6,7 @@
  */
 package com.modestmaps.mapproviders;
 
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import com.modestmaps.core.Coordinate;
 
@@ -22,7 +22,7 @@ class OpenStreetMapProvider extends AbstractMapProvider implements IMapProvider
 		return "OPEN_STREET_MAP";
 	}
 
-	public function getTileUrls(coord:Coordinate):Array<Object>
+	public function getTileUrls(coord:Coordinate):Array<String>
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);
 		//trace("getTileUrls - sourceCoord : "+sourceCoord);

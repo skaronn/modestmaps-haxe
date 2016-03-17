@@ -4,7 +4,7 @@ import openfl.display.Sprite;
 import openfl.geom.Point;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import hxculture.FormatNumber;
 import hxculture.cultures.FrFR;
@@ -59,7 +59,7 @@ class MapScale extends Sprite
 		var start:Location = map.pointLocation(p1);
 		var end:Location = map.pointLocation(p2);
 		
-		var barParams:Array<Object> = [
+		var barParams:Array<Dynamic> = [
 			{ radius: Distance.R_MILES, unit: "mile", units: "miles", field: leftField },
 			{ radius: Distance.R_KM, unit: "km", units: "km", field: rightField },
 		];

@@ -1,7 +1,7 @@
 package com.modestmaps.mapproviders;
 
 import com.modestmaps.core.Coordinate;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 class CloudMadeProvider extends OpenStreetMapProvider
 {
