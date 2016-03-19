@@ -60,7 +60,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 		return null;
 	}
 
-	public function retainKeysInCache(recentlySeen:Array<Object>):Void
+	public function retainKeysInCache(recentlySeen:Array<String>):Void
 	{
 	/*
 	var tempCache:Dictionary = new Dictionary();
@@ -69,6 +69,7 @@ class GoogleTilePainter extends EventDispatcher implements ITilePainter
 	}
 	this.cache = tempCache;
 	*/
+		trace("GoogleTilePainter.hx retainKeysInCache not implemented");
 	}
 
 	public function createAndPopulateTile(coord:Coordinate, key:String):Tile

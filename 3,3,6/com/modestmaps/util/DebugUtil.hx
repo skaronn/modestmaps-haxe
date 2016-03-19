@@ -7,7 +7,7 @@ import openfl.errors.Error;
 import openfl.text.TextFormat;
 import openfl.text.TextField;
 import openfl.system.System;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 import openfl.utils.Timer;
 
 import com.modestmaps.core.TileGrid;
@@ -17,7 +17,7 @@ import com.modestmaps.core.painter.ITilePainter;
 
 class DebugUtil
 {	
-	public static function dumpObject(tw:Object):Void {
+	public static function dumpObject(tw:Dynamic):Void {
 		var concatFieldsDump : String = Type.getClassName(Type.getClass(tw)) + " => ";
 		var fields : Array<String> = Type.getInstanceFields(Type.getClass(tw));
 		var key:Int;
@@ -58,7 +58,7 @@ class DebugUtil
 		}
 	}
 	
-	public static function dumpStack(obj:Object, methodName:String):Void {
+	public static function dumpStack(obj:Dynamic, methodName:String):Void {
 		var er:Error = new Error((obj != null ? Type.getClassName(Type.getClass(obj)) : "[class Object]") + ", " + methodName); //creating but not throwing the error
 		trace(er.getStackTrace()); // see where the issue is happening, but continue running normally!
 	}

@@ -49,14 +49,17 @@ class TileCache
 		return Std.is(alreadySeen.get(key), Tile);
 	}
 
-	public function retainKeys(keys:Array<Object>):Void
+	public function retainKeys(keys:Array<String>):Void
 	{
+		//TODO està fent el contrari?? esta eliminant les keys, en comptes de les que no siguin les keys
+		
 		for (key in alreadySeen.keys())
 		{
-			if (keys.indexOf(key) < 0)
+			if (keys.indexOf(key) < 0) 
 			{
 				tilePool.returnTile(alreadySeen.get(key));
-				untyped __delete__(alreadySeen, key);
+				//untyped __delete__(alreadySeen, key);
+				alreadySeen.remove(key);
 			}
 		}	
 	}
@@ -66,7 +69,7 @@ class TileCache
 		for (key in alreadySeen.keys())
 		{
 			tilePool.returnTile(alreadySeen.get(key));
-			untyped __delete__(alreadySeen, key);
+			//untyped __delete__(alreadySeen, key);
 		}
 		//alreadySeen = new Dictionary();	
 		alreadySeen = new StringMap<Tile>();

@@ -21,16 +21,16 @@
     <class path="D:\HaxeToolkit\haxe\lib\actuate\1,8,6" />
     <class path="Source" />
     <class path="D:\HaxeToolkit\haxe\lib\openfl\3,6,0\extern" />
-    <class path="Export\flash\haxe" />
+    <class path="Export\html5\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="lime=2.9.0&#xA;modestmaps=3.3.6&#xA;modestmaps-haxe=3.3.6&#xA;openfl=3.6.0&#xA;actuate=1.8.6&#xA;openfl-next&#xA;tools=2.9.0&#xA;no-compilation&#xA;openfl-flash&#xA;web&#xA;display" />
+    <option directives="lime=2.9.0&#xA;modestmaps=3.3.6&#xA;modestmaps-haxe=3.3.6&#xA;openfl=3.6.0&#xA;actuate=1.8.6&#xA;openfl-next&#xA;tools=2.9.0&#xA;no-compilation&#xA;openfl-html5&#xA;canvas&#xA;lime-html5&#xA;html5&#xA;web&#xA;html5&#xA;display" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="-swf-version 11.2&#xA;-debug " />
+    <option additional="--remap flash:openfl&#xA;--macro allowPackage(&quot;flash&quot;)&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

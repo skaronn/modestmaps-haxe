@@ -135,7 +135,7 @@ class TilePainter extends EventDispatcher implements ITilePainter
 	 * 
 	 * @param	recentlySeen
 	 */
-	public function retainKeysInCache(recentlySeen:Array<Dynamic>):Void
+	public function retainKeysInCache(recentlySeen:Array<String>):Void
 	{
 		tileCache.retainKeys(recentlySeen); 		
 	}

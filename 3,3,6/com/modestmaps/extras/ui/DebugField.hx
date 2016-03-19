@@ -2,7 +2,7 @@ package com.modestmaps.extras.ui;
 
 import openfl.display.Sprite;
 import openfl.system.System;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 import openfl.utils.Timer;
 import openfl.text.TextField;
 import openfl.text.TextFormat;

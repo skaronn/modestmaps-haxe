@@ -11,7 +11,7 @@ import openfl.text.TextFormat;
 import openfl.display.Bitmap;
 import openfl.display.Sprite;
 import openfl.utils.ByteArray;
-import openfl.utils.Object;
+//import openfl.utils.Object;
 
 import hxculture.FormatNumber;
 import hxculture.cultures.FrFR;
@@ -116,7 +116,7 @@ class Main extends Sprite
 	{   	        	             	
 		// Some sample data
 		// In most cases, we would have loaded this from XML, or a web service.
-		var markerpoints:Array<Object> = [
+		var markerpoints:Array<Dynamic> = [
 			{ title:"Cathédrale Notre-Dame de Paris", location:"48.852966, 2.349902" },
 			{ title:"Tour Eiffel", location:"48.858370, 2.294481"},
 			{ title:"Jardin du luxembourg", location:"48.846222, 2.33716"},

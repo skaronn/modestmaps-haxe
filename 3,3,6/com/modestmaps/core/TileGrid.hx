@@ -330,6 +330,14 @@ class TileGrid extends Sprite
 		dirty = true;		
 	}
 
+	private function stringDescSort(a:String, b:String):Int
+	{
+		a = a.toLowerCase();
+		b = b.toLowerCase();
+		if (a < b) return 1;
+		if (a > b) return -1;
+		return 0;
+	}
 	/**
 	 * Figures out from worldMatrix which tiles we should be showing, adds them to the stage, adds them to the tileQueue if needed, etc.
 	 * 
@@ -452,7 +460,8 @@ class TileGrid extends Sprite
 
 			// take a look at everything else
 			recentlySeen = recentlySeen.slice(0, recentlySeen.length - visibleTiles.length);
-			recentlySeen.sort((cast Array).DESCENDING);
+			//TODO It breaks after some iterations-> recentlySeen.sort((cast Array).DESCENDING);
+			ArraySort.sort(recentlySeen, stringDescSort);
 			recentlySeen = recentlySeen.concat(visibleKeys);
 			
 			// throw away keys at the beginning of recentlySeen
@@ -506,16 +515,15 @@ class TileGrid extends Sprite
 			for (row in minRow...maxRow + 1) {
 				//trace("repopulateVisibleTiles - row : " + row);
 				// create a string key for this tile
-				var key:String = tileKey(col, row, cast(_currentTileZoom, Int));
-				trace("repopulateVisibleTiles - key : " + key);
+				var key:String = tileKey(col, row, Std.int(_currentTileZoom));
+				//trace("repopulateVisibleTiles - key : " + key);
 				
 				// see if we already have this tile
 				// create it if not, and add it to the load queue
 				if (well.getChildByName(key) == null) {
-					trace("well.getChildByName("+key+") == null");
 					tile = tilePainter.getTileFromCache(key);
 					if (tile == null) {
-						trace("tile cache miss");
+						trace("tile cache miss - to load queue");
 						coord.row = row;
 						coord.column = col;
 						coord.zoom = currentTileZoom;
@@ -528,7 +536,7 @@ class TileGrid extends Sprite
 					}
 					well.addChild(tile);
 				} else {
-					trace("We already have this tile");
+					trace("Tile already inside Sprite");
 					tile = cast(well.getChildByName(key), Tile);
 					
 					//TODO is it ok?
