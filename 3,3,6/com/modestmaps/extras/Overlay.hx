@@ -1,6 +1,7 @@
 package com.modestmaps.extras;
 
 import openfl.display.Sprite;
+import openfl.display.Stage;
 import openfl.events.Event;
 import openfl.geom.Point;
 
@@ -14,19 +15,22 @@ import com.modestmaps.events.MapEvent;
 class Overlay extends Sprite
 {
 	public var map:Map;
+	public var ztage:Stage;
 
 	private var panStart:Point;
 
 	private var polySprite:Sprite = new Sprite();
 	private var polyCont:Sprite = new Sprite();
 
-	public function new(map:Map)
+	public function new(map:Map, stage:Stage)
 	{
 		super();
 		this.mouseEnabled = false;
 		this.mouseChildren = false;
 		this.map = map;
+		this.ztage = stage;
 		this.cacheAsBitmap = true;
+		
 		#if flash
 		this.blendMode = flash.display.BlendMode.MULTIPLY;
 		#end
@@ -51,22 +55,20 @@ class Overlay extends Sprite
 
 	private function onMapResize(event:Event):Void
 	{
-		graphics.clear();
+		/*graphics.clear();
 		graphics.beginFill(0xCCCCCC);
-		var w:Float = map.getWidth();
-		var h:Float = map.getHeight();
-		graphics.drawRect(0, 0, w, h);
+		graphics.drawRect(0, 0, map.getWidth(), map.getHeight());*/
 		refresh();
 	}
 
 	public function refresh():Void
 	{
 		polyCont.scaleX = polyCont.scaleY = 1.0;
-		/*polyCont.x = stage.stageWidth / 2;		
-		polyCont.y = stage.stageHeight / 2;		
-		polySprite.x = stage.stageWidth / 2;		
-		polySprite.y = stage.stageHeight / 2;		
-		redraw(polySprite);*/
+		polyCont.x = ztage.stageWidth / 2;		
+		polyCont.y = ztage.stageHeight / 2;		
+		polySprite.x = ztage.stageWidth / 2;		
+		polySprite.y = ztage.stageHeight / 2;
+		redraw(polySprite);
 	}
 
 	/** redraw the overlay onto the given Sprite - override this in your subclass */
