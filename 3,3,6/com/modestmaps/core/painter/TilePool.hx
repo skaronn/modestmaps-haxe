@@ -36,7 +36,8 @@ class TilePool
 	{
 		if (pool.length < MIN_POOL_SIZE){
 			while (pool.length < MAX_NEW_TILES){
-				pool.push(Type.createInstance(tileClass, [0, 0, 0]));
+				//TODO: check if createinstance is needed   pool.push(Type.createInstance(tileClass, [0, 0, 0]));
+				pool.push(new Tile(0, 0, 0));
 			}
 		}			
 		var tile:Tile = pool.pop();

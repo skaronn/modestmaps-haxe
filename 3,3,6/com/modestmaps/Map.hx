@@ -25,6 +25,7 @@
  */
 package com.modestmaps;
 
+import openfl.Lib;
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
 import openfl.events.Event;
@@ -763,7 +764,7 @@ class Map extends Sprite
 		if (!__draggable) return;
 		
 		var p:Point = grid.globalToLocal(new Point(event.stageX, event.stageY));
-		p = new Point(393, 411);
+		//p = new Point(393, 411);
 		trace(">>>>>>>>>>> onDoubleClick - p : "+p);
 		if (event.shiftKey) {
 			if (grid.zoomLevel > grid.minZoom) {
@@ -792,7 +793,8 @@ class Map extends Sprite
 
 	public function onMouseWheel(event:MouseEvent):Void
 	{
-		if (flash.Lib.getTimer() - previousWheelEvent > minMouseWheelInterval)
+		if (Lib.getTimer() - previousWheelEvent > minMouseWheelInterval)
+	
 		{
 			if (event.delta > 0) {
 				zoomInAbout(new Point(mouseX, mouseY), 0);

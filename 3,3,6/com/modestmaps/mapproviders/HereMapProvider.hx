@@ -39,7 +39,6 @@ class HereMapProvider extends AbstractMapProvider implements IMapProvider
 		return "HERE_MAP";
 	}
 
-	//TODO: Why all the mapproviders returns an Array<String> instead of String, does it make sense?
 	public function getTileUrls(coord:Coordinate):Array<String>
 	{
 		var sourceCoord:Coordinate = sourceCoordinate(coord);

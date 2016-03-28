@@ -11,5 +11,4 @@
 	
 	<assets path="Assets" rename="assets" />
 	<icon path="Assets/openfl.svg" />
-	
 </project>

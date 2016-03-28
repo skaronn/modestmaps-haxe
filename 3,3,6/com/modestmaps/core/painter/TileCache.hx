@@ -51,8 +51,6 @@ class TileCache
 
 	public function retainKeys(keys:Array<String>):Void
 	{
-		//TODO està fent el contrari?? esta eliminant les keys, en comptes de les que no siguin les keys
-		
 		for (key in alreadySeen.keys())
 		{
 			if (keys.indexOf(key) < 0) 

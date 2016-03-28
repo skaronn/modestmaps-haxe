@@ -91,6 +91,7 @@ class TweenMap extends Map
 
 	public function tweenToMatrix(m:Matrix, duration:Float):Void
 	{
+		trace("tweenToMatrix");
 		grid.prepareForZooming();
 		grid.prepareForPanning();		
 		enforceToRestore = grid.enforceBoundsEnabled;		
@@ -98,7 +99,9 @@ class TweenMap extends Map
 		grid.enforceBoundsOnMatrix(m);
 		
 		//TweenLite.to(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty, onComplete: panAndZoomComplete });		
-		Actuate.tween(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty}).onComplete(panAndZoomComplete);		
+		Actuate.tween(grid, duration, { a: m.a, b: m.b, c: m.c, d: m.d, tx: m.tx, ty: m.ty}).ease(zoomEase).onComplete(panAndZoomComplete);		
+		//grid.setMatrix(m);
+		//panAndZoomComplete();
 	}
 
 	/** 
@@ -116,7 +119,7 @@ class TweenMap extends Map
 	override public function panAndZoomBy(sc:Float, location:Location, targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		if (duration < 0) duration = panAndZoomDuration;
-		if (targetPoint != null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);		
+		if (targetPoint == null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);		
 		
 		var p:Point = locationPoint(location);
 		
@@ -147,7 +150,7 @@ class TweenMap extends Map
 	override public function zoomByAbout(zoomDelta:Float, targetPoint:Point = null, duration:Float = -1):Void	
 	{
 		if (duration < 0) duration = panAndZoomDuration;
-		if (targetPoint != null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);		
+		if (targetPoint == null) targetPoint = new Point(mapWidth / 2, mapHeight / 2);		
 
 		var constrainedDelta:Float = zoomDelta;
 
@@ -169,7 +172,7 @@ class TweenMap extends Map
 		m.scale(sc, sc);
 		m.translate(targetPoint.x, targetPoint.y);
 		
-		tweenToMatrix(m, duration); 
+		tweenToMatrix(m, duration);
 	}
 
 	/** EXPERIMENTAL! */
@@ -263,7 +266,7 @@ class TweenMap extends Map
 		{
 			var target:Float = (dir < 0) ? Math.floor(grid.zoomLevel + dir) : Math.ceil(grid.zoomLevel + dir);
 			target = Math.max(grid.minZoom, Math.min(grid.maxZoom, target));
-			trace("grid : " + grid);
+			trace("zoomBy : " + Std.string(dir));
 			
 			/*TweenLite.to(grid, zoomDuration, { zoomLevel: target,
 							   onStart: grid.prepareForZooming,

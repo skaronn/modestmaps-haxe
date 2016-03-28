@@ -223,7 +223,7 @@ class MapExtent
 		}
 		
 		//trace("fromLocations - len : " + len);
-		//TODO Don't know why you reset the extent after calculating it
+		// TODO: Don't know why you reset the extent after calculating it
 		if (extent != null) {
 			extent = new MapExtent();
 		}

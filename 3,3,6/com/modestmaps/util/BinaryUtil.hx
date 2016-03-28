@@ -47,7 +47,7 @@ class BinaryUtil
 	private static function decimalToBinary(decimalValue:Int):String
 	{
 		var stringBinary:Dynamic = decimalValue;
-		var result:String = stringBinary.toString(2);
+		var result:String = stringBinary.toString();
 		return result;
 	}
 	

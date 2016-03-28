@@ -76,6 +76,7 @@ class Main extends Sprite
 		map = new TweenMap(stage.stageWidth - 2 * PADDING, stage.stageHeight - 2 * PADDING, 
 				true, new GoogleMapProvider(), [ { new MapExtent(48.8789, 48.8451, 2.3734, 2.2862); } ]);
 		map.addEventListener(MouseEvent.DOUBLE_CLICK, map.onDoubleClick);
+		map.addEventListener(MouseEvent.MOUSE_WHEEL, map.onMouseWheel);		
 		map.x = map.y = PADDING;
 
 		// listen for map events

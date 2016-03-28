@@ -2,6 +2,7 @@ package com.modestmaps.core;
 
 import haxe.ds.ArraySort;
 import haxe.ds.StringMap;
+import openfl.Lib;
 
 import openfl.display.DisplayObject;
 import openfl.display.Sprite;
@@ -350,10 +351,10 @@ class TileGrid extends Sprite
 	{
 		//trace("onRender - dirty : " + dirty);
 		//trace("onRender - stage : " + stage);
-		var t:Float = flash.Lib.getTimer();
+		var t:Float = Lib.getTimer();
 		//DebugUtil.dumpStack(this, "onRender");
 		if (!dirty || stage == null) {
-			//trace((flash.Lib.getTimer() - t) +" ms");
+			//trace((Lib.getTimer() - t) +" ms");
 			onRendered();
 			return;
 		}
@@ -460,7 +461,6 @@ class TileGrid extends Sprite
 
 			// take a look at everything else
 			recentlySeen = recentlySeen.slice(0, recentlySeen.length - visibleTiles.length);
-			//TODO It breaks after some iterations-> recentlySeen.sort((cast Array).DESCENDING);
 			ArraySort.sort(recentlySeen, stringDescSort);
 			recentlySeen = recentlySeen.concat(visibleKeys);
 			
@@ -482,7 +482,7 @@ class TileGrid extends Sprite
 
 		dirty = false;
 		//trace("dirty : "+dirty);	
-		//trace(flash.Lib.getTimer() - t, "ms in", provider);		
+		//trace(flash.Lib.getTimer() - t, "ms");		
 	}
 
 	/**
@@ -506,10 +506,10 @@ class TileGrid extends Sprite
 		var tile:Tile;	
 
 		// loop over currently visible tiles
-		trace("repopulateVisibleTiles - minCol : " + minCol);
+		/*trace("repopulateVisibleTiles - minCol : " + minCol);
 		trace("repopulateVisibleTiles - maxCol : " + maxCol);
 		trace("repopulateVisibleTiles - minRow : " + minRow);
-		trace("repopulateVisibleTiles - maxRow : " + maxRow);
+		trace("repopulateVisibleTiles - maxRow : " + maxRow);*/
 		for (col in minCol...maxCol + 1) {
 			//trace("repopulateVisibleTiles - col : " + col);
 			for (row in minRow...maxRow + 1) {
@@ -523,7 +523,7 @@ class TileGrid extends Sprite
 				if (well.getChildByName(key) == null) {
 					tile = tilePainter.getTileFromCache(key);
 					if (tile == null) {
-						trace("tile cache miss - to load queue");
+						//trace("tile cache miss - to load queue");
 						coord.row = row;
 						coord.column = col;
 						coord.zoom = currentTileZoom;
@@ -531,15 +531,15 @@ class TileGrid extends Sprite
 						tile = tilePainter.createAndPopulateTile(coord, key);
 					}
 					else {
-						trace("tile cache hit");
+						//trace("tile cache hit");
 						tile.show();
 					}
 					well.addChild(tile);
 				} else {
-					trace("Tile already inside Sprite");
+					//trace("Tile already inside Sprite");
 					tile = cast(well.getChildByName(key), Tile);
 					
-					//TODO is it ok?
+					// TODO: is it ok?
 					//well.addChild(tile);
 				}
 			

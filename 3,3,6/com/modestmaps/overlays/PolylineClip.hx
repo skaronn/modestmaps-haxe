@@ -143,7 +143,7 @@ class PolylineClip extends Sprite
 			
 		var boundaryWindow:Rectangle = new Rectangle( -w / 2, -h / 2, w, h);
 
-		//TODO why 2 loops??
+		// TODO: why 2 loops??
 		// Calculate local coordinates for each point
 		for (i in 0...polyline.locationsArray.length)
 		{		

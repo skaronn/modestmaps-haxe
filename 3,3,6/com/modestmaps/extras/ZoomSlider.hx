@@ -117,6 +117,7 @@ class ZoomSlider extends Sprite
 			//TweenLite.to(map.grid, 0.1, { zoomLevel : Math.round(map.grid.zoomLevel) } );
 			//TweenLite.to(map.grid, 0.1, { zoomLevel : Math.round(map.grid.zoomLevel) } );
 			Actuate.tween(map.grid, 0.1, { zoomLevel : Math.round(map.grid.zoomLevel) } );
+			Actuate.tween(map.grid, 0.1, { zoomLevel : Math.round(map.grid.zoomLevel) } );
 
 			stage.removeEventListener(MouseEvent.MOUSE_UP, onThumbMouse);
 			stage.removeEventListener(MouseEvent.MOUSE_MOVE, onThumbMouse);

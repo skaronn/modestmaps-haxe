@@ -27,6 +27,8 @@ class TweenTile extends Tile
 		// it seems there's a harmless bug where hide might get called after show
 		// if there's a tween running it will correct it though :)
 		//TweenLite.killTweensOf(this);
+		//TODO check if the bug still goes with actuate
+		Actuate.stop(this);
 		this.alpha = 0.0;
 	}
 
