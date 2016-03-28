@@ -14,14 +14,14 @@ For more information about Haxe, head to the [offical Haxe website](http://haxe.
 
 ##Screenshots:
 
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/basic-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/greatcircle-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/mapselector-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/markers-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/navigatorwindow-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/polygons-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/polylines-screenshot.png" alt="Modestmaps" width="361" height="380">
-<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/spotlight-screenshot.png" alt="Modestmaps" width="361" height="380">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/basic-screenshot.png" alt="Modestmaps" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/greatcircle-screenshot.png" alt="Modestmaps great circle" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/mapselector-screenshot.png" alt="Modestmaps selector" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/markers-screenshot.png" alt="Modestmaps markers" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/navigatorwindow-screenshot.png" alt="Modestmaps navigator window" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/polygons-screenshot.png" alt="Modestmaps polygons" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/polylines-screenshot.png" alt="Modestmaps polylines" width="109" height="83">
+<img src="https://raw.githubusercontent.com/skaronn/modestmaps-haxe/master/img/screenshot/spotlight-screenshot.png" alt="Modestmaps spotlight" width="109" height="83">
 
 ##Implemented features:
  * Geocoding
