@@ -205,7 +205,7 @@ class MapExtent
 		
 		var extent:MapExtent = null;
 		var location:Location = null;
-		//var len : Int = 0;
+
 		for (location in locations)
 		{
 			if (extent == null)
@@ -219,6 +219,7 @@ class MapExtent
 					extent.enclose(location);
 				}
 			}
+<<<<<<< HEAD
 			//len++;
 		}
 		
@@ -226,6 +227,8 @@ class MapExtent
 		// TODO: Don't know why you reset the extent after calculating it
 		if (extent != null) {
 			extent = new MapExtent();
+=======
+>>>>>>> 1d0fd9767b7bd2b0b37768c4f09867f2ee07b3e6
 		}
 		
 		return extent;
