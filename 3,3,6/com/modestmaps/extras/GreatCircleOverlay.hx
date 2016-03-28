@@ -3,9 +3,10 @@ package com.modestmaps.extras;
 import haxe.ds.ObjectMap;
 
 import openfl.display.Sprite;
+import openfl.display.Stage;
 import openfl.filters.DropShadowFilter;
 import openfl.geom.Point;
-//import openfl.utils.Object;
+import openfl.utils.Object;
 
 import com.modestmaps.Map;
 import com.modestmaps.core.MapExtent;
@@ -16,37 +17,35 @@ import com.modestmaps.geo.Location;
 */
 class GreatCircleOverlay extends Overlay
 {	
-	public var lines:Array<Array<Location>> = [];
+	private var lines:Array<Array<Location>> = [];
 	private var styles:ObjectMap<Array<Location>, LineStyle> = new ObjectMap<Array<Location>, LineStyle>();
 
-	public function new(map:Map)
+	public function new(map:Map, stage:Stage)
 	{
-		super(map);
+		super(map, stage);
 		this.filters = [ new DropShadowFilter(2, 90, 0x000000, 0.35, 8, 8, 2, 1, false, false, false) ];
 	}
 
 	override public function redraw(sprite:Sprite):Void
 	{
 		sprite.graphics.clear();
-		for (line in lines) {
+		for (line in lines)
+		{
 			var lineStyle:LineStyle = styles.get(line);
 			var p:Point = map.locationPoint(line[0], sprite);
 			sprite.graphics.moveTo(p.x, p.y);
 			var i:Int = 0;
 			var prev:Location = null;
-			var fields = Reflect.fields(line.slice(1));
-			for (elt in fields) {
+
+			for (location in line.slice(1))
+			{
 				var thickness:Float = Math.min(1, 1 - Math.abs(i - (line.length / 2)) / (line.length / 3));
-				/*
 				if (i % 4 == 0 && i != line.length-1) {
 					sprite.graphics.lineStyle();
 				}
 				else {
-					lineStyle.apply(sprite.graphics, 1+thickness);
-				}
-				*/
-				var location : Location = cast(elt, Location);
-				lineStyle.apply(sprite.graphics, 1 + thickness);
+					lineStyle.apply(sprite.graphics, 1 + thickness);
+				}				
 				p = map.locationPoint(location, sprite);
 				if (prev != null && (Math.abs(prev.lat - location.lat) > 10 || Math.abs(prev.lon - location.lon) > 10)) {
 					sprite.graphics.moveTo(p.x, p.y);
@@ -60,7 +59,7 @@ class GreatCircleOverlay extends Overlay
 		}
 	}
 
-	public function addGreatCircle(start:Location, end:Location, lineStyle:LineStyle = null):MapExtent
+    public function addGreatCircle(start:Location, end:Location, lineStyle:LineStyle = null):MapExtent
 	{
 		var extent:MapExtent = new MapExtent();
 		var latlngs:Array<Location> = [];
@@ -75,8 +74,9 @@ class GreatCircleOverlay extends Overlay
 		bearing = bearing < 0 ? 360 + bearing : bearing;
 
 		var numSegments:Int = Std.int(40 + (400 * Distance.approxDistance(start, end) / (Math.PI * 2 * 6378000)));
-		
-		for (n in 0...numSegments) {
+
+		for (n in 0...numSegments) 
+		{
 			var f:Float = (1 / (numSegments - 1)) * n;
 			var A:Float = Math.sin((1 - f) * d) / Math.sin(d);
 			var B:Float = Math.sin(f * d) / Math.sin(d);
