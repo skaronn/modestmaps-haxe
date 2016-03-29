@@ -20,10 +20,10 @@ class GreatCircleOverlay extends Overlay
 	private var lines:Array<Array<Location>> = [];
 	private var styles:ObjectMap<Array<Location>, LineStyle> = new ObjectMap<Array<Location>, LineStyle>();
 
-	public function new(map:Map, stage:Stage)
+	public function new(map:Map)
 	{
-		super(map, stage);
-		this.filters = [ new DropShadowFilter(2, 90, 0x000000, 0.35, 8, 8, 2, 1, false, false, false) ];
+		super(map);
+		this.filters = [ new DropShadowFilter(3, 90, 0x000000, 0.35, 8, 8, 2, 1, false, false, false) ];
 	}
 
 	override public function redraw(sprite:Sprite):Void

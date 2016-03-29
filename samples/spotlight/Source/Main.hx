@@ -25,7 +25,6 @@ import com.modestmaps.events.MarkerEvent;
 import com.modestmaps.extras.MapControls;
 import com.modestmaps.extras.Distance;
 import com.modestmaps.extras.LineStyle;
-import com.modestmaps.extras.Overlay;
 import com.modestmaps.extras.SpotlightOverlay;
 import com.modestmaps.extras.ZoomBox;
 import com.modestmaps.extras.ZoomSlider;
@@ -36,8 +35,6 @@ import com.modestmaps.geo.Location;
 import com.modestmaps.mapproviders.google.GoogleMapProvider;
 
 /**
-*http://bl.ocks.org/tristen/raw/2689194/
-*file:///C:/Users/adgnabro/Documents/Perso/programmation/js/modestmaps-js/examples/spotlight/markers.html
 */
 class Main extends Sprite 
 {

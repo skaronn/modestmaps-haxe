@@ -22,13 +22,12 @@ class Overlay extends Sprite
 	private var polySprite:Sprite = new Sprite();
 	private var polyCont:Sprite = new Sprite();
 
-	public function new(map:Map, stage:Stage)
+	public function new(map:Map)
 	{
 		super();
 		this.mouseEnabled = false;
 		this.mouseChildren = false;
 		this.map = map;
-		this.ztage = stage;
 		this.cacheAsBitmap = true;
 		
 		#if flash
@@ -37,6 +36,7 @@ class Overlay extends Sprite
 
 		addChild(polyCont);
 		polyCont.addChild(polySprite);
+		map.addChild(this);
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 	}
 
@@ -64,10 +64,10 @@ class Overlay extends Sprite
 	public function refresh():Void
 	{
 		polyCont.scaleX = polyCont.scaleY = 1.0;
-		polyCont.x = ztage.stageWidth / 2;		
+		/*polyCont.x = ztage.stageWidth / 2;		
 		polyCont.y = ztage.stageHeight / 2;		
 		polySprite.x = ztage.stageWidth / 2;		
-		polySprite.y = ztage.stageHeight / 2;
+		polySprite.y = ztage.stageHeight / 2;*/
 		redraw(polySprite);
 	}
 
